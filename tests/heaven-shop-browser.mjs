@@ -183,6 +183,7 @@ try {
       const clearMiss=[...fauna,...scene.populationWorld.npcs].every(n=>n===actor||!n.alive||
         !scene.heavenActions.inLane({x,y},n,-dx/160,-dy/160,214,36));
       if(!clearMiss||!scene.canOccupy(x,y)||!scene.clearFaunaLine({x,y},f)||scene.populationWorld.npcs.some(n=>n!==actor&&Math.hypot(n.x-f.x,n.y-f.y)<180))continue;
+      scene.faunaTick=-4000;
       place(x,y);scene.selectedFaunaId=null;scene.selectedNpcId=actor.id;
       return {id:f.id,hp:f.hp,x:f.x,y:f.y,dx,dy};
     }
@@ -208,6 +209,8 @@ try {
       place(x,y);
       Object.assign(resident,target);
       resident.home={...target}; resident.actionTarget={...target};
+      resident.workPosition={...target}; resident.goalAction='work';
+      resident.decisionSlot='env-repair:browser-fixture';
       scene.npcRoutes.delete(resident.id);
       scene.npcSprites.get(resident.id).setPosition(target.x,target.y);
       scene.selectedFaunaId=null;
@@ -235,6 +238,12 @@ try {
   await delay(200);
   await aim(await run(`(()=>{${fixture}return screen(${bank.x},${bank.y})})()`));
   await key('F');
+  await until(()=>run("Boolean(window.__worldRebuildGame.scene.getScene('world-rebuild-1b').heavenActions.fishing)"),2000).catch(async error=>{
+    console.error('Fishing did not cast',await run(`(()=>{${fixture}
+      return {bank:${JSON.stringify(bank)},position:{x:actor.x,y:actor.y},gear:actor.equippedWeapon,toast:document.getElementById('population-toast')?.textContent};
+    })()`));
+    throw error;
+  });
   await until(()=>run("document.getElementById('possession-heaven-status')?.textContent.includes('Cá cắn!')"));
   await shot('06a-bite');
   await key('F');

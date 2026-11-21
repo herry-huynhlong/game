@@ -1,3 +1,4 @@
+import { createWorldUuid } from './world/WorldId.ts';
 import { HEAVEN_DEFAULTS } from './dao/HeavenlyDaoSystem.ts';
 import { ensureNPCVisualStyles } from './dao/CharacterAppearance.ts';
 import { ensureNPCPopulation, NPC_POPULATION_QUOTAS } from './dao/NPCPopulationRegistry.ts';
@@ -6,15 +7,7 @@ import { createFactions, createSettlement, createShops } from './dao/SettlementS
 
 export const WORLD_POPULATION_SAVE_KEY = 'world-rebuild-1c-v1';
 
-export function createWorldUuid(cryptoApi = globalThis.crypto) {
-  if (typeof cryptoApi?.randomUUID === 'function') return cryptoApi.randomUUID();
-  if (typeof cryptoApi?.getRandomValues !== 'function') throw new Error('Không có bộ sinh số ngẫu nhiên an toàn trong trình duyệt.');
-  const bytes = cryptoApi.getRandomValues(new Uint8Array(16));
-  bytes[6] = (bytes[6] & 0x0f) | 0x40;
-  bytes[8] = (bytes[8] & 0x3f) | 0x80;
-  const hex = Array.from(bytes, value => value.toString(16).padStart(2, '0')).join('');
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
-}
+export { createWorldUuid };
 
 const roleSites = {
   commoner: ['city-center', 'south-outskirts'], low_disciple: ['sect-yard'], elder: ['sect-yard'],

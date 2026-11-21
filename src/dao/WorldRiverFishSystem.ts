@@ -6,7 +6,7 @@ export type RiverFishDepth = 'surface-near' | 'diving' | 'deep-swim' | 'rising';
 type FishRuntime = RiverFishSave & {
   sprite: Phaser.GameObjects.Sprite; shadow: Phaser.GameObjects.Ellipse;
   path: { x: number; y: number }[]; speed: number; rng: () => number; lastX: number; lastY: number;
-  moved: number; visibleInCamera: boolean;
+  moved: number; visibleInCamera: boolean; pendingMovement: number;
 };
 type Cell = { index: number; x: number; y: number; component: number };
 
@@ -27,7 +27,7 @@ export class WorldRiverFishSystem {
   private originX = 0; private originY = 0; private gridWidth = 0; private gridHeight = 0;
   private passable = new Uint8Array(); private componentAt = new Int32Array();
   private cells: Cell[] = []; private cellsByComponent = new Map<number, Cell[]>(); private fish: FishRuntime[] = [];
-  private waterTiles = 0; private componentCount = 0; private tickMs = 0; private saveDirty = false;
+  private waterTiles = 0; private componentCount = 0;
   private bridgeRects: { x: number; y: number; right: number; bottom: number }[] = [];
 
   constructor(private scene: Phaser.Scene, private map: Phaser.Tilemaps.Tilemap, private environment: EnvironmentSave) {
@@ -135,7 +135,7 @@ export class WorldRiverFishSystem {
       const shadow = this.scene.add.ellipse(saved.x, saved.y + 2, 23, 6, 0x102d32, .2).setDepth(1.26);
       const sprite = this.scene.add.sprite(saved.x, saved.y, texture, 0).setDepth(1.27).setName(saved.id);
       sprite.setData('fishId', saved.id); sprite.play(saved.species === 'common' ? 'world-fish-common-swim' : 'world-fish-spirit-swim');
-      const runtime: FishRuntime = { ...saved, sprite, shadow, path: [], speed: (saved.species === 'common' ? 24 : 18) + random() * 6, rng: random, lastX: saved.x, lastY: saved.y, moved: 0, visibleInCamera: false };
+      const runtime: FishRuntime = { ...saved, sprite, shadow, path: [], speed: (saved.species === 'common' ? 24 : 18) + random() * 6, rng: random, lastX: saved.x, lastY: saved.y, moved: 0, visibleInCamera: false, pendingMovement: 0 };
       if (Number.isFinite(saved.targetX) && Number.isFinite(saved.targetY)) this.planTo(runtime, saved.targetX!, saved.targetY!);
       else this.planNext(runtime, true);
       this.fish.push(runtime); this.applyDepth(runtime);
@@ -208,15 +208,14 @@ export class WorldRiverFishSystem {
 
   private nextPhase(fish: FishRuntime) {
     const index = PHASES.indexOf(fish.depthState); fish.depthState = PHASES[(index + 1) % PHASES.length]; fish.phaseMs = 0;
-    this.saveDirty = true;
   }
-  private applyDepth(fish: FishRuntime) {
+  private applyDepth(fish: FishRuntime, inView = true) {
     const d = Math.min(1, fish.phaseMs / PHASE_DURATIONS[fish.depthState]); let alpha = .82, tint = 0xc4dfd2, shadow = .22;
     if (fish.depthState === 'diving') { alpha = .82 - .72 * d; tint = 0x7d9b9e; shadow = .18 - .13 * d; }
     else if (fish.depthState === 'deep-swim') { alpha = .10; tint = 0x55747d; shadow = .035; }
     else if (fish.depthState === 'rising') { alpha = .10 + .72 * d; tint = 0x93bfbd; shadow = .035 + .18 * d; }
     fish.sprite.setAlpha(alpha).setTint(tint).setDepth(1.27); fish.shadow.setPosition(fish.sprite.x, fish.sprite.y + 2).setAlpha(shadow);
-    const surfaced = fish.depthState === 'surface-near' || fish.depthState === 'diving';
+    const surfaced = inView && (fish.depthState === 'surface-near' || fish.depthState === 'diving');
     fish.sprite.setVisible(surfaced);
     fish.shadow.setVisible(surfaced);
   }
@@ -237,26 +236,42 @@ export class WorldRiverFishSystem {
   }
 
   update(delta: number, camera: Phaser.Cameras.Scene2D.Camera) {
-    const dt = Math.min(Math.max(delta, 0), 60) / 1000; this.tickMs += delta;
+    const dt = Math.min(Math.max(delta, 0), 60);
+    const view = camera.worldView;
     for (const fish of this.fish) {
-      const oldX = fish.x, oldY = fish.y;
-      fish.phaseMs += delta;
-      if (fish.phaseMs >= PHASE_DURATIONS[fish.depthState]) { fish.phaseMs -= PHASE_DURATIONS[fish.depthState]; this.nextPhase(fish); }
-      this.move(fish, dt); this.applyDepth(fish);
-      if (Math.abs(fish.x - oldX) > .01 || Math.abs(fish.y - oldY) > .01 || this.tickMs >= 5000) this.saveDirty = true;
-      fish.visibleInCamera = camera.worldView.contains(fish.x, fish.y);
-    }
-    if (this.tickMs >= 5000) { this.tickMs %= 5000; for (const fish of this.fish) { fish.phaseMs = Math.max(0, fish.phaseMs); } }
-    if (this.saveDirty) {
-      const saved = this.environment.fish ?? [];
-      for (const fish of this.fish) {
-        const record = saved.find(x => x.id === fish.id); if (!record) continue;
-        record.x = Math.round(fish.x * 10) / 10; record.y = Math.round(fish.y * 10) / 10;
-        record.depthState = fish.depthState; record.phaseMs = Math.round(fish.phaseMs); record.targetX = fish.targetX; record.targetY = fish.targetY;
+      const near = fish.x >= view.x - 64 && fish.x <= view.right + 64 &&
+        fish.y >= view.y - 64 && fish.y <= view.bottom + 64;
+      fish.phaseMs += dt;
+      if (fish.phaseMs >= PHASE_DURATIONS[fish.depthState]) this.nextPhase(fish);
+      fish.pendingMovement += dt;
+      if (near || fish.pendingMovement >= 145 + fish.seed % 66) {
+        while (fish.pendingMovement > 0) {
+          const step = Math.min(fish.pendingMovement, 60);
+          this.move(fish, step / 1000);
+          fish.pendingMovement -= step;
+        }
       }
-      this.saveDirty = false;
+      if (near) this.applyDepth(fish);
+      else if (fish.visibleInCamera || fish.sprite.visible || !fish.sprite.anims.isPaused) {
+        this.applyDepth(fish, false);
+        fish.sprite.anims.pause();
+      }
+      if (near && !fish.visibleInCamera) fish.sprite.anims.resume();
+      fish.visibleInCamera = near;
     }
   }
+
+  flushSave() {
+    const saved = this.environment.fish ?? [];
+    for (const fish of this.fish) {
+      const record = saved.find(record => record.id === fish.id);
+      if (!record) continue;
+      record.x = fish.x; record.y = fish.y; record.depthState = fish.depthState;
+      record.phaseMs = Math.round(fish.phaseMs); record.targetX = fish.targetX; record.targetY = fish.targetY;
+    }
+  }
+
+  get visibleCount() { return this.fish.filter(fish => fish.sprite.visible).length; }
 
   getState(camera: Phaser.Cameras.Scene2D.Camera) {
     return { count: (this.environment.fish ?? []).length, living: this.fish.length, common: this.fish.filter(f => f.species === 'common').length, spirit: this.fish.filter(f => f.species === 'spirit').length,

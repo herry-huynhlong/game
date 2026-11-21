@@ -1,3 +1,4 @@
+import { createWorldUuid } from '../world/WorldId';
 import type { DivineWorldSave, MarketStock, ShopSave, SimNPC, TradeItemId, TradeRecord } from './types';
 
 export interface TradeResult { ok:boolean; message:string; record?:TradeRecord; }
@@ -33,5 +34,5 @@ export class EconomySystem {
   static payWage(world:DivineWorldSave,npc:SimNPC,factionId:string,amount:number){const faction=world.factions.find(f=>f.id===factionId);if(!faction||!Number.isFinite(amount)||amount<=0||faction.wealth<amount)return false;faction.wealth-=amount;npc.spiritStones+=amount;return true}
   static payShopOwner(shop:ShopSave,npc:SimNPC,amount:number){if(shop.ownerId!==npc.id||!Number.isFinite(amount)||amount<=0||shop.cash<amount)return false;shop.cash-=amount;npc.spiritStones+=amount;return true}
   private static collectTax(world:DivineWorldSave,amount:number){if(amount>0){const city=world.factions.find(f=>f.id==='qingyun-city');if(city)city.wealth+=amount}}
-  private static record(world:DivineWorldSave,transaction:Omit<TradeRecord,'id'>){const record:TradeRecord={id:crypto.randomUUID(),...transaction};world.economy.transactions.push(record);if(world.economy.transactions.length>500)world.economy.transactions.splice(0,world.economy.transactions.length-500);return record}
+  private static record(world:DivineWorldSave,transaction:Omit<TradeRecord,'id'>){const record:TradeRecord={id:createWorldUuid(),...transaction};world.economy.transactions.push(record);if(world.economy.transactions.length>500)world.economy.transactions.splice(0,world.economy.transactions.length-500);return record}
 }
