@@ -1,12 +1,8 @@
 import Phaser from 'phaser';
-import type { EnvironmentSave } from './types';
+import type { EnvironmentSave, RiverFishSave } from './types';
 
 export type RiverFishSpecies = 'common' | 'spirit';
 export type RiverFishDepth = 'surface-near' | 'diving' | 'deep-swim' | 'rising';
-export interface RiverFishSave {
-  id: string; species: RiverFishSpecies; x: number; y: number; seed: number; component: number;
-  depthState: RiverFishDepth; phaseMs: number; targetX?: number; targetY?: number; invalidReason?: string;
-}
 type FishRuntime = RiverFishSave & {
   sprite: Phaser.GameObjects.Sprite; shadow: Phaser.GameObjects.Ellipse;
   path: { x: number; y: number }[]; speed: number; rng: () => number; lastX: number; lastY: number;
@@ -128,6 +124,7 @@ export class WorldRiverFishSystem {
     if (!common) this.scene.anims.create({ key: 'world-fish-common-swim', frames: this.scene.anims.generateFrameNumbers('world-fish-common', { start: 0, end: 5 }), frameRate: 1000 / 140, repeat: -1 });
     if (!spirit) this.scene.anims.create({ key: 'world-fish-spirit-swim', frames: this.scene.anims.generateFrameNumbers('world-fish-spirit', { start: 0, end: 5 }), frameRate: 1000 / 180, repeat: -1 });
     for (const saved of this.environment.fish ?? []) {
+      if (saved.caughtBy) continue;
       let cell = this.cellAt(saved.x, saved.y);
       if (cell < 0 || this.componentAt[cell] !== saved.component) {
         const candidate = this.cells.filter(c => c.component === saved.component).sort((a, b) => this.cellDistance(a, saved.x, saved.y) - this.cellDistance(b, saved.x, saved.y))[0];
@@ -138,7 +135,7 @@ export class WorldRiverFishSystem {
       const shadow = this.scene.add.ellipse(saved.x, saved.y + 2, 23, 6, 0x102d32, .2).setDepth(1.26);
       const sprite = this.scene.add.sprite(saved.x, saved.y, texture, 0).setDepth(1.27).setName(saved.id);
       sprite.setData('fishId', saved.id); sprite.play(saved.species === 'common' ? 'world-fish-common-swim' : 'world-fish-spirit-swim');
-      const runtime: FishRuntime = Object.assign(saved, { sprite, shadow, path: [], speed: (saved.species === 'common' ? 24 : 18) + random() * 6, rng: random, lastX: saved.x, lastY: saved.y, moved: 0, visibleInCamera: false });
+      const runtime: FishRuntime = { ...saved, sprite, shadow, path: [], speed: (saved.species === 'common' ? 24 : 18) + random() * 6, rng: random, lastX: saved.x, lastY: saved.y, moved: 0, visibleInCamera: false };
       if (Number.isFinite(saved.targetX) && Number.isFinite(saved.targetY)) this.planTo(runtime, saved.targetX!, saved.targetY!);
       else this.planNext(runtime, true);
       this.fish.push(runtime); this.applyDepth(runtime);
@@ -149,6 +146,35 @@ export class WorldRiverFishSystem {
     if (x < this.originX || y < this.originY) return -1;
     const gx = Math.floor((x - this.originX) / STEP), gy = Math.floor((y - this.originY) / STEP), i = gy * this.gridWidth + gx;
     return gx < 0 || gy < 0 || gx >= this.gridWidth || gy >= this.gridHeight || !this.passable[i] ? -1 : i;
+  }
+  waterComponent(x: number, y: number) {
+    const cell = this.cellAt(x, y);
+    return cell < 0 ? -1 : this.componentAt[cell];
+  }
+
+  isWaterTile(x: number, y: number) {
+    const gid = this.map.getLayer('Water')?.data[Math.floor(y / this.map.tileHeight)]?.[Math.floor(x / this.map.tileWidth)]?.index ?? -1;
+    return gid >= WATER_FIRST_GID && gid <= WATER_LAST_GID && !ROCK_GIDS.has(gid);
+  }
+
+  fishNearHook(x: number, y: number, component: number) {
+    return this.fish.filter(fish => fish.component === component && Math.hypot(x - fish.x, y - fish.y) <= 90)
+      .sort((a, b) => Math.hypot(x - a.x, y - a.y) - Math.hypot(x - b.x, y - b.y))[0]?.id;
+  }
+
+  catchFish(id: string, npcId: string, commit: (species: RiverFishSpecies) => boolean) {
+    const index = this.fish.findIndex(fish => fish.id === id);
+    const saved = this.environment.fish?.find(fish => fish.id === id);
+    if (index < 0 || !saved || saved.caughtBy) return null;
+    saved.caughtBy = npcId;
+    if (!commit(saved.species)) {
+      delete saved.caughtBy;
+      return null;
+    }
+    const [fish] = this.fish.splice(index, 1);
+    fish.sprite.destroy();
+    fish.shadow.destroy();
+    return saved.species;
   }
   private cellDistance(cell: Cell, x: number, y: number) { return Math.hypot(this.originX + (cell.x + .5) * STEP - x, this.originY + (cell.y + .5) * STEP - y); }
   private planTo(fish: FishRuntime, x: number, y: number) {
@@ -190,6 +216,9 @@ export class WorldRiverFishSystem {
     else if (fish.depthState === 'deep-swim') { alpha = .10; tint = 0x55747d; shadow = .035; }
     else if (fish.depthState === 'rising') { alpha = .10 + .72 * d; tint = 0x93bfbd; shadow = .035 + .18 * d; }
     fish.sprite.setAlpha(alpha).setTint(tint).setDepth(1.27); fish.shadow.setPosition(fish.sprite.x, fish.sprite.y + 2).setAlpha(shadow);
+    const surfaced = fish.depthState === 'surface-near' || fish.depthState === 'diving';
+    fish.sprite.setVisible(surfaced);
+    fish.shadow.setVisible(surfaced);
   }
   private move(fish: FishRuntime, dt: number) {
     const oldX = fish.x, oldY = fish.y;

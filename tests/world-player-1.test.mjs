@@ -43,8 +43,9 @@ assert.equal(reportCityCombat(world,{eventId:'possessed-hit-1',attackerId:attack
 const scene=fs.readFileSync(new URL('../src/world-rebuild-scene.js',import.meta.url),'utf8');
 assert.match(scene,/this\.populationSimulation\.tick\(1,world\.clock\.day,world\.clock\.minute,this\.possessedNpcId\)/,'the controlled NPC is suspended from autonomous AI');
 assert.match(scene,/const professionWorld=this\.possessedNpcId\?\{\.\.\.world,npcs:world\.npcs\.filter\(n=>n\.id!==this\.possessedNpcId\)\}:world/,'profession work pauses only for the possessed NPC');
-assert.match(scene,/damageFauna\(this\.populationWorld,id,attackerId,damage,eventId\)/,'fauna damage uses the existing damage reducer');
+assert.match(scene,/damageFauna\(this\.populationWorld,id,attacker\.id,damage,eventId\)/,'fauna damage uses the existing damage reducer');
 assert.match(scene,/claimFaunaDrop\(this\.populationWorld,dropId,npcId,eventId\)/,'loot pickup uses the existing one-time inventory transfer');
-assert.match(scene,/reportCombat\(npc\.id,selectedNpc\.id,raw/,'NPC attacks go through CityLaw-aware combat reporting');
+const ranged=fs.readFileSync(new URL('../src/world/WorldHeavenActions.js',import.meta.url),'utf8');
+assert.match(ranged,/scene\.reportCombat\(shot\.npc\.id, target\.id/,'projectile hits go through CityLaw-aware combat reporting');
 console.log('WORLD.PLAYER.1 passed: paid possession cycles/save state, scoped AI pause, real fauna reducer/loot transfer, and CityLaw retaliation integration.');
 } finally { fs.rmSync(temp,{recursive:true,force:true}); }

@@ -3,6 +3,13 @@ export type ItemTier='mortal'|'artifact'|'spirit'|'treasure'|'spiritual-treasure
 export type ItemQuality='low'|'middle'|'high';
 export interface ItemDefinition { id:string; name:string; kind:ItemKind; tier:ItemTier; quality:ItemQuality; description:string; value:number; }
 export const ITEM_CATALOG:Record<string,ItemDefinition>={
+  fishing_rod_basic:{id:'fishing_rod_basic',name:'Cần câu phổ thông',kind:'special',tier:'mortal',quality:'low',description:'Cần tre có dây và phao, dùng ở bờ sông.',value:0},
+  book_qingyun_wave:{id:'book_qingyun_wave',name:'Bí kíp Thanh Vân Kiếm Khí',kind:'special',tier:'mortal',quality:'middle',description:'Kiếm khí tầm xa, thi triển bằng kiếm.',value:0},
+  book_crescent_wave:{id:'book_crescent_wave',name:'Bí kíp Bán Nguyệt Đao Khí',kind:'special',tier:'mortal',quality:'middle',description:'Đao khí có thể chém trúng nhiều mục tiêu.',value:0},
+  book_spirit_thrust:{id:'book_spirit_thrust',name:'Bí kíp Linh Phong Thứ',kind:'special',tier:'mortal',quality:'middle',description:'Đòn đâm linh lực nhanh, không yêu cầu vũ khí.',value:0},
+  book_spirit_guard:{id:'book_spirit_guard',name:'Bí kíp Hộ Thể Linh Cương',kind:'special',tier:'mortal',quality:'middle',description:'Tăng phòng thủ trong thời gian ngắn.',value:0},
+  river_fish_common:{id:'river_fish_common',name:'Cá sông',kind:'material',tier:'mortal',quality:'low',description:'Cá thường câu từ sông.',value:0},
+  river_fish_spirit:{id:'river_fish_spirit',name:'Linh cá',kind:'material',tier:'spirit',quality:'middle',description:'Linh cá câu từ sông.',value:0},
   iron_sword:{id:'iron_sword',name:'Thiết Mộc Kiếm',kind:'weapon',tier:'mortal',quality:'middle',description:'Kiếm gỗ lõi thiết mộc dùng luyện kiếm.',value:12},
   iron_dao:{id:'iron_dao',name:'Thiết Diệp Đao',kind:'weapon',tier:'mortal',quality:'middle',description:'Đao một lưỡi cong nhẹ, rèn từ sắt thô và cán gỗ sơn dầu.',value:16},
   qi_pill:{id:'qi_pill',name:'Tụ Khí Đan',kind:'pill',tier:'artifact',quality:'low',description:'Đan dược hỗ trợ người Luyện Khí.',value:18},

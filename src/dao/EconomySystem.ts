@@ -4,7 +4,7 @@ export interface TradeResult { ok:boolean; message:string; record?:TradeRecord; 
 export class EconomySystem {
   static readonly taxRate=.05;
   static count(items:Array<{itemId:string;count:number}>,id:string){return items.find(x=>x.itemId===id)?.count??0}
-  static add(items:Array<{itemId:string;count:number}>,id:TradeItemId,count:number){const found=items.find(x=>x.itemId===id);if(found)found.count+=count;else items.push({itemId:id,count})}
+  static add(items:Array<{itemId:string;count:number}>,id:string,count:number){const found=items.find(x=>x.itemId===id);if(found)found.count+=count;else items.push({itemId:id,count})}
   static remove(items:Array<{itemId:string;count:number}>,id:string,count:number){const found=items.find(x=>x.itemId===id);if(!found||count<=0||found.count<count)return false;found.count-=count;if(found.count===0)items.splice(items.indexOf(found),1);return true}
   static buyFromShop(world:DivineWorldSave,buyer:SimNPC,shopId:string,itemId:TradeItemId,count:number,day=world.clock.day,minute=world.clock.minute):TradeResult{
     const shop=world.shops.find(s=>s.id===shopId);if(!shop||!buyer.alive||!Number.isInteger(count)||count<1)return {ok:false,message:'Giao dịch không hợp lệ.'};
