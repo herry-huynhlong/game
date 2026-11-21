@@ -1,4 +1,5 @@
 /** Runtime boundary: snapshot legacy saves, then start only the isolated WORLD.REBUILD.1-B2 scene. */
+const WORLD_BUILD_ID=import.meta.env?.VITE_BUILD_ID||'local';
 export const LEGACY_SAVE_KEYS=['thanh-van-ky-save-v1','thien-dao-world-v1','thien-dao-world-devtest-v1'];
 export const LEGACY_ARCHIVE_KEY='thanh-van-legacy-world-archive-v1';
 export const NEW_WORLD_SAVE_KEY='thien-dao-world-v2';
@@ -12,6 +13,17 @@ export function archiveLegacyWorld(storage){
  catch(error){return{ok:false,key:LEGACY_ARCHIVE_KEY,sourceKeys:Object.keys(saves),alreadyArchived:false,error:error instanceof Error?error.message:'Không thể ghi bản sao lưu LocalStorage.'}}
 }
 
+function initializeWorldBoot(){
+ const phases=Object.fromEntries(['document','bundle','phaser','assets','map','population','ecosystem','ready','runtime'].map(name=>[name,{status:'not-started',detail:''}]));
+ let current='bundle';
+ const boot={buildId:WORLD_BUILD_ID,phases,setPhase(name,status,detail=''){if(!phases[name])phases[name]={status:'not-started',detail:''};phases[name]={status,detail,at:new Date().toISOString()};if(status==='running')current=name;if(status==='failed'){const title=document.getElementById('world-area-title'),subtitle=document.getElementById('world-camera-status');if(title)title.textContent=`Khởi tạo lỗi · ${name}`;if(subtitle)subtitle.textContent=detail||'Mở console để xem chi tiết.'}console.info('[world-boot]',JSON.stringify({buildId:WORLD_BUILD_ID,phase:name,status,detail}));return phases[name]},snapshot(){return{buildId:WORLD_BUILD_ID,current,phases}}};
+ window.__worldBoot=boot;boot.setPhase('document','complete');
+ window.addEventListener('error',event=>{if(phases.ready.status!=='complete')boot.setPhase(current,'failed',event.message||'JavaScript runtime error')});
+ window.addEventListener('unhandledrejection',event=>{if(phases.ready.status!=='complete')boot.setPhase(current,'failed',event.reason?.stack||event.reason?.message||String(event.reason))});
+ console.info('[world-boot]',JSON.stringify({buildId:WORLD_BUILD_ID,phase:'start',secureContext:isSecureContext,randomUUIDAvailable:typeof crypto?.randomUUID==='function'}));
+ return boot;
+}
+
 function mountWorldPage(archive){
  document.body.innerHTML=`<main id="world-shell"><div id="world-game" aria-label="Bản đồ Thanh Vân Ký"></div>
  <section id="world-toolbar" aria-label="Điều khiển bản đồ">
@@ -21,7 +33,7 @@ function mountWorldPage(archive){
  <aside id="world-caption"><b id="world-area-title">Đang tải bản đồ…</b><span id="world-camera-status">Thế giới đang được khởi tạo</span></aside>
  <aside id="world-save-state" class="${archive.ok?'':'warning'}" title="Lưu cũ được giữ an toàn">${archive.ok?'Lưu thế giới an toàn':`Lưu gốc được giữ · ${archive.error}`}</aside>
  <section id="world-map-menu" class="drawer" hidden><header><b>Bản đồ thế giới</b><button data-close-drawer>×</button></header><div class="map-regions"><button data-region="city">✦ Thanh Vân Thành <kbd>1</kbd></button><button data-region="north">♧ Đèo núi Bắc <kbd>2</kbd></button><button data-region="east">≈ Thảo nguyên Đông <kbd>3</kbd></button><button data-region="south">⌂ Ngoại thành Nam <kbd>4</kbd></button><button data-region="forest">♠ Rừng yêu thú <kbd>5</kbd></button></div><div class="minimap" aria-label="Sơ đồ vùng"><span class="mini-north">Núi</span><span class="mini-city">Thành</span><span class="mini-river">Sông</span><span class="mini-forest">Rừng</span><span class="mini-sect">Tông môn</span><i id="mini-view"></i></div><div class="drawer-row"><button id="world-overview">Toàn cảnh</button><button id="world-zoom-out" aria-label="Thu nhỏ">−</button><button id="world-zoom-in" aria-label="Phóng to">+</button></div></section>
- <section id="world-dev-menu" class="drawer" hidden><header><b>DEV · Công cụ kiểm tra</b><button data-close-drawer>×</button></header><p>Các công cụ bên dưới chỉ phục vụ kiểm tra thế giới.</p><div class="map-regions"><button data-ecology-view="deer">Tìm hươu</button><button data-ecology-view="predator">Tìm rắn / bọ cạp</button><button data-ecology-view="river">Tìm cá sông</button><button id="world-collision">Collision · C</button><button id="toggle-ecology-debug">Sinh thái / F3</button><button id="toggle-ai-debug">AI · 108 cư dân</button></div></section>
+ <section id="world-dev-menu" class="drawer" hidden><header><b>DEV · Kiểm tra · ${WORLD_BUILD_ID.slice(0,12)}</b><button data-close-drawer>×</button></header><p>Các công cụ bên dưới chỉ phục vụ kiểm tra thế giới.</p><div class="map-regions"><button data-ecology-view="deer">Tìm hươu</button><button data-ecology-view="predator">Tìm rắn / bọ cạp</button><button data-ecology-view="river">Tìm cá sông</button><button id="world-collision">Collision · C</button><button id="toggle-ecology-debug">Sinh thái / F3</button><button id="toggle-ai-debug">AI · 108 cư dân</button></div></section>
  <section id="world-roster-panel" class="drawer roster-drawer" hidden><header><b>Cư dân Thanh Vân</b><button data-close-drawer>×</button></header><input id="roster-search" placeholder="Tìm tên, nghề nghiệp…" autocomplete="off"><div id="roster-count" class="roster-count">108 cư dân</div><div id="roster-list" class="roster-list"></div></section>
  <div id="world-help">Kéo bản đồ · lăn chuột để phóng · chọn NPC để xem hồ sơ</div></main>
  <style>
@@ -30,6 +42,6 @@ function mountWorldPage(archive){
 }
 
 if(typeof window!=='undefined'&&typeof document!=='undefined'){
- const archive=archiveLegacyWorld(window.localStorage);mountWorldPage(archive);
- import('./world-rebuild-scene.js').then(({createRebuildGame})=>{const game=createRebuildGame();window.__worldRebuildGame=game;}).catch(error=>{console.error(error);document.getElementById('world-area-title').textContent='Không tải được world map';document.getElementById('world-camera-status').textContent=error.message;});
+ const boot=initializeWorldBoot();const archive=archiveLegacyWorld(window.localStorage);mountWorldPage(archive);boot.setPhase('bundle','running');
+ import('./world-rebuild-scene.js').then(({createRebuildGame})=>{boot.setPhase('bundle','complete');boot.setPhase('phaser','running');const game=createRebuildGame();window.__worldRebuildGame=game;game.events.once('ready',()=>boot.setPhase('phaser','complete'));}).catch(error=>{console.error(error);boot.setPhase('bundle','failed',error.stack||error.message);});
 }

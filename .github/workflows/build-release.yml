@@ -34,6 +34,8 @@ jobs:
 
       - name: Build production site
         run: npm run build
+        env:
+          VITE_BUILD_ID: ${{ github.sha }}
 
       - name: Validate production output
         run: node scripts/validate-release.mjs --dist

@@ -8,7 +8,9 @@ import { build } from 'esbuild';
 const root=process.cwd(),temp=fs.mkdtempSync(path.join(os.tmpdir(),'world-rebuild-1c-'));
 try{
  await build({entryPoints:['src/world-rebuild-population.js','src/dao/CityLawSystem.ts'],outdir:temp,bundle:true,platform:'node',format:'cjs',target:'node20',outExtension:{'.js':'.cjs'},logLevel:'silent'});
- const require=createRequire(import.meta.url),{loadWorldPopulation,WORLD_POPULATION_SAVE_KEY}=require(path.join(temp,'world-rebuild-population.cjs'));
+ const require=createRequire(import.meta.url),{createWorldUuid,loadWorldPopulation,WORLD_POPULATION_SAVE_KEY}=require(path.join(temp,'world-rebuild-population.cjs'));
+ const insecureContextCrypto={getRandomValues(bytes){bytes.set(Array.from({length:bytes.length},(_,i)=>i));return bytes}};
+ const fallbackUuid=createWorldUuid(insecureContextCrypto);assert.match(fallbackUuid,/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,'UUID v4 fallback works when randomUUID is unavailable on HTTP');
  const mapData=JSON.parse(fs.readFileSync(path.join(root,'maps/world-rebuild-1b.tmj'),'utf8'));
  const map={widthInPixels:mapData.width*mapData.tilewidth,heightInPixels:mapData.height*mapData.tileheight,getObjectLayer(name){return mapData.layers.find(l=>l.name===name)??null}};
  class Storage{data=new Map();getItem(k){return this.data.get(k)??null}setItem(k,v){this.data.set(k,v)}}
