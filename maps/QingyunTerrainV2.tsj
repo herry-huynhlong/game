@@ -1,0 +1,6417 @@
+{
+  "name": "QingyunTerrainV2",
+  "tilewidth": 32,
+  "tileheight": 32,
+  "tilecount": 256,
+  "columns": 16,
+  "spacing": 0,
+  "margin": 0,
+  "image": "../public/assets/tilesets/qingyun_terrain_v2.png",
+  "imagewidth": 512,
+  "imageheight": 512,
+  "objectalignment": "topleft",
+  "tilerendersize": "tile",
+  "fillmode": "stretch",
+  "properties": [
+    {
+      "name": "wangAutoTiling",
+      "type": "bool",
+      "value": true
+    }
+  ],
+  "tiles": [
+    {
+      "id": 0,
+      "type": "G01 Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G01"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "type": "G01 Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G01"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "G01 Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G01"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "G01 Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G01"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "G02 Red Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G02"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "G02 Red Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G02"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "G02 Red Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G02"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "G02 Red Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G02"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "G03 Dry Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G03"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "G03 Dry Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G03"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "G03 Dry Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G03"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "type": "G03 Dry Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G03"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "type": "G04 Damp Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G04"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "type": "G04 Damp Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G04"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "type": "G04 Damp Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G04"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "type": "G04 Damp Soil",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G04"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "type": "G05 Forest Floor",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G05"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "type": "G05 Forest Floor",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G05"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "type": "G05 Forest Floor",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G05"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "type": "G05 Forest Floor",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G05"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "type": "G06 Gravel",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G06"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "type": "G06 Gravel",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G06"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "type": "G06 Gravel",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G06"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "type": "G06 Gravel",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G06"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "type": "G07 Grass",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G07"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "type": "G07 Grass",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G07"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "type": "G07 Grass",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G07"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "type": "G07 Grass",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G07"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "type": "G08 Dry Grass",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G08"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "type": "G08 Dry Grass",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G08"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "type": "G08 Dry Grass",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G08"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "type": "G08 Dry Grass",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G08"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "type": "G09 Natural Stone",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G09"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "type": "G09 Natural Stone",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G09"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "type": "G09 Natural Stone",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G09"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "type": "G09 Natural Stone",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G09"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "type": "G10 City Paving",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G10"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "type": "G10 City Paving",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G10"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "type": "G10 City Paving",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G10"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "type": "G10 City Paving",
+      "properties": [
+        {
+          "name": "terrain",
+          "type": "string",
+          "value": "G10"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "type": "edge_6_0_0",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G01 Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "type": "edge_6_0_1",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G01 Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "type": "edge_6_0_2",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G01 Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "type": "edge_6_0_3",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G01 Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "type": "edge_6_0_4",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G01 Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "type": "edge_6_0_5",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G01 Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "type": "edge_6_0_6",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G01 Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "type": "edge_6_0_7",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G01 Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "type": "edge_6_4_0",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G05 Forest Floor"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "type": "edge_6_4_1",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G05 Forest Floor"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "type": "edge_6_4_2",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G05 Forest Floor"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "type": "edge_6_4_3",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G05 Forest Floor"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "type": "edge_6_4_4",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G05 Forest Floor"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "type": "edge_6_4_5",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G05 Forest Floor"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "type": "edge_6_4_6",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G05 Forest Floor"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "type": "edge_6_4_7",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G05 Forest Floor"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "type": "edge_0_5_0",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G06 Gravel"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": 57,
+      "type": "edge_0_5_1",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G06 Gravel"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 58,
+      "type": "edge_0_5_2",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G06 Gravel"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 59,
+      "type": "edge_0_5_3",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G06 Gravel"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 60,
+      "type": "edge_0_5_4",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G06 Gravel"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "type": "edge_0_5_5",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G06 Gravel"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 62,
+      "type": "edge_0_5_6",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G06 Gravel"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 63,
+      "type": "edge_0_5_7",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G06 Gravel"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 64,
+      "type": "edge_0_10_0",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": 65,
+      "type": "edge_0_10_1",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 66,
+      "type": "edge_0_10_2",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 67,
+      "type": "edge_0_10_3",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 68,
+      "type": "edge_0_10_4",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 69,
+      "type": "edge_0_10_5",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 70,
+      "type": "edge_0_10_6",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 71,
+      "type": "edge_0_10_7",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 72,
+      "type": "edge_6_9_0",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G10 City Paving"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": 73,
+      "type": "edge_6_9_1",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G10 City Paving"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 74,
+      "type": "edge_6_9_2",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G10 City Paving"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 75,
+      "type": "edge_6_9_3",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G10 City Paving"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 76,
+      "type": "edge_6_9_4",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G10 City Paving"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 77,
+      "type": "edge_6_9_5",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G10 City Paving"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 78,
+      "type": "edge_6_9_6",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G10 City Paving"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 79,
+      "type": "edge_6_9_7",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G10 City Paving"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 80,
+      "type": "edge_6_2_0",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G03 Dry Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": 81,
+      "type": "edge_6_2_1",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G03 Dry Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 82,
+      "type": "edge_6_2_2",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G03 Dry Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "type": "edge_6_2_3",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G03 Dry Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "type": "edge_6_2_4",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G03 Dry Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 85,
+      "type": "edge_6_2_5",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G03 Dry Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 86,
+      "type": "edge_6_2_6",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G03 Dry Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 87,
+      "type": "edge_6_2_7",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G07 Grass ↔ G03 Dry Soil"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 88,
+      "type": "edge_0_8_0",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G09 Natural Stone"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": 89,
+      "type": "edge_0_8_1",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G09 Natural Stone"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 90,
+      "type": "edge_0_8_2",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G09 Natural Stone"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 91,
+      "type": "edge_0_8_3",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G09 Natural Stone"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 92,
+      "type": "edge_0_8_4",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G09 Natural Stone"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 93,
+      "type": "edge_0_8_5",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G09 Natural Stone"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 94,
+      "type": "edge_0_8_6",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G09 Natural Stone"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 95,
+      "type": "edge_0_8_7",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G01 Soil ↔ G09 Natural Stone"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 96,
+      "type": "edge_4_10_0",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G05 Forest Floor ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": 97,
+      "type": "edge_4_10_1",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G05 Forest Floor ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 98,
+      "type": "edge_4_10_2",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G05 Forest Floor ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 99,
+      "type": "edge_4_10_3",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G05 Forest Floor ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 100,
+      "type": "edge_4_10_4",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G05 Forest Floor ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "type": "edge_4_10_5",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G05 Forest Floor ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "type": "edge_4_10_6",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G05 Forest Floor ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "type": "edge_4_10_7",
+      "properties": [
+        {
+          "name": "terrainTransition",
+          "type": "string",
+          "value": "G05 Forest Floor ↔ water"
+        },
+        {
+          "name": "edgeVariant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 109,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 110,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 111,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 112,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 113,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 9
+        }
+      ]
+    },
+    {
+      "id": 114,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "id": 115,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 11
+        }
+      ]
+    },
+    {
+      "id": 116,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "id": 117,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 13
+        }
+      ]
+    },
+    {
+      "id": 118,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 14
+        }
+      ]
+    },
+    {
+      "id": 119,
+      "type": "R01 Residential Earth",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R01"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 15
+        }
+      ]
+    },
+    {
+      "id": 120,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": 121,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 122,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 123,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 124,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 125,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 126,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 127,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 128,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 129,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 9
+        }
+      ]
+    },
+    {
+      "id": 130,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "id": 131,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 11
+        }
+      ]
+    },
+    {
+      "id": 132,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "id": 133,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 13
+        }
+      ]
+    },
+    {
+      "id": 134,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 14
+        }
+      ]
+    },
+    {
+      "id": 135,
+      "type": "R02 City Stone",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R02"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 15
+        }
+      ]
+    },
+    {
+      "id": 136,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": 137,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 138,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 139,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 140,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 141,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 142,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 143,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 144,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 145,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 9
+        }
+      ]
+    },
+    {
+      "id": 146,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "id": 147,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 11
+        }
+      ]
+    },
+    {
+      "id": 148,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "id": 149,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 13
+        }
+      ]
+    },
+    {
+      "id": 150,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 14
+        }
+      ]
+    },
+    {
+      "id": 151,
+      "type": "R03 Forest Trail",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R03"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 15
+        }
+      ]
+    },
+    {
+      "id": 152,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": 153,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 154,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 155,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 156,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 157,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 158,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 159,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 160,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 161,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 9
+        }
+      ]
+    },
+    {
+      "id": 162,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "id": 163,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 11
+        }
+      ]
+    },
+    {
+      "id": 164,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "id": 165,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 13
+        }
+      ]
+    },
+    {
+      "id": 166,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 14
+        }
+      ]
+    },
+    {
+      "id": 167,
+      "type": "R04 Sect Walkway",
+      "properties": [
+        {
+          "name": "roadStyle",
+          "type": "string",
+          "value": "R04"
+        },
+        {
+          "name": "neighborMask",
+          "type": "int",
+          "value": 15
+        }
+      ]
+    },
+    {
+      "id": 168,
+      "type": "cliff_face",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 169,
+      "type": "cliff_face",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 170,
+      "type": "cliff_face",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 171,
+      "type": "cliff_face",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 172,
+      "type": "cliff_face",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 173,
+      "type": "cliff_face",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 174,
+      "type": "cliff_face",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 175,
+      "type": "cliff_face",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 176,
+      "type": "cliff_lip",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_lip"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 177,
+      "type": "cliff_lip",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_lip"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 178,
+      "type": "cliff_lip",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_lip"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 179,
+      "type": "cliff_lip",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_lip"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 180,
+      "type": "cliff_lip",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_lip"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 181,
+      "type": "cliff_lip",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_lip"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 182,
+      "type": "cliff_lip",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_lip"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 183,
+      "type": "cliff_lip",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_lip"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 184,
+      "type": "cliff_corner",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 185,
+      "type": "cliff_corner",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 186,
+      "type": "cliff_corner",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 187,
+      "type": "cliff_corner",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 188,
+      "type": "cliff_corner",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 189,
+      "type": "cliff_corner",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 190,
+      "type": "cliff_corner",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 191,
+      "type": "cliff_corner",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 192,
+      "type": "cliff_foot",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_foot"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 193,
+      "type": "cliff_foot",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_foot"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 194,
+      "type": "cliff_foot",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_foot"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 195,
+      "type": "cliff_foot",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_foot"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 196,
+      "type": "cliff_foot",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_foot"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 197,
+      "type": "cliff_foot",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_foot"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 198,
+      "type": "cliff_foot",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_foot"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 199,
+      "type": "cliff_foot",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "cliff_foot"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 200,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 201,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 202,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 203,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 204,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 205,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 206,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 207,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 208,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 9
+        }
+      ]
+    },
+    {
+      "id": 209,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "id": 210,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 11
+        }
+      ]
+    },
+    {
+      "id": 211,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "id": 212,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 13
+        }
+      ]
+    },
+    {
+      "id": 213,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 14
+        }
+      ]
+    },
+    {
+      "id": 214,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 15
+        }
+      ]
+    },
+    {
+      "id": 215,
+      "type": "ground_detail",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "ground_detail"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "id": 216,
+      "type": "water_surface",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 217,
+      "type": "water_surface",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 218,
+      "type": "water_surface",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 219,
+      "type": "water_surface",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 220,
+      "type": "water_surface",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 221,
+      "type": "water_surface",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 222,
+      "type": "water_surface",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 223,
+      "type": "water_surface",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 224,
+      "type": "water_shore",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 9
+        }
+      ]
+    },
+    {
+      "id": 225,
+      "type": "water_shore",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "id": 226,
+      "type": "water_shore",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 11
+        }
+      ]
+    },
+    {
+      "id": 227,
+      "type": "water_shore",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "id": 228,
+      "type": "water_shore",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 13
+        }
+      ]
+    },
+    {
+      "id": 229,
+      "type": "water_shore",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 14
+        }
+      ]
+    },
+    {
+      "id": 230,
+      "type": "water_shore",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 15
+        }
+      ]
+    },
+    {
+      "id": 231,
+      "type": "water_shore",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "id": 232,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 233,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 234,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 235,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 236,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 237,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 238,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 239,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 240,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 9
+        }
+      ]
+    },
+    {
+      "id": 241,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "id": 242,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 11
+        }
+      ]
+    },
+    {
+      "id": 243,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "id": 244,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 13
+        }
+      ]
+    },
+    {
+      "id": 245,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 14
+        }
+      ]
+    },
+    {
+      "id": 246,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 15
+        }
+      ]
+    },
+    {
+      "id": 247,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "id": 248,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 17
+        }
+      ]
+    },
+    {
+      "id": 249,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 18
+        }
+      ]
+    },
+    {
+      "id": 250,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 19
+        }
+      ]
+    },
+    {
+      "id": 251,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 20
+        }
+      ]
+    },
+    {
+      "id": 252,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 21
+        }
+      ]
+    },
+    {
+      "id": 253,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 22
+        }
+      ]
+    },
+    {
+      "id": 254,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 23
+        }
+      ]
+    },
+    {
+      "id": 255,
+      "type": "stone_accent",
+      "properties": [
+        {
+          "name": "terrainFeature",
+          "type": "string",
+          "value": "stone_accent"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 24
+        }
+      ]
+    }
+  ],
+  "wangsets": [
+    {
+      "name": "Qingyun Terrain Biomes",
+      "type": "mixed",
+      "tile": 0,
+      "colors": [
+        {
+          "name": "G01 Soil",
+          "color": "#77523A",
+          "tile": 0,
+          "probability": 1
+        },
+        {
+          "name": "G02 Red Soil",
+          "color": "#915741",
+          "tile": 4,
+          "probability": 1
+        },
+        {
+          "name": "G03 Dry Soil",
+          "color": "#AC884B",
+          "tile": 8,
+          "probability": 1
+        },
+        {
+          "name": "G04 Damp Soil",
+          "color": "#685747",
+          "tile": 12,
+          "probability": 1
+        },
+        {
+          "name": "G05 Forest Floor",
+          "color": "#47583A",
+          "tile": 16,
+          "probability": 1
+        },
+        {
+          "name": "G06 Gravel",
+          "color": "#716552",
+          "tile": 20,
+          "probability": 1
+        },
+        {
+          "name": "G07 Grass",
+          "color": "#56804A",
+          "tile": 24,
+          "probability": 1
+        },
+        {
+          "name": "G08 Dry Grass",
+          "color": "#9B8C49",
+          "tile": 28,
+          "probability": 1
+        },
+        {
+          "name": "G09 Natural Stone",
+          "color": "#7C8578",
+          "tile": 32,
+          "probability": 1
+        },
+        {
+          "name": "G10 City Paving",
+          "color": "#8D9084",
+          "tile": 36,
+          "probability": 1
+        },
+        {
+          "name": "Water",
+          "color": "#39788A",
+          "tile": 40,
+          "probability": 1
+        }
+      ],
+      "wangtiles": [
+        {
+          "tileid": 0,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 1,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 2,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 3,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 4,
+          "wangid": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "tileid": 5,
+          "wangid": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "tileid": 6,
+          "wangid": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "tileid": 7,
+          "wangid": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "tileid": 8,
+          "wangid": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 9,
+          "wangid": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 10,
+          "wangid": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 11,
+          "wangid": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 12,
+          "wangid": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ]
+        },
+        {
+          "tileid": 13,
+          "wangid": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ]
+        },
+        {
+          "tileid": 14,
+          "wangid": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ]
+        },
+        {
+          "tileid": 15,
+          "wangid": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ]
+        },
+        {
+          "tileid": 16,
+          "wangid": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
+        {
+          "tileid": 17,
+          "wangid": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
+        {
+          "tileid": 18,
+          "wangid": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
+        {
+          "tileid": 19,
+          "wangid": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
+        {
+          "tileid": 20,
+          "wangid": [
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6
+          ]
+        },
+        {
+          "tileid": 21,
+          "wangid": [
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6
+          ]
+        },
+        {
+          "tileid": 22,
+          "wangid": [
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6
+          ]
+        },
+        {
+          "tileid": 23,
+          "wangid": [
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6
+          ]
+        },
+        {
+          "tileid": 24,
+          "wangid": [
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 25,
+          "wangid": [
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 26,
+          "wangid": [
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 27,
+          "wangid": [
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 28,
+          "wangid": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "tileid": 29,
+          "wangid": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "tileid": 30,
+          "wangid": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "tileid": 31,
+          "wangid": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "tileid": 32,
+          "wangid": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        {
+          "tileid": 33,
+          "wangid": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        {
+          "tileid": 34,
+          "wangid": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        {
+          "tileid": 35,
+          "wangid": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        {
+          "tileid": 36,
+          "wangid": [
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10
+          ]
+        },
+        {
+          "tileid": 37,
+          "wangid": [
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10
+          ]
+        },
+        {
+          "tileid": 38,
+          "wangid": [
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10
+          ]
+        },
+        {
+          "tileid": 39,
+          "wangid": [
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10
+          ]
+        },
+        {
+          "tileid": 40,
+          "wangid": [
+            1,
+            1,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 41,
+          "wangid": [
+            7,
+            7,
+            1,
+            1,
+            7,
+            7,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 42,
+          "wangid": [
+            7,
+            7,
+            7,
+            7,
+            1,
+            1,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 43,
+          "wangid": [
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 44,
+          "wangid": [
+            7,
+            7,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 45,
+          "wangid": [
+            1,
+            1,
+            7,
+            7,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 46,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            7,
+            7,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 47,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 48,
+          "wangid": [
+            5,
+            5,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 49,
+          "wangid": [
+            7,
+            7,
+            5,
+            5,
+            7,
+            7,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 50,
+          "wangid": [
+            7,
+            7,
+            7,
+            7,
+            5,
+            5,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 51,
+          "wangid": [
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            5,
+            5
+          ]
+        },
+        {
+          "tileid": 52,
+          "wangid": [
+            7,
+            7,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
+        {
+          "tileid": 53,
+          "wangid": [
+            5,
+            5,
+            7,
+            7,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
+        {
+          "tileid": 54,
+          "wangid": [
+            5,
+            5,
+            5,
+            5,
+            7,
+            7,
+            5,
+            5
+          ]
+        },
+        {
+          "tileid": 55,
+          "wangid": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 56,
+          "wangid": [
+            6,
+            6,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 57,
+          "wangid": [
+            1,
+            1,
+            6,
+            6,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 58,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            6,
+            6,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 59,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            6,
+            6
+          ]
+        },
+        {
+          "tileid": 60,
+          "wangid": [
+            1,
+            1,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6
+          ]
+        },
+        {
+          "tileid": 61,
+          "wangid": [
+            6,
+            6,
+            1,
+            1,
+            6,
+            6,
+            6,
+            6
+          ]
+        },
+        {
+          "tileid": 62,
+          "wangid": [
+            6,
+            6,
+            6,
+            6,
+            1,
+            1,
+            6,
+            6
+          ]
+        },
+        {
+          "tileid": 63,
+          "wangid": [
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 64,
+          "wangid": [
+            11,
+            11,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 65,
+          "wangid": [
+            1,
+            1,
+            11,
+            11,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 66,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            11,
+            11,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 67,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            11,
+            11
+          ]
+        },
+        {
+          "tileid": 68,
+          "wangid": [
+            1,
+            1,
+            11,
+            11,
+            11,
+            11,
+            11,
+            11
+          ]
+        },
+        {
+          "tileid": 69,
+          "wangid": [
+            11,
+            11,
+            1,
+            1,
+            11,
+            11,
+            11,
+            11
+          ]
+        },
+        {
+          "tileid": 70,
+          "wangid": [
+            11,
+            11,
+            11,
+            11,
+            1,
+            1,
+            11,
+            11
+          ]
+        },
+        {
+          "tileid": 71,
+          "wangid": [
+            11,
+            11,
+            11,
+            11,
+            11,
+            11,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 72,
+          "wangid": [
+            10,
+            10,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 73,
+          "wangid": [
+            7,
+            7,
+            10,
+            10,
+            7,
+            7,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 74,
+          "wangid": [
+            7,
+            7,
+            7,
+            7,
+            10,
+            10,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 75,
+          "wangid": [
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            10,
+            10
+          ]
+        },
+        {
+          "tileid": 76,
+          "wangid": [
+            7,
+            7,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10
+          ]
+        },
+        {
+          "tileid": 77,
+          "wangid": [
+            10,
+            10,
+            7,
+            7,
+            10,
+            10,
+            10,
+            10
+          ]
+        },
+        {
+          "tileid": 78,
+          "wangid": [
+            10,
+            10,
+            10,
+            10,
+            7,
+            7,
+            10,
+            10
+          ]
+        },
+        {
+          "tileid": 79,
+          "wangid": [
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 80,
+          "wangid": [
+            3,
+            3,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 81,
+          "wangid": [
+            7,
+            7,
+            3,
+            3,
+            7,
+            7,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 82,
+          "wangid": [
+            7,
+            7,
+            7,
+            7,
+            3,
+            3,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 83,
+          "wangid": [
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 84,
+          "wangid": [
+            7,
+            7,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 85,
+          "wangid": [
+            3,
+            3,
+            7,
+            7,
+            3,
+            3,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 86,
+          "wangid": [
+            3,
+            3,
+            3,
+            3,
+            7,
+            7,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 87,
+          "wangid": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            7,
+            7
+          ]
+        },
+        {
+          "tileid": 88,
+          "wangid": [
+            9,
+            9,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 89,
+          "wangid": [
+            1,
+            1,
+            9,
+            9,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 90,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            9,
+            9,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 91,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            9,
+            9
+          ]
+        },
+        {
+          "tileid": 92,
+          "wangid": [
+            1,
+            1,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        {
+          "tileid": 93,
+          "wangid": [
+            9,
+            9,
+            1,
+            1,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        {
+          "tileid": 94,
+          "wangid": [
+            9,
+            9,
+            9,
+            9,
+            1,
+            1,
+            9,
+            9
+          ]
+        },
+        {
+          "tileid": 95,
+          "wangid": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 96,
+          "wangid": [
+            11,
+            11,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
+        {
+          "tileid": 97,
+          "wangid": [
+            5,
+            5,
+            11,
+            11,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
+        {
+          "tileid": 98,
+          "wangid": [
+            5,
+            5,
+            5,
+            5,
+            11,
+            11,
+            5,
+            5
+          ]
+        },
+        {
+          "tileid": 99,
+          "wangid": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            11,
+            11
+          ]
+        },
+        {
+          "tileid": 100,
+          "wangid": [
+            5,
+            5,
+            11,
+            11,
+            11,
+            11,
+            11,
+            11
+          ]
+        },
+        {
+          "tileid": 101,
+          "wangid": [
+            11,
+            11,
+            5,
+            5,
+            11,
+            11,
+            11,
+            11
+          ]
+        },
+        {
+          "tileid": 102,
+          "wangid": [
+            11,
+            11,
+            11,
+            11,
+            5,
+            5,
+            11,
+            11
+          ]
+        },
+        {
+          "tileid": 103,
+          "wangid": [
+            11,
+            11,
+            11,
+            11,
+            11,
+            11,
+            5,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Qingyun Roads",
+      "type": "edge",
+      "tile": 104,
+      "colors": [
+        {
+          "name": "R01",
+          "color": "#A88659",
+          "tile": 104,
+          "probability": 1
+        },
+        {
+          "name": "R02",
+          "color": "#A9ADA1",
+          "tile": 120,
+          "probability": 1
+        },
+        {
+          "name": "R03",
+          "color": "#7C714B",
+          "tile": 136,
+          "probability": 1
+        },
+        {
+          "name": "R04",
+          "color": "#CFCEB9",
+          "tile": 152,
+          "probability": 1
+        }
+      ],
+      "wangtiles": [
+        {
+          "tileid": 104,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 105,
+          "wangid": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 106,
+          "wangid": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 107,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 108,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 109,
+          "wangid": [
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 110,
+          "wangid": [
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 111,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 112,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 113,
+          "wangid": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 114,
+          "wangid": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 115,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 116,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 117,
+          "wangid": [
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 118,
+          "wangid": [
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 119,
+          "wangid": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "tileid": 120,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 121,
+          "wangid": [
+            2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 122,
+          "wangid": [
+            0,
+            0,
+            2,
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 123,
+          "wangid": [
+            2,
+            2,
+            2,
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 124,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            2,
+            2,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 125,
+          "wangid": [
+            2,
+            2,
+            0,
+            0,
+            2,
+            2,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 126,
+          "wangid": [
+            0,
+            0,
+            2,
+            2,
+            2,
+            2,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 127,
+          "wangid": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 128,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            2
+          ]
+        },
+        {
+          "tileid": 129,
+          "wangid": [
+            2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            2,
+            2
+          ]
+        },
+        {
+          "tileid": 130,
+          "wangid": [
+            0,
+            0,
+            2,
+            2,
+            0,
+            0,
+            2,
+            2
+          ]
+        },
+        {
+          "tileid": 131,
+          "wangid": [
+            2,
+            2,
+            2,
+            2,
+            0,
+            0,
+            2,
+            2
+          ]
+        },
+        {
+          "tileid": 132,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "tileid": 133,
+          "wangid": [
+            2,
+            2,
+            0,
+            0,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "tileid": 134,
+          "wangid": [
+            0,
+            0,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "tileid": 135,
+          "wangid": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "tileid": 136,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 137,
+          "wangid": [
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 138,
+          "wangid": [
+            0,
+            0,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 139,
+          "wangid": [
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 140,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            3,
+            3,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 141,
+          "wangid": [
+            3,
+            3,
+            0,
+            0,
+            3,
+            3,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 142,
+          "wangid": [
+            0,
+            0,
+            3,
+            3,
+            3,
+            3,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 143,
+          "wangid": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 144,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 145,
+          "wangid": [
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 146,
+          "wangid": [
+            0,
+            0,
+            3,
+            3,
+            0,
+            0,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 147,
+          "wangid": [
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 148,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            3,
+            3,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 149,
+          "wangid": [
+            3,
+            3,
+            0,
+            0,
+            3,
+            3,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 150,
+          "wangid": [
+            0,
+            0,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 151,
+          "wangid": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ]
+        },
+        {
+          "tileid": 152,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 153,
+          "wangid": [
+            4,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 154,
+          "wangid": [
+            0,
+            0,
+            4,
+            4,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 155,
+          "wangid": [
+            4,
+            4,
+            4,
+            4,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 156,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            4,
+            4,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 157,
+          "wangid": [
+            4,
+            4,
+            0,
+            0,
+            4,
+            4,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 158,
+          "wangid": [
+            0,
+            0,
+            4,
+            4,
+            4,
+            4,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 159,
+          "wangid": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            0,
+            0
+          ]
+        },
+        {
+          "tileid": 160,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            4,
+            4
+          ]
+        },
+        {
+          "tileid": 161,
+          "wangid": [
+            4,
+            4,
+            0,
+            0,
+            0,
+            0,
+            4,
+            4
+          ]
+        },
+        {
+          "tileid": 162,
+          "wangid": [
+            0,
+            0,
+            4,
+            4,
+            0,
+            0,
+            4,
+            4
+          ]
+        },
+        {
+          "tileid": 163,
+          "wangid": [
+            4,
+            4,
+            4,
+            4,
+            0,
+            0,
+            4,
+            4
+          ]
+        },
+        {
+          "tileid": 164,
+          "wangid": [
+            0,
+            0,
+            0,
+            0,
+            4,
+            4,
+            4,
+            4
+          ]
+        },
+        {
+          "tileid": 165,
+          "wangid": [
+            4,
+            4,
+            0,
+            0,
+            4,
+            4,
+            4,
+            4
+          ]
+        },
+        {
+          "tileid": 166,
+          "wangid": [
+            0,
+            0,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ]
+        },
+        {
+          "tileid": 167,
+          "wangid": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ]
+        }
+      ]
+    }
+  ],
+  "type": "tileset",
+  "version": "1.10",
+  "tiledversion": "1.12.2"
+}

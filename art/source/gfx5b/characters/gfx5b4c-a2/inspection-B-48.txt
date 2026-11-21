@@ -1,0 +1,13 @@
+canvas=48x64
+frames=1
+layers=8
+tags=0
+layer=shadow
+layer=legs
+layer=hair_back
+layer=robe
+layer=arms
+layer=face
+layer=hair_front
+layer=details
+frame 0 duration=0.24

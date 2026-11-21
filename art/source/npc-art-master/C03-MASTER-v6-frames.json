@@ -1,0 +1,24 @@
+{
+  "asset": "C03-MASTER-v6",
+  "canvas": { "width": 48, "height": 64, "colorMode": "RGBA8888" },
+  "frameOrder": [
+    { "index": 0, "direction": "South", "view": "front / nhìn xuống" },
+    { "index": 1, "direction": "North", "view": "back / nhìn lên" },
+    { "index": 2, "direction": "West", "view": "profile / nhìn trái" },
+    { "index": 3, "direction": "East", "view": "profile / nhìn phải" }
+  ],
+  "durationMs": 1000,
+  "note": "Four distinct static poses; duration is metadata only, not an animation approval.",
+  "layers": [
+    "01 Contact Shadow",
+    "02 Hair Back",
+    "03 Robe Silhouette",
+    "04 Face and Neck",
+    "05 Robe Cloth and Folds",
+    "06 Sleeves and Sash",
+    "07 Hair Front and Details",
+    "08 Face Features",
+    "09 Feet and Embroidery"
+  ],
+  "authorship": "Pixel runs authored in build-c03-master-v6.mjs and rendered through the local Codex Pixel Bridge with Aseprite CLI; not Pixelorama, not AI, and not an imported image."
+}

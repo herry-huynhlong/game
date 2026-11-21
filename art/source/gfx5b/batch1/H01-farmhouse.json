@@ -1,0 +1,20 @@
+{ "frames": [
+   {
+    "filename": "H01-farmhouse.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 144, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 144, "h": 120 },
+    "sourceSize": { "w": 144, "h": 120 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3.18.6-12-geccf4ec29-dev",
+  "image": "H01-farmhouse.png",
+  "format": "RGBA8888",
+  "size": { "w": 144, "h": 120 },
+  "scale": "1"
+ }
+}

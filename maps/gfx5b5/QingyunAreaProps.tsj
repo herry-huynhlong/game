@@ -1,0 +1,115 @@
+{
+  "type": "tileset",
+  "version": "1.10",
+  "tiledversion": "1.12.2",
+  "name": "QingyunAreaProps",
+  "tilewidth": 128,
+  "tileheight": 128,
+  "tilecount": 8,
+  "columns": 4,
+  "spacing": 0,
+  "margin": 0,
+  "image": "../../public/assets/props/gfx5b5_area_props.png",
+  "imagewidth": 512,
+  "imageheight": 256,
+  "objectalignment": "topleft",
+  "tilerendersize": "tile",
+  "fillmode": "stretch",
+  "tiles": [
+    {
+      "id": 0,
+      "type": "wooden_bridge",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "wooden_bridge"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "type": "market_cart",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "market_cart"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "sect_stele",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "sect_stele"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "sect_banner",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "sect_banner"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "meditation_mat",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "meditation_mat"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "brazier",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "brazier"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "wood_fence",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "wood_fence"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "mission_board",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "mission_board"
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "source",
+      "type": "string",
+      "value": "Aseprite Lua generated area props"
+    }
+  ]
+}

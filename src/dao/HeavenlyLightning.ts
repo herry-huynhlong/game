@@ -1,0 +1,15 @@
+import type { DivineWorldSave, SimNPC } from './types';
+import { cultivationStats } from '../systems/CultivationSystem';
+import { DivineResourceSystem } from './DivineResourceSystem';
+import { HEAVENLY_POWERS } from './HeavenlyPowerSystem';
+import { WorldEventSystem } from './WorldEventSystem';
+import { WorldRewardSystem } from './WorldRewardSystem';
+
+export function lightningDamage(n:SimNPC){const stats=cultivationStats(n),cfg=HEAVENLY_POWERS['heavenly-punishment'];return Math.min(n.hp,Math.max(1,Math.round(stats.hpMax*(cfg.damageRatio??.3)-stats.defense*(cfg.defenseFactor??.5))))}
+export function strikeLightning(world:DivineWorldSave,n:SimNPC,now=Date.now()){
+ const h=world.heaven,cfg=HEAVENLY_POWERS['heavenly-punishment'];if(!h.unlocked.includes(cfg.id))return {ok:false,message:'Thiên Lôi chưa mở khóa.',damage:0};if(!world.npcs.includes(n)||!n.alive||n.ascended||h.possession?.npcId===n.id||n.hp<=0)return {ok:false,message:'Mục tiêu không hợp lệ.',damage:0};if(now<(h.lightningReadyAt??0))return {ok:false,message:'Thiên Lôi đang hồi chiêu.',damage:0};if(!DivineResourceSystem.spendPower(h,cfg.cost))return {ok:false,message:'Không đủ Thần Lực.',damage:0};
+ const damage=lightningDamage(n);n.hp=Math.max(0,n.hp-damage);h.lightningReadyAt=now+(cfg.cooldown??60000);n.actionProgress=0;n.safety=Math.max(0,n.safety-55);n.mood=Math.max(0,n.mood-15);n.decisionSlot=undefined;const brave=n.realmIndex>=2||(n.traits.canDam??0)>=70;n.goalAction=brave?'rest':'flee';n.action='travel';n.shortGoal=brave?'Bình tĩnh hồi phục sau thiên lôi':'Rút lui khỏi nơi giáng lôi';n.actionTarget=brave?(n.home??{x:n.x,y:n.y}):{x:2500,y:1000};n.memories.push({day:world.clock.day,text:'Bị thiên lôi giáng xuống.',kind:'danger'});n.memories=n.memories.slice(-12);
+ const events=new WorldEventSystem(world.events,world);const id=`lightning:${n.id}:${now}`;events.publish({id,type:'heavenly-lightning',day:world.clock.day,minute:world.clock.minute,actorId:'heaven',targetId:n.id,description:`Thiên Lôi giáng lên ${n.name}, gây ${damage} sát thương.`,status:'completed'});for(const witness of world.npcs)if(witness.alive&&witness.id!==n.id&&Math.hypot(witness.x-n.x,witness.y-n.y)<240){witness.mood=Math.max(0,witness.mood-3);witness.memories.push({day:world.clock.day,text:`Chứng kiến thiên lôi giáng lên ${n.name}.`,kind:'danger'});witness.memories=witness.memories.slice(-12)}
+ if(n.hp<=0){n.alive=false;n.deathCause='Thiên Phạt';n.action='idle';n.goalAction='idle';for(const m of world.sectMissions??[])if(m.assigneeId===n.id&&m.status==='active')m.status='failed';n.assignedMissionId=null;for(const f of world.factions??[])f.memberIds=f.memberIds.filter(id=>id!==n.id);const deathId=`npc-death:lightning:${n.id}`;events.publish({id:deathId,type:'npc-death',day:world.clock.day,minute:world.clock.minute,actorId:n.id,description:`${n.name} tử vong vì Thiên Phạt.`,status:'completed',data:{cause:'Thiên Phạt',realmIndex:n.realmIndex}});WorldRewardSystem.claimAscendantDeath(world,events,deathId,n)}
+ return {ok:true,message:`Thiên Lôi gây ${damage} sát thương cho ${n.name}.`,damage};
+}

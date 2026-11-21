@@ -1,0 +1,7 @@
+import assert from 'node:assert/strict';
+import { build } from 'esbuild';
+const bundle=await build({entryPoints:['src/dao/SaveGuard.ts'],bundle:true,platform:'node',format:'esm',write:false,logLevel:'silent'});
+const {SaveGuard}=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
+const data=new Map([['save','original']]);const storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
+const one=new SaveGuard(storage,'save'),two=new SaveGuard(storage,'save');assert.equal(one.write('new-state'),true);assert.equal(two.write('stale-state'),false);assert.equal(data.get('save'),'new-state');assert.equal(one.write('next-state'),true);const reloaded=new SaveGuard(storage,'save');assert.equal(reloaded.write('reloaded-state'),true);assert.equal(one.write('old-again'),false);assert.equal(data.get('save'),'reloaded-state');
+console.log('PASS: concurrent tabs cannot overwrite a changed save');

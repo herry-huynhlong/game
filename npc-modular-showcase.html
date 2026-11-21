@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thanh Vân Ký — Modular NPC Showcase</title>
+  <link rel="stylesheet" href="/src/npc-modular-showcase.css">
+</head>
+<body>
+  <main class="shell">
+    <header><p class="eyebrow">THANH VÂN KÝ · ART LAB</p><h1>Nhân vật lắp ghép</h1><p>Đổi các bộ phận trên cùng một body và xem đồng bộ bốn hướng, đứng hoặc đi. Thay đổi ở trang này chỉ là bản xem trước.</p></header>
+    <section class="layout">
+      <div class="preview-card">
+        <div class="preview-title"><strong id="npc-name">Đang tải NPC…</strong><span id="npc-role"></span></div>
+        <div class="stage"><canvas id="preview" width="256" height="320" aria-label="Bản xem trước nhân vật Pixel Art"></canvas></div>
+        <div class="actions"><button id="prev">‹ Người trước</button><button id="next">Người tiếp ›</button><button id="animate">▶ Đi bộ</button></div>
+        <p class="meta" id="part-labels"></p>
+      </div>
+      <div class="controls">
+        <label>NPC <select id="npc"></select></label>
+        <label>Hướng <select id="direction"><option value="0">Nam · nhìn xuống</option><option value="1">Bắc · nhìn lên</option><option value="2">Tây · nhìn trái</option><option value="3">Đông · nhìn phải</option></select></label>
+        <label>Tóc <select id="hair"></select></label>
+        <label>Khuôn mặt <select id="face"></select></label>
+        <label>Y phục <select id="outfit"></select></label>
+        <label>Phụ kiện <select id="accessory"><option value="">Không dùng</option></select></label>
+        <fieldset><legend>Lớp hiển thị</legend><label><input type="checkbox" data-layer="outfit" checked> Áo</label><label><input type="checkbox" data-layer="face" checked> Mặt</label><label><input type="checkbox" data-layer="hair" checked> Tóc</label><label><input type="checkbox" data-layer="accessory" checked> Phụ kiện</label></fieldset>
+        <p class="hint">Phóng to nearest-neighbor 8× · vùng nhìn pixel gốc 32×40 · animation body lấy từ sprite đang dùng trong game.</p>
+      </div>
+    </section>
+    <footer id="status">Đang nạp source modular…</footer>
+  </main>
+  <script type="module" src="/src/npc-modular-showcase.js"></script>
+</body>
+</html>

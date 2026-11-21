@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0",
+  "rigId": "qingyun-disciple-v1",
+  "status": "art-blocked",
+  "targetFrame": { "width": 32, "height": 48 },
+  "directions": ["down", "up", "left", "right"],
+  "slots": [
+    "body", "face", "hair_back", "hair_front", "outfit_torso",
+    "outfit_sleeve_left", "outfit_sleeve_right", "outfit_lower",
+    "footwear", "head_accessory", "weapon"
+  ],
+  "parts": [],
+  "drawOrder": {
+    "down": ["body", "outfit_lower", "footwear", "hair_back", "outfit_torso", "outfit_sleeve_left", "outfit_sleeve_right", "face", "hair_front", "head_accessory", "weapon"],
+    "up": ["body", "outfit_lower", "footwear", "hair_back", "outfit_torso", "outfit_sleeve_left", "outfit_sleeve_right", "face", "hair_front", "head_accessory", "weapon"],
+    "left": ["body", "outfit_lower", "footwear", "hair_back", "outfit_torso", "outfit_sleeve_left", "outfit_sleeve_right", "face", "hair_front", "head_accessory", "weapon"],
+    "right": ["body", "outfit_lower", "footwear", "hair_back", "outfit_torso", "outfit_sleeve_left", "outfit_sleeve_right", "face", "hair_front", "head_accessory", "weapon"]
+  },
+  "targetAnchors": {
+    "down": { "headCenter": { "x": 16, "y": 9 }, "neck": { "x": 16, "y": 14 }, "shoulderLeft": { "x": 11, "y": 16 }, "shoulderRight": { "x": 21, "y": 16 }, "waist": { "x": 16, "y": 28 }, "handLeft": { "x": 10, "y": 25 }, "handRight": { "x": 22, "y": 25 }, "weaponGrip": { "x": 22, "y": 24 }, "feetCenter": { "x": 16, "y": 43 } },
+    "up": { "headCenter": { "x": 16, "y": 9 }, "neck": { "x": 16, "y": 14 }, "shoulderLeft": { "x": 11, "y": 16 }, "shoulderRight": { "x": 21, "y": 16 }, "waist": { "x": 16, "y": 28 }, "handLeft": { "x": 10, "y": 25 }, "handRight": { "x": 22, "y": 25 }, "weaponGrip": { "x": 22, "y": 24 }, "feetCenter": { "x": 16, "y": 43 } },
+    "left": { "headCenter": { "x": 15, "y": 9 }, "neck": { "x": 15, "y": 14 }, "shoulderLeft": { "x": 12, "y": 16 }, "shoulderRight": { "x": 18, "y": 16 }, "waist": { "x": 15, "y": 28 }, "handLeft": { "x": 11, "y": 25 }, "handRight": { "x": 18, "y": 25 }, "weaponGrip": { "x": 11, "y": 24 }, "feetCenter": { "x": 16, "y": 43 } },
+    "right": { "headCenter": { "x": 17, "y": 9 }, "neck": { "x": 17, "y": 14 }, "shoulderLeft": { "x": 14, "y": 16 }, "shoulderRight": { "x": 20, "y": 16 }, "waist": { "x": 17, "y": 28 }, "handLeft": { "x": 14, "y": 25 }, "handRight": { "x": 21, "y": 25 }, "weaponGrip": { "x": 21, "y": 24 }, "feetCenter": { "x": 16, "y": 43 } }
+  },
+  "sourceAudit": [
+    { "assetId": "C01", "source": "art/source/gfx5b/characters/C01.aseprite", "canvas": { "width": 32, "height": 40 }, "frames": 32, "layers": ["shadow", "legs", "hair_back", "robe", "arms", "face", "hair_front", "details"], "fourDirections": true, "walk": true, "cleanBody": false, "finding": "Hiding hair, face, robe and details removes the head skin and torso; the face and robe layers contain base anatomy/clothing rather than separable overlays." },
+    { "assetId": "C02", "source": "art/source/gfx5b/characters/C02.aseprite", "canvas": { "width": 32, "height": 40 }, "frames": 32, "layers": ["shadow", "legs", "hair_back", "robe", "arms", "face", "hair_front", "details"], "fourDirections": true, "walk": true, "cleanBody": false, "finding": "Layered four-direction source; current layer boundaries do not provide a neutral body suitable for swapping face, hair and outfit independently." },
+    { "assetId": "C03", "source": "art/source/gfx5b/characters/C03.aseprite", "canvas": { "width": 32, "height": 40 }, "frames": 32, "layers": ["shadow", "legs", "hair_back", "robe", "arms", "face", "hair_front", "details"], "fourDirections": true, "walk": true, "cleanBody": false, "finding": "Layered four-direction source; current layer boundaries do not provide a neutral body suitable for swapping face, hair and outfit independently." }
+  ],
+  "missingRequirements": [
+    "Approved neutral body with complete head, neck, hands, legs and feet visible beneath replaceable clothing.",
+    "Face base separated from eyes, brows, nose and mouth overlays.",
+    "Outfit torso, left/right sleeves, lower robe and footwear separated by direction and frame.",
+    "Measured direction-specific anchors and attachment points from approved source art.",
+    "Art review of one complete character composite before making variants."
+  ],
+  "notes": "Technical rig contract only. The 32x48 target and anchors are provisional layout coordinates, not measurements from approved artwork. No source art is approved and no part may be presented as a finished modular character."
+}

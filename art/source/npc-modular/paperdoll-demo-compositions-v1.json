@@ -1,0 +1,38 @@
+{
+  "demoOnly": true,
+  "compositions": [
+    {
+      "id": "sample-a-source-c01",
+      "label": "Mẫu A · C01 nguyên gốc",
+      "outfitBase": "C01-outfit-base",
+      "headBase": "C01-head-base",
+      "hairBack": "C01-hair-back",
+      "hairFront": "C01-hair-front",
+      "details": "C01-details",
+      "equipment": null,
+      "review": "source reconstruction"
+    },
+    {
+      "id": "sample-b-change-hair-c02",
+      "label": "Mẫu B · đổi tóc C02",
+      "outfitBase": "C01-outfit-base",
+      "headBase": "C01-head-base",
+      "hairBack": "C02-hair-back",
+      "hairFront": "C02-hair-front",
+      "details": "C01-details",
+      "equipment": null,
+      "review": "technical cross-source test; art review required"
+    },
+    {
+      "id": "sample-c-base-c02-hair-c01",
+      "label": "Mẫu C · outfit/head C02, tóc C01",
+      "outfitBase": "C02-outfit-base",
+      "headBase": "C02-head-base",
+      "hairBack": "C01-hair-back",
+      "hairFront": "C01-hair-front",
+      "details": "C02-details",
+      "equipment": null,
+      "review": "technical cross-source test; art review required"
+    }
+  ]
+}

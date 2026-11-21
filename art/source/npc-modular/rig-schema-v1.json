@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://thanhvanky.local/schemas/npc-modular-rig-v1.json",
+  "title": "Thanh Vân Ký modular NPC rig v1",
+  "type": "object",
+  "required": ["schemaVersion", "rigId", "status", "targetFrame", "directions", "slots", "parts", "drawOrder", "targetAnchors", "sourceAudit", "missingRequirements"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "rigId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$" },
+    "status": { "enum": ["art-blocked", "prototype", "review", "approved"] },
+    "targetFrame": { "$ref": "#/$defs/size" },
+    "directions": { "type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true, "items": { "enum": ["down", "up", "left", "right"] } },
+    "slots": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["body", "face", "hair_back", "hair_front", "outfit_torso", "outfit_sleeve_left", "outfit_sleeve_right", "outfit_lower", "footwear", "head_accessory", "weapon"] } },
+    "parts": { "type": "array", "items": { "$ref": "#/$defs/part" } },
+    "drawOrder": { "type": "object", "required": ["down", "up", "left", "right"], "properties": { "down": { "$ref": "#/$defs/order" }, "up": { "$ref": "#/$defs/order" }, "left": { "$ref": "#/$defs/order" }, "right": { "$ref": "#/$defs/order" } }, "additionalProperties": false },
+    "targetAnchors": { "type": "object", "required": ["down", "up", "left", "right"], "properties": { "down": { "$ref": "#/$defs/anchors" }, "up": { "$ref": "#/$defs/anchors" }, "left": { "$ref": "#/$defs/anchors" }, "right": { "$ref": "#/$defs/anchors" } }, "additionalProperties": false },
+    "sourceAudit": { "type": "array", "items": { "type": "object", "required": ["assetId", "source", "canvas", "frames", "layers", "fourDirections", "walk", "cleanBody", "finding"], "properties": { "assetId": { "type": "string" }, "source": { "type": "string" }, "canvas": { "$ref": "#/$defs/size" }, "frames": { "type": "integer", "minimum": 1 }, "layers": { "type": "array", "items": { "type": "string" } }, "fourDirections": { "type": "boolean" }, "walk": { "type": "boolean" }, "cleanBody": { "type": "boolean" }, "finding": { "type": "string" } }, "additionalProperties": false } },
+    "missingRequirements": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "size": { "type": "object", "required": ["width", "height"], "properties": { "width": { "type": "integer", "minimum": 1, "maximum": 2048 }, "height": { "type": "integer", "minimum": 1, "maximum": 2048 } }, "additionalProperties": false },
+    "point": { "type": "object", "required": ["x", "y"], "properties": { "x": { "type": "integer" }, "y": { "type": "integer" } }, "additionalProperties": false },
+    "anchors": { "type": "object", "additionalProperties": { "$ref": "#/$defs/point" } },
+    "order": { "type": "array", "items": { "enum": ["shadow", "body", "footwear", "outfit_lower", "outfit_torso", "outfit_sleeve_left", "outfit_sleeve_right", "face", "hair_back", "hair_front", "head_accessory", "weapon"] }, "uniqueItems": true },
+    "animation": { "type": "object", "required": ["start", "end", "fps"], "properties": { "start": { "type": "integer", "minimum": 0 }, "end": { "type": "integer", "minimum": 0 }, "fps": { "type": "number", "exclusiveMinimum": 0, "maximum": 60 } }, "additionalProperties": false },
+    "part": { "type": "object", "required": ["id", "slot", "status", "source", "frameSize", "frameCount", "supportedDirections", "animations", "anchors", "compatibleBodyIds"], "properties": { "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$" }, "slot": { "enum": ["body", "face", "hair_back", "hair_front", "outfit_torso", "outfit_sleeve_left", "outfit_sleeve_right", "outfit_lower", "footwear", "head_accessory", "weapon"] }, "status": { "enum": ["draft", "review", "approved"] }, "source": { "type": ["string", "null"] }, "frameSize": { "$ref": "#/$defs/size" }, "frameCount": { "type": "integer", "minimum": 1 }, "supportedDirections": { "type": "array", "items": { "enum": ["down", "up", "left", "right"] }, "uniqueItems": true }, "animations": { "type": "object", "additionalProperties": { "type": "object", "additionalProperties": { "$ref": "#/$defs/animation" } } }, "anchors": { "type": "object", "additionalProperties": { "$ref": "#/$defs/anchors" } }, "attachment": { "type": ["object", "null"], "properties": { "targetSlot": { "type": "string" }, "targetAnchor": { "type": "string" }, "sourceAnchor": { "type": "string" } }, "required": ["targetSlot", "targetAnchor", "sourceAnchor"], "additionalProperties": false }, "compatibleBodyIds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true } }, "additionalProperties": false }
+  }
+}

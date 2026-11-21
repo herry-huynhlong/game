@@ -1,0 +1,28 @@
+{
+  "canvas": {
+    "width": 48,
+    "height": 64
+  },
+  "frameOrder": [
+    "north",
+    "north_east",
+    "east",
+    "south_east",
+    "south",
+    "south_west",
+    "west",
+    "north_west"
+  ],
+  "facing": "north means away from camera; south means toward camera",
+  "layerOrderBottomToTop": [
+    "shadow",
+    "boots",
+    "robe_back",
+    "body",
+    "sleeves",
+    "hair",
+    "trim"
+  ],
+  "fps": 1,
+  "status": "eight independently composed idle views; no walk cycle yet"
+}

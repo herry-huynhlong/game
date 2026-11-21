@@ -1,0 +1,333 @@
+{
+  "frames": {
+    "ancient_tree": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "bamboo_grove": {
+      "frame": {
+        "x": 128,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "boulder": {
+      "frame": {
+        "x": 256,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "spirit_crystal": {
+      "frame": {
+        "x": 384,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "red_lantern": {
+      "frame": {
+        "x": 0,
+        "y": 96,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "sect_hall": {
+      "frame": {
+        "x": 128,
+        "y": 96,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "village_house": {
+      "frame": {
+        "x": 256,
+        "y": 96,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "qingyun_gate": {
+      "frame": {
+        "x": 384,
+        "y": 96,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "training_pavilion": {
+      "frame": {
+        "x": 0,
+        "y": 192,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "herb_hut": {
+      "frame": {
+        "x": 128,
+        "y": 192,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "spirit_tree": {
+      "frame": {
+        "x": 256,
+        "y": 192,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "willow_tree": {
+      "frame": {
+        "x": 384,
+        "y": 192,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "stone_lantern": {
+      "frame": {
+        "x": 0,
+        "y": 288,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "mossy_rock": {
+      "frame": {
+        "x": 128,
+        "y": 288,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "jade_spire": {
+      "frame": {
+        "x": 256,
+        "y": 288,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    },
+    "teahouse": {
+      "frame": {
+        "x": 384,
+        "y": 288,
+        "w": 128,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 96
+      }
+    }
+  },
+  "meta": {
+    "image": "world_props.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 512,
+      "h": 384
+    },
+    "scale": "1"
+  }
+}

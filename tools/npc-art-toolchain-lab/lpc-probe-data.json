@@ -1,0 +1,6796 @@
+{
+  "toolList": [
+    {
+      "name": "generate_spritesheet",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "bodyType": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female",
+              "teen",
+              "child",
+              "muscular",
+              "pregnant"
+            ],
+            "description": "Body type. Default: male."
+          },
+          "preset": {
+            "type": "string",
+            "description": "Named starting character from list_presets (e.g. knight, mage, blacksmith). Its selections/colors/bodyType form the base; explicit selections/colors merge on top."
+          },
+          "selections": {
+            "type": "object",
+            "description": "Selection groups (type_name from list_categories) -> itemId | \"none\" | {itemId, variant?, recolor?}. Defaults: body=light, head=human male, expression=neutral. Use list_items to discover itemIds.",
+            "additionalProperties": true
+          },
+          "colors": {
+            "type": "object",
+            "description": "Color overrides per selection group, e.g. {body:\"amber\", hair:\"blonde\", clothes:\"red\", eyes:\"blue\"}. Color names from list_palettes / list_items.",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "character": {
+            "type": "object",
+            "description": "Alternatively, a saved-character JSON (app export, {version:2, selections}) as the base. Explicit selections/colors merge on top.",
+            "additionalProperties": true
+          },
+          "match_body_color": {
+            "type": "boolean",
+            "description": "Propagate body color to head/face/ears. Default true."
+          },
+          "output_path": {
+            "type": "string",
+            "description": "Absolute or relative PNG output path (parents are created; relative resolves against the server's cwd). Default: lpc-spritesheet/<name>-<timestamp>.png under the OS temp directory."
+          },
+          "include_credits": {
+            "type": "boolean",
+            "description": "Also write <name>-credits.csv/.txt with per-asset attribution (required by the asset licenses). Default true."
+          },
+          "include_character_json": {
+            "type": "boolean",
+            "description": "Also write <name>-character.json with the resolved selections. Default false."
+          }
+        }
+      }
+    },
+    {
+      "name": "get_animation",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "bodyType": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female",
+              "teen",
+              "child",
+              "muscular",
+              "pregnant"
+            ],
+            "description": "Body type. Default: male."
+          },
+          "preset": {
+            "type": "string",
+            "description": "Named starting character from list_presets (e.g. knight, mage, blacksmith). Its selections/colors/bodyType form the base; explicit selections/colors merge on top."
+          },
+          "selections": {
+            "type": "object",
+            "description": "Selection groups (type_name from list_categories) -> itemId | \"none\" | {itemId, variant?, recolor?}. Defaults: body=light, head=human male, expression=neutral. Use list_items to discover itemIds.",
+            "additionalProperties": true
+          },
+          "colors": {
+            "type": "object",
+            "description": "Color overrides per selection group, e.g. {body:\"amber\", hair:\"blonde\", clothes:\"red\", eyes:\"blue\"}. Color names from list_palettes / list_items.",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "character": {
+            "type": "object",
+            "description": "Alternatively, a saved-character JSON (app export, {version:2, selections}) as the base. Explicit selections/colors merge on top.",
+            "additionalProperties": true
+          },
+          "match_body_color": {
+            "type": "boolean",
+            "description": "Propagate body color to head/face/ears. Default true."
+          },
+          "output_path": {
+            "type": "string",
+            "description": "Absolute or relative PNG output path (parents are created; relative resolves against the server's cwd). Default: lpc-spritesheet/<name>-<timestamp>.png under the OS temp directory."
+          },
+          "include_credits": {
+            "type": "boolean",
+            "description": "Also write <name>-credits.csv/.txt with per-asset attribution (required by the asset licenses). Default true."
+          },
+          "include_character_json": {
+            "type": "boolean",
+            "description": "Also write <name>-character.json with the resolved selections. Default false."
+          },
+          "animation": {
+            "type": "string",
+            "description": "Animation name from list_animations (standard or custom). Required."
+          }
+        },
+        "required": [
+          "animation"
+        ]
+      }
+    },
+    {
+      "name": "get_preview",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "bodyType": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female",
+              "teen",
+              "child",
+              "muscular",
+              "pregnant"
+            ],
+            "description": "Body type. Default: male."
+          },
+          "preset": {
+            "type": "string",
+            "description": "Named starting character from list_presets (e.g. knight, mage, blacksmith). Its selections/colors/bodyType form the base; explicit selections/colors merge on top."
+          },
+          "selections": {
+            "type": "object",
+            "description": "Selection groups (type_name from list_categories) -> itemId | \"none\" | {itemId, variant?, recolor?}. Defaults: body=light, head=human male, expression=neutral. Use list_items to discover itemIds.",
+            "additionalProperties": true
+          },
+          "colors": {
+            "type": "object",
+            "description": "Color overrides per selection group, e.g. {body:\"amber\", hair:\"blonde\", clothes:\"red\", eyes:\"blue\"}. Color names from list_palettes / list_items.",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "character": {
+            "type": "object",
+            "description": "Alternatively, a saved-character JSON (app export, {version:2, selections}) as the base. Explicit selections/colors merge on top.",
+            "additionalProperties": true
+          },
+          "match_body_color": {
+            "type": "boolean",
+            "description": "Propagate body color to head/face/ears. Default true."
+          },
+          "output_path": {
+            "type": "string",
+            "description": "Absolute or relative PNG output path (parents are created; relative resolves against the server's cwd). Default: lpc-spritesheet/<name>-<timestamp>.png under the OS temp directory."
+          },
+          "include_credits": {
+            "type": "boolean",
+            "description": "Also write <name>-credits.csv/.txt with per-asset attribution (required by the asset licenses). Default true."
+          },
+          "include_character_json": {
+            "type": "boolean",
+            "description": "Also write <name>-character.json with the resolved selections. Default false."
+          },
+          "animation": {
+            "type": "string",
+            "description": "Standard animation name. Default: walk."
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "up",
+              "left",
+              "down",
+              "right"
+            ],
+            "description": "Default: down. (hurt/climb have a single facing; any direction is accepted.)"
+          },
+          "scale": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 8,
+            "description": "Nearest-neighbor upscale factor. Default 1."
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "png",
+              "gif"
+            ],
+            "description": "png = strip image (default). gif = looping animated GIF."
+          },
+          "fps": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 30,
+            "description": "gif only: playback ticks per second. The LPC cycle already encodes per-frame holds (idle 0,0,1; sit holds 5 ticks), so one uniform tick rate is correct playback. Default 10 (= the web app's default)."
+          }
+        }
+      }
+    },
+    {
+      "name": "export_character",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "bodyType": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female",
+              "teen",
+              "child",
+              "muscular",
+              "pregnant"
+            ],
+            "description": "Body type. Default: male."
+          },
+          "preset": {
+            "type": "string",
+            "description": "Named starting character from list_presets (e.g. knight, mage, blacksmith). Its selections/colors/bodyType form the base; explicit selections/colors merge on top."
+          },
+          "selections": {
+            "type": "object",
+            "description": "Selection groups (type_name from list_categories) -> itemId | \"none\" | {itemId, variant?, recolor?}. Defaults: body=light, head=human male, expression=neutral. Use list_items to discover itemIds.",
+            "additionalProperties": true
+          },
+          "colors": {
+            "type": "object",
+            "description": "Color overrides per selection group, e.g. {body:\"amber\", hair:\"blonde\", clothes:\"red\", eyes:\"blue\"}. Color names from list_palettes / list_items.",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "character": {
+            "type": "object",
+            "description": "Alternatively, a saved-character JSON (app export, {version:2, selections}) as the base. Explicit selections/colors merge on top.",
+            "additionalProperties": true
+          },
+          "match_body_color": {
+            "type": "boolean",
+            "description": "Propagate body color to head/face/ears. Default true."
+          },
+          "include_credits": {
+            "type": "boolean",
+            "description": "Also write <name>-credits.csv/.txt with per-asset attribution (required by the asset licenses). Default true."
+          },
+          "include_character_json": {
+            "type": "boolean",
+            "description": "Also write <name>-character.json with the resolved selections. Default false."
+          },
+          "output_dir": {
+            "type": "string",
+            "description": "Directory to write the bundle into (created if missing). Default: lpc-<bodyType>-<mode>-<timestamp>/ under the OS temp directory."
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "animation",
+              "frames"
+            ],
+            "description": "animation = one PNG per row block (default). frames = one PNG per frame cell."
+          },
+          "atlas_format": {
+            "type": "string",
+            "enum": [
+              "texturepacker",
+              "aseprite",
+              "godot",
+              "libgdx",
+              "unity"
+            ],
+            "description": "Metadata dialect. Default texturepacker (JSON Hash), which Phaser and most importers read."
+          }
+        }
+      }
+    },
+    {
+      "name": "validate_sheet",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "bodyType": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female",
+              "teen",
+              "child",
+              "muscular",
+              "pregnant"
+            ],
+            "description": "Body type. Default: male."
+          },
+          "preset": {
+            "type": "string",
+            "description": "Named starting character from list_presets (e.g. knight, mage, blacksmith). Its selections/colors/bodyType form the base; explicit selections/colors merge on top."
+          },
+          "selections": {
+            "type": "object",
+            "description": "Selection groups (type_name from list_categories) -> itemId | \"none\" | {itemId, variant?, recolor?}. Defaults: body=light, head=human male, expression=neutral. Use list_items to discover itemIds.",
+            "additionalProperties": true
+          },
+          "colors": {
+            "type": "object",
+            "description": "Color overrides per selection group, e.g. {body:\"amber\", hair:\"blonde\", clothes:\"red\", eyes:\"blue\"}. Color names from list_palettes / list_items.",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "character": {
+            "type": "object",
+            "description": "Alternatively, a saved-character JSON (app export, {version:2, selections}) as the base. Explicit selections/colors merge on top.",
+            "additionalProperties": true
+          },
+          "match_body_color": {
+            "type": "boolean",
+            "description": "Propagate body color to head/face/ears. Default true."
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "layout",
+              "character",
+              "catalog"
+            ],
+            "description": "Default layout."
+          },
+          "category": {
+            "type": "string",
+            "description": "catalog scope: restrict to one selection group."
+          },
+          "limit": {
+            "type": "integer",
+            "description": "catalog scope: max items to inspect. Default 50, max 200."
+          }
+        }
+      }
+    },
+    {
+      "name": "list_categories",
+      "schema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "list_items",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Category (type_name) from list_categories. Required."
+          },
+          "bodyType": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female",
+              "teen",
+              "child",
+              "muscular",
+              "pregnant"
+            ],
+            "description": "Only items supporting this body type."
+          },
+          "search": {
+            "type": "string",
+            "description": "Case-insensitive substring filter on itemId or name."
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Default 50, max 200."
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Pagination offset."
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "itemId",
+                "name",
+                "variants",
+                "colors",
+                "customAnimation"
+              ]
+            },
+            "description": "Which per-item keys to emit. Default: all. Use [\"itemId\",\"name\"] to list a large category cheaply."
+          }
+        },
+        "required": [
+          "category"
+        ]
+      }
+    },
+    {
+      "name": "list_palettes",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "material": {
+            "type": "string",
+            "description": "Optional material filter."
+          }
+        }
+      }
+    },
+    {
+      "name": "list_animations",
+      "schema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "list_presets",
+      "schema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "random_character",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "seed": {
+            "type": "string",
+            "description": "Any string; the same seed always produces the same character(s). Default: empty string."
+          },
+          "gear": {
+            "type": "string",
+            "enum": [
+              "bare",
+              "civilian",
+              "soldier",
+              "fancy"
+            ],
+            "description": "Gear profile: how likely weapons/armour/hats are. Default: civilian."
+          },
+          "complete_only": {
+            "type": "boolean",
+            "description": "Only pick items that paint both walk and idle rows for always-visible groups, so random characters never have empty core rows. Default: true."
+          },
+          "bodyType": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female",
+              "teen",
+              "child",
+              "muscular",
+              "pregnant"
+            ],
+            "description": "Pin the body type instead of a weighted roll."
+          },
+          "preview": {
+            "type": "boolean",
+            "description": "Also render a walk preview strip (inline PNG). Default: true."
+          },
+          "animation": {
+            "type": "string",
+            "description": "Standard animation name. Default: walk."
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "up",
+              "left",
+              "down",
+              "right"
+            ],
+            "description": "Default: down. (hurt/climb have a single facing; any direction is accepted.)"
+          },
+          "scale": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 8,
+            "description": "Nearest-neighbor upscale factor. Default 1 (2 for the random/design preview conveniences)."
+          },
+          "output_path": {
+            "type": "string",
+            "description": "Optional PNG path for the preview strip. Default: lpc-spritesheet/lpc-random-<seed>-<animation>-<direction>.png under the OS temp directory."
+          }
+        }
+      }
+    },
+    {
+      "name": "generate_batch",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "seed": {
+            "type": "string",
+            "description": "Any string; the same seed always produces the same character(s). Default: empty string."
+          },
+          "gear": {
+            "type": "string",
+            "enum": [
+              "bare",
+              "civilian",
+              "soldier",
+              "fancy"
+            ],
+            "description": "Gear profile: how likely weapons/armour/hats are. Default: civilian."
+          },
+          "complete_only": {
+            "type": "boolean",
+            "description": "Only pick items that paint both walk and idle rows for always-visible groups, so random characters never have empty core rows. Default: true."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 25,
+            "description": "How many characters. Default 5, max 25."
+          },
+          "bodyType": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female",
+              "teen",
+              "child",
+              "muscular",
+              "pregnant"
+            ],
+            "description": "Pin every character to one body type. Default: weighted roll per character."
+          },
+          "output_dir": {
+            "type": "string",
+            "description": "Directory for the batch (created if missing). Default: lpc-batch-<seed>-<timestamp>/ under the OS temp directory."
+          },
+          "sheets": {
+            "type": "boolean",
+            "description": "Write a full 832x3456+ spritesheet PNG per character. Default: true."
+          },
+          "previews": {
+            "type": "boolean",
+            "description": "Write a walk-down preview strip per character. Default: true."
+          },
+          "index": {
+            "type": "boolean",
+            "description": "Write index.png (contact grid of every character's walk-down frame). Default: true."
+          },
+          "include_credits": {
+            "type": "boolean",
+            "description": "Per-character credits sidecars plus one rolled-up batch-credits.csv/.txt. Default: true."
+          }
+        },
+        "required": [
+          "count"
+        ]
+      }
+    },
+    {
+      "name": "design_character",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "The character brief in plain language. Required."
+          },
+          "model": {
+            "type": "string",
+            "enum": [
+              "qwen3.7-plus",
+              "kimi-k2.5",
+              "qwen3.6-plus"
+            ],
+            "description": "Per-call model override. Default: LPC_AI_MODEL env or qwen3.7-plus."
+          },
+          "preview": {
+            "type": "boolean",
+            "description": "Also render a walk preview strip (inline PNG). Default: true."
+          },
+          "animation": {
+            "type": "string",
+            "description": "Standard animation name. Default: walk."
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "up",
+              "left",
+              "down",
+              "right"
+            ],
+            "description": "Default: down. (hurt/climb have a single facing; any direction is accepted.)"
+          },
+          "scale": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 8,
+            "description": "Nearest-neighbor upscale factor. Default 1 (2 for the random/design preview conveniences)."
+          },
+          "output_path": {
+            "type": "string",
+            "description": "Optional PNG path for the preview strip."
+          }
+        },
+        "required": [
+          "prompt"
+        ]
+      }
+    }
+  ],
+  "categories": {
+    "head": {
+      "category": "head",
+      "total": 45,
+      "showing": {
+        "offset": 0,
+        "count": 28
+      },
+      "palettes": {
+        "body.ulpc.fur_brown": [
+          "light",
+          "amber",
+          "olive",
+          "taupe",
+          "bronze",
+          "brown",
+          "black",
+          "blue",
+          "bright_green",
+          "dark_green",
+          "fur_black",
+          "fur_brown",
+          "fur_copper",
+          "fur_gold",
+          "fur_grey",
+          "fur_tan",
+          "fur_white",
+          "green",
+          "lavender",
+          "pale_green",
+          "zombie",
+          "zombie_green",
+          "lpcr.ivory",
+          "lpcr.porcelain",
+          "lpcr.peach",
+          "lpcr.tan",
+          "lpcr.tawny",
+          "lpcr.honey",
+          "lpcr.bronze",
+          "lpcr.brown",
+          "lpcr.coffee",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ],
+        "eye.ulpc.blue": [
+          "blue",
+          "green",
+          "purple",
+          "red",
+          "orange",
+          "yellow",
+          "brown",
+          "gray",
+          "lpcr.black",
+          "lpcr.blue",
+          "lpcr.brown",
+          "lpcr.gray",
+          "lpcr.green",
+          "lpcr.hazel",
+          "lpcr.purple"
+        ]
+      },
+      "items": [
+        {
+          "itemId": "heads_boarman_child",
+          "name": "Boarman child",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_boarman",
+          "name": "Boarman",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_minotaur_child",
+          "name": "Minotaur child",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_minotaur_female",
+          "name": "Minotaur female",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_minotaur",
+          "name": "Minotaur",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_wartotaur",
+          "name": "Wartotaur",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_wolf_child",
+          "name": "Wolf child",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_wolf_female",
+          "name": "Wolf female",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_wolf_male",
+          "name": "Wolf male",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_goblin_child",
+          "name": "Goblin child",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_goblin",
+          "name": "Goblin",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_orc_child",
+          "name": "Orc child",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_orc_female",
+          "name": "Orc female",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_orc_male",
+          "name": "Orc male",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_troll_child",
+          "name": "Troll child",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_troll",
+          "name": "Troll",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_mouse_child",
+          "name": "Mouse child",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_mouse",
+          "name": "Mouse",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_pig_child",
+          "name": "Pig child",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_pig",
+          "name": "Pig",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_rabbit_child",
+          "name": "Rabbit child",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_rabbit",
+          "name": "Rabbit",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_rat_child",
+          "name": "Rat child",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_rat",
+          "name": "Rat",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_sheep_child",
+          "name": "Sheep child",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_sheep",
+          "name": "Sheep",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_human_child",
+          "name": "Human Child",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_human_elderly_small",
+          "name": "Human Elderly Small",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_brown",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        }
+      ],
+      "truncated": true,
+      "nextOffset": 28,
+      "note": "Response cut to fit 12000 bytes. Ask for fewer fields (e.g. fields:[\"itemId\",\"name\"]) or continue with offset for the rest.",
+      "bytes": 11575
+    },
+    "expression": {
+      "category": "expression",
+      "total": 15,
+      "showing": {
+        "offset": 0,
+        "count": 15
+      },
+      "palettes": {
+        "body.ulpc.light": [
+          "light",
+          "amber",
+          "olive",
+          "taupe",
+          "bronze",
+          "brown",
+          "black",
+          "blue",
+          "bright_green",
+          "dark_green",
+          "fur_black",
+          "fur_brown",
+          "fur_copper",
+          "fur_gold",
+          "fur_grey",
+          "fur_tan",
+          "fur_white",
+          "green",
+          "lavender",
+          "pale_green",
+          "zombie",
+          "zombie_green",
+          "lpcr.ivory",
+          "lpcr.porcelain",
+          "lpcr.peach",
+          "lpcr.tan",
+          "lpcr.tawny",
+          "lpcr.honey",
+          "lpcr.bronze",
+          "lpcr.brown",
+          "lpcr.coffee",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ],
+        "eye.ulpc.blue": [
+          "blue",
+          "green",
+          "purple",
+          "red",
+          "orange",
+          "yellow",
+          "brown",
+          "gray",
+          "lpcr.black",
+          "lpcr.blue",
+          "lpcr.brown",
+          "lpcr.gray",
+          "lpcr.green",
+          "lpcr.hazel",
+          "lpcr.purple"
+        ]
+      },
+      "items": [
+        {
+          "itemId": "face_angry",
+          "name": "Angry",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "face_angry2",
+          "name": "Angry Alt",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "face_blush",
+          "name": "Blush",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "face_closed",
+          "name": "Closed Eyes",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "face_closing",
+          "name": "Closing Eyes",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "face_eyeroll",
+          "name": "Rolling Eyes",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "face_happy",
+          "name": "Happy",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "face_happy2",
+          "name": "Happy Alt",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "face_look_l",
+          "name": "Looking Left",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "face_look_r",
+          "name": "Looking Right",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "face_neutral",
+          "name": "Neutral",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "face_sad",
+          "name": "Sad",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "face_sad2",
+          "name": "Sad Alt",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "face_shame",
+          "name": "Shame",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "face_shock",
+          "name": "Shock",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        }
+      ],
+      "bytes": 8967
+    },
+    "hair": {
+      "category": "hair",
+      "total": 91,
+      "showing": {
+        "offset": 0,
+        "count": 26
+      },
+      "palettes": {
+        "hair.ulpc.orange": [
+          "orange",
+          "ash",
+          "platinum",
+          "white",
+          "gray",
+          "blonde",
+          "sandy",
+          "strawberry",
+          "gold",
+          "ginger",
+          "carrot",
+          "redhead",
+          "red",
+          "light_brown",
+          "chestnut",
+          "dark_brown",
+          "dark_gray",
+          "black",
+          "raven",
+          "rose",
+          "pink",
+          "purple",
+          "violet",
+          "navy",
+          "blue",
+          "green",
+          "lpcr.ash_brown",
+          "lpcr.black",
+          "lpcr.blonde",
+          "lpcr.blue",
+          "lpcr.brown",
+          "lpcr.charcoal",
+          "lpcr.chestnut",
+          "lpcr.gray",
+          "lpcr.green",
+          "lpcr.orange",
+          "lpcr.pink",
+          "lpcr.platinum",
+          "lpcr.purple",
+          "lpcr.raven",
+          "lpcr.red",
+          "lpcr.ruby",
+          "lpcr.silver",
+          "lpcr.teal",
+          "lpcr.violet",
+          "lpcr.white",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ],
+        "cloth.ulpc.white": [
+          "brown",
+          "leather",
+          "walnut",
+          "yellow",
+          "tan",
+          "orange",
+          "rose",
+          "maroon",
+          "red",
+          "pink",
+          "lavender",
+          "purple",
+          "blue",
+          "navy",
+          "teal",
+          "bluegray",
+          "forest",
+          "green",
+          "white",
+          "sky",
+          "slate",
+          "gray",
+          "black",
+          "charcoal",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ]
+      },
+      "items": [
+        {
+          "itemId": "hair_afro",
+          "name": "Afro",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_cornrows",
+          "name": "Cornrows",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_dreadlocks_long",
+          "name": "Dreadlocks long",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_dreadlocks_short",
+          "name": "Dreadlocks short",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_flat_top_fade",
+          "name": "Flat top fade",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_flat_top_straight",
+          "name": "Flat top straight",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_natural",
+          "name": "Natural",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_twists_fade",
+          "name": "Twists fade",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_twists_straight",
+          "name": "Twists straight",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_balding",
+          "name": "Balding",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_buzzcut",
+          "name": "Buzzcut",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_high_and_tight",
+          "name": "High and tight",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_longhawk",
+          "name": "Longhawk",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_shorthawk",
+          "name": "Shorthawk",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_bob_side_part",
+          "name": "Bob side part",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_bob",
+          "name": "Bob",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_lob",
+          "name": "Lob",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_relm_short",
+          "name": "Relm Short",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_bangs_bun",
+          "name": "Bangs bun",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_braid",
+          "name": "Braid",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_braid2",
+          "name": "Braid2",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_half_up",
+          "name": "Half up",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_high_ponytail",
+          "name": "High ponytail",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_long_tied",
+          "name": "Long tied",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            },
+            {
+              "slot": "Hair Tie",
+              "typeName": "hair_tie",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_ponytail",
+          "name": "Ponytail",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_ponytail2",
+          "name": "Ponytail2",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        }
+      ],
+      "truncated": true,
+      "nextOffset": 26,
+      "note": "Response cut to fit 12000 bytes. Ask for fewer fields (e.g. fields:[\"itemId\",\"name\"]) or continue with offset for the rest.",
+      "bytes": 11921
+    },
+    "clothes": {
+      "category": "clothes",
+      "total": 35,
+      "showing": {
+        "offset": 0,
+        "count": 30
+      },
+      "palettes": {
+        "cloth.ulpc.white": [
+          "brown",
+          "leather",
+          "walnut",
+          "yellow",
+          "tan",
+          "orange",
+          "rose",
+          "maroon",
+          "red",
+          "pink",
+          "lavender",
+          "purple",
+          "blue",
+          "navy",
+          "teal",
+          "bluegray",
+          "forest",
+          "green",
+          "white",
+          "sky",
+          "slate",
+          "gray",
+          "black",
+          "charcoal",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ]
+      },
+      "items": [
+        {
+          "itemId": "torso_clothes_longsleeve_formal_striped",
+          "name": "Striped Collared/Formal Longsleeve",
+          "variants": [
+            "white"
+          ]
+        },
+        {
+          "itemId": "torso_clothes_longsleeve_formal",
+          "name": "Collared/Formal Longsleeve",
+          "variants": [
+            "white"
+          ]
+        },
+        {
+          "itemId": "torso_clothes_longsleeve_laced",
+          "name": "Longsleeve laced",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "torso_clothes_longsleeve_scoop",
+          "name": "Scoop",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_longsleeve",
+          "name": "Longsleeve",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_longsleeve2_buttoned",
+          "name": "Longsleeve 2 Buttoned",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_longsleeve2_cardigan",
+          "name": "Cardigan",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_longsleeve2_polo",
+          "name": "Longsleeve Polo",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_longsleeve2_scoop",
+          "name": "Longsleeve 2 Scoop",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_longsleeve2_vneck",
+          "name": "Longsleeve 2 VNeck",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_longsleeve2",
+          "name": "Longsleeve 2",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_shortsleeve_cardigan",
+          "name": "Shortsleeve Cardigan",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_shortsleeve_polo",
+          "name": "Shortsleeve Polo",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_shortsleeve",
+          "name": "Shortsleeve",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_tshirt_buttoned",
+          "name": "TShirt Buttoned",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_tshirt_scoop",
+          "name": "TShirt Scoop",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_tshirt_vneck",
+          "name": "TShirt VNeck",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_tshirt",
+          "name": "TShirt",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_sleeveless_laced",
+          "name": "Sleeveless laced",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "torso_clothes_sleeveless_striped",
+          "name": "Sleeveless striped",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "torso_clothes_sleeveless_tanktop",
+          "name": "Tanktop",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "torso_clothes_sleeveless",
+          "name": "Sleeveless",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "torso_clothes_sleeveless1",
+          "name": "Original Sleeveless",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_sleeveless2_buttoned",
+          "name": "Sleeveless 2 Buttoned",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_sleeveless2_cardigan",
+          "name": "Sleeveless 2 Cardigan",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_sleeveless2_polo",
+          "name": "Sleeveless 2 Polo",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_sleeveless2_scoop",
+          "name": "Sleeveless 2 Scoop",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_sleeveless2_vneck",
+          "name": "Sleeveless 2 VNeck",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_sleeveless2",
+          "name": "Sleeveless 2",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_clothes_blouse_longsleeve",
+          "name": "Longsleeve blouse",
+          "variants": [
+            "black",
+            "blue",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "sky",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        }
+      ],
+      "truncated": true,
+      "nextOffset": 30,
+      "note": "Response cut to fit 12000 bytes. Ask for fewer fields (e.g. fields:[\"itemId\",\"name\"]) or continue with offset for the rest.",
+      "bytes": 11979
+    },
+    "armour": {
+      "category": "armour",
+      "total": 3,
+      "showing": {
+        "offset": 0,
+        "count": 3
+      },
+      "palettes": {
+        "cloth.ulpc.leather": [
+          "brown",
+          "leather",
+          "walnut",
+          "yellow",
+          "tan",
+          "orange",
+          "rose",
+          "maroon",
+          "red",
+          "pink",
+          "lavender",
+          "purple",
+          "blue",
+          "navy",
+          "teal",
+          "bluegray",
+          "forest",
+          "green",
+          "white",
+          "sky",
+          "slate",
+          "gray",
+          "black",
+          "charcoal",
+          "metal.ceramic",
+          "metal.brass",
+          "metal.copper",
+          "metal.bronze",
+          "metal.iron",
+          "metal.steel",
+          "metal.silver",
+          "metal.gold",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ],
+        "metal.ulpc.steel": [
+          "ceramic",
+          "brass",
+          "copper",
+          "bronze",
+          "iron",
+          "steel",
+          "silver",
+          "gold",
+          "lpcr.brass",
+          "lpcr.copper",
+          "lpcr.bronze",
+          "lpcr.iron",
+          "lpcr.steel",
+          "lpcr.silver",
+          "lpcr.gold",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ]
+      },
+      "items": [
+        {
+          "itemId": "torso_armour_leather",
+          "name": "Leather",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.leather"
+            },
+            {
+              "slot": "Leather Armor Belt",
+              "typeName": "leather_armor_belt",
+              "material": "metal",
+              "default": "ceramic",
+              "palette": "metal.ulpc.steel"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_armour_legion",
+          "name": "Legion",
+          "colors": [
+            {
+              "slot": "Metal",
+              "material": "metal",
+              "default": "ceramic",
+              "palette": "metal.ulpc.steel"
+            }
+          ]
+        },
+        {
+          "itemId": "torso_armour_plate",
+          "name": "Plate",
+          "colors": [
+            {
+              "slot": "Metal",
+              "material": "metal",
+              "default": "ceramic",
+              "palette": "metal.ulpc.steel"
+            }
+          ]
+        }
+      ],
+      "bytes": 5684
+    },
+    "legs": {
+      "category": "legs",
+      "total": 21,
+      "showing": {
+        "offset": 0,
+        "count": 21
+      },
+      "palettes": {
+        "cloth.ulpc.white": [
+          "brown",
+          "leather",
+          "walnut",
+          "yellow",
+          "tan",
+          "orange",
+          "rose",
+          "maroon",
+          "red",
+          "pink",
+          "lavender",
+          "purple",
+          "blue",
+          "navy",
+          "teal",
+          "bluegray",
+          "forest",
+          "green",
+          "white",
+          "sky",
+          "slate",
+          "gray",
+          "black",
+          "charcoal",
+          "metal.ceramic",
+          "metal.brass",
+          "metal.copper",
+          "metal.bronze",
+          "metal.iron",
+          "metal.steel",
+          "metal.silver",
+          "metal.gold",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ],
+        "metal.ulpc.steel": [
+          "ceramic",
+          "brass",
+          "copper",
+          "bronze",
+          "iron",
+          "steel",
+          "silver",
+          "gold",
+          "lpcr.brass",
+          "lpcr.copper",
+          "lpcr.bronze",
+          "lpcr.iron",
+          "lpcr.steel",
+          "lpcr.silver",
+          "lpcr.gold",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ]
+      },
+      "items": [
+        {
+          "itemId": "legs_hose",
+          "name": "Hose",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_leggings",
+          "name": "Leggings",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_leggings2",
+          "name": "Leggings 2",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_armour",
+          "name": "Armour",
+          "colors": [
+            {
+              "slot": "Metal",
+              "material": "metal",
+              "default": "ceramic",
+              "palette": "metal.ulpc.steel"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_childpants",
+          "name": "Child pants",
+          "variants": [
+            "black",
+            "blue",
+            "brown",
+            "darkblue",
+            "green",
+            "lightblue",
+            "maroon",
+            "red",
+            "white"
+          ]
+        },
+        {
+          "itemId": "legs_cuffed",
+          "name": "Cuffed Pants",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_formal_striped",
+          "name": "Striped Formal Pants",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_formal",
+          "name": "Formal Pants",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_pantaloons",
+          "name": "Pantaloons",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_pants",
+          "name": "Pants",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_pants2",
+          "name": "Long Pants",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_pregnantpants",
+          "name": "Pregnancy pants",
+          "variants": [
+            "black",
+            "blue",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "sky",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "legs_widepants",
+          "name": "Wide pants",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "legs_shorts_short",
+          "name": "Short Shorts",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_shorts",
+          "name": "Shorts",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_childskirts",
+          "name": "Child skirts",
+          "variants": [
+            "black",
+            "blue",
+            "darkblue",
+            "green",
+            "lavender",
+            "lightblue",
+            "maroon",
+            "pink",
+            "red",
+            "white"
+          ]
+        },
+        {
+          "itemId": "legs_skirt_belle",
+          "name": "Belle skirt",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_skirt_straight",
+          "name": "Straight skirt",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_skirts_legion",
+          "name": "Legion skirt",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_skirts_plain",
+          "name": "Plain skirt",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "legs_skirts_slit",
+          "name": "Slit skirt",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        }
+      ],
+      "bytes": 10481
+    },
+    "shoes": {
+      "category": "shoes",
+      "total": 12,
+      "showing": {
+        "offset": 0,
+        "count": 12
+      },
+      "palettes": {
+        "cloth.ulpc.white": [
+          "brown",
+          "leather",
+          "walnut",
+          "yellow",
+          "tan",
+          "orange",
+          "rose",
+          "maroon",
+          "red",
+          "pink",
+          "lavender",
+          "purple",
+          "blue",
+          "navy",
+          "teal",
+          "bluegray",
+          "forest",
+          "green",
+          "white",
+          "sky",
+          "slate",
+          "gray",
+          "black",
+          "charcoal",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ],
+        "metal.ulpc.steel": [
+          "ceramic",
+          "brass",
+          "copper",
+          "bronze",
+          "iron",
+          "steel",
+          "silver",
+          "gold",
+          "lpcr.brass",
+          "lpcr.copper",
+          "lpcr.bronze",
+          "lpcr.iron",
+          "lpcr.steel",
+          "lpcr.silver",
+          "lpcr.gold",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ],
+        "body.ulpc.fur_tan": [
+          "light",
+          "amber",
+          "olive",
+          "taupe",
+          "bronze",
+          "brown",
+          "black",
+          "blue",
+          "bright_green",
+          "dark_green",
+          "fur_black",
+          "fur_brown",
+          "fur_copper",
+          "fur_gold",
+          "fur_grey",
+          "fur_tan",
+          "fur_white",
+          "green",
+          "lavender",
+          "pale_green",
+          "zombie",
+          "zombie_green",
+          "lpcr.ivory",
+          "lpcr.porcelain",
+          "lpcr.peach",
+          "lpcr.tan",
+          "lpcr.tawny",
+          "lpcr.honey",
+          "lpcr.bronze",
+          "lpcr.brown",
+          "lpcr.coffee",
+          "hair.orange",
+          "hair.ash",
+          "hair.platinum",
+          "hair.white",
+          "hair.gray",
+          "hair.blonde",
+          "hair.sandy",
+          "hair.strawberry",
+          "hair.gold",
+          "hair.ginger",
+          "hair.carrot",
+          "hair.redhead",
+          "hair.red",
+          "hair.light_brown",
+          "hair.chestnut",
+          "hair.dark_brown",
+          "hair.dark_gray",
+          "hair.black",
+          "hair.raven",
+          "hair.rose",
+          "hair.pink",
+          "hair.purple",
+          "hair.violet",
+          "hair.navy",
+          "hair.blue",
+          "hair.green",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ]
+      },
+      "items": [
+        {
+          "itemId": "feet_boots_basic",
+          "name": "Basic Boots",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "feet_boots_fold",
+          "name": "Folded Rim Boots",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "feet_boots_revised",
+          "name": "Revised Boots",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "feet_boots_rim",
+          "name": "Rimmed Boots",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "feet_armour",
+          "name": "Armour",
+          "colors": [
+            {
+              "slot": "Metal",
+              "material": "metal",
+              "default": "ceramic",
+              "palette": "metal.ulpc.steel"
+            }
+          ]
+        },
+        {
+          "itemId": "feet_hoofs",
+          "name": "Hoofs",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.fur_tan"
+            }
+          ]
+        },
+        {
+          "itemId": "feet_sandals",
+          "name": "Sandals",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "feet_slippers",
+          "name": "Slippers",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "feet_shoes_basic",
+          "name": "Basic Shoes",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "feet_shoes_ghillies",
+          "name": "Ghillies",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "feet_shoes_revised",
+          "name": "Revised Shoes",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "feet_shoes_sara",
+          "name": "Sara Shoes",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        }
+      ],
+      "bytes": 10566
+    },
+    "weapon": {
+      "category": "weapon",
+      "total": 40,
+      "showing": {
+        "offset": 0,
+        "count": 12
+      },
+      "palettes": {
+        "metal.ulpc.steel": [
+          "ceramic",
+          "brass",
+          "copper",
+          "bronze",
+          "iron",
+          "steel",
+          "silver",
+          "gold",
+          "lpcr.brass",
+          "lpcr.copper",
+          "lpcr.bronze",
+          "lpcr.iron",
+          "lpcr.steel",
+          "lpcr.silver",
+          "lpcr.gold",
+          "cloth.brown",
+          "cloth.leather",
+          "cloth.walnut",
+          "cloth.yellow",
+          "cloth.tan",
+          "cloth.orange",
+          "cloth.rose",
+          "cloth.maroon",
+          "cloth.red",
+          "cloth.pink",
+          "cloth.lavender",
+          "cloth.purple",
+          "cloth.blue",
+          "cloth.navy",
+          "cloth.teal",
+          "cloth.bluegray",
+          "cloth.forest",
+          "cloth.green",
+          "cloth.white",
+          "cloth.sky",
+          "cloth.slate",
+          "cloth.gray",
+          "cloth.black",
+          "cloth.charcoal",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ],
+        "wood.ulpc.maple": [
+          "maple",
+          "oak",
+          "walnut",
+          "mahogany",
+          "lpcr.brown",
+          "lpcr.coffee",
+          "lpcr.oak",
+          "lpcr.tan",
+          "lpcr.umber",
+          "metal.ceramic",
+          "metal.brass",
+          "metal.copper",
+          "metal.bronze",
+          "metal.iron",
+          "metal.steel",
+          "metal.silver",
+          "metal.gold",
+          "cloth.brown",
+          "cloth.leather",
+          "cloth.walnut",
+          "cloth.yellow",
+          "cloth.tan",
+          "cloth.orange",
+          "cloth.rose",
+          "cloth.maroon",
+          "cloth.red",
+          "cloth.pink",
+          "cloth.lavender",
+          "cloth.purple",
+          "cloth.blue",
+          "cloth.navy",
+          "cloth.teal",
+          "cloth.bluegray",
+          "cloth.forest",
+          "cloth.green",
+          "cloth.white",
+          "cloth.sky",
+          "cloth.slate",
+          "cloth.gray",
+          "cloth.black",
+          "cloth.charcoal",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ],
+        "cloth.ulpc.tan": [
+          "brown",
+          "leather",
+          "walnut",
+          "yellow",
+          "tan",
+          "orange",
+          "rose",
+          "maroon",
+          "red",
+          "pink",
+          "lavender",
+          "purple",
+          "blue",
+          "navy",
+          "teal",
+          "bluegray",
+          "forest",
+          "green",
+          "white",
+          "sky",
+          "slate",
+          "gray",
+          "black",
+          "charcoal",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ]
+      },
+      "items": [
+        {
+          "itemId": "tool_axe",
+          "name": "Axe",
+          "colors": [
+            {
+              "slot": "Metal",
+              "material": "metal",
+              "default": "ceramic",
+              "palette": "metal.ulpc.steel"
+            },
+            {
+              "slot": "Handle",
+              "typeName": "handle",
+              "material": "wood",
+              "default": "maple",
+              "palette": "wood.ulpc.maple"
+            }
+          ],
+          "customAnimation": "tool_axe"
+        },
+        {
+          "itemId": "tool_hammer",
+          "name": "Hammer",
+          "colors": [
+            {
+              "slot": "Metal",
+              "material": "metal",
+              "default": "ceramic",
+              "palette": "metal.ulpc.steel"
+            },
+            {
+              "slot": "Handle",
+              "typeName": "handle",
+              "material": "wood",
+              "default": "maple",
+              "palette": "wood.ulpc.maple"
+            }
+          ],
+          "customAnimation": "tool_hammer"
+        },
+        {
+          "itemId": "tool_hoe",
+          "name": "Hoe",
+          "colors": [
+            {
+              "slot": "Metal",
+              "material": "metal",
+              "default": "ceramic",
+              "palette": "metal.ulpc.steel"
+            },
+            {
+              "slot": "Handle",
+              "typeName": "handle",
+              "material": "wood",
+              "default": "maple",
+              "palette": "wood.ulpc.maple"
+            }
+          ]
+        },
+        {
+          "itemId": "tool_pickaxe",
+          "name": "Pickaxe",
+          "colors": [
+            {
+              "slot": "Metal",
+              "material": "metal",
+              "default": "ceramic",
+              "palette": "metal.ulpc.steel"
+            },
+            {
+              "slot": "Handle",
+              "typeName": "handle",
+              "material": "wood",
+              "default": "maple",
+              "palette": "wood.ulpc.maple"
+            }
+          ],
+          "customAnimation": "tool_axe"
+        },
+        {
+          "itemId": "tool_rod",
+          "name": "Fishing Rod",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.tan"
+            },
+            {
+              "slot": "Grip",
+              "typeName": "handle",
+              "material": "wood",
+              "default": "maple",
+              "palette": "wood.ulpc.maple"
+            },
+            {
+              "slot": "Reel",
+              "typeName": "reel",
+              "material": "metal",
+              "default": "ceramic",
+              "palette": "metal.ulpc.steel"
+            }
+          ],
+          "customAnimation": "tool_rod"
+        },
+        {
+          "itemId": "tool_shovel",
+          "name": "Shovel",
+          "colors": [
+            {
+              "slot": "Metal",
+              "material": "metal",
+              "default": "ceramic",
+              "palette": "metal.ulpc.steel"
+            },
+            {
+              "slot": "Handle",
+              "typeName": "handle",
+              "material": "wood",
+              "default": "maple",
+              "palette": "wood.ulpc.maple"
+            }
+          ]
+        },
+        {
+          "itemId": "tool_watering_can",
+          "name": "Watering Can",
+          "colors": [
+            {
+              "slot": "Wood",
+              "material": "wood",
+              "default": "maple",
+              "palette": "wood.ulpc.maple"
+            }
+          ]
+        },
+        {
+          "itemId": "tool_whip",
+          "name": "Whip",
+          "colors": [
+            {
+              "slot": "Wood",
+              "material": "wood",
+              "default": "maple",
+              "palette": "wood.ulpc.maple"
+            }
+          ],
+          "customAnimation": "tool_whip"
+        },
+        {
+          "itemId": "weapon_blunt_club",
+          "name": "Club",
+          "variants": [
+            "club"
+          ],
+          "customAnimation": "slash_reverse_oversize"
+        },
+        {
+          "itemId": "weapon_blunt_flail",
+          "name": "Flail",
+          "variants": [
+            "flail"
+          ],
+          "customAnimation": "slash_oversize"
+        },
+        {
+          "itemId": "weapon_blunt_mace",
+          "name": "Mace",
+          "variants": [
+            "mace"
+          ],
+          "customAnimation": "slash_oversize"
+        },
+        {
+          "itemId": "weapon_blunt_waraxe",
+          "name": "Waraxe",
+          "variants": [
+            "waraxe"
+          ],
+          "customAnimation": "slash_oversize"
+        }
+      ],
+      "truncated": true,
+      "nextOffset": 12,
+      "note": "Response cut to fit 12000 bytes. Ask for fewer fields (e.g. fields:[\"itemId\",\"name\"]) or continue with offset for the rest.",
+      "bytes": 11996
+    },
+    "hat": {
+      "category": "hat",
+      "total": 50,
+      "showing": {
+        "offset": 0,
+        "count": 18
+      },
+      "palettes": {
+        "cloth.ulpc.white": [
+          "brown",
+          "leather",
+          "walnut",
+          "yellow",
+          "tan",
+          "orange",
+          "rose",
+          "maroon",
+          "red",
+          "pink",
+          "lavender",
+          "purple",
+          "blue",
+          "navy",
+          "teal",
+          "bluegray",
+          "forest",
+          "green",
+          "white",
+          "sky",
+          "slate",
+          "gray",
+          "black",
+          "charcoal",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ]
+      },
+      "items": [
+        {
+          "itemId": "hat_hood_cloth",
+          "name": "Hood",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "hat_hood_hijab",
+          "name": "Hijab",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "hat_hood_sack_cloth",
+          "name": "Sack Cloth Hood",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "hat_bicorne_athwart_admiral",
+          "name": "Bicorne Athwart Admiral",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "hat_bicorne_athwart_basic",
+          "name": "Bicorne Athwart",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "hat_bicorne_athwart_captain",
+          "name": "Bicorne Athwart Captain",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "hat_bicorne_athwart_commodore",
+          "name": "Bicorne Athwart Commodore",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "hat_cap_bonnie_tilt",
+          "name": "Bonnie Alt Tilt",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "hat_cap_bonnie",
+          "name": "Bonnie",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "hat_cap_cavalier",
+          "name": "Cavalier",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "hat_cap_leather",
+          "name": "Leather Cap",
+          "variants": [
+            "base",
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "hat_bicorne_foreaft_commodore",
+          "name": "Bicorne Foreaft Commodore",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "hat_bicorne_foreaft",
+          "name": "Bicorne foreaft",
+          "variants": [
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "hat_formal_bowler",
+          "name": "Formal Bowler Hat",
+          "variants": [
+            "base",
+            "base_brown",
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "hat_formal_crown",
+          "name": "Crown",
+          "variants": [
+            "crown_gold",
+            "crown_red",
+            "crown_blue",
+            "crown_gray",
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow",
+            "steel",
+            "iron",
+            "ceramic",
+            "brass",
+            "copper",
+            "bronze",
+            "silver",
+            "gold"
+          ]
+        },
+        {
+          "itemId": "hat_formal_tiara",
+          "name": "Tiara",
+          "variants": [
+            "tiara_bronze",
+            "tiara_gold",
+            "tiara_iron",
+            "tiara_purple",
+            "tiara_silver",
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow",
+            "steel",
+            "iron",
+            "ceramic",
+            "brass",
+            "copper",
+            "bronze",
+            "silver",
+            "gold"
+          ]
+        },
+        {
+          "itemId": "hat_formal_tophat",
+          "name": "Formal Tophat",
+          "variants": [
+            "base",
+            "base_brown",
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "itemId": "hat_holiday_christmas",
+          "name": "Christmas Hat",
+          "variants": [
+            "red",
+            "black",
+            "blue",
+            "bluegray",
+            "brown",
+            "charcoal",
+            "forest",
+            "gray",
+            "green",
+            "lavender",
+            "leather",
+            "maroon",
+            "navy",
+            "orange",
+            "pink",
+            "purple",
+            "rose",
+            "sky",
+            "slate",
+            "tan",
+            "teal",
+            "walnut",
+            "white",
+            "yellow"
+          ]
+        }
+      ],
+      "truncated": true,
+      "nextOffset": 18,
+      "note": "Response cut to fit 12000 bytes. Ask for fewer fields (e.g. fields:[\"itemId\",\"name\"]) or continue with offset for the rest.",
+      "bytes": 11794
+    },
+    "belt": {
+      "category": "belt",
+      "total": 8,
+      "showing": {
+        "offset": 0,
+        "count": 8
+      },
+      "palettes": {},
+      "items": [
+        {
+          "itemId": "belt_belly",
+          "name": "Belly belt",
+          "variants": [
+            "brown",
+            "charcoal",
+            "leather",
+            "slate",
+            "tan",
+            "walnut",
+            "white"
+          ]
+        },
+        {
+          "itemId": "belt_double",
+          "name": "Double Belt",
+          "variants": [
+            "brown",
+            "charcoal",
+            "leather",
+            "slate",
+            "tan",
+            "walnut",
+            "white"
+          ]
+        },
+        {
+          "itemId": "belt_formal",
+          "name": "Formal Belt",
+          "variants": [
+            "brown"
+          ]
+        },
+        {
+          "itemId": "belt_leather",
+          "name": "Leather Belt",
+          "variants": [
+            "brown",
+            "charcoal",
+            "leather",
+            "slate",
+            "tan",
+            "walnut",
+            "white"
+          ]
+        },
+        {
+          "itemId": "belt_leather2",
+          "name": "Leather Belt Alt",
+          "variants": [
+            "leather"
+          ]
+        },
+        {
+          "itemId": "belt_loose",
+          "name": "Loose Belt",
+          "variants": [
+            "brown",
+            "charcoal",
+            "leather",
+            "slate",
+            "tan",
+            "walnut",
+            "white"
+          ]
+        },
+        {
+          "itemId": "belt_mage",
+          "name": "Mage Belt",
+          "variants": [
+            "black",
+            "bronze",
+            "brown",
+            "gold",
+            "iron",
+            "silver"
+          ]
+        },
+        {
+          "itemId": "belt_robe",
+          "name": "Robe Belt",
+          "variants": [
+            "teal",
+            "white"
+          ]
+        }
+      ],
+      "bytes": 1602
+    },
+    "body": {
+      "category": "body",
+      "total": 3,
+      "showing": {
+        "offset": 0,
+        "count": 3
+      },
+      "palettes": {
+        "body.ulpc.light": [
+          "light",
+          "amber",
+          "olive",
+          "taupe",
+          "bronze",
+          "brown",
+          "black",
+          "blue",
+          "bright_green",
+          "dark_green",
+          "fur_black",
+          "fur_brown",
+          "fur_copper",
+          "fur_gold",
+          "fur_grey",
+          "fur_tan",
+          "fur_white",
+          "green",
+          "lavender",
+          "pale_green",
+          "zombie",
+          "zombie_green",
+          "lpcr.ivory",
+          "lpcr.porcelain",
+          "lpcr.peach",
+          "lpcr.tan",
+          "lpcr.tawny",
+          "lpcr.honey",
+          "lpcr.bronze",
+          "lpcr.brown",
+          "lpcr.coffee",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ],
+        "cloth.ulpc.white": [
+          "brown",
+          "leather",
+          "walnut",
+          "yellow",
+          "tan",
+          "orange",
+          "rose",
+          "maroon",
+          "red",
+          "pink",
+          "lavender",
+          "purple",
+          "blue",
+          "navy",
+          "teal",
+          "bluegray",
+          "forest",
+          "green",
+          "white",
+          "sky",
+          "slate",
+          "gray",
+          "black",
+          "charcoal",
+          "body.light",
+          "body.amber",
+          "body.olive",
+          "body.taupe",
+          "body.bronze",
+          "body.brown",
+          "body.black",
+          "body.blue",
+          "body.bright_green",
+          "body.dark_green",
+          "body.fur_black",
+          "body.fur_brown",
+          "body.fur_copper",
+          "body.fur_gold",
+          "body.fur_grey",
+          "body.fur_tan",
+          "body.fur_white",
+          "body.green",
+          "body.lavender",
+          "body.pale_green",
+          "body.zombie",
+          "body.zombie_green",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ]
+      },
+      "items": [
+        {
+          "itemId": "body",
+          "name": "Body Color",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "body_skeleton",
+          "name": "Skeleton",
+          "colors": [
+            {
+              "slot": "General",
+              "material": "cloth",
+              "default": "brown",
+              "palette": "cloth.ulpc.white"
+            }
+          ]
+        },
+        {
+          "itemId": "body_zombie",
+          "name": "Zombie",
+          "variants": [
+            "zombie"
+          ]
+        }
+      ],
+      "bytes": 5973
+    }
+  },
+  "searches": {
+    "head / human male": {
+      "category": "head",
+      "total": 5,
+      "unfilteredTotal": 45,
+      "showing": {
+        "offset": 0,
+        "count": 5
+      },
+      "palettes": {
+        "body.ulpc.light": [
+          "light",
+          "amber",
+          "olive",
+          "taupe",
+          "bronze",
+          "brown",
+          "black",
+          "blue",
+          "bright_green",
+          "dark_green",
+          "fur_black",
+          "fur_brown",
+          "fur_copper",
+          "fur_gold",
+          "fur_grey",
+          "fur_tan",
+          "fur_white",
+          "green",
+          "lavender",
+          "pale_green",
+          "zombie",
+          "zombie_green",
+          "lpcr.ivory",
+          "lpcr.porcelain",
+          "lpcr.peach",
+          "lpcr.tan",
+          "lpcr.tawny",
+          "lpcr.honey",
+          "lpcr.bronze",
+          "lpcr.brown",
+          "lpcr.coffee",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ],
+        "eye.ulpc.blue": [
+          "blue",
+          "green",
+          "purple",
+          "red",
+          "orange",
+          "yellow",
+          "brown",
+          "gray",
+          "lpcr.black",
+          "lpcr.blue",
+          "lpcr.brown",
+          "lpcr.gray",
+          "lpcr.green",
+          "lpcr.hazel",
+          "lpcr.purple"
+        ]
+      },
+      "items": [
+        {
+          "itemId": "heads_human_male_elderly",
+          "name": "Human Male Elderly",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_human_male_gaunt",
+          "name": "Human Male Gaunt",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_human_male_plump",
+          "name": "Human Male Plump",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_human_male_small",
+          "name": "Human Male Small",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_human_male",
+          "name": "Human Male",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        }
+      ],
+      "bytes": 5444
+    },
+    "head / human female": {
+      "category": "head",
+      "total": 3,
+      "unfilteredTotal": 45,
+      "showing": {
+        "offset": 0,
+        "count": 3
+      },
+      "palettes": {
+        "body.ulpc.light": [
+          "light",
+          "amber",
+          "olive",
+          "taupe",
+          "bronze",
+          "brown",
+          "black",
+          "blue",
+          "bright_green",
+          "dark_green",
+          "fur_black",
+          "fur_brown",
+          "fur_copper",
+          "fur_gold",
+          "fur_grey",
+          "fur_tan",
+          "fur_white",
+          "green",
+          "lavender",
+          "pale_green",
+          "zombie",
+          "zombie_green",
+          "lpcr.ivory",
+          "lpcr.porcelain",
+          "lpcr.peach",
+          "lpcr.tan",
+          "lpcr.tawny",
+          "lpcr.honey",
+          "lpcr.bronze",
+          "lpcr.brown",
+          "lpcr.coffee",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ],
+        "eye.ulpc.blue": [
+          "blue",
+          "green",
+          "purple",
+          "red",
+          "orange",
+          "yellow",
+          "brown",
+          "gray",
+          "lpcr.black",
+          "lpcr.blue",
+          "lpcr.brown",
+          "lpcr.gray",
+          "lpcr.green",
+          "lpcr.hazel",
+          "lpcr.purple"
+        ]
+      },
+      "items": [
+        {
+          "itemId": "heads_human_female_elderly",
+          "name": "Human Female Elderly",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_human_female_small",
+          "name": "Human Female Small",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        },
+        {
+          "itemId": "heads_human_female",
+          "name": "Human Female",
+          "colors": [
+            {
+              "slot": "Skintone",
+              "material": "body",
+              "default": "light",
+              "palette": "body.ulpc.light",
+              "matchBodyColor": true
+            },
+            {
+              "slot": "Eye Color",
+              "typeName": "eyes",
+              "material": "eye",
+              "default": "blue",
+              "palette": "eye.ulpc.blue",
+              "matchBodyColor": true
+            }
+          ]
+        }
+      ],
+      "bytes": 4438
+    },
+    "clothes / robe": {
+      "category": "clothes",
+      "total": 1,
+      "unfilteredTotal": 35,
+      "showing": {
+        "offset": 0,
+        "count": 1
+      },
+      "palettes": {},
+      "items": [
+        {
+          "itemId": "torso_clothes_robe",
+          "name": "Robe",
+          "variants": [
+            "black",
+            "blue",
+            "brown",
+            "dark brown",
+            "dark gray",
+            "forest green",
+            "light gray",
+            "purple",
+            "red",
+            "white"
+          ]
+        }
+      ],
+      "bytes": 458
+    },
+    "weapon / sword": {
+      "category": "weapon",
+      "total": 9,
+      "unfilteredTotal": 40,
+      "showing": {
+        "offset": 0,
+        "count": 9
+      },
+      "palettes": {},
+      "items": [
+        {
+          "itemId": "weapon_sword_arming",
+          "name": "Arming Sword",
+          "variants": [
+            "brass",
+            "bronze",
+            "ceramic",
+            "copper",
+            "gold",
+            "iron",
+            "silver",
+            "steel"
+          ],
+          "customAnimation": "slash_128"
+        },
+        {
+          "itemId": "weapon_sword_dagger",
+          "name": "Dagger",
+          "variants": [
+            "dagger"
+          ]
+        },
+        {
+          "itemId": "weapon_sword_glowsword",
+          "name": "Glowsword",
+          "variants": [
+            "blue",
+            "red"
+          ],
+          "customAnimation": "slash_oversize"
+        },
+        {
+          "itemId": "weapon_sword_katana",
+          "name": "Katana",
+          "variants": [
+            "katana"
+          ],
+          "customAnimation": "walk_128"
+        },
+        {
+          "itemId": "weapon_sword_longsword_alt",
+          "name": "Longsword alt",
+          "variants": [
+            "longsword_alt"
+          ],
+          "customAnimation": "walk_128"
+        },
+        {
+          "itemId": "weapon_sword_longsword",
+          "name": "Longsword",
+          "variants": [
+            "longsword"
+          ],
+          "customAnimation": "slash_oversize"
+        },
+        {
+          "itemId": "weapon_sword_rapier",
+          "name": "Rapier",
+          "variants": [
+            "rapier"
+          ],
+          "customAnimation": "slash_oversize"
+        },
+        {
+          "itemId": "weapon_sword_saber",
+          "name": "Saber",
+          "variants": [
+            "saber"
+          ],
+          "customAnimation": "slash_oversize"
+        },
+        {
+          "itemId": "weapon_sword_scimitar",
+          "name": "Scimitar",
+          "variants": [
+            "scimitar"
+          ],
+          "customAnimation": "walk_128"
+        }
+      ],
+      "bytes": 1758
+    },
+    "hat / hairpin": {
+      "category": "hat",
+      "total": 0,
+      "unfilteredTotal": 50,
+      "showing": {
+        "offset": 0,
+        "count": 0
+      },
+      "palettes": {},
+      "items": [],
+      "bytes": 163
+    },
+    "hair / ponytail": {
+      "category": "hair",
+      "total": 4,
+      "unfilteredTotal": 91,
+      "showing": {
+        "offset": 0,
+        "count": 4
+      },
+      "palettes": {
+        "hair.ulpc.orange": [
+          "orange",
+          "ash",
+          "platinum",
+          "white",
+          "gray",
+          "blonde",
+          "sandy",
+          "strawberry",
+          "gold",
+          "ginger",
+          "carrot",
+          "redhead",
+          "red",
+          "light_brown",
+          "chestnut",
+          "dark_brown",
+          "dark_gray",
+          "black",
+          "raven",
+          "rose",
+          "pink",
+          "purple",
+          "violet",
+          "navy",
+          "blue",
+          "green",
+          "lpcr.ash_brown",
+          "lpcr.black",
+          "lpcr.blonde",
+          "lpcr.blue",
+          "lpcr.brown",
+          "lpcr.charcoal",
+          "lpcr.chestnut",
+          "lpcr.gray",
+          "lpcr.green",
+          "lpcr.orange",
+          "lpcr.pink",
+          "lpcr.platinum",
+          "lpcr.purple",
+          "lpcr.raven",
+          "lpcr.red",
+          "lpcr.ruby",
+          "lpcr.silver",
+          "lpcr.teal",
+          "lpcr.violet",
+          "lpcr.white",
+          "all.lpcr.ivory",
+          "all.lpcr.porcelain",
+          "all.lpcr.peach",
+          "all.lpcr.tan",
+          "all.lpcr.tawny",
+          "all.lpcr.honey",
+          "all.lpcr.bronze",
+          "all.lpcr.brown",
+          "all.lpcr.coffee",
+          "all.lpcr.aegean",
+          "all.lpcr.amber",
+          "all.lpcr.amethyst",
+          "all.lpcr.apple",
+          "all.lpcr.apricot",
+          "all.lpcr.azure",
+          "all.lpcr.beige",
+          "all.lpcr.black",
+          "all.lpcr.blue",
+          "all.lpcr.blue_violet",
+          "all.lpcr.cerise",
+          "all.lpcr.cerulean",
+          "all.lpcr.charcoal",
+          "all.lpcr.chocolate",
+          "all.lpcr.coral",
+          "all.lpcr.cornflower",
+          "all.lpcr.cyan",
+          "all.lpcr.denim",
+          "all.lpcr.dove",
+          "all.lpcr.emerald",
+          "all.lpcr.fern",
+          "all.lpcr.forest",
+          "all.lpcr.garnet",
+          "all.lpcr.gray",
+          "all.lpcr.green",
+          "all.lpcr.heather",
+          "all.lpcr.ice",
+          "all.lpcr.indigo",
+          "all.lpcr.lavender",
+          "all.lpcr.leather",
+          "all.lpcr.lemon",
+          "all.lpcr.linen",
+          "all.lpcr.mauve",
+          "all.lpcr.midnight",
+          "all.lpcr.mint",
+          "all.lpcr.mustard",
+          "all.lpcr.navy",
+          "all.lpcr.neptune",
+          "all.lpcr.oak",
+          "all.lpcr.ochre",
+          "all.lpcr.olivine",
+          "all.lpcr.orange",
+          "all.lpcr.pearl",
+          "all.lpcr.periwinkle",
+          "all.lpcr.pink",
+          "all.lpcr.plum",
+          "all.lpcr.powder",
+          "all.lpcr.purple",
+          "all.lpcr.red",
+          "all.lpcr.red_orange",
+          "all.lpcr.royal",
+          "all.lpcr.salmon",
+          "all.lpcr.sepia",
+          "all.lpcr.shadow",
+          "all.lpcr.silver",
+          "all.lpcr.sky",
+          "all.lpcr.smoke",
+          "all.lpcr.soot",
+          "all.lpcr.spring",
+          "all.lpcr.swamp",
+          "all.lpcr.teal",
+          "all.lpcr.tumeric",
+          "all.lpcr.umber",
+          "all.lpcr.white",
+          "all.lpcr.wine",
+          "all.lpcr.yellow"
+        ]
+      },
+      "items": [
+        {
+          "itemId": "hair_high_ponytail",
+          "name": "High ponytail",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_ponytail",
+          "name": "Ponytail",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_ponytail2",
+          "name": "Ponytail2",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        },
+        {
+          "itemId": "hair_relm_ponytail",
+          "name": "Relm w/Ponytail",
+          "colors": [
+            {
+              "slot": "Hair",
+              "material": "hair",
+              "default": "orange",
+              "palette": "hair.ulpc.orange"
+            }
+          ]
+        }
+      ],
+      "bytes": 3883
+    }
+  },
+  "animations": {
+    "sheetLayout": "13 columns x 54 rows of 64px frames (832x3456); each animation occupies `directionRows` rows starting at `row` (64px each); directions order = up,left,down,right; frames are actually-present frame columns.",
+    "standard": {
+      "spellcast": {
+        "label": "spellcast",
+        "row": 0,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 7,
+        "cycle": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "yOffset": 0
+      },
+      "thrust": {
+        "label": "thrust",
+        "row": 4,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 8,
+        "cycle": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "yOffset": 256
+      },
+      "walk": {
+        "label": "walk",
+        "row": 8,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 9,
+        "cycle": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "yOffset": 512
+      },
+      "slash": {
+        "label": "slash",
+        "row": 12,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 6,
+        "cycle": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "yOffset": 768
+      },
+      "shoot": {
+        "label": "shoot",
+        "row": 16,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 13,
+        "cycle": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "yOffset": 1024
+      },
+      "hurt": {
+        "label": "hurt",
+        "row": 20,
+        "directionRows": 1,
+        "directions": [
+          "down"
+        ],
+        "frames": 6,
+        "cycle": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "yOffset": 1280
+      },
+      "climb": {
+        "label": "climb",
+        "row": 21,
+        "directionRows": 1,
+        "directions": [
+          "up"
+        ],
+        "frames": 6,
+        "cycle": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "yOffset": 1344
+      },
+      "idle": {
+        "label": "idle",
+        "row": 22,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 2,
+        "cycle": [
+          0,
+          0,
+          1
+        ],
+        "yOffset": 1408
+      },
+      "jump": {
+        "label": "jump",
+        "row": 26,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 5,
+        "cycle": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          1
+        ],
+        "yOffset": 1664
+      },
+      "sit": {
+        "label": "sit",
+        "row": 30,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 3,
+        "cycle": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "yOffset": 1920
+      },
+      "emote": {
+        "label": "emote",
+        "row": 34,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 3,
+        "cycle": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "yOffset": 2176
+      },
+      "run": {
+        "label": "run",
+        "row": 38,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 8,
+        "cycle": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "yOffset": 2432
+      },
+      "watering": {
+        "label": "watering",
+        "row": 4,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 8,
+        "cycle": [
+          0,
+          1,
+          4,
+          4,
+          4,
+          4,
+          5
+        ],
+        "yOffset": 256,
+        "notes": "alias: shares the thrust row block"
+      },
+      "combat": {
+        "label": "combat",
+        "row": 42,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 2,
+        "cycle": [
+          0,
+          0,
+          1
+        ],
+        "yOffset": 2688,
+        "notes": "canonical name of the combat_idle row block (get_animation and get_preview also accept combat_idle)"
+      },
+      "1h_slash": {
+        "label": "1h_slash",
+        "row": 46,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 13,
+        "cycle": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "yOffset": 2944,
+        "notes": "alias: shares the backslash row block"
+      },
+      "1h_backslash": {
+        "label": "1h_backslash",
+        "row": 46,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 13,
+        "cycle": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "yOffset": 2944
+      },
+      "1h_halfslash": {
+        "label": "1h_halfslash",
+        "row": 50,
+        "directionRows": 4,
+        "directions": [
+          "up",
+          "left",
+          "down",
+          "right"
+        ],
+        "frames": 6,
+        "cycle": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "yOffset": 3200
+      }
+    },
+    "custom": {
+      "wheelchair": {
+        "frameSize": 64,
+        "rows": 4,
+        "columns": 2,
+        "baseAnimation": "sit",
+        "available": true,
+        "usedBy": [
+          "wheelchair"
+        ]
+      },
+      "tool_rod": {
+        "frameSize": 128,
+        "rows": 4,
+        "columns": 13,
+        "baseAnimation": "thrust",
+        "available": true,
+        "usedBy": [
+          "tool_rod"
+        ]
+      },
+      "slash_128": {
+        "frameSize": 128,
+        "rows": 4,
+        "columns": 6,
+        "baseAnimation": "slash",
+        "available": true,
+        "usedBy": [
+          "weapon_sword_arming",
+          "weapon_sword_katana",
+          "weapon_sword_longsword_alt",
+          "weapon_sword_scimitar"
+        ]
+      },
+      "backslash_128": {
+        "frameSize": 128,
+        "rows": 4,
+        "columns": 13,
+        "baseAnimation": "backslash",
+        "available": true,
+        "usedBy": [
+          "weapon_sword_arming"
+        ]
+      },
+      "halfslash_128": {
+        "frameSize": 128,
+        "rows": 4,
+        "columns": 6,
+        "baseAnimation": "halfslash",
+        "available": true,
+        "usedBy": [
+          "weapon_sword_arming"
+        ]
+      },
+      "thrust_oversize": {
+        "frameSize": 192,
+        "rows": 4,
+        "columns": 8,
+        "baseAnimation": "thrust",
+        "available": true,
+        "usedBy": [
+          "weapon_magic_crystal",
+          "weapon_magic_diamond",
+          "weapon_magic_gnarled",
+          "weapon_magic_loop",
+          "weapon_magic_s",
+          "weapon_polearm_dragonspear",
+          "weapon_polearm_halberd",
+          "weapon_polearm_longspear",
+          "weapon_polearm_trident",
+          "weapon_sword_longsword"
+        ]
+      },
+      "slash_oversize": {
+        "frameSize": 192,
+        "rows": 4,
+        "columns": 6,
+        "baseAnimation": "slash",
+        "available": true,
+        "usedBy": [
+          "weapon_blunt_flail",
+          "weapon_blunt_mace",
+          "weapon_blunt_waraxe",
+          "weapon_polearm_halberd",
+          "weapon_polearm_scythe",
+          "weapon_sword_glowsword",
+          "weapon_sword_longsword",
+          "weapon_sword_rapier",
+          "weapon_sword_saber"
+        ]
+      },
+      "walk_128": {
+        "frameSize": 128,
+        "rows": 4,
+        "columns": 9,
+        "baseAnimation": "walk",
+        "available": true,
+        "usedBy": [
+          "weapon_polearm_dragonspear",
+          "weapon_polearm_longspear",
+          "weapon_polearm_trident",
+          "weapon_ranged_bow_great",
+          "weapon_ranged_bow_normal",
+          "weapon_ranged_bow_recurve",
+          "weapon_sword_katana",
+          "weapon_sword_longsword_alt",
+          "weapon_sword_scimitar"
+        ]
+      },
+      "thrust_128": {
+        "frameSize": 128,
+        "rows": 4,
+        "columns": 8,
+        "baseAnimation": "thrust",
+        "available": false,
+        "usedBy": []
+      },
+      "slash_reverse_oversize": {
+        "frameSize": 192,
+        "rows": 4,
+        "columns": 6,
+        "baseAnimation": "slash",
+        "available": true,
+        "usedBy": [
+          "weapon_blunt_club",
+          "weapon_ranged_boomerang",
+          "weapon_sword_longsword"
+        ]
+      },
+      "whip_oversize": {
+        "frameSize": 192,
+        "rows": 4,
+        "columns": 8,
+        "baseAnimation": "slash",
+        "available": false,
+        "usedBy": []
+      },
+      "tool_whip": {
+        "frameSize": 192,
+        "rows": 4,
+        "columns": 8,
+        "baseAnimation": "slash",
+        "available": true,
+        "usedBy": [
+          "tool_whip"
+        ]
+      },
+      "tool_axe": {
+        "frameSize": 128,
+        "rows": 4,
+        "columns": 10,
+        "baseAnimation": "slash",
+        "available": true,
+        "usedBy": [
+          "tool_axe",
+          "tool_pickaxe"
+        ]
+      },
+      "tool_hammer": {
+        "frameSize": 128,
+        "rows": 4,
+        "columns": 9,
+        "baseAnimation": "slash",
+        "available": true,
+        "usedBy": [
+          "tool_hammer"
+        ]
+      }
+    },
+    "customNote": "Custom blocks are appended below the standard 54-row sheet and can also widen the canvas (up to 1664px with 128/192px frames). They appear in a render only when the character includes an item from usedBy. Blocks with available:false are defined upstream but no item in this pack provides them, so no character can render them."
+  }
+}

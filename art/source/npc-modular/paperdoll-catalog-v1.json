@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0",
+  "model": "hybrid-paper-doll",
+  "reviewStatus": "technical-demo-unreviewed-art",
+  "sourceAssets": ["C01", "C02", "C03"],
+  "frame": { "width": 32, "height": 40, "frameCount": 32, "columns": 4, "rows": 8, "directions": ["down", "up", "left", "right"], "idleFrames": 4, "walkFrames": 4, "pivot": { "x": 16, "y": 40 }, "footBaselineY": 37 },
+  "componentRoles": {
+    "outfitBase": { "layers": ["shadow", "legs", "robe", "arms"], "replaceableAsUnit": true, "includesHead": false },
+    "headBase": { "layers": ["face"], "replaceableAsUnit": true, "includesSkinAndFacialMarks": true },
+    "hairBack": { "layers": ["hair_back"], "replaceable": true },
+    "hairFront": { "layers": ["hair_front"], "replaceable": true },
+    "details": { "layers": ["details"], "replaceable": false, "semanticClass": "unclassified-source-detail", "pairing": "must-follow-outfitBase" },
+    "equipment": { "source": "existing Phaser equipment renderer", "inPaperdollAtlas": false }
+  },
+  "compositionOrder": ["hairBack", "outfitBase", "headBase", "hairFront", "details"],
+  "components": {
+    "C01": { "source": "art/source/gfx5b/characters/C01.aseprite", "placement": "art/source/gfx5b/characters/C01.placement.json", "exportPrefix": "c01", "technicalPrototype": true },
+    "C02": { "source": "art/source/gfx5b/characters/C02.aseprite", "placement": "art/source/gfx5b/characters/C02.placement.json", "exportPrefix": "c02", "technicalPrototype": true },
+    "C03": { "source": "art/source/gfx5b/characters/C03.aseprite", "placement": "art/source/gfx5b/characters/C03.placement.json", "exportPrefix": "c03", "technicalPrototype": true }
+  },
+  "compatibility": { "sameCanvasAndFrameMap": true, "crossSourcePixelAlignment": "canvas-aligned and structurally validated; cross-combinations still need visual review", "faceFeaturesIndependent": false, "accessoriesClassified": false },
+  "notes": ["All extracted parts reconstruct their own source spritesheet pixel-exactly when composed in the declared order.", "A head is a complete head/skin/face unit. Facial marks are not independently replaceable.", "The details layer is not assumed to contain accessories only and must not be used as an accessory catalog without art review.", "C01-C03 remain technical prototypes, not approved art. No NPC runtime mapping is changed."]
+}

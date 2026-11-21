@@ -1,0 +1,22 @@
+{
+  "name": "xianxia-open-world-mvp",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "validate:release": "node scripts/validate-release.mjs",
+    "test:systems": "node tests/world-systems.test.mjs && node tests/confirm-action.test.mjs && node tests/save-guard.test.mjs && node tests/weapon-visuals.test.mjs && node tests/weapon-combat.test.mjs && node tests/npc-modular-appearance.test.mjs && node tests/camera-controls.test.mjs && node tests/minimap-camera.test.mjs && node tests/gfx3b-map.test.mjs && node tests/gfx3c-map.test.mjs && node tests/environmental-system.test.mjs && node tests/commission-system.test.mjs && node tests/gfx5a-appearance.test.mjs && node tests/gfx5a-map.test.mjs && node tests/npc-ai-variety.test.mjs && node tests/npc-population-108.test.mjs && node tests/npc-authority-1a.test.mjs && node tests/world-rebuild-1a.test.mjs && node tests/world-rebuild-1b.test.mjs && node tests/world-rebuild-1c.test.mjs && node tests/world-rebuild-1c2.test.mjs && node tests/monster-fauna-1.test.mjs && node tests/world-player-1.test.mjs"
+  },
+  "dependencies": {
+    "phaser": "^4.2.1"
+  },
+  "devDependencies": {
+    "gifenc": "^1.0.3",
+    "pngjs": "^7.0.0",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5"
+  }
+}

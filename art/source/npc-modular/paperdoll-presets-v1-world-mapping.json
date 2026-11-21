@@ -1,0 +1,765 @@
+{
+  "generatedAt": "2026-11-20T16:47:24.864Z",
+  "previewOnly": true,
+  "saveUnchanged": true,
+  "total": 108,
+  "distinctPresetIds": 24,
+  "assignments": [
+    {
+      "npcId": "population:v1:commoner:01",
+      "presetId": "P01",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:02",
+      "presetId": "P02",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:03",
+      "presetId": "P03",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:04",
+      "presetId": "P04",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:05",
+      "presetId": "P01",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "nong_dan"
+    },
+    {
+      "npcId": "population:v1:commoner:06",
+      "presetId": "P02",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:07",
+      "presetId": "P03",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:08",
+      "presetId": "P04",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:09",
+      "presetId": "P01",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:10",
+      "presetId": "P03",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "nong_dan"
+    },
+    {
+      "npcId": "population:v1:commoner:11",
+      "presetId": "P02",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:12",
+      "presetId": "P01",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:13",
+      "presetId": "P04",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:14",
+      "presetId": "P03",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:15",
+      "presetId": "P02",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "nong_dan"
+    },
+    {
+      "npcId": "population:v1:commoner:16",
+      "presetId": "P01",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:17",
+      "presetId": "P04",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:18",
+      "presetId": "P03",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:19",
+      "presetId": "P02",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:commoner:20",
+      "presetId": "P02",
+      "populationRole": "commoner",
+      "authorityRole": null,
+      "profession": "nong_dan"
+    },
+    {
+      "npcId": "population:v1:low_disciple:01",
+      "presetId": "P07",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:02",
+      "presetId": "P05",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:03",
+      "presetId": "P06",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:04",
+      "presetId": "P07",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:05",
+      "presetId": "P05",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:06",
+      "presetId": "P06",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:07",
+      "presetId": "P07",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:08",
+      "presetId": "P05",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:09",
+      "presetId": "P06",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:10",
+      "presetId": "P07",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:11",
+      "presetId": "P06",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:12",
+      "presetId": "P05",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:13",
+      "presetId": "P07",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:14",
+      "presetId": "P05",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:15",
+      "presetId": "P07",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:16",
+      "presetId": "P06",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:17",
+      "presetId": "P05",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:18",
+      "presetId": "P06",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:19",
+      "presetId": "P05",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:low_disciple:20",
+      "presetId": "P07",
+      "populationRole": "low_disciple",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:elder:01",
+      "presetId": "P08",
+      "populationRole": "elder",
+      "authorityRole": "elder",
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:elder:02",
+      "presetId": "P08",
+      "populationRole": "elder",
+      "authorityRole": "elder",
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:elder:03",
+      "presetId": "P08",
+      "populationRole": "elder",
+      "authorityRole": "elder",
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:elder:04",
+      "presetId": "P08",
+      "populationRole": "elder",
+      "authorityRole": "elder",
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:elder:05",
+      "presetId": "P08",
+      "populationRole": "elder",
+      "authorityRole": "elder",
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:sect_leader:01",
+      "presetId": "P09",
+      "populationRole": "sect_leader",
+      "authorityRole": "sect_leader",
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:merchant:01",
+      "presetId": "P10",
+      "populationRole": "merchant",
+      "authorityRole": null,
+      "profession": "thuong_nhan"
+    },
+    {
+      "npcId": "population:v1:merchant:02",
+      "presetId": "P11",
+      "populationRole": "merchant",
+      "authorityRole": null,
+      "profession": "thuong_nhan"
+    },
+    {
+      "npcId": "population:v1:merchant:03",
+      "presetId": "P10",
+      "populationRole": "merchant",
+      "authorityRole": null,
+      "profession": "thuong_nhan"
+    },
+    {
+      "npcId": "population:v1:merchant:04",
+      "presetId": "P11",
+      "populationRole": "merchant",
+      "authorityRole": null,
+      "profession": "thuong_nhan"
+    },
+    {
+      "npcId": "population:v1:merchant:05",
+      "presetId": "P10",
+      "populationRole": "merchant",
+      "authorityRole": null,
+      "profession": "thuong_nhan"
+    },
+    {
+      "npcId": "population:v1:merchant:06",
+      "presetId": "P11",
+      "populationRole": "merchant",
+      "authorityRole": null,
+      "profession": "thuong_nhan"
+    },
+    {
+      "npcId": "population:v1:merchant:07",
+      "presetId": "P10",
+      "populationRole": "merchant",
+      "authorityRole": null,
+      "profession": "thuong_nhan"
+    },
+    {
+      "npcId": "population:v1:tavern_staff:01",
+      "presetId": "P12",
+      "populationRole": "tavern_staff",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:tavern_staff:02",
+      "presetId": "P12",
+      "populationRole": "tavern_staff",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:tavern_staff:03",
+      "presetId": "P12",
+      "populationRole": "tavern_staff",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:city_guard:01",
+      "presetId": "P14",
+      "populationRole": "city_guard",
+      "authorityRole": "city_guard",
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:city_guard:02",
+      "presetId": "P13",
+      "populationRole": "city_guard",
+      "authorityRole": "city_guard",
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:city_guard:03",
+      "presetId": "P14",
+      "populationRole": "city_guard",
+      "authorityRole": "city_guard",
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:city_guard:04",
+      "presetId": "P13",
+      "populationRole": "city_guard",
+      "authorityRole": "city_guard",
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:city_guard:05",
+      "presetId": "P14",
+      "populationRole": "city_guard",
+      "authorityRole": "city_guard",
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:city_guard:06",
+      "presetId": "P13",
+      "populationRole": "city_guard",
+      "authorityRole": "city_guard",
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:city_guard:07",
+      "presetId": "P14",
+      "populationRole": "city_guard",
+      "authorityRole": "city_guard",
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:city_guard:08",
+      "presetId": "P13",
+      "populationRole": "city_guard",
+      "authorityRole": "city_guard",
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:city_guard:09",
+      "presetId": "P14",
+      "populationRole": "city_guard",
+      "authorityRole": "city_guard",
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:city_guard:10",
+      "presetId": "P14",
+      "populationRole": "city_guard",
+      "authorityRole": "city_guard",
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:repair_worker:01",
+      "presetId": "P15",
+      "populationRole": "repair_worker",
+      "authorityRole": null,
+      "profession": "tho_re"
+    },
+    {
+      "npcId": "population:v1:repair_worker:02",
+      "presetId": "P15",
+      "populationRole": "repair_worker",
+      "authorityRole": null,
+      "profession": "tho_re"
+    },
+    {
+      "npcId": "population:v1:hunter:01",
+      "presetId": "P16",
+      "populationRole": "hunter",
+      "authorityRole": null,
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:hunter:02",
+      "presetId": "P16",
+      "populationRole": "hunter",
+      "authorityRole": null,
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:hunter:03",
+      "presetId": "P16",
+      "populationRole": "hunter",
+      "authorityRole": null,
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:hunter:04",
+      "presetId": "P16",
+      "populationRole": "hunter",
+      "authorityRole": null,
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:hunter:05",
+      "presetId": "P16",
+      "populationRole": "hunter",
+      "authorityRole": null,
+      "profession": "ho_ve"
+    },
+    {
+      "npcId": "population:v1:herb_gatherer:01",
+      "presetId": "P17",
+      "populationRole": "herb_gatherer",
+      "authorityRole": null,
+      "profession": "duoc_su"
+    },
+    {
+      "npcId": "population:v1:herb_gatherer:02",
+      "presetId": "P17",
+      "populationRole": "herb_gatherer",
+      "authorityRole": null,
+      "profession": "duoc_su"
+    },
+    {
+      "npcId": "population:v1:herb_gatherer:03",
+      "presetId": "P17",
+      "populationRole": "herb_gatherer",
+      "authorityRole": null,
+      "profession": "duoc_su"
+    },
+    {
+      "npcId": "population:v1:quest_clerk:01",
+      "presetId": "P18",
+      "populationRole": "quest_clerk",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:quest_clerk:02",
+      "presetId": "P18",
+      "populationRole": "quest_clerk",
+      "authorityRole": null,
+      "profession": "dan_thuong"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:01",
+      "presetId": "P24",
+      "populationRole": "independent_cultivator",
+      "authorityRole": "city_master",
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:02",
+      "presetId": "P19",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:03",
+      "presetId": "P20",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:04",
+      "presetId": "P21",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:05",
+      "presetId": "P22",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:06",
+      "presetId": "P23",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:07",
+      "presetId": "P19",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:08",
+      "presetId": "P19",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:09",
+      "presetId": "P20",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:10",
+      "presetId": "P23",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:11",
+      "presetId": "P22",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:12",
+      "presetId": "P21",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:13",
+      "presetId": "P20",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:14",
+      "presetId": "P22",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:15",
+      "presetId": "P21",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:16",
+      "presetId": "P20",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:17",
+      "presetId": "P19",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:18",
+      "presetId": "P20",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:19",
+      "presetId": "P19",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:20",
+      "presetId": "P21",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:21",
+      "presetId": "P22",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:22",
+      "presetId": "P19",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:23",
+      "presetId": "P20",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:24",
+      "presetId": "P20",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:25",
+      "presetId": "P21",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:26",
+      "presetId": "P23",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:27",
+      "presetId": "P19",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:28",
+      "presetId": "P19",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:29",
+      "presetId": "P20",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    },
+    {
+      "npcId": "population:v1:independent_cultivator:30",
+      "presetId": "P22",
+      "populationRole": "independent_cultivator",
+      "authorityRole": null,
+      "profession": "tu_si"
+    }
+  ]
+}

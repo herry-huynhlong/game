@@ -1,0 +1,2331 @@
+{
+  "type": "tileset",
+  "version": "1.10",
+  "tiledversion": "1.12.2",
+  "name": "GFX5B5AreaTerrain",
+  "tilewidth": 32,
+  "tileheight": 32,
+  "tilecount": 256,
+  "columns": 16,
+  "spacing": 0,
+  "margin": 0,
+  "image": "../../public/assets/tilesets/gfx5b5_area_terrain.png",
+  "imagewidth": 512,
+  "imageheight": 512,
+  "objectalignment": "topleft",
+  "tilerendersize": "tile",
+  "fillmode": "stretch",
+  "tiles": [
+    {
+      "id": 0,
+      "type": "area_tile_000",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "type": "area_tile_001",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "area_tile_002",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "area_tile_003",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "area_tile_004",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "area_tile_005",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "area_tile_006",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "area_tile_007",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "area_tile_008",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "forest"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "area_tile_009",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "forest"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "area_tile_010",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "forest"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "type": "area_tile_011",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "forest"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "type": "area_tile_012",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "forest"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "type": "area_tile_013",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "forest"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "type": "area_tile_014",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "forest"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "type": "area_tile_015",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "forest"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "type": "area_tile_016",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "earth"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "type": "area_tile_017",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "earth"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "type": "area_tile_018",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "earth"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "type": "area_tile_019",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "earth"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "type": "area_tile_020",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "earth"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "type": "area_tile_021",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "earth"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "type": "area_tile_022",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "earth"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "type": "area_tile_023",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "earth"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "type": "area_tile_024",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dry_grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "type": "area_tile_025",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dry_grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "type": "area_tile_026",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dry_grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "type": "area_tile_027",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dry_grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "type": "area_tile_028",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dry_grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "type": "area_tile_029",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dry_grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "type": "area_tile_030",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dry_grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "type": "area_tile_031",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dry_grass"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "type": "area_tile_032",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "city_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "type": "area_tile_033",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "city_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "type": "area_tile_034",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "city_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "type": "area_tile_035",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "city_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "type": "area_tile_036",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "city_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "type": "area_tile_037",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "city_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "type": "area_tile_038",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "city_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "type": "area_tile_039",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "city_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "type": "area_tile_040",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "sect_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "type": "area_tile_041",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "sect_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "type": "area_tile_042",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "sect_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "type": "area_tile_043",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "sect_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "type": "area_tile_044",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "sect_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "type": "area_tile_045",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "sect_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "type": "area_tile_046",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "sect_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "type": "area_tile_047",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "sect_stone"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "type": "area_tile_048",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rocky_ground"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "type": "area_tile_049",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rocky_ground"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "type": "area_tile_050",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rocky_ground"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "type": "area_tile_051",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rocky_ground"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "type": "area_tile_052",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rocky_ground"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "type": "area_tile_053",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rocky_ground"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "type": "area_tile_054",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rocky_ground"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "type": "area_tile_055",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rocky_ground"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "type": "area_tile_056",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 57,
+      "type": "area_tile_057",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 58,
+      "type": "area_tile_058",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 59,
+      "type": "area_tile_059",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 60,
+      "type": "area_tile_060",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "type": "area_tile_061",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 62,
+      "type": "area_tile_062",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 63,
+      "type": "area_tile_063",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "water"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 64,
+      "type": "area_tile_064",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 65,
+      "type": "area_tile_065",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 66,
+      "type": "area_tile_066",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 67,
+      "type": "area_tile_067",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 68,
+      "type": "area_tile_068",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 69,
+      "type": "area_tile_069",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 70,
+      "type": "area_tile_070",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 71,
+      "type": "area_tile_071",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 72,
+      "type": "area_tile_072",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dirt_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 73,
+      "type": "area_tile_073",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dirt_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 74,
+      "type": "area_tile_074",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dirt_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 75,
+      "type": "area_tile_075",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dirt_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 76,
+      "type": "area_tile_076",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dirt_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 77,
+      "type": "area_tile_077",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dirt_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 78,
+      "type": "area_tile_078",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dirt_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 79,
+      "type": "area_tile_079",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "dirt_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 80,
+      "type": "area_tile_080",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stone_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 81,
+      "type": "area_tile_081",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stone_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 82,
+      "type": "area_tile_082",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stone_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "type": "area_tile_083",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stone_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "type": "area_tile_084",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stone_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 85,
+      "type": "area_tile_085",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stone_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 86,
+      "type": "area_tile_086",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stone_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 87,
+      "type": "area_tile_087",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stone_road"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 88,
+      "type": "area_tile_088",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_cap"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 89,
+      "type": "area_tile_089",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_cap"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 90,
+      "type": "area_tile_090",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_cap"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 91,
+      "type": "area_tile_091",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_cap"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 92,
+      "type": "area_tile_092",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_cap"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 93,
+      "type": "area_tile_093",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_cap"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 94,
+      "type": "area_tile_094",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_cap"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 95,
+      "type": "area_tile_095",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_cap"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 96,
+      "type": "area_tile_096",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 97,
+      "type": "area_tile_097",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 98,
+      "type": "area_tile_098",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 99,
+      "type": "area_tile_099",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 100,
+      "type": "area_tile_100",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "type": "area_tile_101",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "type": "area_tile_102",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "type": "area_tile_103",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "type": "area_tile_104",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "type": "area_tile_105",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "type": "area_tile_106",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "type": "area_tile_107",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "type": "area_tile_108",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 109,
+      "type": "area_tile_109",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 110,
+      "type": "area_tile_110",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 111,
+      "type": "area_tile_111",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "cliff_face"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 112,
+      "type": "area_tile_112",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 113,
+      "type": "area_tile_113",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 114,
+      "type": "area_tile_114",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 115,
+      "type": "area_tile_115",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 116,
+      "type": "area_tile_116",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 117,
+      "type": "area_tile_117",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 118,
+      "type": "area_tile_118",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 119,
+      "type": "area_tile_119",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 120,
+      "type": "area_tile_120",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 121,
+      "type": "area_tile_121",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 122,
+      "type": "area_tile_122",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 123,
+      "type": "area_tile_123",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 124,
+      "type": "area_tile_124",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 125,
+      "type": "area_tile_125",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 126,
+      "type": "area_tile_126",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 127,
+      "type": "area_tile_127",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 128,
+      "type": "area_tile_128",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 129,
+      "type": "area_tile_129",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 130,
+      "type": "area_tile_130",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 131,
+      "type": "area_tile_131",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 132,
+      "type": "area_tile_132",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 133,
+      "type": "area_tile_133",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 134,
+      "type": "area_tile_134",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 135,
+      "type": "area_tile_135",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "id": 136,
+      "type": "area_tile_136",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": 137,
+      "type": "area_tile_137",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": 138,
+      "type": "area_tile_138",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": 139,
+      "type": "area_tile_139",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": 140,
+      "type": "area_tile_140",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": 141,
+      "type": "area_tile_141",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": 142,
+      "type": "area_tile_142",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": 143,
+      "type": "area_tile_143",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "moss"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "tilesetPurpose",
+      "type": "string",
+      "value": "Top-down city, wilderness and sect sample terrain"
+    }
+  ]
+}

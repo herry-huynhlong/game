@@ -1,0 +1,164 @@
+{
+  "animation": "wind_light",
+  "runtime": {
+    "textureMode": "shared horizontal spritesheets",
+    "origin": "bottom-center anchor via tiled bottom-left object alignment; each Phaser sprite is centered on fixed Tiled object bounds",
+    "interpolation": "nearest neighbor",
+    "phaseSeed": "stable FNV-1a hash of placed Tiled object name",
+    "collisionUnchanged": true
+  },
+  "species": {
+    "T03-mountain-pine": {
+      "firstgid": 400,
+      "canvas": [
+        96,
+        112
+      ],
+      "frames": 8,
+      "durationsMs": [
+        160,
+        160,
+        180,
+        160,
+        160,
+        180,
+        160,
+        160
+      ],
+      "layers": [
+        "Contact shadow",
+        "Trunk roots and branches",
+        "Foliage base",
+        "Wind-bent branch tips"
+      ],
+      "contactShadow": "fixed frame layer",
+      "windParts": [
+        "branch tips, needle bunches by tier"
+      ],
+      "collisionFootprint": {
+        "offset": [
+          29,
+          -15
+        ],
+        "size": [
+          38,
+          14
+        ]
+      }
+    },
+    "T04-broadleaf": {
+      "firstgid": 408,
+      "canvas": [
+        96,
+        112
+      ],
+      "frames": 8,
+      "durationsMs": [
+        170,
+        180,
+        170,
+        170,
+        180,
+        170,
+        170,
+        180
+      ],
+      "layers": [
+        "Contact shadow",
+        "Trunk roots and branches",
+        "Foliage base",
+        "Wind-bent branch tips"
+      ],
+      "contactShadow": "fixed frame layer",
+      "windParts": [
+        "outer leaf clusters"
+      ],
+      "collisionFootprint": {
+        "offset": [
+          30,
+          -15
+        ],
+        "size": [
+          37,
+          14
+        ]
+      }
+    },
+    "T05-willow": {
+      "firstgid": 416,
+      "canvas": [
+        96,
+        112
+      ],
+      "frames": 8,
+      "durationsMs": [
+        200,
+        200,
+        220,
+        200,
+        200,
+        220,
+        200,
+        200
+      ],
+      "layers": [
+        "Contact shadow",
+        "Trunk roots and branches",
+        "Foliage base",
+        "Wind-bent branch tips"
+      ],
+      "contactShadow": "fixed frame layer",
+      "windParts": [
+        "drooping branches, tips, leaf bunches"
+      ],
+      "collisionFootprint": {
+        "offset": [
+          31,
+          -15
+        ],
+        "size": [
+          34,
+          14
+        ]
+      }
+    },
+    "T06-monster-ancient": {
+      "firstgid": 424,
+      "canvas": [
+        96,
+        112
+      ],
+      "frames": 8,
+      "durationsMs": [
+        220,
+        220,
+        240,
+        220,
+        220,
+        240,
+        220,
+        220
+      ],
+      "layers": [
+        "Contact shadow",
+        "Trunk roots and branches",
+        "Foliage base",
+        "Wind-bent branch tips"
+      ],
+      "contactShadow": "fixed frame layer",
+      "windParts": [
+        "distant vines and leaf tips"
+      ],
+      "collisionFootprint": {
+        "offset": [
+          29,
+          -15
+        ],
+        "size": [
+          38,
+          14
+        ]
+      }
+    }
+  }
+}

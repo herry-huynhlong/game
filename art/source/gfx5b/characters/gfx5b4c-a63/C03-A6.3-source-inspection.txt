@@ -1,0 +1,14 @@
+SIZE=48x64 FRAMES=3 LAYERS=10 TAGS=3
+LAYER 1 shadow
+LAYER 2 hair_back
+LAYER 3 robe_back
+LAYER 4 legs_boots
+LAYER 5 sleeves
+LAYER 6 body
+LAYER 7 face
+LAYER 8 hair_front
+LAYER 9 facial_features
+LAYER 10 robe_trim
+TAG 1 idle_front 
+TAG 2 idle_profile_east 
+TAG 3 idle_three_quarter_south_east 

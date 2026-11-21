@@ -1,0 +1,51 @@
+{
+  "assetId": "T02-bamboo-v2",
+  "canvas": {
+    "width": 96,
+    "height": 96
+  },
+  "frames": 8,
+  "durationsMs": [
+    220,
+    220,
+    220,
+    220,
+    220,
+    220,
+    220,
+    220
+  ],
+  "spriteSheet": "T02-bamboo-v2.png",
+  "aseprite": "T02-bamboo-v2.aseprite",
+  "coordinates": "canvas pixels; x right, y down",
+  "proposedPlacement": {
+    "originPixel": {
+      "x": 46,
+      "y": 87
+    },
+    "displayScale": 1,
+    "footprint": {
+      "x": 26,
+      "y": 80,
+      "width": 41,
+      "height": 10
+    },
+    "proposedCollisionRects": [
+      {
+        "x": 26,
+        "y": 82,
+        "width": 41,
+        "height": 7
+      }
+    ],
+    "occlusion": "sort by root y; foliage and stems retained as separate Aseprite layers",
+    "status": "proposed, not integrated"
+  },
+  "layersBottomToTop": [
+    "ground_shadow",
+    "rear_stems",
+    "front_stems",
+    "rear_leaves",
+    "front_leaves"
+  ]
+}

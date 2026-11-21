@@ -1,0 +1,658 @@
+{
+  "version": 1,
+  "frame": {
+    "width": 32,
+    "height": 40,
+    "poses": [
+      "idle",
+      "walk-a",
+      "walk-b"
+    ],
+    "directions": [
+      "down",
+      "up",
+      "left",
+      "right"
+    ]
+  },
+  "parts": {
+    "hair": [
+      {
+        "id": "hair-01",
+        "name": "short-cut",
+        "sheet": "npc-hair-01-04",
+        "variant": 0,
+        "frameCount": 12,
+        "layerNames": [
+          "hair_back",
+          "hair_mass",
+          "hair_highlights",
+          "hair_ties"
+        ]
+      },
+      {
+        "id": "hair-02",
+        "name": "high-knot",
+        "sheet": "npc-hair-01-04",
+        "variant": 1,
+        "frameCount": 12,
+        "layerNames": [
+          "hair_back",
+          "hair_mass",
+          "hair_highlights",
+          "hair_ties"
+        ]
+      },
+      {
+        "id": "hair-03",
+        "name": "tied-long",
+        "sheet": "npc-hair-01-04",
+        "variant": 2,
+        "frameCount": 12,
+        "layerNames": [
+          "hair_back",
+          "hair_mass",
+          "hair_highlights",
+          "hair_ties"
+        ]
+      },
+      {
+        "id": "hair-04",
+        "name": "loose-long",
+        "sheet": "npc-hair-01-04",
+        "variant": 3,
+        "frameCount": 12,
+        "layerNames": [
+          "hair_back",
+          "hair_mass",
+          "hair_highlights",
+          "hair_ties"
+        ]
+      },
+      {
+        "id": "hair-05",
+        "name": "double-bun",
+        "sheet": "npc-hair-05-08",
+        "variant": 0,
+        "frameCount": 12,
+        "layerNames": [
+          "hair_back",
+          "hair_mass",
+          "hair_highlights",
+          "hair_ties"
+        ]
+      },
+      {
+        "id": "hair-06",
+        "name": "braided",
+        "sheet": "npc-hair-05-08",
+        "variant": 1,
+        "frameCount": 12,
+        "layerNames": [
+          "hair_back",
+          "hair_mass",
+          "hair_highlights",
+          "hair_ties"
+        ]
+      },
+      {
+        "id": "hair-07",
+        "name": "side-fringe",
+        "sheet": "npc-hair-05-08",
+        "variant": 2,
+        "frameCount": 12,
+        "layerNames": [
+          "hair_back",
+          "hair_mass",
+          "hair_highlights",
+          "hair_ties"
+        ]
+      },
+      {
+        "id": "hair-08",
+        "name": "silver-long",
+        "sheet": "npc-hair-05-08",
+        "variant": 3,
+        "frameCount": 12,
+        "layerNames": [
+          "hair_back",
+          "hair_mass",
+          "hair_highlights",
+          "hair_ties"
+        ]
+      },
+      {
+        "id": "hair-09",
+        "name": "silver-bun",
+        "sheet": "npc-hair-09-12",
+        "variant": 0,
+        "frameCount": 12,
+        "layerNames": [
+          "hair_back",
+          "hair_mass",
+          "hair_highlights",
+          "hair_ties"
+        ]
+      },
+      {
+        "id": "hair-10",
+        "name": "soft-curls",
+        "sheet": "npc-hair-09-12",
+        "variant": 1,
+        "frameCount": 12,
+        "layerNames": [
+          "hair_back",
+          "hair_mass",
+          "hair_highlights",
+          "hair_ties"
+        ]
+      },
+      {
+        "id": "hair-11",
+        "name": "close-cropped",
+        "sheet": "npc-hair-09-12",
+        "variant": 2,
+        "frameCount": 12,
+        "layerNames": [
+          "hair_back",
+          "hair_mass",
+          "hair_highlights",
+          "hair_ties"
+        ]
+      },
+      {
+        "id": "hair-12",
+        "name": "daoist-tie",
+        "sheet": "npc-hair-09-12",
+        "variant": 3,
+        "frameCount": 12,
+        "layerNames": [
+          "hair_back",
+          "hair_mass",
+          "hair_highlights",
+          "hair_ties"
+        ]
+      }
+    ],
+    "face": [
+      {
+        "id": "face-01",
+        "name": "young-man",
+        "sheet": "npc-face-01-04",
+        "variant": 0,
+        "frameCount": 12,
+        "layerNames": [
+          "face_shape",
+          "eyes_and_brows",
+          "age_beard_scars"
+        ]
+      },
+      {
+        "id": "face-02",
+        "name": "young-woman",
+        "sheet": "npc-face-01-04",
+        "variant": 1,
+        "frameCount": 12,
+        "layerNames": [
+          "face_shape",
+          "eyes_and_brows",
+          "age_beard_scars"
+        ]
+      },
+      {
+        "id": "face-03",
+        "name": "middle-man",
+        "sheet": "npc-face-01-04",
+        "variant": 2,
+        "frameCount": 12,
+        "layerNames": [
+          "face_shape",
+          "eyes_and_brows",
+          "age_beard_scars"
+        ]
+      },
+      {
+        "id": "face-04",
+        "name": "middle-woman",
+        "sheet": "npc-face-01-04",
+        "variant": 3,
+        "frameCount": 12,
+        "layerNames": [
+          "face_shape",
+          "eyes_and_brows",
+          "age_beard_scars"
+        ]
+      },
+      {
+        "id": "face-05",
+        "name": "elder-bearded",
+        "sheet": "npc-face-05-08",
+        "variant": 0,
+        "frameCount": 12,
+        "layerNames": [
+          "face_shape",
+          "eyes_and_brows",
+          "age_beard_scars"
+        ]
+      },
+      {
+        "id": "face-06",
+        "name": "elder-woman",
+        "sheet": "npc-face-05-08",
+        "variant": 1,
+        "frameCount": 12,
+        "layerNames": [
+          "face_shape",
+          "eyes_and_brows",
+          "age_beard_scars"
+        ]
+      },
+      {
+        "id": "face-07",
+        "name": "moustache",
+        "sheet": "npc-face-05-08",
+        "variant": 2,
+        "frameCount": 12,
+        "layerNames": [
+          "face_shape",
+          "eyes_and_brows",
+          "age_beard_scars"
+        ]
+      },
+      {
+        "id": "face-08",
+        "name": "stern",
+        "sheet": "npc-face-05-08",
+        "variant": 3,
+        "frameCount": 12,
+        "layerNames": [
+          "face_shape",
+          "eyes_and_brows",
+          "age_beard_scars"
+        ]
+      },
+      {
+        "id": "face-09",
+        "name": "kind",
+        "sheet": "npc-face-09-10",
+        "variant": 0,
+        "frameCount": 12,
+        "layerNames": [
+          "face_shape",
+          "eyes_and_brows",
+          "age_beard_scars"
+        ]
+      },
+      {
+        "id": "face-10",
+        "name": "scarred",
+        "sheet": "npc-face-09-10",
+        "variant": 1,
+        "frameCount": 12,
+        "layerNames": [
+          "face_shape",
+          "eyes_and_brows",
+          "age_beard_scars"
+        ]
+      }
+    ],
+    "outfit": [
+      {
+        "id": "outfit-01",
+        "name": "work-indigo",
+        "sheet": "npc-outfit-01-04",
+        "variant": 0,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-02",
+        "name": "field-olive",
+        "sheet": "npc-outfit-01-04",
+        "variant": 1,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-03",
+        "name": "village-rust",
+        "sheet": "npc-outfit-01-04",
+        "variant": 2,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-04",
+        "name": "merchant-teal",
+        "sheet": "npc-outfit-01-04",
+        "variant": 3,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-05",
+        "name": "merchant-plum",
+        "sheet": "npc-outfit-05-08",
+        "variant": 0,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-06",
+        "name": "tavern-apron",
+        "sheet": "npc-outfit-05-08",
+        "variant": 1,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-07",
+        "name": "guard-lamellar",
+        "sheet": "npc-outfit-05-08",
+        "variant": 2,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-08",
+        "name": "guard-captain",
+        "sheet": "npc-outfit-05-08",
+        "variant": 3,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-09",
+        "name": "disciple-jade",
+        "sheet": "npc-outfit-09-12",
+        "variant": 0,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-10",
+        "name": "disciple-sky",
+        "sheet": "npc-outfit-09-12",
+        "variant": 1,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-11",
+        "name": "elder-cloud",
+        "sheet": "npc-outfit-09-12",
+        "variant": 2,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-12",
+        "name": "scribe-robe",
+        "sheet": "npc-outfit-09-12",
+        "variant": 3,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-13",
+        "name": "hunter-travel",
+        "sheet": "npc-outfit-13-16",
+        "variant": 0,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-14",
+        "name": "herb-gatherer",
+        "sheet": "npc-outfit-13-16",
+        "variant": 1,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-15",
+        "name": "rogue-cloak",
+        "sheet": "npc-outfit-13-16",
+        "variant": 2,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-16",
+        "name": "rogue-leather",
+        "sheet": "npc-outfit-13-16",
+        "variant": 3,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-17",
+        "name": "city-lord-brocade",
+        "sheet": "npc-outfit-17-18",
+        "variant": 0,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      },
+      {
+        "id": "outfit-18",
+        "name": "sect-master-raiment",
+        "sheet": "npc-outfit-17-18",
+        "variant": 1,
+        "frameCount": 12,
+        "layerNames": [
+          "robe_outer_shape",
+          "collar_sash_rank",
+          "woven_shadows",
+          "hem_motion"
+        ]
+      }
+    ],
+    "accessory": [
+      {
+        "id": "accessory-01",
+        "name": "official-cap",
+        "sheet": "npc-accessory-01-04",
+        "variant": 0,
+        "frameCount": 12,
+        "layerNames": [
+          "accessory_headwear",
+          "accessory_work_gear",
+          "accessory_hardware"
+        ]
+      },
+      {
+        "id": "accessory-02",
+        "name": "head-scarf",
+        "sheet": "npc-accessory-01-04",
+        "variant": 1,
+        "frameCount": 12,
+        "layerNames": [
+          "accessory_headwear",
+          "accessory_work_gear",
+          "accessory_hardware"
+        ]
+      },
+      {
+        "id": "accessory-03",
+        "name": "field-hat",
+        "sheet": "npc-accessory-01-04",
+        "variant": 2,
+        "frameCount": 12,
+        "layerNames": [
+          "accessory_headwear",
+          "accessory_work_gear",
+          "accessory_hardware"
+        ]
+      },
+      {
+        "id": "accessory-04",
+        "name": "medicine-pouch",
+        "sheet": "npc-accessory-01-04",
+        "variant": 3,
+        "frameCount": 12,
+        "layerNames": [
+          "accessory_headwear",
+          "accessory_work_gear",
+          "accessory_hardware"
+        ]
+      },
+      {
+        "id": "accessory-05",
+        "name": "cloth-pack",
+        "sheet": "npc-accessory-05-08",
+        "variant": 0,
+        "frameCount": 12,
+        "layerNames": [
+          "accessory_headwear",
+          "accessory_work_gear",
+          "accessory_hardware"
+        ]
+      },
+      {
+        "id": "accessory-06",
+        "name": "wide-belt",
+        "sheet": "npc-accessory-05-08",
+        "variant": 1,
+        "frameCount": 12,
+        "layerNames": [
+          "accessory_headwear",
+          "accessory_work_gear",
+          "accessory_hardware"
+        ]
+      },
+      {
+        "id": "accessory-07",
+        "name": "shoulder-guard",
+        "sheet": "npc-accessory-05-08",
+        "variant": 2,
+        "frameCount": 12,
+        "layerNames": [
+          "accessory_headwear",
+          "accessory_work_gear",
+          "accessory_hardware"
+        ]
+      },
+      {
+        "id": "accessory-08",
+        "name": "wrist-wraps",
+        "sheet": "npc-accessory-05-08",
+        "variant": 3,
+        "frameCount": 12,
+        "layerNames": [
+          "accessory_headwear",
+          "accessory_work_gear",
+          "accessory_hardware"
+        ]
+      },
+      {
+        "id": "accessory-09",
+        "name": "jade-hairpin",
+        "sheet": "npc-accessory-09-10",
+        "variant": 0,
+        "frameCount": 12,
+        "layerNames": [
+          "accessory_headwear",
+          "accessory_work_gear",
+          "accessory_hardware"
+        ]
+      },
+      {
+        "id": "accessory-10",
+        "name": "sect-badge",
+        "sheet": "npc-accessory-09-10",
+        "variant": 1,
+        "frameCount": 12,
+        "layerNames": [
+          "accessory_headwear",
+          "accessory_work_gear",
+          "accessory_hardware"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,3726 @@
+{
+  "seed": "authority-roster-seed",
+  "total": 109,
+  "authority": {
+    "version": 1,
+    "realmBalanceVersion": 1,
+    "cityMasterId": "city-master-qingyun",
+    "sectLeaderId": "van-du",
+    "realmChanges": [
+      {
+        "npcId": "population:v1:commoner:07",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò commoner (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:commoner:09",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò commoner (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:commoner:15",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò commoner (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "qingyun-12",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 2
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò low_disciple (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:low_disciple:13",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 1
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò low_disciple (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "qingyun-24",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò low_disciple (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:elder:02",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 7
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò elder (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:elder:05",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 3
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 8
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò elder (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "qingyun-03",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 9
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò elder (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:elder:04",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "to": {
+          "realmIndex": 2,
+          "realmLevel": 4
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò elder (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:elder:03",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "to": {
+          "realmIndex": 2,
+          "realmLevel": 5
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò elder (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "van-du",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 3,
+          "realmLevel": 2
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò sect_leader (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:tavern_staff:02",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò tavern_staff (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:city_guard:04",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò city_guard (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "qingyun-06",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò city_guard (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:city_guard:08",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò city_guard (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:city_guard:10",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò city_guard (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:city_guard:05",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò city_guard (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:city_guard:09",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò city_guard (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:city_guard:06",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 1
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò city_guard (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:city_guard:03",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 3
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò city_guard (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:city_guard:07",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 1
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò city_guard (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:hunter:04",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 2
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò hunter (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:09",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 9
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:13",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 6
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:25",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:29",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 1
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "blackwind-2",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 9
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:05",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 7
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:08",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 9
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:17",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 6
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:18",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 7
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:21",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:28",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 2
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "blackwind-3",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 3
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 8
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:10",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 3
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 6
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:14",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 3
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:20",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 3
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:24",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 3
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "blackwind-4",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 7
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:07",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "to": {
+          "realmIndex": 0,
+          "realmLevel": 6
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:11",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 6
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:15",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 5
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:19",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 8
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:23",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 4
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:27",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 4
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 5
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:06",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 6
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:12",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 6
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:16",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 5
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:22",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "to": {
+          "realmIndex": 1,
+          "realmLevel": 4
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "population:v1:independent_cultivator:26",
+        "from": {
+          "realmIndex": 0,
+          "realmLevel": 5
+        },
+        "to": {
+          "realmIndex": 2,
+          "realmLevel": 5
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      },
+      {
+        "npcId": "blackwind-1",
+        "from": {
+          "realmIndex": 1,
+          "realmLevel": 5
+        },
+        "to": {
+          "realmIndex": 2,
+          "realmLevel": 8
+        },
+        "reason": "Chuẩn hóa tu vi theo vai trò independent_cultivator (NPC.AUTHORITY.1-A)."
+      }
+    ]
+  },
+  "distribution": {
+    "Luyện Khí": 83,
+    "Trúc Cơ": 20,
+    "Kim Đan": 4,
+    "Nguyên Anh": 2,
+    "Hóa Thần": 0
+  },
+  "residents": [
+    {
+      "id": "van-du",
+      "name": "Vân Du",
+      "authorityRole": "sect_leader",
+      "populationRole": "sect_leader",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Nguyên Anh",
+      "realmIndex": 3,
+      "realmLevel": 2,
+      "xp": 0,
+      "hp": 417,
+      "hpMax": 417,
+      "mp": 264,
+      "mpMax": 264,
+      "attack": 79.2,
+      "defense": 16,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "điềm tĩnh",
+      "age": 23,
+      "position": {
+        "x": 580,
+        "y": 790
+      },
+      "stones": 15,
+      "inventory": [
+        {
+          "itemId": "qi_pill",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-01",
+      "name": "Tống Thanh Hà",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 6,
+      "xp": 23,
+      "hp": 100,
+      "hpMax": 151,
+      "mp": 60,
+      "mpMax": 80,
+      "attack": 30.7,
+      "defense": 2,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "tham vọng",
+      "age": 25,
+      "position": {
+        "x": 430,
+        "y": 610
+      },
+      "stones": 34,
+      "inventory": [
+        {
+          "itemId": "spirit_herb",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "qingyun-02",
+      "name": "Mạc Tiểu Nhiên",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 46,
+      "hp": 100,
+      "hpMax": 151,
+      "mp": 60,
+      "mpMax": 91,
+      "attack": 25,
+      "defense": 2,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "hào sảng",
+      "age": 32,
+      "position": {
+        "x": 720,
+        "y": 720
+      },
+      "stones": 53,
+      "inventory": [
+        {
+          "itemId": "iron_sword",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-03",
+      "name": "Lục Trường Canh",
+      "authorityRole": "elder",
+      "populationRole": "elder",
+      "profession": "dan_su",
+      "faction": "Thanh Vân Tông",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 9,
+      "xp": 69,
+      "hp": 195,
+      "hpMax": 236,
+      "mp": 118,
+      "mpMax": 142,
+      "attack": 43,
+      "defense": 7,
+      "origin": "Thanh Vân Tông · gia đình hành nghề dan_su",
+      "personality": "cẩn trọng",
+      "age": 39,
+      "position": {
+        "x": 490,
+        "y": 860
+      },
+      "stones": 72,
+      "inventory": [
+        {
+          "itemId": "protective_talisman",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-04",
+      "name": "Bạch Tố Tâm",
+      "authorityRole": null,
+      "populationRole": "merchant",
+      "profession": "thuong_nhan",
+      "faction": "Thương Hội Thanh Vân",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "xp": 17,
+      "hp": 100,
+      "hpMax": 114,
+      "mp": 60,
+      "mpMax": 68,
+      "attack": 25.5,
+      "defense": 4,
+      "origin": "Thương Hội Thanh Vân · gia đình hành nghề thuong_nhan",
+      "personality": "hiếu kỳ",
+      "age": 46,
+      "position": {
+        "x": 2740,
+        "y": 850
+      },
+      "stones": 91,
+      "inventory": [
+        {
+          "itemId": "qi_pill",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-05",
+      "name": "Hàn Sơn",
+      "authorityRole": null,
+      "populationRole": "herb_gatherer",
+      "profession": "duoc_su",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 40,
+      "hp": 100,
+      "hpMax": 126,
+      "mp": 60,
+      "mpMax": 64,
+      "attack": 23.4,
+      "defense": 1,
+      "origin": "Thanh Vân Tông · gia đình hành nghề duoc_su",
+      "personality": "cô độc",
+      "age": 53,
+      "position": {
+        "x": 680,
+        "y": 530
+      },
+      "stones": 110,
+      "inventory": [
+        {
+          "itemId": "spirit_herb",
+          "count": 5
+        }
+      ]
+    },
+    {
+      "id": "qingyun-06",
+      "name": "Diệp Linh Chi",
+      "authorityRole": "city_guard",
+      "populationRole": "city_guard",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 63,
+      "hp": 128,
+      "hpMax": 143,
+      "mp": 76,
+      "mpMax": 76,
+      "attack": 25,
+      "defense": 2,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "nhân hậu",
+      "age": 60,
+      "position": {
+        "x": 2370,
+        "y": 850
+      },
+      "stones": 129,
+      "inventory": [
+        {
+          "itemId": "iron_sword",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-07",
+      "name": "Chu Mặc",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "nong_dan",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 6,
+      "xp": 11,
+      "hp": 100,
+      "hpMax": 135,
+      "mp": 60,
+      "mpMax": 96,
+      "attack": 30.7,
+      "defense": 2,
+      "origin": "Thanh Vân Thôn · gia đình làm ruộng",
+      "personality": "thực tế",
+      "age": 67,
+      "position": {
+        "x": 2670,
+        "y": 1195
+      },
+      "stones": 28,
+      "inventory": [
+        {
+          "itemId": "rice_seed",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "qingyun-08",
+      "name": "Ninh Uyển",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 34,
+      "hp": 100,
+      "hpMax": 151,
+      "mp": 60,
+      "mpMax": 76,
+      "attack": 25,
+      "defense": 2,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "điềm tĩnh",
+      "age": 74,
+      "position": {
+        "x": 340,
+        "y": 510
+      },
+      "stones": 47,
+      "inventory": [
+        {
+          "itemId": "qi_pill",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-09",
+      "name": "Phùng Đại Hải",
+      "authorityRole": null,
+      "populationRole": "repair_worker",
+      "profession": "tho_re",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 57,
+      "hp": 100,
+      "hpMax": 121,
+      "mp": 60,
+      "mpMax": 72,
+      "attack": 23.5,
+      "defense": 5,
+      "origin": "Thanh Vân Tông · gia đình hành nghề tho_re",
+      "personality": "tham vọng",
+      "age": 81,
+      "position": {
+        "x": 3260,
+        "y": 1080
+      },
+      "stones": 66,
+      "inventory": [
+        {
+          "itemId": "iron_ore",
+          "count": 4
+        },
+        {
+          "itemId": "wood",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "qingyun-10",
+      "name": "Tần Vũ",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 3,
+      "xp": 5,
+      "hp": 100,
+      "hpMax": 194,
+      "mp": 60,
+      "mpMax": 118,
+      "attack": 45,
+      "defense": 5,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "hào sảng",
+      "age": 20,
+      "position": {
+        "x": 1740,
+        "y": 540
+      },
+      "stones": 85,
+      "inventory": [
+        {
+          "itemId": "iron_sword",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-11",
+      "name": "Lâm Tiểu Ngư",
+      "authorityRole": null,
+      "populationRole": "herb_gatherer",
+      "profession": "duoc_su",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 28,
+      "hp": 100,
+      "hpMax": 142,
+      "mp": 60,
+      "mpMax": 64,
+      "attack": 20.5,
+      "defense": 1,
+      "origin": "Thanh Vân Tông · gia đình hành nghề duoc_su",
+      "personality": "cẩn trọng",
+      "age": 27,
+      "position": {
+        "x": 2965,
+        "y": 632
+      },
+      "stones": 104,
+      "inventory": [
+        {
+          "itemId": "spirit_herb",
+          "count": 5
+        }
+      ]
+    },
+    {
+      "id": "qingyun-12",
+      "name": "Thẩm Dạ",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 2,
+      "xp": 51,
+      "hp": 187,
+      "hpMax": 187,
+      "mp": 114,
+      "mpMax": 137,
+      "attack": 32.5,
+      "defense": 5,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "hiếu kỳ",
+      "age": 34,
+      "position": {
+        "x": 2040,
+        "y": 520
+      },
+      "stones": 123,
+      "inventory": [
+        {
+          "itemId": "qi_pill",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-13",
+      "name": "Cố Minh Châu",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "dan_su",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 6,
+      "xp": 74,
+      "hp": 100,
+      "hpMax": 135,
+      "mp": 60,
+      "mpMax": 80,
+      "attack": 30.7,
+      "defense": 2,
+      "origin": "Thanh Vân Tông · gia đình hành nghề dan_su",
+      "personality": "cô độc",
+      "age": 41,
+      "position": {
+        "x": 1800,
+        "y": 760
+      },
+      "stones": 22,
+      "inventory": [
+        {
+          "itemId": "spirit_herb",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "qingyun-14",
+      "name": "Đường Kính",
+      "authorityRole": null,
+      "populationRole": "merchant",
+      "profession": "thuong_nhan",
+      "faction": "Thương Hội Thanh Vân",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 22,
+      "hp": 100,
+      "hpMax": 151,
+      "mp": 60,
+      "mpMax": 76,
+      "attack": 25,
+      "defense": 5,
+      "origin": "Thương Hội Thanh Vân · gia đình hành nghề thuong_nhan",
+      "personality": "nhân hậu",
+      "age": 48,
+      "position": {
+        "x": 3170,
+        "y": 652
+      },
+      "stones": 41,
+      "inventory": [
+        {
+          "itemId": "iron_sword",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-15",
+      "name": "Liễu Như Yên",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 45,
+      "hp": 100,
+      "hpMax": 121,
+      "mp": 60,
+      "mpMax": 72,
+      "attack": 26.8,
+      "defense": 2,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "thực tế",
+      "age": 55,
+      "position": {
+        "x": 1660,
+        "y": 850
+      },
+      "stones": 60,
+      "inventory": [
+        {
+          "itemId": "protective_talisman",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-16",
+      "name": "La Thất",
+      "authorityRole": "city_guard",
+      "populationRole": "city_guard",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "xp": 68,
+      "hp": 100,
+      "hpMax": 128,
+      "mp": 60,
+      "mpMax": 68,
+      "attack": 25.5,
+      "defense": 1,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "điềm tĩnh",
+      "age": 62,
+      "position": {
+        "x": 2370,
+        "y": 900
+      },
+      "stones": 79,
+      "inventory": [
+        {
+          "itemId": "qi_pill",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-17",
+      "name": "Hứa An",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "nong_dan",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 16,
+      "hp": 100,
+      "hpMax": 126,
+      "mp": 60,
+      "mpMax": 77,
+      "attack": 20.5,
+      "defense": 1,
+      "origin": "Thanh Vân Thôn · gia đình làm ruộng",
+      "personality": "tham vọng",
+      "age": 69,
+      "position": {
+        "x": 2620,
+        "y": 1195
+      },
+      "stones": 98,
+      "inventory": [
+        {
+          "itemId": "rice_seed",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "qingyun-18",
+      "name": "Kỷ Vô Ưu",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "xp": 39,
+      "hp": 100,
+      "hpMax": 100,
+      "mp": 60,
+      "mpMax": 60,
+      "attack": 19,
+      "defense": 1,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "hào sảng",
+      "age": 76,
+      "position": {
+        "x": 1310,
+        "y": 1040
+      },
+      "stones": 117,
+      "inventory": [
+        {
+          "itemId": "iron_sword",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-19",
+      "name": "Tô Nguyệt",
+      "authorityRole": null,
+      "populationRole": "merchant",
+      "profession": "thuong_nhan",
+      "faction": "Thương Hội Thanh Vân",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 6,
+      "xp": 62,
+      "hp": 100,
+      "hpMax": 135,
+      "mp": 60,
+      "mpMax": 80,
+      "attack": 30.7,
+      "defense": 5,
+      "origin": "Thương Hội Thanh Vân · gia đình hành nghề thuong_nhan",
+      "personality": "cẩn trọng",
+      "age": 83,
+      "position": {
+        "x": 2590,
+        "y": 632
+      },
+      "stones": 16,
+      "inventory": [
+        {
+          "itemId": "protective_talisman",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-20",
+      "name": "Trình Bá",
+      "authorityRole": null,
+      "populationRole": "repair_worker",
+      "profession": "tho_re",
+      "faction": "Thanh Vân Tông",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 5,
+      "xp": 10,
+      "hp": 100,
+      "hpMax": 245,
+      "mp": 60,
+      "mpMax": 126,
+      "attack": 42.2,
+      "defense": 6,
+      "origin": "Thanh Vân Tông · gia đình hành nghề tho_re",
+      "personality": "hiếu kỳ",
+      "age": 22,
+      "position": {
+        "x": 3270,
+        "y": 1070
+      },
+      "stones": 35,
+      "inventory": [
+        {
+          "itemId": "iron_ore",
+          "count": 4
+        },
+        {
+          "itemId": "wood",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "qingyun-21",
+      "name": "Âu Dương Tĩnh",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 33,
+      "hp": 100,
+      "hpMax": 136,
+      "mp": 60,
+      "mpMax": 72,
+      "attack": 23.5,
+      "defense": 2,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "cô độc",
+      "age": 29,
+      "position": {
+        "x": 1780,
+        "y": 1090
+      },
+      "stones": 54,
+      "inventory": [
+        {
+          "itemId": "spirit_herb",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "qingyun-22",
+      "name": "Mạnh Tiểu Thạch",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "xp": 56,
+      "hp": 100,
+      "hpMax": 114,
+      "mp": 60,
+      "mpMax": 82,
+      "attack": 25.5,
+      "defense": 1,
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "personality": "nhân hậu",
+      "age": 36,
+      "position": {
+        "x": 1940,
+        "y": 1280
+      },
+      "stones": 73,
+      "inventory": [
+        {
+          "itemId": "iron_sword",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-23",
+      "name": "Lý Hoài Cẩn",
+      "authorityRole": null,
+      "populationRole": "herb_gatherer",
+      "profession": "duoc_su",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 4,
+      "hp": 100,
+      "hpMax": 126,
+      "mp": 60,
+      "mpMax": 64,
+      "attack": 20.5,
+      "defense": 1,
+      "origin": "Thanh Vân Tông · gia đình hành nghề duoc_su",
+      "personality": "thực tế",
+      "age": 43,
+      "position": {
+        "x": 1240,
+        "y": 760
+      },
+      "stones": 92,
+      "inventory": [
+        {
+          "itemId": "spirit_herb",
+          "count": 5
+        }
+      ]
+    },
+    {
+      "id": "qingyun-24",
+      "name": "Yến Phi",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 27,
+      "hp": 128,
+      "hpMax": 128,
+      "mp": 76,
+      "mpMax": 76,
+      "attack": 25,
+      "defense": 5,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "điềm tĩnh",
+      "age": 50,
+      "position": {
+        "x": 540,
+        "y": 690
+      },
+      "stones": 111,
+      "inventory": [
+        {
+          "itemId": "qi_pill",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "qingyun-25",
+      "name": "Đào A Mộc",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 6,
+      "xp": 50,
+      "hp": 100,
+      "hpMax": 135,
+      "mp": 60,
+      "mpMax": 80,
+      "attack": 35,
+      "defense": 2,
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "personality": "tham vọng",
+      "age": 57,
+      "position": {
+        "x": 1850,
+        "y": 450
+      },
+      "stones": 130,
+      "inventory": [
+        {
+          "itemId": "spirit_herb",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "blackwind-1",
+      "name": "Hắc Phong Tôn",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Hắc Phong Hội",
+      "realm": "Kim Đan",
+      "realmIndex": 2,
+      "realmLevel": 8,
+      "xp": 24,
+      "hp": 158,
+      "hpMax": 329,
+      "mp": 97,
+      "mpMax": 203,
+      "attack": 65.5,
+      "defense": 12,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "tham vọng",
+      "age": 28,
+      "position": {
+        "x": 1818,
+        "y": 1270
+      },
+      "stones": 22,
+      "inventory": []
+    },
+    {
+      "id": "blackwind-2",
+      "name": "Mục Quỷ",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "ho_ve",
+      "faction": "Hắc Phong Hội",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 9,
+      "xp": 31,
+      "hp": 146,
+      "hpMax": 156,
+      "mp": 86,
+      "mpMax": 92,
+      "attack": 35.3,
+      "defense": 3,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "thực tế",
+      "age": 35,
+      "position": {
+        "x": 1900,
+        "y": 1290
+      },
+      "stones": 29,
+      "inventory": []
+    },
+    {
+      "id": "blackwind-3",
+      "name": "Đao Thập Tam",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Hắc Phong Hội",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 8,
+      "xp": 38,
+      "hp": 131,
+      "hpMax": 149,
+      "mp": 78,
+      "mpMax": 88,
+      "attack": 33.6,
+      "defense": 3,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "cẩn trọng",
+      "age": 42,
+      "position": {
+        "x": 1760,
+        "y": 1370
+      },
+      "stones": 36,
+      "inventory": []
+    },
+    {
+      "id": "blackwind-4",
+      "name": "Hứa Hắc Liên",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Hắc Phong Hội",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 7,
+      "xp": 45,
+      "hp": 117,
+      "hpMax": 142,
+      "mp": 70,
+      "mpMax": 84,
+      "attack": 31.9,
+      "defense": 3,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "cô độc",
+      "age": 49,
+      "position": {
+        "x": 1980,
+        "y": 1340
+      },
+      "stones": 43,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:05",
+      "name": "GiangKính Đường",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "nong_dan",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 54,
+      "hp": 100,
+      "hpMax": 143,
+      "mp": 60,
+      "mpMax": 72,
+      "attack": 23.5,
+      "defense": 2,
+      "origin": "Thanh Vân Thôn · gia đình làm ruộng",
+      "personality": "cẩn trọng",
+      "age": 31,
+      "position": {
+        "x": 2802,
+        "y": 1039
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:06",
+      "name": "TônMinh Châu",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 60,
+      "hp": 100,
+      "hpMax": 126,
+      "mp": 60,
+      "mpMax": 64,
+      "attack": 20.5,
+      "defense": 4,
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "personality": "cô độc",
+      "age": 38,
+      "position": {
+        "x": 2890,
+        "y": 1039
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:07",
+      "name": "HứaNhư Yên",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 8,
+      "hp": 107,
+      "hpMax": 107,
+      "mp": 64,
+      "mpMax": 77,
+      "attack": 23.8,
+      "defense": 1,
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "personality": "tham vọng",
+      "age": 55,
+      "position": {
+        "x": 2450,
+        "y": 1117
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:08",
+      "name": "CungMạnh Đức",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 17,
+      "hp": 100,
+      "hpMax": 126,
+      "mp": 60,
+      "mpMax": 77,
+      "attack": 20.5,
+      "defense": 1,
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "personality": "cô độc",
+      "age": 58,
+      "position": {
+        "x": 2538,
+        "y": 1117
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:09",
+      "name": "LâmThanh Hà",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 40,
+      "hp": 107,
+      "hpMax": 107,
+      "mp": 64,
+      "mpMax": 64,
+      "attack": 27.1,
+      "defense": 1,
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "personality": "hào sảng",
+      "age": 75,
+      "position": {
+        "x": 2626,
+        "y": 1117
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:10",
+      "name": "NinhNhư Yên",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "nong_dan",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 20,
+      "hp": 100,
+      "hpMax": 128,
+      "mp": 60,
+      "mpMax": 91,
+      "attack": 29,
+      "defense": 2,
+      "origin": "Thanh Vân Thôn · gia đình làm ruộng",
+      "personality": "cô độc",
+      "age": 55,
+      "position": {
+        "x": 2714,
+        "y": 1117
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:11",
+      "name": "TừCảnh Hành",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "xp": 72,
+      "hp": 100,
+      "hpMax": 118,
+      "mp": 60,
+      "mpMax": 60,
+      "attack": 19,
+      "defense": 4,
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "personality": "tham vọng",
+      "age": 38,
+      "position": {
+        "x": 2802,
+        "y": 1117
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:12",
+      "name": "TưởngHoài Sơn",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 66,
+      "hp": 100,
+      "hpMax": 126,
+      "mp": 60,
+      "mpMax": 64,
+      "attack": 20.5,
+      "defense": 1,
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "personality": "thực tế",
+      "age": 31,
+      "position": {
+        "x": 2890,
+        "y": 1117
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:13",
+      "name": "ĐàoĐại Hải",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 43,
+      "hp": 100,
+      "hpMax": 121,
+      "mp": 60,
+      "mpMax": 72,
+      "attack": 26.8,
+      "defense": 2,
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "personality": "hào sảng",
+      "age": 72,
+      "position": {
+        "x": 2450,
+        "y": 1195
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:14",
+      "name": "TưởngCảnh Hành",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 3,
+      "hp": 100,
+      "hpMax": 151,
+      "mp": 60,
+      "mpMax": 76,
+      "attack": 28.5,
+      "defense": 2,
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "personality": "hào sảng",
+      "age": 45,
+      "position": {
+        "x": 2538,
+        "y": 1195
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:15",
+      "name": "PhùngHoài Sơn",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "nong_dan",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 55,
+      "hp": 107,
+      "hpMax": 107,
+      "mp": 64,
+      "mpMax": 77,
+      "attack": 20.5,
+      "defense": 1,
+      "origin": "Thanh Vân Thôn · gia đình làm ruộng",
+      "personality": "nhân hậu",
+      "age": 28,
+      "position": {
+        "x": 2626,
+        "y": 1195
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:16",
+      "name": "VănĐại Hải",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 49,
+      "hp": 100,
+      "hpMax": 120,
+      "mp": 60,
+      "mpMax": 64,
+      "attack": 20.5,
+      "defense": 1,
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "personality": "hiếu kỳ",
+      "age": 21,
+      "position": {
+        "x": 2714,
+        "y": 1195
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:17",
+      "name": "NinhCảnh Hành",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "xp": 26,
+      "hp": 100,
+      "hpMax": 114,
+      "mp": 60,
+      "mpMax": 68,
+      "attack": 25.5,
+      "defense": 1,
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "personality": "thực tế",
+      "age": 62,
+      "position": {
+        "x": 2802,
+        "y": 1195
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:18",
+      "name": "Âu DươngHoài Sơn",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 61,
+      "hp": 100,
+      "hpMax": 121,
+      "mp": 60,
+      "mpMax": 72,
+      "attack": 23.5,
+      "defense": 2,
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "personality": "thực tế",
+      "age": 35,
+      "position": {
+        "x": 2890,
+        "y": 1195
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:19",
+      "name": "ThạchHoài Sơn",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 1,
+      "hp": 100,
+      "hpMax": 121,
+      "mp": 60,
+      "mpMax": 72,
+      "attack": 23.5,
+      "defense": 2,
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "personality": "cẩn trọng",
+      "age": 34,
+      "position": {
+        "x": 2450,
+        "y": 1273
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:commoner:20",
+      "name": "MạnhVân Sinh",
+      "authorityRole": null,
+      "populationRole": "commoner",
+      "profession": "nong_dan",
+      "faction": "Thanh Vân Thôn",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "xp": 14,
+      "hp": 100,
+      "hpMax": 135,
+      "mp": 60,
+      "mpMax": 68,
+      "attack": 22,
+      "defense": 1,
+      "origin": "Thanh Vân Thôn · gia đình làm ruộng",
+      "personality": "thực tế",
+      "age": 62,
+      "position": {
+        "x": 2538,
+        "y": 1273
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:low_disciple:11",
+      "name": "TôTư Viễn",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "xp": 59,
+      "hp": 100,
+      "hpMax": 128,
+      "mp": 60,
+      "mpMax": 68,
+      "attack": 25.5,
+      "defense": 1,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "cô độc",
+      "age": 24,
+      "position": {
+        "x": 832,
+        "y": 572
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:low_disciple:12",
+      "name": "DươngDạ Minh",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 36,
+      "hp": 100,
+      "hpMax": 151,
+      "mp": 60,
+      "mpMax": 76,
+      "attack": 25,
+      "defense": 2,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "điềm tĩnh",
+      "age": 65,
+      "position": {
+        "x": 920,
+        "y": 572
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:low_disciple:13",
+      "name": "VănHành Chu",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 1,
+      "xp": 13,
+      "hp": 180,
+      "hpMax": 180,
+      "mp": 110,
+      "mpMax": 110,
+      "attack": 35.3,
+      "defense": 5,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "hiếu kỳ",
+      "age": 48,
+      "position": {
+        "x": 480,
+        "y": 650
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:low_disciple:14",
+      "name": "HànLinh Chi",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 24,
+      "hp": 100,
+      "hpMax": 142,
+      "mp": 60,
+      "mpMax": 64,
+      "attack": 20.5,
+      "defense": 1,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "cô độc",
+      "age": 51,
+      "position": {
+        "x": 568,
+        "y": 650
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:low_disciple:15",
+      "name": "ThạchPhi Bạch",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 1,
+      "hp": 100,
+      "hpMax": 121,
+      "mp": 60,
+      "mpMax": 72,
+      "attack": 23.5,
+      "defense": 2,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "điềm tĩnh",
+      "age": 34,
+      "position": {
+        "x": 656,
+        "y": 650
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:low_disciple:16",
+      "name": "VệBình An",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 53,
+      "hp": 100,
+      "hpMax": 128,
+      "mp": 60,
+      "mpMax": 76,
+      "attack": 33.1,
+      "defense": 2,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "cẩn trọng",
+      "age": 75,
+      "position": {
+        "x": 744,
+        "y": 650
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:low_disciple:17",
+      "name": "ĐườngLinh Chi",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "xp": 30,
+      "hp": 100,
+      "hpMax": 118,
+      "mp": 60,
+      "mpMax": 72,
+      "attack": 19,
+      "defense": 1,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "thực tế",
+      "age": 58,
+      "position": {
+        "x": 832,
+        "y": 650
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:low_disciple:18",
+      "name": "TừPhi Bạch",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 41,
+      "hp": 100,
+      "hpMax": 107,
+      "mp": 60,
+      "mpMax": 64,
+      "attack": 23.8,
+      "defense": 1,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "điềm tĩnh",
+      "age": 61,
+      "position": {
+        "x": 920,
+        "y": 650
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:low_disciple:19",
+      "name": "TốngHạo Nhiên",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 18,
+      "hp": 100,
+      "hpMax": 143,
+      "mp": 60,
+      "mpMax": 72,
+      "attack": 26.8,
+      "defense": 2,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "cẩn trọng",
+      "age": 44,
+      "position": {
+        "x": 480,
+        "y": 728
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:low_disciple:20",
+      "name": "TạTử Nghi",
+      "authorityRole": null,
+      "populationRole": "low_disciple",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 13,
+      "hp": 100,
+      "hpMax": 107,
+      "mp": 60,
+      "mpMax": 64,
+      "attack": 20.5,
+      "defense": 1,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "hiếu kỳ",
+      "age": 34,
+      "position": {
+        "x": 568,
+        "y": 728
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:elder:02",
+      "name": "TềVân Sinh",
+      "authorityRole": "elder",
+      "populationRole": "elder",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 7,
+      "xp": 20,
+      "hp": 208,
+      "hpMax": 249,
+      "mp": 126,
+      "mpMax": 134,
+      "attack": 40,
+      "defense": 7,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "hào sảng",
+      "age": 18,
+      "position": {
+        "x": 568,
+        "y": 494
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:elder:03",
+      "name": "KỷTử Du",
+      "authorityRole": "elder",
+      "populationRole": "elder",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Kim Đan",
+      "realmIndex": 2,
+      "realmLevel": 5,
+      "xp": 43,
+      "hp": 240,
+      "hpMax": 363,
+      "mp": 151,
+      "mpMax": 191,
+      "attack": 53,
+      "defense": 14,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "thực tế",
+      "age": 35,
+      "position": {
+        "x": 656,
+        "y": 494
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:elder:04",
+      "name": "TônThanh Hà",
+      "authorityRole": "elder",
+      "populationRole": "elder",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Kim Đan",
+      "realmIndex": 2,
+      "realmLevel": 4,
+      "xp": 31,
+      "hp": 249,
+      "hpMax": 301,
+      "mp": 156,
+      "mpMax": 187,
+      "attack": 51.5,
+      "defense": 11,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "nhân hậu",
+      "age": 32,
+      "position": {
+        "x": 744,
+        "y": 494
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:elder:05",
+      "name": "HứaMinh Châu",
+      "authorityRole": "elder",
+      "populationRole": "elder",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 8,
+      "xp": 54,
+      "hp": 200,
+      "hpMax": 302,
+      "mp": 122,
+      "mpMax": 138,
+      "attack": 41.5,
+      "defense": 7,
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "personality": "hào sảng",
+      "age": 49,
+      "position": {
+        "x": 832,
+        "y": 494
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:merchant:04",
+      "name": "TừTĩnh Uyển",
+      "authorityRole": null,
+      "populationRole": "merchant",
+      "profession": "thuong_nhan",
+      "faction": "Thương Hội Thanh Vân",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "xp": 53,
+      "hp": 100,
+      "hpMax": 114,
+      "mp": 60,
+      "mpMax": 68,
+      "attack": 22,
+      "defense": 4,
+      "origin": "Thương Hội Thanh Vân · gia đình hành nghề thuong_nhan",
+      "personality": "nhân hậu",
+      "age": 34,
+      "position": {
+        "x": 2784,
+        "y": 668
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:merchant:05",
+      "name": "TềTrường Lạc",
+      "authorityRole": null,
+      "populationRole": "merchant",
+      "profession": "thuong_nhan",
+      "faction": "Thương Hội Thanh Vân",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 1,
+      "hp": 100,
+      "hpMax": 126,
+      "mp": 60,
+      "mpMax": 77,
+      "attack": 20.5,
+      "defense": 1,
+      "origin": "Thương Hội Thanh Vân · gia đình hành nghề thuong_nhan",
+      "personality": "hào sảng",
+      "age": 51,
+      "position": {
+        "x": 2872,
+        "y": 668
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:merchant:06",
+      "name": "KỷVân Khanh",
+      "authorityRole": null,
+      "populationRole": "merchant",
+      "profession": "thuong_nhan",
+      "faction": "Thương Hội Thanh Vân",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "xp": 24,
+      "hp": 100,
+      "hpMax": 100,
+      "mp": 60,
+      "mpMax": 60,
+      "attack": 25.1,
+      "defense": 1,
+      "origin": "Thương Hội Thanh Vân · gia đình hành nghề thuong_nhan",
+      "personality": "thực tế",
+      "age": 68,
+      "position": {
+        "x": 2960,
+        "y": 668
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:merchant:07",
+      "name": "LươngMặc Nhiên",
+      "authorityRole": null,
+      "populationRole": "merchant",
+      "profession": "thuong_nhan",
+      "faction": "Thương Hội Thanh Vân",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 47,
+      "hp": 100,
+      "hpMax": 121,
+      "mp": 60,
+      "mpMax": 72,
+      "attack": 23.5,
+      "defense": 2,
+      "origin": "Thương Hội Thanh Vân · gia đình hành nghề thuong_nhan",
+      "personality": "hiếu kỳ",
+      "age": 27,
+      "position": {
+        "x": 2520,
+        "y": 746
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:tavern_staff:01",
+      "name": "TốngTử Khanh",
+      "authorityRole": null,
+      "populationRole": "tavern_staff",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 65,
+      "hp": 100,
+      "hpMax": 121,
+      "mp": 60,
+      "mpMax": 72,
+      "attack": 23.5,
+      "defense": 2,
+      "origin": "Thanh Vân Thành · gia đình hành nghề dan_thuong",
+      "personality": "tham vọng",
+      "age": 24,
+      "position": {
+        "x": 2370,
+        "y": 476
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:tavern_staff:02",
+      "name": "TầnTrường Canh",
+      "authorityRole": null,
+      "populationRole": "tavern_staff",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 42,
+      "hp": 107,
+      "hpMax": 107,
+      "mp": 64,
+      "mpMax": 64,
+      "attack": 27.1,
+      "defense": 1,
+      "origin": "Thanh Vân Thành · gia đình hành nghề dan_thuong",
+      "personality": "hiếu kỳ",
+      "age": 65,
+      "position": {
+        "x": 2458,
+        "y": 476
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:tavern_staff:03",
+      "name": "TưởngHạo Nhiên",
+      "authorityRole": null,
+      "populationRole": "tavern_staff",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 19,
+      "hp": 100,
+      "hpMax": 126,
+      "mp": 60,
+      "mpMax": 77,
+      "attack": 20.5,
+      "defense": 1,
+      "origin": "Thanh Vân Thành · gia đình hành nghề dan_thuong",
+      "personality": "điềm tĩnh",
+      "age": 48,
+      "position": {
+        "x": 2546,
+        "y": 476
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:city_guard:03",
+      "name": "TốngMạnh Đức",
+      "authorityRole": "city_guard",
+      "populationRole": "city_guard",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 3,
+      "xp": 14,
+      "hp": 152,
+      "hpMax": 229,
+      "mp": 94,
+      "mpMax": 142,
+      "attack": 34,
+      "defense": 5,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "hào sảng",
+      "age": 50,
+      "position": {
+        "x": 2326,
+        "y": 680
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:city_guard:04",
+      "name": "KhangTử Mặc",
+      "authorityRole": "city_guard",
+      "populationRole": "city_guard",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 49,
+      "hp": 128,
+      "hpMax": 128,
+      "mp": 76,
+      "mpMax": 91,
+      "attack": 29,
+      "defense": 2,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "hào sảng",
+      "age": 23,
+      "position": {
+        "x": 2414,
+        "y": 680
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:city_guard:05",
+      "name": "HànDưỡng Tâm",
+      "authorityRole": "city_guard",
+      "populationRole": "city_guard",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 26,
+      "hp": 113,
+      "hpMax": 143,
+      "mp": 68,
+      "mpMax": 72,
+      "attack": 23.5,
+      "defense": 5,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "nhân hậu",
+      "age": 64,
+      "position": {
+        "x": 2502,
+        "y": 680
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:city_guard:06",
+      "name": "PhùngTử Du",
+      "authorityRole": "city_guard",
+      "populationRole": "city_guard",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 1,
+      "xp": 20,
+      "hp": 148,
+      "hpMax": 212,
+      "mp": 92,
+      "mpMax": 110,
+      "attack": 31,
+      "defense": 5,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "hiếu kỳ",
+      "age": 57,
+      "position": {
+        "x": 2590,
+        "y": 680
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:city_guard:07",
+      "name": "LụcNhược Thủy",
+      "authorityRole": "city_guard",
+      "populationRole": "city_guard",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 1,
+      "xp": 72,
+      "hp": 141,
+      "hpMax": 180,
+      "mp": 87,
+      "mpMax": 110,
+      "attack": 35.3,
+      "defense": 5,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "thực tế",
+      "age": 40,
+      "position": {
+        "x": 2150,
+        "y": 758
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:city_guard:08",
+      "name": "ĐườngDưỡng Tâm",
+      "authorityRole": "city_guard",
+      "populationRole": "city_guard",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 32,
+      "hp": 107,
+      "hpMax": 126,
+      "mp": 64,
+      "mpMax": 64,
+      "attack": 23.4,
+      "defense": 1,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "thực tế",
+      "age": 71,
+      "position": {
+        "x": 2238,
+        "y": 758
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:city_guard:09",
+      "name": "HồTử Du",
+      "authorityRole": "city_guard",
+      "populationRole": "city_guard",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 9,
+      "hp": 120,
+      "hpMax": 128,
+      "mp": 71,
+      "mpMax": 91,
+      "attack": 25,
+      "defense": 2,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "cẩn trọng",
+      "age": 54,
+      "position": {
+        "x": 2326,
+        "y": 758
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:city_guard:10",
+      "name": "ThẩmKính Đường",
+      "authorityRole": "city_guard",
+      "populationRole": "city_guard",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 60,
+      "hp": 121,
+      "hpMax": 121,
+      "mp": 72,
+      "mpMax": 72,
+      "attack": 26.8,
+      "defense": 2,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "cẩn trọng",
+      "age": 40,
+      "position": {
+        "x": 2414,
+        "y": 758
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:hunter:01",
+      "name": "GiangSơ Ảnh",
+      "authorityRole": null,
+      "populationRole": "hunter",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 72,
+      "hp": 100,
+      "hpMax": 151,
+      "mp": 60,
+      "mpMax": 76,
+      "attack": 25,
+      "defense": 5,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "hiếu kỳ",
+      "age": 67,
+      "position": {
+        "x": 1230,
+        "y": 1004
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:hunter:02",
+      "name": "TônTĩnh Uyển",
+      "authorityRole": null,
+      "populationRole": "hunter",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 3,
+      "hp": 100,
+      "hpMax": 143,
+      "mp": 60,
+      "mpMax": 72,
+      "attack": 26.8,
+      "defense": 2,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "nhân hậu",
+      "age": 74,
+      "position": {
+        "x": 1318,
+        "y": 1004
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:hunter:03",
+      "name": "HứaTử An",
+      "authorityRole": null,
+      "populationRole": "hunter",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "xp": 26,
+      "hp": 100,
+      "hpMax": 107,
+      "mp": 60,
+      "mpMax": 64,
+      "attack": 23.8,
+      "defense": 1,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "hào sảng",
+      "age": 33,
+      "position": {
+        "x": 1406,
+        "y": 1004
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:hunter:04",
+      "name": "TạTiểu Thạch",
+      "authorityRole": null,
+      "populationRole": "hunter",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 2,
+      "xp": 66,
+      "hp": 187,
+      "hpMax": 221,
+      "mp": 114,
+      "mpMax": 114,
+      "attack": 32.5,
+      "defense": 5,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "hào sảng",
+      "age": 60,
+      "position": {
+        "x": 1494,
+        "y": 1004
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:hunter:05",
+      "name": "ChuMặc Nhiên",
+      "authorityRole": null,
+      "populationRole": "hunter",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 14,
+      "hp": 100,
+      "hpMax": 143,
+      "mp": 60,
+      "mpMax": 76,
+      "attack": 29,
+      "defense": 2,
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "personality": "thực tế",
+      "age": 19,
+      "position": {
+        "x": 1582,
+        "y": 1004
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:quest_clerk:01",
+      "name": "HứaDưỡng Tâm",
+      "authorityRole": null,
+      "populationRole": "quest_clerk",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 54,
+      "hp": 100,
+      "hpMax": 136,
+      "mp": 60,
+      "mpMax": 72,
+      "attack": 27.3,
+      "defense": 2,
+      "origin": "Thanh Vân Thành · gia đình hành nghề dan_thuong",
+      "personality": "tham vọng",
+      "age": 65,
+      "position": {
+        "x": 2280,
+        "y": 844
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:quest_clerk:02",
+      "name": "LýVãn Tình",
+      "authorityRole": null,
+      "populationRole": "quest_clerk",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thành",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "xp": 2,
+      "hp": 100,
+      "hpMax": 114,
+      "mp": 60,
+      "mpMax": 68,
+      "attack": 22,
+      "defense": 4,
+      "origin": "Thanh Vân Thành · gia đình hành nghề dan_thuong",
+      "personality": "nhân hậu",
+      "age": 24,
+      "position": {
+        "x": 2368,
+        "y": 844
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:05",
+      "name": "HứaTiểu Ngư",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 7,
+      "xp": 50,
+      "hp": 133,
+      "hpMax": 168,
+      "mp": 79,
+      "mpMax": 101,
+      "attack": 28,
+      "defense": 3,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "cô độc",
+      "age": 43,
+      "position": {
+        "x": 1982,
+        "y": 294
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:06",
+      "name": "LýTiểu Nhiên",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 6,
+      "xp": 73,
+      "hp": 168,
+      "hpMax": 215,
+      "mp": 103,
+      "mpMax": 130,
+      "attack": 50.9,
+      "defense": 6,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "hào sảng",
+      "age": 60,
+      "position": {
+        "x": 2070,
+        "y": 294
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:07",
+      "name": "BùiTử Mặc",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 6,
+      "xp": 21,
+      "hp": 112,
+      "hpMax": 135,
+      "mp": 67,
+      "mpMax": 80,
+      "attack": 26.5,
+      "defense": 2,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "thực tế",
+      "age": 19,
+      "position": {
+        "x": 1630,
+        "y": 372
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:08",
+      "name": "BạchMinh Nguyệt",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 9,
+      "xp": 50,
+      "hp": 146,
+      "hpMax": 156,
+      "mp": 86,
+      "mpMax": 92,
+      "attack": 31,
+      "defense": 3,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "điềm tĩnh",
+      "age": 54,
+      "position": {
+        "x": 1718,
+        "y": 372
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:09",
+      "name": "PhanTùng Tuyết",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 9,
+      "xp": 73,
+      "hp": 157,
+      "hpMax": 207,
+      "mp": 92,
+      "mpMax": 92,
+      "attack": 31,
+      "defense": 3,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "hiếu kỳ",
+      "age": 71,
+      "position": {
+        "x": 1806,
+        "y": 372
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:10",
+      "name": "TốngTử Mặc",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 6,
+      "xp": 16,
+      "hp": 118,
+      "hpMax": 151,
+      "mp": 71,
+      "mpMax": 80,
+      "attack": 30.7,
+      "defense": 2,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "điềm tĩnh",
+      "age": 67,
+      "position": {
+        "x": 1894,
+        "y": 372
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:11",
+      "name": "TầnTiểu Ngư",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 6,
+      "xp": 68,
+      "hp": 178,
+      "hpMax": 254,
+      "mp": 108,
+      "mpMax": 130,
+      "attack": 38.5,
+      "defense": 6,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "cẩn trọng",
+      "age": 50,
+      "position": {
+        "x": 1982,
+        "y": 372
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:12",
+      "name": "TưởngMạnh Đức",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 6,
+      "xp": 44,
+      "hp": 168,
+      "hpMax": 215,
+      "mp": 103,
+      "mpMax": 130,
+      "attack": 43.9,
+      "defense": 6,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "nhân hậu",
+      "age": 33,
+      "position": {
+        "x": 2070,
+        "y": 372
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:13",
+      "name": "PhùngTử Mặc",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 6,
+      "xp": 21,
+      "hp": 135,
+      "hpMax": 135,
+      "mp": 80,
+      "mpMax": 96,
+      "attack": 30.7,
+      "defense": 2,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "hào sảng",
+      "age": 74,
+      "position": {
+        "x": 1630,
+        "y": 450
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:14",
+      "name": "CốDưỡng Tâm",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 33,
+      "hp": 112,
+      "hpMax": 128,
+      "mp": 67,
+      "mpMax": 76,
+      "attack": 25,
+      "defense": 2,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "cẩn trọng",
+      "age": 19,
+      "position": {
+        "x": 1718,
+        "y": 450
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:15",
+      "name": "DưTử Du",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 5,
+      "xp": 10,
+      "hp": 172,
+      "hpMax": 208,
+      "mp": 105,
+      "mpMax": 126,
+      "attack": 48.9,
+      "defense": 6,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "nhân hậu",
+      "age": 60,
+      "position": {
+        "x": 1806,
+        "y": 450
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:16",
+      "name": "LiễuNhược Thủy",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 5,
+      "xp": 62,
+      "hp": 162,
+      "hpMax": 245,
+      "mp": 100,
+      "mpMax": 151,
+      "attack": 37,
+      "defense": 6,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "tham vọng",
+      "age": 43,
+      "position": {
+        "x": 1894,
+        "y": 450
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:17",
+      "name": "TưởngMinh Châu",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 6,
+      "xp": 39,
+      "hp": 126,
+      "hpMax": 135,
+      "mp": 75,
+      "mpMax": 80,
+      "attack": 26.5,
+      "defense": 5,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "cô độc",
+      "age": 26,
+      "position": {
+        "x": 1982,
+        "y": 450
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:18",
+      "name": "KhangMạnh Đức",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 7,
+      "xp": 56,
+      "hp": 133,
+      "hpMax": 142,
+      "mp": 79,
+      "mpMax": 101,
+      "attack": 28,
+      "defense": 3,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "hào sảng",
+      "age": 47,
+      "position": {
+        "x": 2070,
+        "y": 450
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:19",
+      "name": "HànNhược Thủy",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 8,
+      "xp": 33,
+      "hp": 189,
+      "hpMax": 229,
+      "mp": 115,
+      "mpMax": 138,
+      "attack": 48.1,
+      "defense": 10,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "cô độc",
+      "age": 30,
+      "position": {
+        "x": 1630,
+        "y": 528
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:20",
+      "name": "CungVân Sinh",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 22,
+      "hp": 106,
+      "hpMax": 121,
+      "mp": 64,
+      "mpMax": 72,
+      "attack": 31.1,
+      "defense": 2,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "hào sảng",
+      "age": 60,
+      "position": {
+        "x": 1718,
+        "y": 528
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:21",
+      "name": "LâmHành Chu",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 45,
+      "hp": 113,
+      "hpMax": 121,
+      "mp": 68,
+      "mpMax": 72,
+      "attack": 23.5,
+      "defense": 2,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "thực tế",
+      "age": 19,
+      "position": {
+        "x": 1806,
+        "y": 528
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:22",
+      "name": "MạnhKính Đường",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 4,
+      "xp": 51,
+      "hp": 157,
+      "hpMax": 201,
+      "mp": 96,
+      "mpMax": 122,
+      "attack": 35.5,
+      "defense": 9,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "tham vọng",
+      "age": 26,
+      "position": {
+        "x": 1894,
+        "y": 528
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:23",
+      "name": "TừMinh Châu",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 4,
+      "xp": 74,
+      "hp": 166,
+      "hpMax": 237,
+      "mp": 102,
+      "mpMax": 146,
+      "attack": 35.5,
+      "defense": 6,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "cô độc",
+      "age": 43,
+      "position": {
+        "x": 1982,
+        "y": 528
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:24",
+      "name": "ChuNhư Yên",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 5,
+      "hp": 112,
+      "hpMax": 151,
+      "mp": 67,
+      "mpMax": 76,
+      "attack": 25,
+      "defense": 2,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "thực tế",
+      "age": 50,
+      "position": {
+        "x": 2070,
+        "y": 528
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:25",
+      "name": "GiangTư Viễn",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "xp": 28,
+      "hp": 121,
+      "hpMax": 136,
+      "mp": 72,
+      "mpMax": 72,
+      "attack": 27.3,
+      "defense": 2,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "hiếu kỳ",
+      "age": 67,
+      "position": {
+        "x": 1630,
+        "y": 606
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:26",
+      "name": "TônHoài Sơn",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Kim Đan",
+      "realmIndex": 2,
+      "realmLevel": 5,
+      "xp": 34,
+      "hp": 241,
+      "hpMax": 308,
+      "mp": 151,
+      "mpMax": 229,
+      "attack": 61.5,
+      "defense": 11,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "nhân hậu",
+      "age": 74,
+      "position": {
+        "x": 1718,
+        "y": 606
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:27",
+      "name": "HứaHành Chu",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Trúc Cơ",
+      "realmIndex": 1,
+      "realmLevel": 5,
+      "xp": 57,
+      "hp": 172,
+      "hpMax": 208,
+      "mp": 105,
+      "mpMax": 126,
+      "attack": 42.2,
+      "defense": 6,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "hào sảng",
+      "age": 33,
+      "position": {
+        "x": 1806,
+        "y": 606
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:28",
+      "name": "KhươngKính Đường",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 62,
+      "hp": 119,
+      "hpMax": 143,
+      "mp": 71,
+      "mpMax": 76,
+      "attack": 25,
+      "defense": 2,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "hiếu kỳ",
+      "age": 40,
+      "position": {
+        "x": 1894,
+        "y": 606
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:29",
+      "name": "LaDạ Minh",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "xp": 10,
+      "hp": 128,
+      "hpMax": 151,
+      "mp": 76,
+      "mpMax": 76,
+      "attack": 25,
+      "defense": 5,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "tham vọng",
+      "age": 57,
+      "position": {
+        "x": 1982,
+        "y": 606
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "population:v1:independent_cultivator:30",
+      "name": "HồHoài Sơn",
+      "authorityRole": null,
+      "populationRole": "independent_cultivator",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "realm": "Luyện Khí",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "xp": 28,
+      "hp": 100,
+      "hpMax": 135,
+      "mp": 60,
+      "mpMax": 68,
+      "attack": 22,
+      "defense": 4,
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "personality": "hiếu kỳ",
+      "age": 45,
+      "position": {
+        "x": 2070,
+        "y": 606
+      },
+      "stones": 0,
+      "inventory": []
+    },
+    {
+      "id": "city-master-qingyun",
+      "name": "Tạ Cảnh Minh",
+      "authorityRole": "city_master",
+      "populationRole": null,
+      "profession": "tu_si",
+      "faction": "Thanh Vân Thành",
+      "realm": "Nguyên Anh",
+      "realmIndex": 3,
+      "realmLevel": 1,
+      "xp": 20,
+      "hp": 410,
+      "hpMax": 410,
+      "mp": 260,
+      "mpMax": 260,
+      "attack": 77.5,
+      "defense": 16,
+      "origin": "Thanh Vân Thành · gia tộc quản sự lâu đời",
+      "personality": "điềm tĩnh",
+      "age": 55,
+      "position": {
+        "x": 2180,
+        "y": 620
+      },
+      "stones": 0,
+      "inventory": []
+    }
+  ]
+}

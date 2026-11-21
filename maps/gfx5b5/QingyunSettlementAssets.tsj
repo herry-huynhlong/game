@@ -1,0 +1,434 @@
+{
+  "type": "tileset",
+  "version": "1.10",
+  "tiledversion": "1.12.2",
+  "name": "QingyunSettlementAssets",
+  "tilewidth": 192,
+  "tileheight": 192,
+  "tilecount": 40,
+  "columns": 5,
+  "spacing": 0,
+  "margin": 0,
+  "image": "../../public/assets/props/settlement_buildings.png",
+  "imagewidth": 960,
+  "imageheight": 1536,
+  "objectalignment": "topleft",
+  "tilerendersize": "tile",
+  "fillmode": "stretch",
+  "tiles": [
+    {
+      "id": 0,
+      "type": "city_gate",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "city_gate"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "type": "city_wall",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "city_wall"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "market_stall",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "market_stall"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "food_hall",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "food_hall"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "inn",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "inn"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "barracks",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "barracks"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "forge",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "forge"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "apothecary",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "apothecary"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "city_hall",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "city_hall"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "farm_plot",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "farm_plot"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "training_yard",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "training_yard"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "type": "watchtower",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "watchtower"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "type": "residential_house",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "residential_house"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "type": "sect_gate",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "sect_gate"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "type": "sect_hall",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "sect_hall"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "type": "meditation_hall",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "meditation_hall"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "type": "disciple_house",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "disciple_house"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "type": "sect_storehouse",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "sect_storehouse"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "type": "blackwind_camp",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "blackwind_camp"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "type": "spirit_vein",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "spirit_vein"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "type": "city_tree",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "city_tree"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "type": "pine_tree",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "pine_tree"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "type": "ancient_tree",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "ancient_tree"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "type": "shrub_cluster",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "shrub_cluster"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "type": "flower_patch",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "flower_patch"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "type": "stone_lamp",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "stone_lamp"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "type": "boulder",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "boulder"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "type": "lantern_post",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "lantern_post"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "type": "jade_fountain",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "jade_fountain"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "type": "herb_stall",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "herb_stall"
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "type": "pill_stall",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "pill_stall"
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "type": "artifact_stall",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "artifact_stall"
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "type": "wall_corner",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "wall_corner"
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "type": "bamboo_clump",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "bamboo_clump"
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "type": "grass_ground",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "grass_ground"
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "type": "stone_paving",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "stone_paving"
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "type": "market_props",
+      "properties": [
+        {
+          "name": "frame",
+          "type": "string",
+          "value": "market_props"
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "sourceAtlas",
+      "type": "string",
+      "value": "settlement_buildings.json"
+    }
+  ]
+}

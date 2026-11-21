@@ -1,0 +1,44 @@
+{
+  "mapSize": [
+    120,
+    50
+  ],
+  "tileSize": [
+    32,
+    32
+  ],
+  "sampleBoundsTiles": [
+    0,
+    71,
+    0,
+    49
+  ],
+  "convertedGroundCells": 3600,
+  "layers": [
+    "Ground",
+    "GroundVariation",
+    "TerrainTransitions",
+    "Paths",
+    "Details",
+    "WorldProps",
+    "Collision",
+    "Zones",
+    "Spawns",
+    "ActivitySites"
+  ],
+  "objects": {
+    "WorldProps": 115,
+    "Collision": 94,
+    "Zones": 8,
+    "Spawns": 9,
+    "ActivitySites": 17
+  },
+  "collisionsUnchanged": true,
+  "zonesUnchanged": true,
+  "spawnsUnchanged": true,
+  "activitySitesUnchanged": true,
+  "legacyMapSha256": "a00703984574646cfe8ab4093473a1b1dc9dcb7b3e1ddfc2e25965bbf7723fa5",
+  "terrainV2FirstGid": 257,
+  "terrainV2TileCount": 256,
+  "addedDecorRocks": 10
+}

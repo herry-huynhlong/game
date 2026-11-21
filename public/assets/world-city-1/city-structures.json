@@ -1,0 +1,47 @@
+{ "frames": [
+   {
+    "filename": "WorldCityStructures 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 320, "h": 256 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 320, "h": 256 },
+    "sourceSize": { "w": 320, "h": 256 },
+    "duration": 200
+   },
+   {
+    "filename": "WorldCityStructures 1.aseprite",
+    "frame": { "x": 320, "y": 0, "w": 320, "h": 256 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 320, "h": 256 },
+    "sourceSize": { "w": 320, "h": 256 },
+    "duration": 200
+   },
+   {
+    "filename": "WorldCityStructures 2.aseprite",
+    "frame": { "x": 640, "y": 0, "w": 320, "h": 256 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 320, "h": 256 },
+    "sourceSize": { "w": 320, "h": 256 },
+    "duration": 200
+   },
+   {
+    "filename": "WorldCityStructures 3.aseprite",
+    "frame": { "x": 960, "y": 0, "w": 320, "h": 256 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 320, "h": 256 },
+    "sourceSize": { "w": 320, "h": 256 },
+    "duration": 200
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3.18.6-12-geccf4ec29-dev",
+  "image": "city-structures.png",
+  "format": "RGBA8888",
+  "size": { "w": 1280, "h": 256 },
+  "scale": "1"
+ }
+}

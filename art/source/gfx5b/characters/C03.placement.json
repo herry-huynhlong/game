@@ -1,0 +1,75 @@
+{
+  "assetId": "C03",
+  "canvas": {
+    "width": 32,
+    "height": 40
+  },
+  "frames": 32,
+  "layersBottomToTop": [
+    "shadow",
+    "legs",
+    "hair_back",
+    "robe",
+    "arms",
+    "face",
+    "hair_front",
+    "details"
+  ],
+  "spritesheet": "C03.png",
+  "aseprite": "C03.aseprite",
+  "layout": {
+    "columns": 4,
+    "rows": 8,
+    "frameWidth": 32,
+    "frameHeight": 40
+  },
+  "animations": {
+    "idle_down": {
+      "start": 0,
+      "end": 3,
+      "durationMs": 240
+    },
+    "idle_up": {
+      "start": 4,
+      "end": 7,
+      "durationMs": 240
+    },
+    "idle_left": {
+      "start": 8,
+      "end": 11,
+      "durationMs": 240
+    },
+    "idle_right": {
+      "start": 12,
+      "end": 15,
+      "durationMs": 240
+    },
+    "walk_down": {
+      "start": 16,
+      "end": 19,
+      "durationMs": 140
+    },
+    "walk_up": {
+      "start": 20,
+      "end": 23,
+      "durationMs": 140
+    },
+    "walk_left": {
+      "start": 24,
+      "end": 27,
+      "durationMs": 140
+    },
+    "walk_right": {
+      "start": 28,
+      "end": 31,
+      "durationMs": 140
+    }
+  },
+  "originPixel": {
+    "x": 16,
+    "y": 40
+  },
+  "collision": "Phaser body 18x10 offset (7,28), unchanged; only in optional preview",
+  "status": "opt-in Phaser preview",
+  "footBaselinePixelY": 37
+}

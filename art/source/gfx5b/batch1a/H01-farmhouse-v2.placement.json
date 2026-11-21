@@ -1,0 +1,62 @@
+{
+  "assetId": "H01-farmhouse-v2",
+  "canvas": {
+    "width": 144,
+    "height": 120
+  },
+  "frames": 1,
+  "durationsMs": [
+    100
+  ],
+  "spriteSheet": "H01-farmhouse-v2.png",
+  "aseprite": "H01-farmhouse-v2.aseprite",
+  "coordinates": "canvas pixels; x right, y down",
+  "proposedPlacement": {
+    "originPixel": {
+      "x": 72,
+      "y": 105
+    },
+    "displayScale": 1.25,
+    "footprint": {
+      "x": 22,
+      "y": 94,
+      "width": 101,
+      "height": 15
+    },
+    "doorOpening": {
+      "x": 60,
+      "y": 54,
+      "width": 25,
+      "height": 40
+    },
+    "doorApproach": {
+      "x": 72,
+      "y": 109
+    },
+    "proposedCollisionRects": [
+      {
+        "x": 22,
+        "y": 94,
+        "width": 38,
+        "height": 12
+      },
+      {
+        "x": 85,
+        "y": 94,
+        "width": 38,
+        "height": 12
+      }
+    ],
+    "occlusion": "roof and wall artwork is one sprite; split/occlusion implementation required",
+    "status": "proposed, not integrated"
+  },
+  "layersBottomToTop": [
+    "ground_shadow",
+    "foundation",
+    "walls",
+    "timber",
+    "thatched_roof",
+    "door_and_windows",
+    "wear_and_props"
+  ]
+}

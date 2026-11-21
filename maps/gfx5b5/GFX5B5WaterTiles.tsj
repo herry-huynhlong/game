@@ -1,0 +1,1371 @@
+{
+  "type": "tileset",
+  "version": "1.10",
+  "tiledversion": "1.12.2",
+  "name": "GFX5B5WaterTiles",
+  "tilewidth": 32,
+  "tileheight": 32,
+  "tilecount": 64,
+  "columns": 8,
+  "spacing": 0,
+  "margin": 0,
+  "image": "../../public/assets/tilesets/gfx5b5_water_tiles.png",
+  "imagewidth": 256,
+  "imageheight": 256,
+  "objectalignment": "topleft",
+  "tilerendersize": "tile",
+  "fillmode": "stretch",
+  "tiles": [
+    {
+      "id": 0,
+      "type": "river_south",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_south"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Nam"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "type": "river_south",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_south"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Nam"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "river_south",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_south"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Nam"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "river_south",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_south"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Nam"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "river_south",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_south"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Nam"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "river_south",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_south"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Nam"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "river_south",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_south"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Nam"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "river_south",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_south"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Nam"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "river_east",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_east"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Đông"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "river_east",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_east"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Đông"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "river_east",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_east"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Đông"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "type": "river_east",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_east"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Đông"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "type": "river_east",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_east"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Đông"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "type": "river_east",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_east"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Đông"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "type": "river_east",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_east"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Đông"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "type": "river_east",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "river_east"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "River · dòng Đông"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "type": "stream",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stream"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Stream · nước cạn"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "type": "stream",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stream"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Stream · nước cạn"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "type": "stream",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stream"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Stream · nước cạn"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "type": "stream",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stream"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Stream · nước cạn"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "type": "stream",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stream"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Stream · nước cạn"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "type": "stream",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stream"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Stream · nước cạn"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "type": "stream",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stream"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Stream · nước cạn"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "type": "stream",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "stream"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Stream · nước cạn"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "type": "lake",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "lake"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Lake · nước tĩnh"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "type": "lake",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "lake"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Lake · nước tĩnh"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "type": "lake",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "lake"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Lake · nước tĩnh"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "type": "lake",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "lake"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Lake · nước tĩnh"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "type": "lake",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "lake"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Lake · nước tĩnh"
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "type": "lake",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "lake"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Lake · nước tĩnh"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "type": "lake",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "lake"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Lake · nước tĩnh"
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "type": "lake",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "lake"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Lake · nước tĩnh"
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "type": "shore",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · bờ cardinal"
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "type": "shore",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · bờ cardinal"
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "type": "shore",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · bờ cardinal"
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "type": "shore",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · bờ cardinal"
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "type": "shore",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · bờ cardinal"
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "type": "shore",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · bờ cardinal"
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "type": "shore",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · bờ cardinal"
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "type": "shore",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · bờ cardinal"
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "type": "shore_corner",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · góc và khúc cong"
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "type": "shore_corner",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · góc và khúc cong"
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "type": "shore_corner",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · góc và khúc cong"
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "type": "shore_corner",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · góc và khúc cong"
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "type": "shore_corner",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · góc và khúc cong"
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "type": "shore_corner",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · góc và khúc cong"
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "type": "shore_corner",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · góc và khúc cong"
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "type": "shore_corner",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "shore_corner"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Shore · góc và khúc cong"
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "type": "rock",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rock"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá giữa dòng"
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "type": "rock",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rock"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá giữa dòng"
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "type": "rock",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rock"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá giữa dòng"
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "type": "rock",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rock"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá giữa dòng"
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "type": "rock",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rock"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá giữa dòng"
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "type": "rock",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rock"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá giữa dòng"
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "type": "rock",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rock"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá giữa dòng"
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "type": "rock",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "rock"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá giữa dòng"
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "type": "pebble",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "pebble"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 1
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá cuội nhỏ"
+        }
+      ]
+    },
+    {
+      "id": 57,
+      "type": "pebble",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "pebble"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 2
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá cuội nhỏ"
+        }
+      ]
+    },
+    {
+      "id": 58,
+      "type": "pebble",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "pebble"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 3
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá cuội nhỏ"
+        }
+      ]
+    },
+    {
+      "id": 59,
+      "type": "pebble",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "pebble"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 4
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá cuội nhỏ"
+        }
+      ]
+    },
+    {
+      "id": 60,
+      "type": "pebble",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "pebble"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 5
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá cuội nhỏ"
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "type": "pebble",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "pebble"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 6
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá cuội nhỏ"
+        }
+      ]
+    },
+    {
+      "id": 62,
+      "type": "pebble",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "pebble"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 7
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá cuội nhỏ"
+        }
+      ]
+    },
+    {
+      "id": 63,
+      "type": "pebble",
+      "properties": [
+        {
+          "name": "family",
+          "type": "string",
+          "value": "pebble"
+        },
+        {
+          "name": "variant",
+          "type": "int",
+          "value": 8
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "value": "Water rock · đá cuội nhỏ"
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "source",
+      "type": "string",
+      "value": "GFX5B5 WATER-A Aseprite Lua atlas · 64 tiles"
+    }
+  ]
+}

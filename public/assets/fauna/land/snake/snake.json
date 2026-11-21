@@ -1,0 +1,46 @@
+{
+  "name": "snake",
+  "frameWidth": 32,
+  "frameHeight": 32,
+  "frameCount": 12,
+  "animations": {
+    "idle": {
+      "start": 0,
+      "end": 1,
+      "frameRate": 3,
+      "repeat": -1
+    },
+    "move": {
+      "start": 2,
+      "end": 5,
+      "frameRate": 8,
+      "repeat": -1
+    },
+    "flee": {
+      "start": 6,
+      "end": 9,
+      "frameRate": 12,
+      "repeat": -1
+    },
+    "attack": {
+      "start": 6,
+      "end": 7,
+      "frameRate": 10,
+      "repeat": 0
+    },
+    "hit": {
+      "start": 10,
+      "end": 10,
+      "frameRate": 1,
+      "repeat": 0
+    },
+    "death": {
+      "start": 11,
+      "end": 11,
+      "frameRate": 1,
+      "repeat": 0
+    }
+  },
+  "source": "art/source/monster-fauna-1/Fauna-snake-32.aseprite",
+  "workflow": "Aseprite CLI + codex-pixel-bridge; hand-authored pixel operations in source JSON"
+}

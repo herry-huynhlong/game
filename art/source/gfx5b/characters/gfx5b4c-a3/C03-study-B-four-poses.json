@@ -1,0 +1,43 @@
+{ "frames": {
+   "C03-study-B-four-poses 0.aseprite": {
+    "frame": { "x": 0, "y": 0, "w": 48, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 64 },
+    "sourceSize": { "w": 48, "h": 64 },
+    "duration": 240
+   },
+   "C03-study-B-four-poses 1.aseprite": {
+    "frame": { "x": 48, "y": 0, "w": 48, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 64 },
+    "sourceSize": { "w": 48, "h": 64 },
+    "duration": 240
+   },
+   "C03-study-B-four-poses 2.aseprite": {
+    "frame": { "x": 96, "y": 0, "w": 48, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 64 },
+    "sourceSize": { "w": 48, "h": 64 },
+    "duration": 240
+   },
+   "C03-study-B-four-poses 3.aseprite": {
+    "frame": { "x": 144, "y": 0, "w": 48, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 64 },
+    "sourceSize": { "w": 48, "h": 64 },
+    "duration": 240
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3.18.6-12-geccf4ec29-dev",
+  "image": "C03-study-B-four-poses.png",
+  "format": "RGBA8888",
+  "size": { "w": 192, "h": 64 },
+  "scale": "1"
+ }
+}

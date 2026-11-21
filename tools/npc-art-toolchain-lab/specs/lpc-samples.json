@@ -1,0 +1,93 @@
+[
+  {
+    "id": "lpc01_disciple_male",
+    "label": "Nam đệ tử Thanh Vân",
+    "bodyType": "male",
+    "selections": {
+      "head": "heads_human_male",
+      "expression": "face_neutral",
+      "hair": "hair_high_ponytail",
+      "clothes": {
+        "itemId": "torso_clothes_longsleeve_formal",
+        "variant": "white"
+      },
+      "belt": {
+        "itemId": "belt_robe",
+        "variant": "teal"
+      },
+      "legs": {
+        "itemId": "legs_pantaloons"
+      },
+      "shoes": "feet_boots_basic",
+      "weapon": {
+        "itemId": "weapon_sword_katana",
+        "variant": "katana"
+      }
+    },
+    "colors": {
+      "body": "light",
+      "eyes": "brown",
+      "hair": "black",
+      "legs": "navy"
+    }
+  },
+  {
+    "id": "lpc02_female_cultivator",
+    "label": "Nữ tu sĩ",
+    "bodyType": "female",
+    "selections": {
+      "head": "heads_human_female",
+      "expression": "face_neutral",
+      "hair": "hair_long_tied",
+      "clothes": {
+        "itemId": "torso_clothes_robe",
+        "variant": "white"
+      },
+      "belt": {
+        "itemId": "belt_robe",
+        "variant": "teal"
+      },
+      "legs": "legs_leggings",
+      "shoes": "feet_slippers",
+      "hairtie": "hat_headband_hairtie"
+    },
+    "colors": {
+      "body": "light",
+      "eyes": "brown",
+      "hair": "black",
+      "legs": "navy",
+      "hairtie": "teal"
+    }
+  },
+  {
+    "id": "lpc03_city_guard",
+    "label": "Vệ binh thành",
+    "bodyType": "male",
+    "selections": {
+      "head": "heads_human_male",
+      "expression": "face_angry",
+      "hair": "hair_high_and_tight",
+      "clothes": "torso_clothes_longsleeve",
+      "armour": "torso_armour_legion",
+      "belt": {
+        "itemId": "belt_double",
+        "variant": "leather"
+      },
+      "legs": "legs_armour",
+      "shoes": "feet_armour",
+      "weapon": {
+        "itemId": "weapon_sword_saber",
+        "variant": "saber"
+      }
+    },
+    "colors": {
+      "body": "olive",
+      "eyes": "brown",
+      "hair": "black",
+      "clothes": "navy",
+      "armour": "steel",
+      "legs": "steel",
+      "shoes": "steel"
+    }
+  }
+]

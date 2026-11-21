@@ -1,0 +1,71 @@
+{
+  "sect_m": [
+    "npc-sect_m-01",
+    "npc-sect_m-02",
+    "npc-sect_m-03",
+    "npc-sect_m-04"
+  ],
+  "sect_f": [
+    "npc-sect_f-01",
+    "npc-sect_f-02",
+    "npc-sect_f-03",
+    "npc-sect_f-04",
+    "npc-sect_f-05"
+  ],
+  "alchemist_m": [
+    "npc-alchemist_m-01",
+    "npc-alchemist_m-02",
+    "npc-alchemist_m-03",
+    "npc-alchemist_m-04"
+  ],
+  "alchemist_f": [
+    "npc-alchemist_f-01"
+  ],
+  "merchant_m": [
+    "npc-merchant_m-01",
+    "npc-merchant_m-02",
+    "npc-merchant_m-03"
+  ],
+  "merchant_f": [
+    "npc-merchant_f-01",
+    "npc-merchant_f-02"
+  ],
+  "smith_m": [
+    "npc-smith_m-01",
+    "npc-smith_m-02"
+  ],
+  "guard_m": [
+    "npc-guard_m-01",
+    "npc-guard_m-02"
+  ],
+  "guard_f": [
+    "npc-guard_f-01"
+  ],
+  "smith_f": [
+    "npc-smith_f-01"
+  ],
+  "civilian_m": [
+    "npc-civilian_m-01",
+    "npc-civilian_m-02"
+  ],
+  "civilian_f": [
+    "npc-civilian_f-01"
+  ],
+  "farmer_m": [
+    "npc-farmer_m-01",
+    "npc-farmer_m-02"
+  ],
+  "elder_m": [
+    "npc-elder_m-01",
+    "npc-elder_m-02"
+  ],
+  "elder_f": [
+    "npc-elder_f-01"
+  ],
+  "rogue_m": [
+    "npc-rogue_m-01",
+    "npc-rogue_m-02",
+    "npc-rogue_m-03",
+    "npc-rogue_m-04"
+  ]
+}

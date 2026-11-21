@@ -1,0 +1,15 @@
+# Palette riêng cho thử nghiệm tiên hiệp; toàn bộ màu do dự án tự định nghĩa.
+ramps:
+  stone: ["#17221f", "#34443e", "#58665d", "#849084", "#b8b7a2", "#e4dcc0"]
+  cloth: ["#182b39", "#28465a", "#396783", "#6b94a2", "#abc7c5", "#e5e2d2"]
+  robe: ["#17333d", "#285d6b", "#4b8790", "#83b5b2", "#c3d9cf", "#f3ead7"]
+  jade: ["#183b38", "#28564e", "#42796a", "#6d9d7e", "#a4c49b", "#d7e1b9"]
+  skin: ["#502f2a", "#805147", "#b07c65", "#d39c7d", "#ecc2a0", "#f5ddbc"]
+  hair: ["#17191d", "#262a2e", "#3c3c3b", "#5a4c3b", "#7b674b", "#a58a62"]
+  steel: ["#1c2730", "#344651", "#526875", "#7c9195", "#b0b9ad", "#e0d8c0"]
+  leather: ["#2b211e", "#483329", "#694a36", "#8b6645", "#b18b5d", "#d2ae73"]
+  gold: ["#3b2815", "#68481e", "#9a6e2c", "#c69a48", "#e3c26f", "#f2dfa0"]
+  ink: ["#17211f"]
+  fx_tail: ["#71afad"]
+  fx_mid: ["#b9dfd1"]
+  fx_core: ["#f8f2dc"]

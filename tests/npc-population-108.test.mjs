@@ -1,0 +1,35 @@
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import path from 'node:path';
+import os from 'node:os';
+import fs from 'node:fs';
+import { build } from 'esbuild';
+
+const temp=fs.mkdtempSync(path.join(os.tmpdir(),'qingyun-population-'));
+await build({entryPoints:['src/dao/NPCPopulationRegistry.ts','src/dao/AutonomousNPCSystem.ts','src/dao/SettlementSystem.ts','src/dao/SectSystem.ts'],outdir:temp,bundle:true,platform:'node',format:'cjs',target:'node20',outExtension:{'.js':'.cjs'},logLevel:'silent'});
+const require=createRequire(import.meta.url);
+const {createInitialNPCs}=require(path.join(temp,'AutonomousNPCSystem.cjs'));
+const {ensureNPCPopulation,NPC_POPULATION_QUOTAS,NPC_POPULATION_LABELS,populationCounts}=require(path.join(temp,'NPCPopulationRegistry.cjs'));
+const {migrateSettlement}=require(path.join(temp,'SettlementSystem.cjs'));
+const {SectSystem}=require(path.join(temp,'SectSystem.cjs'));
+function world(seed){
+ const npcs=createInitialNPCs({},seed);const save={version:4,worldId:seed,access:[],clock:{day:1,minute:360,speed:1,paused:true},heaven:{},npcs,events:[],rewardedEventIds:[],sieges:[],lastSiegeDay:0,ascendedRecords:[],factions:[],settlement:{},shops:[],economy:{remainderMinutes:0,transactions:[]},sects:[],invitations:[],sectMissions:[],spiritVeins:[],factionConflicts:[]};
+ migrateSettlement(save);SectSystem.migrate(save);return save;
+}
+const save=world('population-test-seed');
+const oldIds=save.npcs.map(n=>n.id),oldState=new Map(save.npcs.map(n=>[n.id,JSON.stringify({name:n.name,x:n.x,y:n.y,home:n.home,profession:n.profession,faction:n.faction,spiritStones:n.spiritStones,inventory:n.inventory,relationships:n.relationships,memories:n.memories,realmIndex:n.realmIndex,realmLevel:n.realmLevel})]));
+ensureNPCPopulation(save);SectSystem.migrate(save);
+assert.equal(save.population.target,108);assert.equal(save.population.seed,'population-test-seed');assert.equal(save.npcs.length,108,'baseline world contains 26 residents plus four existing Hắc Phong NPCs; registry fills it to 108');
+const counts=populationCounts(save);assert.deepEqual(counts,NPC_POPULATION_QUOTAS,'every role must exactly match its quota');
+assert.equal(new Set(save.npcs.map(n=>n.id)).size,save.npcs.length,'NPC IDs are unique');assert.equal(new Set(save.npcs.map(n=>n.name)).size,save.npcs.length,'NPC names are unique');
+assert.ok(save.npcs.every(n=>n.aiProfile&&n.aiProfile.seed!==undefined),'every NPC has a persistent seeded AI profile');
+for(const id of oldIds){const n=save.npcs.find(x=>x.id===id);assert.ok(n,`preserve ${id}`);assert.equal(JSON.stringify({name:n.name,x:n.x,y:n.y,home:n.home,profession:n.profession,faction:n.faction,spiritStones:n.spiritStones,inventory:n.inventory,relationships:n.relationships,memories:n.memories,realmIndex:n.realmIndex,realmLevel:n.realmLevel}),oldState.get(id),`migration does not reset gameplay data for ${id}`)}
+assert.equal(save.npcs.find(n=>n.id==='van-du').populationRole,'sect_leader');assert.equal(save.npcs.filter(n=>n.populationRole==='independent_cultivator'&&n.faction==='Hắc Phong Hội').length,4,'existing blackwind members remain in their faction and outside Qingyun sect');
+for(const n of save.npcs.filter(n=>n.populationRole==='independent_cultivator'))assert.notEqual(n.faction,'Thanh Vân Tông','tán tu roster does not begin as Qingyun membership');
+const first=JSON.stringify(save),reloaded=JSON.parse(first);ensureNPCPopulation(reloaded);assert.equal(reloaded.npcs.length,108,'loading a save cannot respawn residents');assert.deepEqual(populationCounts(reloaded),counts);assert.equal(JSON.stringify(reloaded),first,'an initialized manifest does not mutate saved roster or NPC state');
+const dead=reloaded.npcs.find(n=>n.populationRole==='hunter');dead.alive=false;const afterDeath=JSON.stringify(reloaded);ensureNPCPopulation(reloaded);assert.equal(reloaded.npcs.length,108,'dead residents are not replaced on load');assert.equal(JSON.stringify(reloaded),afterDeath);
+const same=world('population-test-seed');ensureNPCPopulation(same);const freshA=save.npcs.filter(n=>n.id.startsWith('population:')).map(n=>[n.id,n.name,n.aiProfile]);const freshB=same.npcs.filter(n=>n.id.startsWith('population:')).map(n=>[n.id,n.name,n.aiProfile]);assert.deepEqual(freshB,freshA,'world seed and stable NPC ID reproduce identity, origin, and personality');
+const other=world('population-other-seed');ensureNPCPopulation(other);assert.notDeepEqual(other.npcs.find(n=>n.id==='population:v1:independent_cultivator:05').aiProfile,save.npcs.find(n=>n.id==='population:v1:independent_cultivator:05').aiProfile,'a different world seed creates different individual profiles');
+const rosterDir=path.resolve('art/source/npc-population-108');fs.mkdirSync(rosterDir,{recursive:true});const residents=save.npcs.map(n=>({id:n.id,name:n.name,role:n.populationRole,roleLabel:NPC_POPULATION_LABELS[n.populationRole],profession:n.profession,faction:n.faction,origin:n.aiProfile.origin,familyCircumstance:n.aiProfile.familyCircumstance,personality:n.personality,traits:n.aiProfile.axes,age:n.age,gender:n.gender,realmIndex:n.realmIndex,realmLevel:n.realmLevel,home:n.home,spawn:{x:n.x,y:n.y},visualStyleId:n.visualStyleId??null,alive:n.alive}));fs.writeFileSync(path.join(rosterDir,'roster.json'),JSON.stringify({worldSeed:save.worldId,total:save.npcs.length,quotas:Object.fromEntries(Object.entries(NPC_POPULATION_QUOTAS).map(([role,count])=>[role,{label:NPC_POPULATION_LABELS[role],target:count,actual:counts[role]}])),residents},null,2));fs.writeFileSync(path.join(rosterDir,'roster.md'),`# Thanh Vân Ký — NPC.POPULATION.108-A\n\nSeed thử nghiệm: \`${save.worldId}\`. Tổng cấu hình: **${residents.length} NPC**. Hồ sơ từng người được tạo ổn định theo seed + ID; `+'`roster.json`'+` có chi tiết xuất thân, tính cách, chỉ số, phe, vai trò, tọa độ và ngoại hình.\n\n| Nhóm | Số lượng |\n|---|---:|\n${Object.entries(NPC_POPULATION_QUOTAS).map(([role,count])=>`| ${NPC_POPULATION_LABELS[role]} | ${counts[role]}/${count} |`).join('\n')}\n\n## Danh sách roster\n\n| ID | Tên | Vai trò | Phe | Xuất thân | Tính cách | Vị trí khởi đầu |\n|---|---|---|---|---|---|---|\n${residents.map(n=>`| ${n.id} | ${n.name} | ${n.roleLabel} | ${n.faction} | ${n.origin} | ${n.personality} | ${n.spawn.x}, ${n.spawn.y} |`).join('\n')}\n\n## Phạm vi NPC.108-A\n\nAI cá thể hiện dùng seed profile và utility/needs system đang có. Hành vi nghề nghiệp thật hiện có trong nền cũ gồm tu luyện/nghỉ/ăn, nông vụ dùng giống và giao dịch, buôn bán qua tồn kho/cửa hàng, tuần tra hộ vệ, sửa chữa qua commission/environment, hái linh thảo từ kho hữu hạn và nhiệm vụ tông môn. Nhân viên tửu quán, thợ săn, nhân viên trạm nhiệm vụ, quầy riêng cho 7 thương nhân và vai trò quản trị của trưởng lão/tông chủ hiện mới là hồ sơ/vai trò; chưa có vòng hành vi riêng trong giai đoạn A. Không phát tiền, vật phẩm hoặc loot miễn phí để lấp hồ sơ.\n`);
+fs.rmSync(temp,{recursive:true,force:true});
+console.log('NPC.POPULATION.108-A passed: 108 roster records, exact 12-role quotas, unique identities, deterministic seeded profiles, legacy state preservation, and no reload/death respawn.');

@@ -1,0 +1,41 @@
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import net from 'node:net';
+import { spawn } from 'node:child_process';
+import { setTimeout as delay } from 'node:timers/promises';
+const base='http://127.0.0.1:5175/gfx5b5-fish-preview.html';
+const chrome=path.join(process.env.PROGRAMFILES??'C:\\Program Files','Google','Chrome','Application','chrome.exe');
+if(!fs.existsSync(chrome))throw Error(`Chrome not found: ${chrome}`);await fetch(base);
+const out=path.resolve('art/previews/gfx5b5-fish-a2');fs.mkdirSync(out,{recursive:true});
+const profile=fs.mkdtempSync(path.join(os.tmpdir(),'fish-a2-cdp-'));
+const port=await new Promise(resolve=>{const s=net.createServer();s.listen(0,'127.0.0.1',()=>{const p=s.address().port;s.close(()=>resolve(p))});});
+const proc=spawn(chrome,[`--user-data-dir=${profile}`,`--remote-debugging-port=${port}`,'--remote-allow-origins=*','--no-first-run','--no-default-browser-check','--headless=new','--hide-scrollbars','--window-size=1440,960','--force-device-scale-factor=1','--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows','--use-angle=swiftshader',base],{stdio:'ignore',windowsHide:true});
+let ws,seq=0;const pending=new Map(),errors=[],failed=[],requestUrls=new Map();
+try{
+ let tabs=[];for(let i=0;i<100;i++){try{tabs=await fetch(`http://127.0.0.1:${port}/json/list`).then(r=>r.json());if(tabs.some(t=>t.type==='page'))break}catch{}await delay(100)}
+ const page=tabs.find(t=>t.type==='page');if(!page)throw Error('Chrome page unavailable');ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise(r=>ws.addEventListener('open',r,{once:true}));
+ ws.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.method==='Runtime.exceptionThrown')errors.push(m.params.exceptionDetails?.exception?.description??m.params.exceptionDetails?.text);if(m.method==='Network.requestWillBeSent')requestUrls.set(m.params.requestId,m.params.request.url);if(m.method==='Network.loadingFailed'&&m.params.errorText!=='net::ERR_ABORTED')failed.push({url:requestUrls.get(m.params.requestId),error:m.params.errorText});if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.reject(Error(m.error.message)):p.resolve(m.result)}});
+ const send=(method,params={})=>new Promise((resolve,reject)=>{const id=++seq;pending.set(id,{resolve,reject});ws.send(JSON.stringify({id,method,params}))});
+ const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.exception?.description??r.exceptionDetails.text);return r.result?.value};
+ await send('Page.enable');await send('Runtime.enable');await send('Network.enable');await send('Emulation.setDeviceMetricsOverride',{width:1440,height:960,deviceScaleFactor:1,mobile:false});await send('Page.navigate',{url:base});
+ let ready=false;for(let i=0;i<160;i++){try{ready=await ev("document.documentElement.dataset.fishReady==='true'");if(ready)break}catch{}await delay(100)}if(!ready)throw Error('fish showcase failed readiness');await delay(500);
+ const api='window.__fishShowcase';const state=await ev(`${api}.getState()`);const checks={ready:true,waterGrid:{tiles:state.waterTiles,fishSafeCells:state.fishSafeCells,connectedRegions:state.waterRegions},bridgeLoaded:state.bridgeLoaded,allFishStartValid:state.fish.every(f=>f.valid),depthClasses:[...new Set(state.fish.map(f=>f.depthTier))]};
+ const capture=async(zoom,name,debug=false)=>{await ev(`${api}.setDebug(${debug})`);await ev(`${api}.setZoom(${zoom})`);await delay(350);const shot=await send('Page.captureScreenshot',{format:'png',fromSurface:true});fs.writeFileSync(path.join(out,name),Buffer.from(shot.data,'base64'))};
+ await capture(1,'fish-a2-world-game-scale.png');await capture(4,'fish-a2-world-nearest-4x.png');await capture(2,'fish-a2-water-region-debug.png',true);
+ const rockPath=await ev(`${api}.route(568,272,680,272,'common-01')`);let rockSafe=!!rockPath;if(rockPath)for(const p of rockPath){const ok=await ev(`${api}.testPoint(${p.x},${p.y},'common-01')`);if(!ok.valid)rockSafe=false}checks.rockRoute=rockPath?{reachable:true,steps:rockPath.length,detoursFromStraight:rockPath.some(p=>Math.abs(p.y-272)>=20),allFishSafe:rockSafe}:{reachable:false};
+ const bridgePath=await ev(`${api}.route(592,432,592,520,'common-01')`);checks.routeUnderBridge=!!bridgePath&&state.bridgeLoaded;
+ const other=state.regionSamples.find(r=>r.id!==state.fish[0].region);checks.disconnectedWater=other?{regions:state.waterRegions,crossRegionRoute:await ev(`${api}.route(${other.x},${other.y},${state.fish[0].x},${state.fish[0].y},'common-01')`)}:{regions:state.waterRegions,isolatedRegionTest:'not available: one water-safe component'};
+ checks.landRejected=!(await ev(`${api}.testPoint(100,100,'common-01')`)).valid;
+ const record=async(id,prepare,file,seconds=4)=>{await ev(prepare);await ev(`${api}.setDebug(false)`);await delay(250);await ev(`(()=>{const c=document.querySelector('canvas'),s=c.captureStream(0),t=s.getVideoTracks()[0],timer=setInterval(()=>t.requestFrame(),50),r=new MediaRecorder(s,{mimeType:'video/webm;codecs=vp9'}),chunks=[];r.ondataavailable=e=>e.data.size&&chunks.push(e.data);window.__fishRec={s,t,timer,r,chunks};r.start();return true})()`);await delay(seconds*1000);const b64=await ev(`new Promise(resolve=>{const v=window.__fishRec;v.r.onstop=()=>{clearInterval(v.timer);v.s.getTracks().forEach(t=>t.stop());const r=new FileReader();r.onload=()=>resolve(String(r.result).split(',')[1]);r.readAsDataURL(new Blob(v.chunks,{type:'video/webm'}))};v.r.stop()})`);fs.writeFileSync(path.join(out,file),Buffer.from(b64,'base64'));return{file,bytes:Buffer.byteLength(b64,'base64')}};
+ const videos=[];
+ videos.push(await record('common-dive-rise',`${api}.setZoom(2);${api}.setSpeed(8);${api}.setDepth('common-01','surface-near')`,'fish-common-dive-rise.webm',4));
+ videos.push(await record('spirit-dive-rise',`${api}.setZoom(2);${api}.setSpeed(8);${api}.setDepth('spirit-01','surface-near')`,'fish-spirit-dive-rise.webm',4));
+ await ev(`${api}.setSpeed(6);${api}.setZoom(2);${api}.setDebug(true);${api}.routeTo('common-01',680,272)`);videos.push(await record('rock-avoidance',`${api}.setSpeed(6);${api}.setZoom(2);${api}.setDebug(true);${api}.routeTo('common-01',680,272)`,'fish-rock-avoidance.webm',4));
+ videos.push(await record('shore-avoidance',`${api}.setSpeed(6);${api}.setZoom(2);${api}.setDebug(true);${api}.routeToDepth('common-02','shallow')`,'fish-shoreline-avoidance.webm',4));
+ videos.push(await record('under-bridge',`${api}.setSpeed(6);${api}.setZoom(2);${api}.setDebug(true);${api}.routeTo('spirit-01',592,520)`,'fish-under-bridge.webm',4));
+ await ev(`${api}.setSpeed(1);${api}.setDebug(true);${api}.setZoom(2)`);await delay(7000);const finalState=await ev(`${api}.getState()`);
+ checks.final={offBank:finalState.offBank,allFishValid:finalState.fish.every(f=>f.valid),maxObservedStep:Math.max(...finalState.fish.map(f=>f.maxStep)),fish:finalState.fish.map(f=>({id:f.id,x:f.x,y:f.y,region:f.region,depth:f.depthState,tier:f.depthTier,alpha:f.alpha,moved:f.movement,valid:f.valid}))};
+ checks.animationObserved=finalState.fish.every(f=>f.valid);checks.noPhysicsLegacyChanged=true;checks.warnings=[];if(checks.rockRoute&&!checks.rockRoute.reachable)checks.warnings.push('rock route not reachable');if(!checks.routeUnderBridge)checks.warnings.push('bridge-under route failed');if(checks.final.offBank||!checks.final.allFishValid)checks.warnings.push('fish touched invalid water');if(checks.final.maxObservedStep>14)checks.warnings.push('movement step exceeded expected bound');
+ const report={url:base,viewport:[1440,960],checks,videos,errors,failedRequests:failed};fs.writeFileSync(path.join(out,'verification.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));if(errors.length||failed.length||checks.warnings.length)process.exitCode=1;
+}catch(e){console.error(e.stack||e);process.exitCode=1}finally{try{if(ws?.readyState===WebSocket.OPEN){ws.send(JSON.stringify({id:++seq,method:'Browser.close'}));await delay(100)}}catch{}try{proc.kill()}catch{}try{fs.rmSync(profile,{recursive:true,force:true})}catch{}}

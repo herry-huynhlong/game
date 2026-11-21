@@ -1,0 +1,252 @@
+{
+  "frames": {
+    "house_intact": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 160
+      }
+    },
+    "house_damaged": {
+      "frame": {
+        "x": 160,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 160
+      }
+    },
+    "house_ruined": {
+      "frame": {
+        "x": 320,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 160
+      }
+    },
+    "tree_intact": {
+      "frame": {
+        "x": 480,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 160
+      }
+    },
+    "tree_damaged": {
+      "frame": {
+        "x": 0,
+        "y": 160,
+        "w": 160,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 160
+      }
+    },
+    "tree_stump": {
+      "frame": {
+        "x": 160,
+        "y": 160,
+        "w": 160,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 160
+      }
+    },
+    "rubble": {
+      "frame": {
+        "x": 320,
+        "y": 160,
+        "w": 160,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 160
+      }
+    },
+    "leaf_fall": {
+      "frame": {
+        "x": 480,
+        "y": 160,
+        "w": 160,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 160
+      }
+    },
+    "drop_wood": {
+      "frame": {
+        "x": 0,
+        "y": 320,
+        "w": 160,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 160
+      }
+    },
+    "drop_wolf_pelt": {
+      "frame": {
+        "x": 160,
+        "y": 320,
+        "w": 160,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 160
+      }
+    },
+    "drop_wolf_fang": {
+      "frame": {
+        "x": 320,
+        "y": 320,
+        "w": 160,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 160
+      }
+    },
+    "drop_demon_core": {
+      "frame": {
+        "x": 480,
+        "y": 320,
+        "w": 160,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 160
+      }
+    }
+  },
+  "meta": {
+    "app": "GFX.4A procedural pixel art (Pillow)",
+    "size": {
+      "w": 640,
+      "h": 480
+    },
+    "scale": "1"
+  }
+}

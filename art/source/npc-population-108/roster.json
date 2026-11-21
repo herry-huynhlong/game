@@ -1,0 +1,3740 @@
+{
+  "worldSeed": "population-test-seed",
+  "total": 108,
+  "quotas": {
+    "commoner": {
+      "label": "Dân thường",
+      "target": 20,
+      "actual": 20
+    },
+    "low_disciple": {
+      "label": "Đệ tử cấp thấp Thanh Vân Tông",
+      "target": 20,
+      "actual": 20
+    },
+    "elder": {
+      "label": "Trưởng lão tông môn",
+      "target": 5,
+      "actual": 5
+    },
+    "sect_leader": {
+      "label": "Tông chủ",
+      "target": 1,
+      "actual": 1
+    },
+    "merchant": {
+      "label": "Thương nhân bày sạp",
+      "target": 7,
+      "actual": 7
+    },
+    "tavern_staff": {
+      "label": "Nhân viên tửu quán",
+      "target": 3,
+      "actual": 3
+    },
+    "city_guard": {
+      "label": "Lính canh thành",
+      "target": 10,
+      "actual": 10
+    },
+    "repair_worker": {
+      "label": "Thợ sửa chữa",
+      "target": 2,
+      "actual": 2
+    },
+    "hunter": {
+      "label": "Thợ săn",
+      "target": 5,
+      "actual": 5
+    },
+    "herb_gatherer": {
+      "label": "Người hái dược",
+      "target": 3,
+      "actual": 3
+    },
+    "quest_clerk": {
+      "label": "NPC trạm nhiệm vụ",
+      "target": 2,
+      "actual": 2
+    },
+    "independent_cultivator": {
+      "label": "Tán tu độc lập",
+      "target": 30,
+      "actual": 30
+    }
+  },
+  "residents": [
+    {
+      "id": "van-du",
+      "name": "Vân Du",
+      "role": "sect_leader",
+      "roleLabel": "Tông chủ",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "điềm tĩnh",
+      "traits": {
+        "diligence": 88,
+        "courage": 90,
+        "ambition": 87,
+        "generosity": 69,
+        "sociability": 34,
+        "caution": 63,
+        "discipline": 49
+      },
+      "age": 23,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 580,
+        "y": 790
+      },
+      "spawn": {
+        "x": 580,
+        "y": 790
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-01",
+      "name": "Tống Thanh Hà",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 42,
+        "courage": 85,
+        "ambition": 49,
+        "generosity": 86,
+        "sociability": 33,
+        "caution": 88,
+        "discipline": 78
+      },
+      "age": 25,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 6,
+      "home": {
+        "x": 430,
+        "y": 610
+      },
+      "spawn": {
+        "x": 430,
+        "y": 610
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-02",
+      "name": "Mạc Tiểu Nhiên",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "hào sảng",
+      "traits": {
+        "diligence": 68,
+        "courage": 36,
+        "ambition": 46,
+        "generosity": 88,
+        "sociability": 71,
+        "caution": 93,
+        "discipline": 40
+      },
+      "age": 32,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 720,
+        "y": 720
+      },
+      "spawn": {
+        "x": 720,
+        "y": 720
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-03",
+      "name": "Lục Trường Canh",
+      "role": "elder",
+      "roleLabel": "Trưởng lão tông môn",
+      "profession": "dan_su",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · gia đình hành nghề dan_su",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "cẩn trọng",
+      "traits": {
+        "diligence": 53,
+        "courage": 21,
+        "ambition": 28,
+        "generosity": 59,
+        "sociability": 68,
+        "caution": 87,
+        "discipline": 90
+      },
+      "age": 39,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 490,
+        "y": 860
+      },
+      "spawn": {
+        "x": 490,
+        "y": 860
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-04",
+      "name": "Bạch Tố Tâm",
+      "role": "merchant",
+      "roleLabel": "Thương nhân bày sạp",
+      "profession": "thuong_nhan",
+      "faction": "Thương Hội Thanh Vân",
+      "origin": "Thương Hội Thanh Vân · gia đình hành nghề thuong_nhan",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "hiếu kỳ",
+      "traits": {
+        "diligence": 70,
+        "courage": 80,
+        "ambition": 70,
+        "generosity": 56,
+        "sociability": 40,
+        "caution": 79,
+        "discipline": 63
+      },
+      "age": 46,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 2760,
+        "y": 1000
+      },
+      "spawn": {
+        "x": 2740,
+        "y": 850
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-05",
+      "name": "Hàn Sơn",
+      "role": "herb_gatherer",
+      "roleLabel": "Người hái dược",
+      "profession": "duoc_su",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · gia đình hành nghề duoc_su",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 63,
+        "courage": 38,
+        "ambition": 64,
+        "generosity": 27,
+        "sociability": 38,
+        "caution": 86,
+        "discipline": 83
+      },
+      "age": 53,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 680,
+        "y": 530
+      },
+      "spawn": {
+        "x": 680,
+        "y": 530
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-06",
+      "name": "Diệp Linh Chi",
+      "role": "city_guard",
+      "roleLabel": "Lính canh thành",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "nhân hậu",
+      "traits": {
+        "diligence": 94,
+        "courage": 56,
+        "ambition": 92,
+        "generosity": 50,
+        "sociability": 68,
+        "caution": 69,
+        "discipline": 69
+      },
+      "age": 60,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 2385,
+        "y": 940
+      },
+      "spawn": {
+        "x": 2370,
+        "y": 850
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-07",
+      "name": "Chu Mặc",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "nong_dan",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình làm ruộng",
+      "familyCircumstance": "gia đình sống bằng vụ mùa",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 77,
+        "courage": 69,
+        "ambition": 20,
+        "generosity": 31,
+        "sociability": 72,
+        "caution": 87,
+        "discipline": 23
+      },
+      "age": 67,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 6,
+      "home": {
+        "x": 2605,
+        "y": 1275
+      },
+      "spawn": {
+        "x": 2670,
+        "y": 1195
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-08",
+      "name": "Ninh Uyển",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "điềm tĩnh",
+      "traits": {
+        "diligence": 71,
+        "courage": 41,
+        "ambition": 45,
+        "generosity": 26,
+        "sociability": 84,
+        "caution": 27,
+        "discipline": 40
+      },
+      "age": 74,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 340,
+        "y": 510
+      },
+      "spawn": {
+        "x": 340,
+        "y": 510
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-09",
+      "name": "Phùng Đại Hải",
+      "role": "repair_worker",
+      "roleLabel": "Thợ sửa chữa",
+      "profession": "tho_re",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · gia đình hành nghề tho_re",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 42,
+        "courage": 88,
+        "ambition": 81,
+        "generosity": 77,
+        "sociability": 38,
+        "caution": 64,
+        "discipline": 93
+      },
+      "age": 81,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 3260,
+        "y": 1165
+      },
+      "spawn": {
+        "x": 3260,
+        "y": 1080
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-10",
+      "name": "Tần Vũ",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "hào sảng",
+      "traits": {
+        "diligence": 68,
+        "courage": 82,
+        "ambition": 74,
+        "generosity": 38,
+        "sociability": 28,
+        "caution": 57,
+        "discipline": 78
+      },
+      "age": 20,
+      "gender": "nam",
+      "realmIndex": 1,
+      "realmLevel": 3,
+      "home": {
+        "x": 1740,
+        "y": 540
+      },
+      "spawn": {
+        "x": 1740,
+        "y": 540
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-11",
+      "name": "Lâm Tiểu Ngư",
+      "role": "herb_gatherer",
+      "roleLabel": "Người hái dược",
+      "profession": "duoc_su",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · gia đình hành nghề duoc_su",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "cẩn trọng",
+      "traits": {
+        "diligence": 65,
+        "courage": 46,
+        "ambition": 65,
+        "generosity": 75,
+        "sociability": 53,
+        "caution": 86,
+        "discipline": 66
+      },
+      "age": 27,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 2940,
+        "y": 735
+      },
+      "spawn": {
+        "x": 2965,
+        "y": 632
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-12",
+      "name": "Thẩm Dạ",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "hiếu kỳ",
+      "traits": {
+        "diligence": 36,
+        "courage": 69,
+        "ambition": 50,
+        "generosity": 26,
+        "sociability": 73,
+        "caution": 71,
+        "discipline": 56
+      },
+      "age": 34,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 2040,
+        "y": 520
+      },
+      "spawn": {
+        "x": 2040,
+        "y": 520
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-13",
+      "name": "Cố Minh Châu",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "dan_su",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · gia đình hành nghề dan_su",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 63,
+        "courage": 64,
+        "ambition": 91,
+        "generosity": 62,
+        "sociability": 18,
+        "caution": 92,
+        "discipline": 27
+      },
+      "age": 41,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 6,
+      "home": {
+        "x": 1800,
+        "y": 760
+      },
+      "spawn": {
+        "x": 1800,
+        "y": 760
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-14",
+      "name": "Đường Kính",
+      "role": "merchant",
+      "roleLabel": "Thương nhân bày sạp",
+      "profession": "thuong_nhan",
+      "faction": "Thương Hội Thanh Vân",
+      "origin": "Thương Hội Thanh Vân · gia đình hành nghề thuong_nhan",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "nhân hậu",
+      "traits": {
+        "diligence": 44,
+        "courage": 80,
+        "ambition": 85,
+        "generosity": 20,
+        "sociability": 29,
+        "caution": 37,
+        "discipline": 53
+      },
+      "age": 48,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 3170,
+        "y": 750
+      },
+      "spawn": {
+        "x": 3170,
+        "y": 652
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-15",
+      "name": "Liễu Như Yên",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 50,
+        "courage": 81,
+        "ambition": 88,
+        "generosity": 46,
+        "sociability": 29,
+        "caution": 89,
+        "discipline": 44
+      },
+      "age": 55,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 1660,
+        "y": 850
+      },
+      "spawn": {
+        "x": 1660,
+        "y": 850
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-16",
+      "name": "La Thất",
+      "role": "city_guard",
+      "roleLabel": "Lính canh thành",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "điềm tĩnh",
+      "traits": {
+        "diligence": 62,
+        "courage": 42,
+        "ambition": 74,
+        "generosity": 37,
+        "sociability": 88,
+        "caution": 44,
+        "discipline": 67
+      },
+      "age": 62,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 2415,
+        "y": 940
+      },
+      "spawn": {
+        "x": 2370,
+        "y": 900
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-17",
+      "name": "Hứa An",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "nong_dan",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình làm ruộng",
+      "familyCircumstance": "gia đình sống bằng vụ mùa",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 90,
+        "courage": 71,
+        "ambition": 93,
+        "generosity": 34,
+        "sociability": 30,
+        "caution": 45,
+        "discipline": 76
+      },
+      "age": 69,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 2740,
+        "y": 1275
+      },
+      "spawn": {
+        "x": 2620,
+        "y": 1195
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-18",
+      "name": "Kỷ Vô Ưu",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "hào sảng",
+      "traits": {
+        "diligence": 30,
+        "courage": 81,
+        "ambition": 89,
+        "generosity": 72,
+        "sociability": 62,
+        "caution": 81,
+        "discipline": 56
+      },
+      "age": 76,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 1310,
+        "y": 1040
+      },
+      "spawn": {
+        "x": 1310,
+        "y": 1040
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-19",
+      "name": "Tô Nguyệt",
+      "role": "merchant",
+      "roleLabel": "Thương nhân bày sạp",
+      "profession": "thuong_nhan",
+      "faction": "Thương Hội Thanh Vân",
+      "origin": "Thương Hội Thanh Vân · gia đình hành nghề thuong_nhan",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "cẩn trọng",
+      "traits": {
+        "diligence": 39,
+        "courage": 86,
+        "ambition": 83,
+        "generosity": 50,
+        "sociability": 67,
+        "caution": 27,
+        "discipline": 40
+      },
+      "age": 83,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 6,
+      "home": {
+        "x": 2600,
+        "y": 720
+      },
+      "spawn": {
+        "x": 2590,
+        "y": 632
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-20",
+      "name": "Trình Bá",
+      "role": "repair_worker",
+      "roleLabel": "Thợ sửa chữa",
+      "profession": "tho_re",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · gia đình hành nghề tho_re",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "hiếu kỳ",
+      "traits": {
+        "diligence": 75,
+        "courage": 57,
+        "ambition": 73,
+        "generosity": 41,
+        "sociability": 88,
+        "caution": 38,
+        "discipline": 20
+      },
+      "age": 22,
+      "gender": "nam",
+      "realmIndex": 1,
+      "realmLevel": 5,
+      "home": {
+        "x": 3320,
+        "y": 1165
+      },
+      "spawn": {
+        "x": 3270,
+        "y": 1070
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-21",
+      "name": "Âu Dương Tĩnh",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 55,
+        "courage": 31,
+        "ambition": 45,
+        "generosity": 68,
+        "sociability": 78,
+        "caution": 78,
+        "discipline": 77
+      },
+      "age": 29,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 1780,
+        "y": 1090
+      },
+      "spawn": {
+        "x": 1780,
+        "y": 1090
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-22",
+      "name": "Mạnh Tiểu Thạch",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "nhân hậu",
+      "traits": {
+        "diligence": 29,
+        "courage": 32,
+        "ambition": 41,
+        "generosity": 51,
+        "sociability": 61,
+        "caution": 39,
+        "discipline": 26
+      },
+      "age": 36,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 1940,
+        "y": 1280
+      },
+      "spawn": {
+        "x": 1940,
+        "y": 1280
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-23",
+      "name": "Lý Hoài Cẩn",
+      "role": "herb_gatherer",
+      "roleLabel": "Người hái dược",
+      "profession": "duoc_su",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · gia đình hành nghề duoc_su",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 83,
+        "courage": 79,
+        "ambition": 55,
+        "generosity": 80,
+        "sociability": 69,
+        "caution": 43,
+        "discipline": 70
+      },
+      "age": 43,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 1240,
+        "y": 760
+      },
+      "spawn": {
+        "x": 1240,
+        "y": 760
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-24",
+      "name": "Yến Phi",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "điềm tĩnh",
+      "traits": {
+        "diligence": 84,
+        "courage": 68,
+        "ambition": 80,
+        "generosity": 58,
+        "sociability": 64,
+        "caution": 72,
+        "discipline": 73
+      },
+      "age": 50,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 540,
+        "y": 690
+      },
+      "spawn": {
+        "x": 540,
+        "y": 690
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "qingyun-25",
+      "name": "Đào A Mộc",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 41,
+        "courage": 72,
+        "ambition": 88,
+        "generosity": 72,
+        "sociability": 16,
+        "caution": 48,
+        "discipline": 60
+      },
+      "age": 57,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 6,
+      "home": {
+        "x": 1850,
+        "y": 450
+      },
+      "spawn": {
+        "x": 1850,
+        "y": 450
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "blackwind-1",
+      "name": "Hắc Phong Tôn",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Hắc Phong Hội",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 88,
+        "courage": 90,
+        "ambition": 87,
+        "generosity": 69,
+        "sociability": 34,
+        "caution": 63,
+        "discipline": 49
+      },
+      "age": 28,
+      "gender": "nam",
+      "realmIndex": 1,
+      "realmLevel": 5,
+      "home": {
+        "x": 1818,
+        "y": 1270
+      },
+      "spawn": {
+        "x": 1818,
+        "y": 1270
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "blackwind-2",
+      "name": "Mục Quỷ",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "ho_ve",
+      "faction": "Hắc Phong Hội",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 88,
+        "courage": 90,
+        "ambition": 87,
+        "generosity": 69,
+        "sociability": 34,
+        "caution": 63,
+        "discipline": 49
+      },
+      "age": 35,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 1900,
+        "y": 1290
+      },
+      "spawn": {
+        "x": 1900,
+        "y": 1290
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "blackwind-3",
+      "name": "Đao Thập Tam",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Hắc Phong Hội",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "cẩn trọng",
+      "traits": {
+        "diligence": 88,
+        "courage": 90,
+        "ambition": 87,
+        "generosity": 69,
+        "sociability": 34,
+        "caution": 63,
+        "discipline": 49
+      },
+      "age": 42,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 1760,
+        "y": 1370
+      },
+      "spawn": {
+        "x": 1760,
+        "y": 1370
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "blackwind-4",
+      "name": "Hứa Hắc Liên",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Hắc Phong Hội",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 88,
+        "courage": 90,
+        "ambition": 87,
+        "generosity": 69,
+        "sociability": 34,
+        "caution": 63,
+        "discipline": 49
+      },
+      "age": 49,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 1980,
+        "y": 1340
+      },
+      "spawn": {
+        "x": 1980,
+        "y": 1340
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:05",
+      "name": "YếnMinh Châu",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "nong_dan",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình làm ruộng",
+      "familyCircumstance": "gia đình sống bằng vụ mùa",
+      "personality": "điềm tĩnh",
+      "traits": {
+        "diligence": 68,
+        "courage": 27,
+        "ambition": 21,
+        "generosity": 90,
+        "sociability": 41,
+        "caution": 45,
+        "discipline": 39
+      },
+      "age": 36,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 2802,
+        "y": 1039
+      },
+      "spawn": {
+        "x": 2802,
+        "y": 1039
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:06",
+      "name": "KhangHành Chu",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "nhân hậu",
+      "traits": {
+        "diligence": 26,
+        "courage": 25,
+        "ambition": 50,
+        "generosity": 20,
+        "sociability": 87,
+        "caution": 27,
+        "discipline": 82
+      },
+      "age": 29,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 2890,
+        "y": 1039
+      },
+      "spawn": {
+        "x": 2890,
+        "y": 1039
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:07",
+      "name": "HànTư Viễn",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 67,
+        "courage": 21,
+        "ambition": 32,
+        "generosity": 33,
+        "sociability": 55,
+        "caution": 86,
+        "discipline": 33
+      },
+      "age": 70,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 2450,
+        "y": 1117
+      },
+      "spawn": {
+        "x": 2450,
+        "y": 1117
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:08",
+      "name": "YếnPhi Bạch",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 76,
+        "courage": 49,
+        "ambition": 56,
+        "generosity": 78,
+        "sociability": 18,
+        "caution": 33,
+        "discipline": 74
+      },
+      "age": 25,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 2538,
+        "y": 1117
+      },
+      "spawn": {
+        "x": 2538,
+        "y": 1117
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:09",
+      "name": "CốBình An",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 80,
+        "courage": 67,
+        "ambition": 54,
+        "generosity": 27,
+        "sociability": 90,
+        "caution": 56,
+        "discipline": 22
+      },
+      "age": 66,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 2626,
+        "y": 1117
+      },
+      "spawn": {
+        "x": 2626,
+        "y": 1117
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:10",
+      "name": "LâmCảnh Hành",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "nong_dan",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình làm ruộng",
+      "familyCircumstance": "gia đình sống bằng vụ mùa",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 87,
+        "courage": 85,
+        "ambition": 76,
+        "generosity": 81,
+        "sociability": 17,
+        "caution": 60,
+        "discipline": 79
+      },
+      "age": 70,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 2714,
+        "y": 1117
+      },
+      "spawn": {
+        "x": 2714,
+        "y": 1117
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:11",
+      "name": "ThôiPhi Bạch",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "hào sảng",
+      "traits": {
+        "diligence": 37,
+        "courage": 83,
+        "ambition": 52,
+        "generosity": 21,
+        "sociability": 47,
+        "caution": 44,
+        "discipline": 85
+      },
+      "age": 29,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 2802,
+        "y": 1117
+      },
+      "spawn": {
+        "x": 2802,
+        "y": 1117
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:12",
+      "name": "TừĐại Hải",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "hiếu kỳ",
+      "traits": {
+        "diligence": 92,
+        "courage": 60,
+        "ambition": 25,
+        "generosity": 52,
+        "sociability": 48,
+        "caution": 75,
+        "discipline": 44
+      },
+      "age": 36,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 2890,
+        "y": 1117
+      },
+      "spawn": {
+        "x": 2890,
+        "y": 1117
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:13",
+      "name": "TềTử Khanh",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "điềm tĩnh",
+      "traits": {
+        "diligence": 53,
+        "courage": 20,
+        "ambition": 38,
+        "generosity": 61,
+        "sociability": 54,
+        "caution": 35,
+        "discipline": 23
+      },
+      "age": 53,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 2450,
+        "y": 1195
+      },
+      "spawn": {
+        "x": 2450,
+        "y": 1195
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:14",
+      "name": "CungPhi Yến",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "điềm tĩnh",
+      "traits": {
+        "diligence": 52,
+        "courage": 40,
+        "ambition": 82,
+        "generosity": 49,
+        "sociability": 84,
+        "caution": 65,
+        "discipline": 30
+      },
+      "age": 22,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 2538,
+        "y": 1195
+      },
+      "spawn": {
+        "x": 2538,
+        "y": 1195
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:15",
+      "name": "LâmHạo Nhiên",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "nong_dan",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình làm ruộng",
+      "familyCircumstance": "nhà thiếu lương thực dự trữ",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 55,
+        "courage": 25,
+        "ambition": 37,
+        "generosity": 24,
+        "sociability": 84,
+        "caution": 82,
+        "discipline": 50
+      },
+      "age": 39,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 2626,
+        "y": 1195
+      },
+      "spawn": {
+        "x": 2626,
+        "y": 1195
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:16",
+      "name": "MạnhTử Nghi",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 51,
+        "courage": 34,
+        "ambition": 66,
+        "generosity": 41,
+        "sociability": 87,
+        "caution": 24,
+        "discipline": 80
+      },
+      "age": 46,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 2714,
+        "y": 1195
+      },
+      "spawn": {
+        "x": 2714,
+        "y": 1195
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:17",
+      "name": "TừTrường Canh",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "cẩn trọng",
+      "traits": {
+        "diligence": 61,
+        "courage": 90,
+        "ambition": 86,
+        "generosity": 65,
+        "sociability": 51,
+        "caution": 76,
+        "discipline": 74
+      },
+      "age": 63,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 2802,
+        "y": 1195
+      },
+      "spawn": {
+        "x": 2802,
+        "y": 1195
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:18",
+      "name": "MạcHoài Cẩn",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "cẩn trọng",
+      "traits": {
+        "diligence": 76,
+        "courage": 32,
+        "ambition": 28,
+        "generosity": 50,
+        "sociability": 41,
+        "caution": 39,
+        "discipline": 34
+      },
+      "age": 32,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 2890,
+        "y": 1195
+      },
+      "spawn": {
+        "x": 2890,
+        "y": 1195
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:19",
+      "name": "CungSơ Ảnh",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "điềm tĩnh",
+      "traits": {
+        "diligence": 79,
+        "courage": 75,
+        "ambition": 64,
+        "generosity": 40,
+        "sociability": 24,
+        "caution": 84,
+        "discipline": 70
+      },
+      "age": 49,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 2450,
+        "y": 1273
+      },
+      "spawn": {
+        "x": 2450,
+        "y": 1273
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:commoner:20",
+      "name": "YếnMặc Nhiên",
+      "role": "commoner",
+      "roleLabel": "Dân thường",
+      "profession": "nong_dan",
+      "faction": "Thanh Vân Thôn",
+      "origin": "Thanh Vân Thôn · gia đình làm ruộng",
+      "familyCircumstance": "nhà thiếu lương thực dự trữ",
+      "personality": "cẩn trọng",
+      "traits": {
+        "diligence": 95,
+        "courage": 72,
+        "ambition": 63,
+        "generosity": 62,
+        "sociability": 32,
+        "caution": 58,
+        "discipline": 88
+      },
+      "age": 41,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 2538,
+        "y": 1273
+      },
+      "spawn": {
+        "x": 2538,
+        "y": 1273
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:low_disciple:11",
+      "name": "BùiTiểu Nhiên",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "được gia đình hỗ trợ cơ bản",
+      "personality": "cẩn trọng",
+      "traits": {
+        "diligence": 54,
+        "courage": 83,
+        "ambition": 57,
+        "generosity": 87,
+        "sociability": 51,
+        "caution": 69,
+        "discipline": 82
+      },
+      "age": 21,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 832,
+        "y": 572
+      },
+      "spawn": {
+        "x": 832,
+        "y": 572
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:low_disciple:12",
+      "name": "TrìnhThanh Phong",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "điềm tĩnh",
+      "traits": {
+        "diligence": 80,
+        "courage": 33,
+        "ambition": 94,
+        "generosity": 42,
+        "sociability": 60,
+        "caution": 43,
+        "discipline": 40
+      },
+      "age": 38,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 920,
+        "y": 572
+      },
+      "spawn": {
+        "x": 920,
+        "y": 572
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:low_disciple:13",
+      "name": "TônTử Lăng",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 74,
+        "courage": 53,
+        "ambition": 51,
+        "generosity": 87,
+        "sociability": 89,
+        "caution": 57,
+        "discipline": 94
+      },
+      "age": 55,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 480,
+        "y": 650
+      },
+      "spawn": {
+        "x": 480,
+        "y": 650
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:low_disciple:14",
+      "name": "ThẩmTùng Tuyết",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "hiếu kỳ",
+      "traits": {
+        "diligence": 49,
+        "courage": 73,
+        "ambition": 81,
+        "generosity": 29,
+        "sociability": 51,
+        "caution": 73,
+        "discipline": 40
+      },
+      "age": 52,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 568,
+        "y": 650
+      },
+      "spawn": {
+        "x": 568,
+        "y": 650
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:low_disciple:15",
+      "name": "MạcNhất Minh",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "điềm tĩnh",
+      "traits": {
+        "diligence": 33,
+        "courage": 84,
+        "ambition": 49,
+        "generosity": 48,
+        "sociability": 71,
+        "caution": 70,
+        "discipline": 53
+      },
+      "age": 69,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 656,
+        "y": 650
+      },
+      "spawn": {
+        "x": 656,
+        "y": 650
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:low_disciple:16",
+      "name": "CungTiểu Ngư",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 84,
+        "courage": 80,
+        "ambition": 45,
+        "generosity": 42,
+        "sociability": 81,
+        "caution": 71,
+        "discipline": 40
+      },
+      "age": 28,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 744,
+        "y": 650
+      },
+      "spawn": {
+        "x": 744,
+        "y": 650
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:low_disciple:17",
+      "name": "LâmTố Tâm",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "hào sảng",
+      "traits": {
+        "diligence": 38,
+        "courage": 67,
+        "ambition": 52,
+        "generosity": 85,
+        "sociability": 56,
+        "caution": 65,
+        "discipline": 73
+      },
+      "age": 45,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 832,
+        "y": 650
+      },
+      "spawn": {
+        "x": 832,
+        "y": 650
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:low_disciple:18",
+      "name": "TônNhược Thủy",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 61,
+        "courage": 90,
+        "ambition": 92,
+        "generosity": 37,
+        "sociability": 69,
+        "caution": 73,
+        "discipline": 43
+      },
+      "age": 24,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 920,
+        "y": 650
+      },
+      "spawn": {
+        "x": 920,
+        "y": 650
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:low_disciple:19",
+      "name": "HứaTĩnh Sơn",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 67,
+        "courage": 58,
+        "ambition": 76,
+        "generosity": 36,
+        "sociability": 31,
+        "caution": 56,
+        "discipline": 57
+      },
+      "age": 41,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 480,
+        "y": 728
+      },
+      "spawn": {
+        "x": 480,
+        "y": 728
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:low_disciple:20",
+      "name": "ThạchTư Viễn",
+      "role": "low_disciple",
+      "roleLabel": "Đệ tử cấp thấp Thanh Vân Tông",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 60,
+        "courage": 79,
+        "ambition": 83,
+        "generosity": 61,
+        "sociability": 63,
+        "caution": 46,
+        "discipline": 73
+      },
+      "age": 71,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 568,
+        "y": 728
+      },
+      "spawn": {
+        "x": 568,
+        "y": 728
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:elder:02",
+      "name": "DươngVô Ưu",
+      "role": "elder",
+      "roleLabel": "Trưởng lão tông môn",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "nhân hậu",
+      "traits": {
+        "diligence": 32,
+        "courage": 36,
+        "ambition": 80,
+        "generosity": 59,
+        "sociability": 36,
+        "caution": 26,
+        "discipline": 40
+      },
+      "age": 27,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 568,
+        "y": 494
+      },
+      "spawn": {
+        "x": 568,
+        "y": 494
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:elder:03",
+      "name": "VănBá Hải",
+      "role": "elder",
+      "roleLabel": "Trưởng lão tông môn",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 50,
+        "courage": 22,
+        "ambition": 76,
+        "generosity": 89,
+        "sociability": 40,
+        "caution": 56,
+        "discipline": 89
+      },
+      "age": 68,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 656,
+        "y": 494
+      },
+      "spawn": {
+        "x": 656,
+        "y": 494
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:elder:04",
+      "name": "DưHoài Cẩn",
+      "role": "elder",
+      "roleLabel": "Trưởng lão tông môn",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 54,
+        "courage": 71,
+        "ambition": 75,
+        "generosity": 38,
+        "sociability": 32,
+        "caution": 65,
+        "discipline": 58
+      },
+      "age": 61,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 744,
+        "y": 494
+      },
+      "spawn": {
+        "x": 744,
+        "y": 494
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:elder:05",
+      "name": "LiễuTiểu Thạch",
+      "role": "elder",
+      "roleLabel": "Trưởng lão tông môn",
+      "profession": "tu_si",
+      "faction": "Thanh Vân Tông",
+      "origin": "Thanh Vân Tông · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "cẩn trọng",
+      "traits": {
+        "diligence": 33,
+        "courage": 53,
+        "ambition": 56,
+        "generosity": 26,
+        "sociability": 58,
+        "caution": 85,
+        "discipline": 60
+      },
+      "age": 44,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 832,
+        "y": 494
+      },
+      "spawn": {
+        "x": 832,
+        "y": 494
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:merchant:04",
+      "name": "KhangVân Khanh",
+      "role": "merchant",
+      "roleLabel": "Thương nhân bày sạp",
+      "profession": "thuong_nhan",
+      "faction": "Thương Hội Thanh Vân",
+      "origin": "Thương Hội Thanh Vân · gia đình hành nghề thuong_nhan",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 82,
+        "courage": 66,
+        "ambition": 35,
+        "generosity": 70,
+        "sociability": 59,
+        "caution": 34,
+        "discipline": 42
+      },
+      "age": 57,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 2784,
+        "y": 668
+      },
+      "spawn": {
+        "x": 2784,
+        "y": 668
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:merchant:05",
+      "name": "HànNguyệt Bạch",
+      "role": "merchant",
+      "roleLabel": "Thương nhân bày sạp",
+      "profession": "thuong_nhan",
+      "faction": "Thương Hội Thanh Vân",
+      "origin": "Thương Hội Thanh Vân · gia đình hành nghề thuong_nhan",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "hào sảng",
+      "traits": {
+        "diligence": 60,
+        "courage": 59,
+        "ambition": 82,
+        "generosity": 37,
+        "sociability": 70,
+        "caution": 40,
+        "discipline": 94
+      },
+      "age": 40,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 2872,
+        "y": 668
+      },
+      "spawn": {
+        "x": 2872,
+        "y": 668
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:merchant:06",
+      "name": "ThạchThanh Phong",
+      "role": "merchant",
+      "roleLabel": "Thương nhân bày sạp",
+      "profession": "thuong_nhan",
+      "faction": "Thương Hội Thanh Vân",
+      "origin": "Thương Hội Thanh Vân · gia đình hành nghề thuong_nhan",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 43,
+        "courage": 35,
+        "ambition": 77,
+        "generosity": 39,
+        "sociability": 29,
+        "caution": 80,
+        "discipline": 49
+      },
+      "age": 23,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 2960,
+        "y": 668
+      },
+      "spawn": {
+        "x": 2960,
+        "y": 668
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:merchant:07",
+      "name": "VệVân Khanh",
+      "role": "merchant",
+      "roleLabel": "Thương nhân bày sạp",
+      "profession": "thuong_nhan",
+      "faction": "Thương Hội Thanh Vân",
+      "origin": "Thương Hội Thanh Vân · gia đình hành nghề thuong_nhan",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 93,
+        "courage": 21,
+        "ambition": 26,
+        "generosity": 70,
+        "sociability": 67,
+        "caution": 29,
+        "discipline": 62
+      },
+      "age": 64,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 2520,
+        "y": 746
+      },
+      "spawn": {
+        "x": 2520,
+        "y": 746
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:tavern_staff:01",
+      "name": "PhanTiểu Ngư",
+      "role": "tavern_staff",
+      "roleLabel": "Nhân viên tửu quán",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 26,
+        "courage": 62,
+        "ambition": 72,
+        "generosity": 55,
+        "sociability": 35,
+        "caution": 46,
+        "discipline": 92
+      },
+      "age": 75,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 2370,
+        "y": 476
+      },
+      "spawn": {
+        "x": 2370,
+        "y": 476
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:tavern_staff:02",
+      "name": "TạTiểu Nhiên",
+      "role": "tavern_staff",
+      "roleLabel": "Nhân viên tửu quán",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "hiếu kỳ",
+      "traits": {
+        "diligence": 64,
+        "courage": 59,
+        "ambition": 22,
+        "generosity": 58,
+        "sociability": 47,
+        "caution": 47,
+        "discipline": 43
+      },
+      "age": 34,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 2458,
+        "y": 476
+      },
+      "spawn": {
+        "x": 2458,
+        "y": 476
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:tavern_staff:03",
+      "name": "ChuTử Mặc",
+      "role": "tavern_staff",
+      "roleLabel": "Nhân viên tửu quán",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 25,
+        "courage": 50,
+        "ambition": 78,
+        "generosity": 25,
+        "sociability": 38,
+        "caution": 20,
+        "discipline": 31
+      },
+      "age": 51,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 2546,
+        "y": 476
+      },
+      "spawn": {
+        "x": 2546,
+        "y": 476
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:city_guard:03",
+      "name": "DiệpTùng Tuyết",
+      "role": "city_guard",
+      "roleLabel": "Lính canh thành",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "hào sảng",
+      "traits": {
+        "diligence": 74,
+        "courage": 78,
+        "ambition": 31,
+        "generosity": 48,
+        "sociability": 39,
+        "caution": 75,
+        "discipline": 88
+      },
+      "age": 31,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 2326,
+        "y": 680
+      },
+      "spawn": {
+        "x": 2326,
+        "y": 680
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:city_guard:04",
+      "name": "HứaNhất Minh",
+      "role": "city_guard",
+      "roleLabel": "Lính canh thành",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "hào sảng",
+      "traits": {
+        "diligence": 77,
+        "courage": 78,
+        "ambition": 89,
+        "generosity": 39,
+        "sociability": 16,
+        "caution": 46,
+        "discipline": 24
+      },
+      "age": 58,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 2414,
+        "y": 680
+      },
+      "spawn": {
+        "x": 2414,
+        "y": 680
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:city_guard:05",
+      "name": "LýTiểu Ngư",
+      "role": "city_guard",
+      "roleLabel": "Lính canh thành",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 49,
+        "courage": 71,
+        "ambition": 79,
+        "generosity": 41,
+        "sociability": 82,
+        "caution": 58,
+        "discipline": 30
+      },
+      "age": 75,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 2502,
+        "y": 680
+      },
+      "spawn": {
+        "x": 2502,
+        "y": 680
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:city_guard:06",
+      "name": "LaTiểu Nhiên",
+      "role": "city_guard",
+      "roleLabel": "Lính canh thành",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 56,
+        "courage": 69,
+        "ambition": 48,
+        "generosity": 88,
+        "sociability": 49,
+        "caution": 24,
+        "discipline": 25
+      },
+      "age": 24,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 2590,
+        "y": 680
+      },
+      "spawn": {
+        "x": 2590,
+        "y": 680
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:city_guard:07",
+      "name": "NgụyTử Mặc",
+      "role": "city_guard",
+      "roleLabel": "Lính canh thành",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 63,
+        "courage": 59,
+        "ambition": 69,
+        "generosity": 39,
+        "sociability": 18,
+        "caution": 24,
+        "discipline": 95
+      },
+      "age": 41,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 2150,
+        "y": 758
+      },
+      "spawn": {
+        "x": 2150,
+        "y": 758
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:city_guard:08",
+      "name": "PhanTử Lăng",
+      "role": "city_guard",
+      "roleLabel": "Lính canh thành",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 58,
+        "courage": 52,
+        "ambition": 69,
+        "generosity": 70,
+        "sociability": 48,
+        "caution": 20,
+        "discipline": 48
+      },
+      "age": 28,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 2238,
+        "y": 758
+      },
+      "spawn": {
+        "x": 2238,
+        "y": 758
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:city_guard:09",
+      "name": "TạTùng Tuyết",
+      "role": "city_guard",
+      "roleLabel": "Lính canh thành",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "nhân hậu",
+      "traits": {
+        "diligence": 34,
+        "courage": 54,
+        "ambition": 48,
+        "generosity": 52,
+        "sociability": 64,
+        "caution": 54,
+        "discipline": 52
+      },
+      "age": 45,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 2326,
+        "y": 758
+      },
+      "spawn": {
+        "x": 2326,
+        "y": 758
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:city_guard:10",
+      "name": "VệVân Sinh",
+      "role": "city_guard",
+      "roleLabel": "Lính canh thành",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 91,
+        "courage": 51,
+        "ambition": 35,
+        "generosity": 20,
+        "sociability": 50,
+        "caution": 31,
+        "discipline": 46
+      },
+      "age": 71,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 2414,
+        "y": 758
+      },
+      "spawn": {
+        "x": 2414,
+        "y": 758
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:hunter:01",
+      "name": "PhùngVô Ưu",
+      "role": "hunter",
+      "roleLabel": "Thợ săn",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 69,
+        "courage": 27,
+        "ambition": 27,
+        "generosity": 48,
+        "sociability": 19,
+        "caution": 95,
+        "discipline": 84
+      },
+      "age": 22,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 1230,
+        "y": 1004
+      },
+      "spawn": {
+        "x": 1230,
+        "y": 1004
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:hunter:02",
+      "name": "VănTĩnh Uyển",
+      "role": "hunter",
+      "roleLabel": "Thợ săn",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 45,
+        "courage": 67,
+        "ambition": 54,
+        "generosity": 46,
+        "sociability": 40,
+        "caution": 54,
+        "discipline": 89
+      },
+      "age": 73,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 1318,
+        "y": 1004
+      },
+      "spawn": {
+        "x": 1318,
+        "y": 1004
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:hunter:03",
+      "name": "NinhTrường Phong",
+      "role": "hunter",
+      "roleLabel": "Thợ săn",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "điềm tĩnh",
+      "traits": {
+        "diligence": 84,
+        "courage": 21,
+        "ambition": 24,
+        "generosity": 84,
+        "sociability": 41,
+        "caution": 70,
+        "discipline": 59
+      },
+      "age": 56,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 1406,
+        "y": 1004
+      },
+      "spawn": {
+        "x": 1406,
+        "y": 1004
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:hunter:04",
+      "name": "Âu DươngTiểu Thạch",
+      "role": "hunter",
+      "roleLabel": "Thợ săn",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "điềm tĩnh",
+      "traits": {
+        "diligence": 58,
+        "courage": 24,
+        "ambition": 20,
+        "generosity": 58,
+        "sociability": 50,
+        "caution": 75,
+        "discipline": 49
+      },
+      "age": 29,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 1494,
+        "y": 1004
+      },
+      "spawn": {
+        "x": 1494,
+        "y": 1004
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:hunter:05",
+      "name": "HoàngTĩnh Uyển",
+      "role": "hunter",
+      "roleLabel": "Thợ săn",
+      "profession": "ho_ve",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề ho_ve",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "hiếu kỳ",
+      "traits": {
+        "diligence": 85,
+        "courage": 88,
+        "ambition": 41,
+        "generosity": 82,
+        "sociability": 58,
+        "caution": 57,
+        "discipline": 48
+      },
+      "age": 70,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 1582,
+        "y": 1004
+      },
+      "spawn": {
+        "x": 1582,
+        "y": 1004
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:quest_clerk:01",
+      "name": "CốTử Khanh",
+      "role": "quest_clerk",
+      "roleLabel": "NPC trạm nhiệm vụ",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 49,
+        "courage": 43,
+        "ambition": 68,
+        "generosity": 43,
+        "sociability": 79,
+        "caution": 92,
+        "discipline": 83
+      },
+      "age": 50,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 2280,
+        "y": 844
+      },
+      "spawn": {
+        "x": 2280,
+        "y": 844
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:quest_clerk:02",
+      "name": "HànPhi Bạch",
+      "role": "quest_clerk",
+      "roleLabel": "NPC trạm nhiệm vụ",
+      "profession": "dan_thuong",
+      "faction": "Thanh Vân Thành",
+      "origin": "Thanh Vân Thành · gia đình hành nghề dan_thuong",
+      "familyCircumstance": "đời sống theo nghề nghiệp và tài sản hiện có",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 44,
+        "courage": 80,
+        "ambition": 38,
+        "generosity": 32,
+        "sociability": 83,
+        "caution": 79,
+        "discipline": 81
+      },
+      "age": 43,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 2368,
+        "y": 844
+      },
+      "spawn": {
+        "x": 2368,
+        "y": 844
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:05",
+      "name": "PhùngTiểu Thạch",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "cẩn trọng",
+      "traits": {
+        "diligence": 28,
+        "courage": 47,
+        "ambition": 81,
+        "generosity": 84,
+        "sociability": 27,
+        "caution": 24,
+        "discipline": 72
+      },
+      "age": 56,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 1982,
+        "y": 294
+      },
+      "spawn": {
+        "x": 1982,
+        "y": 294
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:06",
+      "name": "LụcTĩnh Uyển",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "nhân hậu",
+      "traits": {
+        "diligence": 56,
+        "courage": 74,
+        "ambition": 59,
+        "generosity": 36,
+        "sociability": 54,
+        "caution": 63,
+        "discipline": 93
+      },
+      "age": 39,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 2070,
+        "y": 294
+      },
+      "spawn": {
+        "x": 2070,
+        "y": 294
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:07",
+      "name": "CaoHoài Cẩn",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "hào sảng",
+      "traits": {
+        "diligence": 87,
+        "courage": 71,
+        "ambition": 93,
+        "generosity": 58,
+        "sociability": 23,
+        "caution": 89,
+        "discipline": 61
+      },
+      "age": 22,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 1630,
+        "y": 372
+      },
+      "spawn": {
+        "x": 1630,
+        "y": 372
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:08",
+      "name": "KỷDưỡng Tâm",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 43,
+        "courage": 82,
+        "ambition": 86,
+        "generosity": 31,
+        "sociability": 30,
+        "caution": 48,
+        "discipline": 88
+      },
+      "age": 63,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 1718,
+        "y": 372
+      },
+      "spawn": {
+        "x": 1718,
+        "y": 372
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:09",
+      "name": "KhươngMạnh Đức",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "điềm tĩnh",
+      "traits": {
+        "diligence": 67,
+        "courage": 39,
+        "ambition": 82,
+        "generosity": 45,
+        "sociability": 85,
+        "caution": 66,
+        "discipline": 50
+      },
+      "age": 46,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 1806,
+        "y": 372
+      },
+      "spawn": {
+        "x": 1806,
+        "y": 372
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:10",
+      "name": "TiêuTĩnh Uyển",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 27,
+        "courage": 59,
+        "ambition": 66,
+        "generosity": 86,
+        "sociability": 24,
+        "caution": 36,
+        "discipline": 43
+      },
+      "age": 60,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 1894,
+        "y": 372
+      },
+      "spawn": {
+        "x": 1894,
+        "y": 372
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:11",
+      "name": "KhươngTử An",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 62,
+        "courage": 77,
+        "ambition": 90,
+        "generosity": 35,
+        "sociability": 27,
+        "caution": 30,
+        "discipline": 40
+      },
+      "age": 19,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 1982,
+        "y": 372
+      },
+      "spawn": {
+        "x": 1982,
+        "y": 372
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:12",
+      "name": "LaTiểu Thạch",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "được gia đình hỗ trợ cơ bản",
+      "personality": "hào sảng",
+      "traits": {
+        "diligence": 55,
+        "courage": 66,
+        "ambition": 49,
+        "generosity": 53,
+        "sociability": 65,
+        "caution": 81,
+        "discipline": 40
+      },
+      "age": 36,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 2070,
+        "y": 372
+      },
+      "spawn": {
+        "x": 2070,
+        "y": 372
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:13",
+      "name": "NgụyMặc Nhiên",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "được gia đình hỗ trợ cơ bản",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 83,
+        "courage": 21,
+        "ambition": 88,
+        "generosity": 26,
+        "sociability": 24,
+        "caution": 66,
+        "discipline": 82
+      },
+      "age": 53,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 1630,
+        "y": 450
+      },
+      "spawn": {
+        "x": 1630,
+        "y": 450
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:14",
+      "name": "MạnhTrường Phong",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "nhân hậu",
+      "traits": {
+        "diligence": 61,
+        "courage": 55,
+        "ambition": 94,
+        "generosity": 87,
+        "sociability": 56,
+        "caution": 34,
+        "discipline": 59
+      },
+      "age": 50,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 1718,
+        "y": 450
+      },
+      "spawn": {
+        "x": 1718,
+        "y": 450
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:15",
+      "name": "TừAn Nhiên",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "hào sảng",
+      "traits": {
+        "diligence": 35,
+        "courage": 47,
+        "ambition": 48,
+        "generosity": 67,
+        "sociability": 36,
+        "caution": 31,
+        "discipline": 51
+      },
+      "age": 67,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 1806,
+        "y": 450
+      },
+      "spawn": {
+        "x": 1806,
+        "y": 450
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:16",
+      "name": "TềNguyệt Bạch",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 69,
+        "courage": 56,
+        "ambition": 48,
+        "generosity": 84,
+        "sociability": 64,
+        "caution": 84,
+        "discipline": 57
+      },
+      "age": 26,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 1894,
+        "y": 450
+      },
+      "spawn": {
+        "x": 1894,
+        "y": 450
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:17",
+      "name": "KỷTrường Lạc",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "được gia đình hỗ trợ cơ bản",
+      "personality": "hiếu kỳ",
+      "traits": {
+        "diligence": 66,
+        "courage": 20,
+        "ambition": 78,
+        "generosity": 36,
+        "sociability": 89,
+        "caution": 38,
+        "discipline": 55
+      },
+      "age": 43,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 1982,
+        "y": 450
+      },
+      "spawn": {
+        "x": 1982,
+        "y": 450
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:18",
+      "name": "TônTiểu Thạch",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "cẩn trọng",
+      "traits": {
+        "diligence": 71,
+        "courage": 81,
+        "ambition": 45,
+        "generosity": 66,
+        "sociability": 58,
+        "caution": 94,
+        "discipline": 72
+      },
+      "age": 40,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 2070,
+        "y": 450
+      },
+      "spawn": {
+        "x": 2070,
+        "y": 450
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:19",
+      "name": "HứaMặc Nhiên",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 90,
+        "courage": 67,
+        "ambition": 45,
+        "generosity": 28,
+        "sociability": 66,
+        "caution": 93,
+        "discipline": 76
+      },
+      "age": 57,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 1630,
+        "y": 528
+      },
+      "spawn": {
+        "x": 1630,
+        "y": 528
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:20",
+      "name": "HồTiểu Thạch",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "được gia đình hỗ trợ cơ bản",
+      "personality": "thực tế",
+      "traits": {
+        "diligence": 45,
+        "courage": 42,
+        "ambition": 82,
+        "generosity": 61,
+        "sociability": 46,
+        "caution": 42,
+        "discipline": 52
+      },
+      "age": 47,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 1718,
+        "y": 528
+      },
+      "spawn": {
+        "x": 1718,
+        "y": 528
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:21",
+      "name": "YếnNguyệt Bạch",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "cẩn trọng",
+      "traits": {
+        "diligence": 29,
+        "courage": 68,
+        "ambition": 45,
+        "generosity": 32,
+        "sociability": 38,
+        "caution": 52,
+        "discipline": 94
+      },
+      "age": 30,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 1806,
+        "y": 528
+      },
+      "spawn": {
+        "x": 1806,
+        "y": 528
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:22",
+      "name": "KhangTrường Phong",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 61,
+        "courage": 88,
+        "ambition": 63,
+        "generosity": 37,
+        "sociability": 26,
+        "caution": 60,
+        "discipline": 89
+      },
+      "age": 23,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 1894,
+        "y": 528
+      },
+      "spawn": {
+        "x": 1894,
+        "y": 528
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:23",
+      "name": "HànVân Khanh",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "hiếu kỳ",
+      "traits": {
+        "diligence": 94,
+        "courage": 62,
+        "ambition": 47,
+        "generosity": 26,
+        "sociability": 18,
+        "caution": 53,
+        "discipline": 85
+      },
+      "age": 64,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 1982,
+        "y": 528
+      },
+      "spawn": {
+        "x": 1982,
+        "y": 528
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:24",
+      "name": "LiễuNguyệt Bạch",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "được gia đình hỗ trợ cơ bản",
+      "personality": "hiếu kỳ",
+      "traits": {
+        "diligence": 90,
+        "courage": 39,
+        "ambition": 48,
+        "generosity": 85,
+        "sociability": 16,
+        "caution": 90,
+        "discipline": 40
+      },
+      "age": 37,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 2070,
+        "y": 528
+      },
+      "spawn": {
+        "x": 2070,
+        "y": 528
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:25",
+      "name": "TưởngTrường Phong",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "điềm tĩnh",
+      "traits": {
+        "diligence": 81,
+        "courage": 50,
+        "ambition": 82,
+        "generosity": 55,
+        "sociability": 32,
+        "caution": 89,
+        "discipline": 40
+      },
+      "age": 20,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 1630,
+        "y": 606
+      },
+      "spawn": {
+        "x": 1630,
+        "y": 606
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:26",
+      "name": "ĐườngVân Khanh",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "nhân hậu",
+      "traits": {
+        "diligence": 93,
+        "courage": 24,
+        "ambition": 61,
+        "generosity": 81,
+        "sociability": 24,
+        "caution": 50,
+        "discipline": 89
+      },
+      "age": 71,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 1,
+      "home": {
+        "x": 1718,
+        "y": 606
+      },
+      "spawn": {
+        "x": 1718,
+        "y": 606
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:27",
+      "name": "HồNguyệt Bạch",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 38,
+        "courage": 53,
+        "ambition": 45,
+        "generosity": 41,
+        "sociability": 74,
+        "caution": 25,
+        "discipline": 40
+      },
+      "age": 54,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 2,
+      "home": {
+        "x": 1806,
+        "y": 606
+      },
+      "spawn": {
+        "x": 1806,
+        "y": 606
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:28",
+      "name": "TưởngTử Mặc",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "dựa vào công lao môn phái",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 41,
+        "courage": 70,
+        "ambition": 45,
+        "generosity": 87,
+        "sociability": 71,
+        "caution": 31,
+        "discipline": 40
+      },
+      "age": 67,
+      "gender": "nam",
+      "realmIndex": 0,
+      "realmLevel": 4,
+      "home": {
+        "x": 1894,
+        "y": 606
+      },
+      "spawn": {
+        "x": 1894,
+        "y": 606
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:29",
+      "name": "ĐàoTiểu Ngư",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "tự kiếm tài nguyên tu hành",
+      "personality": "tham vọng",
+      "traits": {
+        "diligence": 77,
+        "courage": 74,
+        "ambition": 47,
+        "generosity": 43,
+        "sociability": 35,
+        "caution": 88,
+        "discipline": 40
+      },
+      "age": 50,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 5,
+      "home": {
+        "x": 1982,
+        "y": 606
+      },
+      "spawn": {
+        "x": 1982,
+        "y": 606
+      },
+      "visualStyleId": null,
+      "alive": true
+    },
+    {
+      "id": "population:v1:independent_cultivator:30",
+      "name": "GiangTiểu Nhiên",
+      "role": "independent_cultivator",
+      "roleLabel": "Tán tu độc lập",
+      "profession": "tu_si",
+      "faction": "Tán tu",
+      "origin": "Tán tu · con đường tu hành ngoại môn",
+      "familyCircumstance": "được gia đình hỗ trợ cơ bản",
+      "personality": "cô độc",
+      "traits": {
+        "diligence": 73,
+        "courage": 61,
+        "ambition": 45,
+        "generosity": 66,
+        "sociability": 66,
+        "caution": 76,
+        "discipline": 40
+      },
+      "age": 54,
+      "gender": "nữ",
+      "realmIndex": 0,
+      "realmLevel": 3,
+      "home": {
+        "x": 2070,
+        "y": 606
+      },
+      "spawn": {
+        "x": 2070,
+        "y": 606
+      },
+      "visualStyleId": null,
+      "alive": true
+    }
+  ]
+}

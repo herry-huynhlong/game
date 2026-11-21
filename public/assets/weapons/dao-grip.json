@@ -1,0 +1,2603 @@
+{ "frames": [
+   {
+    "filename": "dao-grip 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 1.aseprite",
+    "frame": { "x": 32, "y": 0, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 2.aseprite",
+    "frame": { "x": 64, "y": 0, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 3.aseprite",
+    "frame": { "x": 96, "y": 0, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 4.aseprite",
+    "frame": { "x": 128, "y": 0, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 5.aseprite",
+    "frame": { "x": 160, "y": 0, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 6.aseprite",
+    "frame": { "x": 192, "y": 0, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 7.aseprite",
+    "frame": { "x": 224, "y": 0, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 8.aseprite",
+    "frame": { "x": 0, "y": 40, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 9.aseprite",
+    "frame": { "x": 32, "y": 40, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 10.aseprite",
+    "frame": { "x": 64, "y": 40, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 11.aseprite",
+    "frame": { "x": 96, "y": 40, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 12.aseprite",
+    "frame": { "x": 128, "y": 40, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 13.aseprite",
+    "frame": { "x": 160, "y": 40, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 14.aseprite",
+    "frame": { "x": 192, "y": 40, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 15.aseprite",
+    "frame": { "x": 224, "y": 40, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 16.aseprite",
+    "frame": { "x": 0, "y": 80, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 17.aseprite",
+    "frame": { "x": 32, "y": 80, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 18.aseprite",
+    "frame": { "x": 64, "y": 80, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 19.aseprite",
+    "frame": { "x": 96, "y": 80, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 20.aseprite",
+    "frame": { "x": 128, "y": 80, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 21.aseprite",
+    "frame": { "x": 160, "y": 80, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 22.aseprite",
+    "frame": { "x": 192, "y": 80, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 23.aseprite",
+    "frame": { "x": 224, "y": 80, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 24.aseprite",
+    "frame": { "x": 0, "y": 120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 25.aseprite",
+    "frame": { "x": 32, "y": 120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 26.aseprite",
+    "frame": { "x": 64, "y": 120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 27.aseprite",
+    "frame": { "x": 96, "y": 120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 28.aseprite",
+    "frame": { "x": 128, "y": 120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 29.aseprite",
+    "frame": { "x": 160, "y": 120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 30.aseprite",
+    "frame": { "x": 192, "y": 120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 31.aseprite",
+    "frame": { "x": 224, "y": 120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 32.aseprite",
+    "frame": { "x": 0, "y": 160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 33.aseprite",
+    "frame": { "x": 32, "y": 160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 34.aseprite",
+    "frame": { "x": 64, "y": 160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 35.aseprite",
+    "frame": { "x": 96, "y": 160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 36.aseprite",
+    "frame": { "x": 128, "y": 160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 37.aseprite",
+    "frame": { "x": 160, "y": 160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 38.aseprite",
+    "frame": { "x": 192, "y": 160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 39.aseprite",
+    "frame": { "x": 224, "y": 160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 40.aseprite",
+    "frame": { "x": 0, "y": 200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 41.aseprite",
+    "frame": { "x": 32, "y": 200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 42.aseprite",
+    "frame": { "x": 64, "y": 200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 43.aseprite",
+    "frame": { "x": 96, "y": 200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 44.aseprite",
+    "frame": { "x": 128, "y": 200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 45.aseprite",
+    "frame": { "x": 160, "y": 200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 46.aseprite",
+    "frame": { "x": 192, "y": 200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 47.aseprite",
+    "frame": { "x": 224, "y": 200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 48.aseprite",
+    "frame": { "x": 0, "y": 240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 49.aseprite",
+    "frame": { "x": 32, "y": 240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 50.aseprite",
+    "frame": { "x": 64, "y": 240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 51.aseprite",
+    "frame": { "x": 96, "y": 240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 52.aseprite",
+    "frame": { "x": 128, "y": 240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 53.aseprite",
+    "frame": { "x": 160, "y": 240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 54.aseprite",
+    "frame": { "x": 192, "y": 240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 55.aseprite",
+    "frame": { "x": 224, "y": 240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 56.aseprite",
+    "frame": { "x": 0, "y": 280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 57.aseprite",
+    "frame": { "x": 32, "y": 280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 58.aseprite",
+    "frame": { "x": 64, "y": 280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 59.aseprite",
+    "frame": { "x": 96, "y": 280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 60.aseprite",
+    "frame": { "x": 128, "y": 280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 61.aseprite",
+    "frame": { "x": 160, "y": 280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 62.aseprite",
+    "frame": { "x": 192, "y": 280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 63.aseprite",
+    "frame": { "x": 224, "y": 280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 64.aseprite",
+    "frame": { "x": 0, "y": 320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 65.aseprite",
+    "frame": { "x": 32, "y": 320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 66.aseprite",
+    "frame": { "x": 64, "y": 320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 67.aseprite",
+    "frame": { "x": 96, "y": 320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 68.aseprite",
+    "frame": { "x": 128, "y": 320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 69.aseprite",
+    "frame": { "x": 160, "y": 320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 70.aseprite",
+    "frame": { "x": 192, "y": 320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 71.aseprite",
+    "frame": { "x": 224, "y": 320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 72.aseprite",
+    "frame": { "x": 0, "y": 360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 73.aseprite",
+    "frame": { "x": 32, "y": 360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 74.aseprite",
+    "frame": { "x": 64, "y": 360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 75.aseprite",
+    "frame": { "x": 96, "y": 360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 76.aseprite",
+    "frame": { "x": 128, "y": 360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 77.aseprite",
+    "frame": { "x": 160, "y": 360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 78.aseprite",
+    "frame": { "x": 192, "y": 360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 79.aseprite",
+    "frame": { "x": 224, "y": 360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 80.aseprite",
+    "frame": { "x": 0, "y": 400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 81.aseprite",
+    "frame": { "x": 32, "y": 400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 82.aseprite",
+    "frame": { "x": 64, "y": 400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 83.aseprite",
+    "frame": { "x": 96, "y": 400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 84.aseprite",
+    "frame": { "x": 128, "y": 400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 85.aseprite",
+    "frame": { "x": 160, "y": 400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 86.aseprite",
+    "frame": { "x": 192, "y": 400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 87.aseprite",
+    "frame": { "x": 224, "y": 400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 88.aseprite",
+    "frame": { "x": 0, "y": 440, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 89.aseprite",
+    "frame": { "x": 32, "y": 440, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 90.aseprite",
+    "frame": { "x": 64, "y": 440, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 91.aseprite",
+    "frame": { "x": 96, "y": 440, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 92.aseprite",
+    "frame": { "x": 128, "y": 440, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 93.aseprite",
+    "frame": { "x": 160, "y": 440, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 94.aseprite",
+    "frame": { "x": 192, "y": 440, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 95.aseprite",
+    "frame": { "x": 224, "y": 440, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 96.aseprite",
+    "frame": { "x": 0, "y": 480, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 97.aseprite",
+    "frame": { "x": 32, "y": 480, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 98.aseprite",
+    "frame": { "x": 64, "y": 480, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 99.aseprite",
+    "frame": { "x": 96, "y": 480, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 100.aseprite",
+    "frame": { "x": 128, "y": 480, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 101.aseprite",
+    "frame": { "x": 160, "y": 480, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 102.aseprite",
+    "frame": { "x": 192, "y": 480, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 103.aseprite",
+    "frame": { "x": 224, "y": 480, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 104.aseprite",
+    "frame": { "x": 0, "y": 520, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 105.aseprite",
+    "frame": { "x": 32, "y": 520, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 106.aseprite",
+    "frame": { "x": 64, "y": 520, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 107.aseprite",
+    "frame": { "x": 96, "y": 520, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 108.aseprite",
+    "frame": { "x": 128, "y": 520, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 109.aseprite",
+    "frame": { "x": 160, "y": 520, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 110.aseprite",
+    "frame": { "x": 192, "y": 520, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 111.aseprite",
+    "frame": { "x": 224, "y": 520, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 112.aseprite",
+    "frame": { "x": 0, "y": 560, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 113.aseprite",
+    "frame": { "x": 32, "y": 560, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 114.aseprite",
+    "frame": { "x": 64, "y": 560, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 115.aseprite",
+    "frame": { "x": 96, "y": 560, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 116.aseprite",
+    "frame": { "x": 128, "y": 560, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 117.aseprite",
+    "frame": { "x": 160, "y": 560, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 118.aseprite",
+    "frame": { "x": 192, "y": 560, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 119.aseprite",
+    "frame": { "x": 224, "y": 560, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 120.aseprite",
+    "frame": { "x": 0, "y": 600, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 121.aseprite",
+    "frame": { "x": 32, "y": 600, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 122.aseprite",
+    "frame": { "x": 64, "y": 600, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 123.aseprite",
+    "frame": { "x": 96, "y": 600, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 124.aseprite",
+    "frame": { "x": 128, "y": 600, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 125.aseprite",
+    "frame": { "x": 160, "y": 600, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 126.aseprite",
+    "frame": { "x": 192, "y": 600, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 127.aseprite",
+    "frame": { "x": 224, "y": 600, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 128.aseprite",
+    "frame": { "x": 0, "y": 640, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 129.aseprite",
+    "frame": { "x": 32, "y": 640, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 130.aseprite",
+    "frame": { "x": 64, "y": 640, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 131.aseprite",
+    "frame": { "x": 96, "y": 640, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 132.aseprite",
+    "frame": { "x": 128, "y": 640, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 133.aseprite",
+    "frame": { "x": 160, "y": 640, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 134.aseprite",
+    "frame": { "x": 192, "y": 640, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 135.aseprite",
+    "frame": { "x": 224, "y": 640, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 136.aseprite",
+    "frame": { "x": 0, "y": 680, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 137.aseprite",
+    "frame": { "x": 32, "y": 680, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 138.aseprite",
+    "frame": { "x": 64, "y": 680, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 139.aseprite",
+    "frame": { "x": 96, "y": 680, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 140.aseprite",
+    "frame": { "x": 128, "y": 680, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 141.aseprite",
+    "frame": { "x": 160, "y": 680, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 142.aseprite",
+    "frame": { "x": 192, "y": 680, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 143.aseprite",
+    "frame": { "x": 224, "y": 680, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 144.aseprite",
+    "frame": { "x": 0, "y": 720, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 145.aseprite",
+    "frame": { "x": 32, "y": 720, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 146.aseprite",
+    "frame": { "x": 64, "y": 720, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 147.aseprite",
+    "frame": { "x": 96, "y": 720, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 148.aseprite",
+    "frame": { "x": 128, "y": 720, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 149.aseprite",
+    "frame": { "x": 160, "y": 720, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 150.aseprite",
+    "frame": { "x": 192, "y": 720, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 151.aseprite",
+    "frame": { "x": 224, "y": 720, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 152.aseprite",
+    "frame": { "x": 0, "y": 760, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 153.aseprite",
+    "frame": { "x": 32, "y": 760, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 154.aseprite",
+    "frame": { "x": 64, "y": 760, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 155.aseprite",
+    "frame": { "x": 96, "y": 760, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 156.aseprite",
+    "frame": { "x": 128, "y": 760, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 157.aseprite",
+    "frame": { "x": 160, "y": 760, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 158.aseprite",
+    "frame": { "x": 192, "y": 760, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 159.aseprite",
+    "frame": { "x": 224, "y": 760, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 160.aseprite",
+    "frame": { "x": 0, "y": 800, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 161.aseprite",
+    "frame": { "x": 32, "y": 800, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 162.aseprite",
+    "frame": { "x": 64, "y": 800, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 163.aseprite",
+    "frame": { "x": 96, "y": 800, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 164.aseprite",
+    "frame": { "x": 128, "y": 800, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 165.aseprite",
+    "frame": { "x": 160, "y": 800, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 166.aseprite",
+    "frame": { "x": 192, "y": 800, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 167.aseprite",
+    "frame": { "x": 224, "y": 800, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 168.aseprite",
+    "frame": { "x": 0, "y": 840, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 169.aseprite",
+    "frame": { "x": 32, "y": 840, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 170.aseprite",
+    "frame": { "x": 64, "y": 840, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 171.aseprite",
+    "frame": { "x": 96, "y": 840, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 172.aseprite",
+    "frame": { "x": 128, "y": 840, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 173.aseprite",
+    "frame": { "x": 160, "y": 840, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 174.aseprite",
+    "frame": { "x": 192, "y": 840, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 175.aseprite",
+    "frame": { "x": 224, "y": 840, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 176.aseprite",
+    "frame": { "x": 0, "y": 880, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 177.aseprite",
+    "frame": { "x": 32, "y": 880, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 178.aseprite",
+    "frame": { "x": 64, "y": 880, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 179.aseprite",
+    "frame": { "x": 96, "y": 880, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 180.aseprite",
+    "frame": { "x": 128, "y": 880, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 181.aseprite",
+    "frame": { "x": 160, "y": 880, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 182.aseprite",
+    "frame": { "x": 192, "y": 880, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 183.aseprite",
+    "frame": { "x": 224, "y": 880, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 184.aseprite",
+    "frame": { "x": 0, "y": 920, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 185.aseprite",
+    "frame": { "x": 32, "y": 920, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 186.aseprite",
+    "frame": { "x": 64, "y": 920, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 187.aseprite",
+    "frame": { "x": 96, "y": 920, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 188.aseprite",
+    "frame": { "x": 128, "y": 920, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 189.aseprite",
+    "frame": { "x": 160, "y": 920, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 190.aseprite",
+    "frame": { "x": 192, "y": 920, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 191.aseprite",
+    "frame": { "x": 224, "y": 920, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 192.aseprite",
+    "frame": { "x": 0, "y": 960, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 193.aseprite",
+    "frame": { "x": 32, "y": 960, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 194.aseprite",
+    "frame": { "x": 64, "y": 960, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 195.aseprite",
+    "frame": { "x": 96, "y": 960, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 196.aseprite",
+    "frame": { "x": 128, "y": 960, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 197.aseprite",
+    "frame": { "x": 160, "y": 960, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 198.aseprite",
+    "frame": { "x": 192, "y": 960, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 199.aseprite",
+    "frame": { "x": 224, "y": 960, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 200.aseprite",
+    "frame": { "x": 0, "y": 1000, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 201.aseprite",
+    "frame": { "x": 32, "y": 1000, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 202.aseprite",
+    "frame": { "x": 64, "y": 1000, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 203.aseprite",
+    "frame": { "x": 96, "y": 1000, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 204.aseprite",
+    "frame": { "x": 128, "y": 1000, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 205.aseprite",
+    "frame": { "x": 160, "y": 1000, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 206.aseprite",
+    "frame": { "x": 192, "y": 1000, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 207.aseprite",
+    "frame": { "x": 224, "y": 1000, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 208.aseprite",
+    "frame": { "x": 0, "y": 1040, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 209.aseprite",
+    "frame": { "x": 32, "y": 1040, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 210.aseprite",
+    "frame": { "x": 64, "y": 1040, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 211.aseprite",
+    "frame": { "x": 96, "y": 1040, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 212.aseprite",
+    "frame": { "x": 128, "y": 1040, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 213.aseprite",
+    "frame": { "x": 160, "y": 1040, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 214.aseprite",
+    "frame": { "x": 192, "y": 1040, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 215.aseprite",
+    "frame": { "x": 224, "y": 1040, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 216.aseprite",
+    "frame": { "x": 0, "y": 1080, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 217.aseprite",
+    "frame": { "x": 32, "y": 1080, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 218.aseprite",
+    "frame": { "x": 64, "y": 1080, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 219.aseprite",
+    "frame": { "x": 96, "y": 1080, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 220.aseprite",
+    "frame": { "x": 128, "y": 1080, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 221.aseprite",
+    "frame": { "x": 160, "y": 1080, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 222.aseprite",
+    "frame": { "x": 192, "y": 1080, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 223.aseprite",
+    "frame": { "x": 224, "y": 1080, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 224.aseprite",
+    "frame": { "x": 0, "y": 1120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 225.aseprite",
+    "frame": { "x": 32, "y": 1120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 226.aseprite",
+    "frame": { "x": 64, "y": 1120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 227.aseprite",
+    "frame": { "x": 96, "y": 1120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 228.aseprite",
+    "frame": { "x": 128, "y": 1120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 229.aseprite",
+    "frame": { "x": 160, "y": 1120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 230.aseprite",
+    "frame": { "x": 192, "y": 1120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 231.aseprite",
+    "frame": { "x": 224, "y": 1120, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 232.aseprite",
+    "frame": { "x": 0, "y": 1160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 233.aseprite",
+    "frame": { "x": 32, "y": 1160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 234.aseprite",
+    "frame": { "x": 64, "y": 1160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 235.aseprite",
+    "frame": { "x": 96, "y": 1160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 236.aseprite",
+    "frame": { "x": 128, "y": 1160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 237.aseprite",
+    "frame": { "x": 160, "y": 1160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 238.aseprite",
+    "frame": { "x": 192, "y": 1160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 239.aseprite",
+    "frame": { "x": 224, "y": 1160, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 240.aseprite",
+    "frame": { "x": 0, "y": 1200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 241.aseprite",
+    "frame": { "x": 32, "y": 1200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 242.aseprite",
+    "frame": { "x": 64, "y": 1200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 243.aseprite",
+    "frame": { "x": 96, "y": 1200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 244.aseprite",
+    "frame": { "x": 128, "y": 1200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 245.aseprite",
+    "frame": { "x": 160, "y": 1200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 246.aseprite",
+    "frame": { "x": 192, "y": 1200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 247.aseprite",
+    "frame": { "x": 224, "y": 1200, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 248.aseprite",
+    "frame": { "x": 0, "y": 1240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 249.aseprite",
+    "frame": { "x": 32, "y": 1240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 250.aseprite",
+    "frame": { "x": 64, "y": 1240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 251.aseprite",
+    "frame": { "x": 96, "y": 1240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 252.aseprite",
+    "frame": { "x": 128, "y": 1240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 253.aseprite",
+    "frame": { "x": 160, "y": 1240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 254.aseprite",
+    "frame": { "x": 192, "y": 1240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 255.aseprite",
+    "frame": { "x": 224, "y": 1240, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 256.aseprite",
+    "frame": { "x": 0, "y": 1280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 257.aseprite",
+    "frame": { "x": 32, "y": 1280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 258.aseprite",
+    "frame": { "x": 64, "y": 1280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 259.aseprite",
+    "frame": { "x": 96, "y": 1280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 260.aseprite",
+    "frame": { "x": 128, "y": 1280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 261.aseprite",
+    "frame": { "x": 160, "y": 1280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 262.aseprite",
+    "frame": { "x": 192, "y": 1280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 263.aseprite",
+    "frame": { "x": 224, "y": 1280, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 264.aseprite",
+    "frame": { "x": 0, "y": 1320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 265.aseprite",
+    "frame": { "x": 32, "y": 1320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 266.aseprite",
+    "frame": { "x": 64, "y": 1320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 267.aseprite",
+    "frame": { "x": 96, "y": 1320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 268.aseprite",
+    "frame": { "x": 128, "y": 1320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 269.aseprite",
+    "frame": { "x": 160, "y": 1320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 270.aseprite",
+    "frame": { "x": 192, "y": 1320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 271.aseprite",
+    "frame": { "x": 224, "y": 1320, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 272.aseprite",
+    "frame": { "x": 0, "y": 1360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 273.aseprite",
+    "frame": { "x": 32, "y": 1360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 274.aseprite",
+    "frame": { "x": 64, "y": 1360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 275.aseprite",
+    "frame": { "x": 96, "y": 1360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 276.aseprite",
+    "frame": { "x": 128, "y": 1360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 277.aseprite",
+    "frame": { "x": 160, "y": 1360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 278.aseprite",
+    "frame": { "x": 192, "y": 1360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 279.aseprite",
+    "frame": { "x": 224, "y": 1360, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 280.aseprite",
+    "frame": { "x": 0, "y": 1400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 281.aseprite",
+    "frame": { "x": 32, "y": 1400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 282.aseprite",
+    "frame": { "x": 64, "y": 1400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 283.aseprite",
+    "frame": { "x": 96, "y": 1400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 284.aseprite",
+    "frame": { "x": 128, "y": 1400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 285.aseprite",
+    "frame": { "x": 160, "y": 1400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 286.aseprite",
+    "frame": { "x": 192, "y": 1400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   },
+   {
+    "filename": "dao-grip 287.aseprite",
+    "frame": { "x": 224, "y": 1400, "w": 32, "h": 40 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 65535
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3.18.6-12-geccf4ec29-dev",
+  "image": "dao-grip.png",
+  "format": "RGBA8888",
+  "size": { "w": 256, "h": 1440 },
+  "scale": "1"
+ }
+}

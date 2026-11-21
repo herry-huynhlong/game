@@ -1,0 +1,4 @@
+# SpriteKiln: renders and caches are regenerated; exported files live in the engine folder
+specs/**/out/
+specs/**/.kilncache/
+specs/**/*_ref/

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thanh Vân Ký — Hybrid Paper Doll Lab</title>
+  <link rel="stylesheet" href="/src/npc-paperdoll-showcase.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div><p class="eyebrow">THANH VÂN KÝ · ART LAB</p><h1>Hybrid Paper Doll</h1><p class="intro">Thay outfit base, đầu và tóc từ các layer Aseprite có thật. Bản xem trước cô lập, không ghi vào save hoặc NPC runtime.</p></div>
+      <span class="status-pill">DEMO KỸ THUẬT · ART CHƯA DUYỆT</span>
+    </header>
+    <section class="layout">
+      <div class="preview-card">
+        <div class="preview-head"><div><strong id="sample-title">Mẫu A · C01 nguyên gốc</strong><span id="compose-summary">C01 body + C01 head + C01 hair</span></div><span id="frame-label">Idle · Nam · 1/4</span></div>
+        <div id="stage" aria-label="Phaser paper doll preview"></div>
+        <div class="transport"><button id="play">Ⅱ Tạm dừng</button><button id="step-back" aria-label="Frame trước">◀</button><button id="step-next" aria-label="Frame sau">▶</button><label>Phóng<select id="scale"><option value="1">1×</option><option value="2">2×</option><option value="4" selected>4×</option></select></label></div>
+        <div class="presets"><button data-preset="a">Mẫu A · C01 gốc</button><button data-preset="b">Mẫu B · đổi tóc C02</button><button data-preset="c">Mẫu C · base C02 + tóc C01</button></div>
+      </div>
+      <aside class="controls">
+        <h2>Lắp ghép</h2>
+        <label>Outfit Base<select id="outfit"></select><small>Thân, tay, chân và y phục; đầu/tóc tách riêng.</small></label>
+        <label>Head Base<select id="head"></select><small>Đầu, da và nét mặt là một đơn vị.</small></label>
+        <label>Tóc<select id="hair"></select><small>Gồm tóc sau và tóc trước, cùng nguồn/frame.</small></label>
+        <label>Chi tiết nguồn<select id="details" disabled></select><small>Giữ cùng outfit; layer này chưa được phân loại là phụ kiện.</small></label>
+        <label>Hướng<select id="direction"><option value="0">Nam · nhìn xuống</option><option value="1">Bắc · nhìn lên</option><option value="2">Tây · nhìn trái</option><option value="3">Đông · nhìn phải</option></select></label>
+        <label>Chuyển động<select id="motion"><option value="idle">Đứng yên</option><option value="walk">Đi bộ</option></select></label>
+        <label class="range-label">Frame trong hướng <input id="frame" type="range" min="0" max="3" value="0"><span id="frame-value">0</span></label>
+        <fieldset><legend>Lớp ghép</legend><label class="check"><input id="show-back" type="checkbox" checked>Tóc sau</label><label class="check"><input id="show-front" type="checkbox" checked>Tóc trước</label><label class="check"><input id="show-details" type="checkbox" checked>Chi tiết</label></fieldset>
+      </aside>
+    </section>
+    <section class="notes"><strong>Giới hạn nguồn:</strong> Có thể đổi outfit base, head base và tóc trong demo vì từng phần được xuất từ layer độc lập. Nét mặt không tách khỏi đầu; accessories chưa phân loại; thiết bị chiến đấu vẫn dùng renderer hiện có. Các tổ hợp chéo khớp khung 32×40 và frame map nhưng cần duyệt mỹ thuật riêng.</section>
+    <footer id="status">Đang tải spritesheet lab…</footer>
+  </main>
+  <script type="module" src="/src/npc-paperdoll-showcase.js"></script>
+</body>
+</html>

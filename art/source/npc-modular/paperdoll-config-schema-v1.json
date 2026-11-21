@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://thanhvanky.local/schemas/paperdoll-config-v1.json",
+  "title": "Thanh Vân Ký paper doll composition",
+  "type": "object",
+  "required": ["demoOnly", "compositions"],
+  "properties": {
+    "demoOnly": { "const": true },
+    "compositions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "outfitBase", "headBase", "hairBack", "hairFront", "details", "equipment"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+          "label": { "type": "string", "minLength": 1 },
+          "outfitBase": { "type": "string" },
+          "headBase": { "type": "string" },
+          "hairBack": { "type": "string" },
+          "hairFront": { "type": "string" },
+          "details": { "type": "string" },
+          "accessories": { "type": "array", "items": { "type": "string" } },
+          "equipment": { "type": ["string", "null"] },
+          "review": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
