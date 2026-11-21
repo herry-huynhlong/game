@@ -43,7 +43,10 @@ release_tag="${meta[0]}"; archive_name="${meta[1]}"; archive_url="${meta[2]}"; s
 [[ "$release_tag" =~ ^[A-Za-z0-9._-]+$ ]] || fail "Unexpected release tag."
 curl --fail --silent --show-error --location "${auth[@]}" "$archive_url" -o "$STAGING/$archive_name"
 curl --fail --silent --show-error --location "${auth[@]}" "$sums_url" -o "$STAGING/SHA256SUMS"
-(cd "$STAGING" && grep -F "  $archive_name" SHA256SUMS | sha256sum --check --status) || fail "Release checksum verification failed."
+expected_hash="$(awk -v name="$archive_name" '$2 == name || $2 == "release/" name || $2 == "*" name || $2 == "*release/" name { print $1; exit }' "$STAGING/SHA256SUMS")"
+[[ "$expected_hash" =~ ^[A-Fa-f0-9]{64}$ ]] || fail "Release checksum file has no valid entry for $archive_name."
+actual_hash="$(sha256sum "$STAGING/$archive_name" | awk '{ print $1 }')"
+[[ "$actual_hash" == "$expected_hash" ]] || fail "Release checksum verification failed."
 
 release_dir="$ROOT/releases/$release_tag"
 active="$(readlink -f "$ROOT/current" 2>/dev/null || true)"

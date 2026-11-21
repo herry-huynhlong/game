@@ -44,7 +44,7 @@ jobs:
           mkdir -p release
           release_version="${GITHUB_REF_NAME//\//-}"
           tar -czf "release/thanh-van-ky-${release_version}.tar.gz" -C dist .
-          sha256sum release/*.tar.gz > release/SHA256SUMS
+          (cd release && sha256sum *.tar.gz > SHA256SUMS)
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
