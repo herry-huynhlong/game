@@ -60,15 +60,16 @@ fi
 
 cat > "$NGINX_SITE" <<NGINX
 server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
+    listen 80;
+    listen [::]:80;
     server_name $SITE_DOMAIN;
     root $ROOT/current;
     index index.html;
+    location = /index.html { add_header Cache-Control "no-cache"; }
     location / { try_files \$uri \$uri/ /index.html; }
     location ~* \.(?:js|css|png|webp|jpg|jpeg|gif|svg|woff2?)\$ {
         expires 7d;
-        add_header Cache-Control "public, max-age=604800, immutable";
+        add_header Cache-Control "public, max-age=604800";
         try_files \$uri =404;
     }
 }
@@ -83,7 +84,7 @@ rollback_current() {
 }
 if ! nginx -t || ! systemctl reload nginx; then rollback_current; systemctl restart nginx || true; fail "Nginx rejected the release; previous version restored."
 fi
-if ! curl --fail --silent --show-error --max-time 15 "$HEALTHCHECK_URL" -o /dev/null; then
+if ! curl --fail --silent --show-error --max-time 15 -H "Host: $SITE_DOMAIN" "$HEALTHCHECK_URL" -o /dev/null; then
   rollback_current
   systemctl reload nginx || true
   fail "Healthcheck failed; previous version restored."
