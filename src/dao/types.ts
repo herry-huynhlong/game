@@ -25,6 +25,7 @@ export interface SimNPC {
   homeId?:string; home?:{x:number;y:number}; employerId?:string; safety:number; traits:Record<string,number>; lastTradeAt?:number; decisionSlot?:string;
   assignedCommissionId?:string|null; lastCommissionBoardVisitDay?:number;
   talent?:number; sectRank?:SectRank; mentorId?:string|null; loyalty?:number; merit?:number; sectCooldownDay?:number; assignedMissionId?:string|null; equippedWeapon?:string|null; deathCause?:string; notoriety?:number; grudges?:Record<string,number>; visualStyleId?:string; visualParts?:{bodyId:string;faceId:string;hairId:string;hairColorId:string;outfitId:string;accessoryIds:string[]}; heavenlyDisposition?:HeavenlyDisposition; knownFacts?:NPCKnownFact[]; causalOpinions?:NPCCausalOpinion[];
+  socialNeed?:number; foodSearchAfter?:number; livingMentorDay?:number; timberSourceId?:string; faunaEvadeUntil?:number;
   aiProfile?:NPCAIProfile; aiDecision?:NPCAIDecision; populationRole?:PopulationRole; populationDuty?:string; authorityRole?:NPCAuthorityRole; authorityScope?:'city'|'sect';
   spawnRegionId?:string;workplaceId?:string;stallId?:string;guardPostId?:string;workPosition?:{x:number;y:number};patrolPoints?:{x:number;y:number}[];patrolIndex?:number;pathBlocked?:boolean;lawResponse?:{incidentId:string;status:'responding'|'at-scene';targetId:string;returnTarget?:{x:number;y:number}};
   activeHeavenSkill?:string|null; heavenSkillReadyAt?:number; heavenGuardUntil?:number;
@@ -49,20 +50,20 @@ export interface SettlementSave { id:string; name:string; populationLimit:number
 export type EnvironmentStatus='intact'|'damaged'|'destroyed'|'repairing';
 export interface EnvironmentObjectSave {id:string;kind:'house'|'tree';x:number;y:number;maxHp:number;hp:number;defense:number;status:EnvironmentStatus;ownerFactionId?:string;collision:{x:number;y:number;width:number;height:number}|null;restoreCollision?:{x:number;y:number;width:number;height:number};hitbox:{x:number;y:number;width:number;height:number};repairable:boolean;destroyedAtDay?:number;regrowAfterDay?:number;repairProgress:number;repairWorkerId?:string;repairGeneration?:number;mapObjectId?:number;repairSite?:{x:number;y:number};}
 export interface GroundDropSave {id:string;itemId:TradeItemId;count:number;x:number;y:number;sourceId:string;createdDay:number;createdMinute:number;status:'ground'|'claimed';claimedBy?:string;claimedEventId?:string;}
-export interface ResourceNodeSave {id:string;kind:'herb';itemId:'spirit_herb';x:number;y:number;amount:number;maxAmount:number;danger:number;reservedBy?:string;depletedAt?:number;}
+export interface ResourceNodeSave {id:string;kind:'herb';itemId:'spirit_herb';x:number;y:number;amount:number;maxAmount:number;danger:number;reservedBy?:string;depletedAt?:number;harvestCount?:number;nextGrowthAt?:number;}
 export type FaunaSpecies='deer'|'scorpion'|'snake';
-export interface FaunaSave {id:string;species:FaunaSpecies;x:number;y:number;hp:number;maxHp:number;zoneId:string;alive:boolean;state:'idle'|'walk'|'flee'|'attack'|'hit'|'dead';targetNpcId?:string;roamTarget?:{x:number;y:number};fleeUntil?:number;attackReadyAt:number;nextThinkAt:number;lootCreated:boolean;deathAt?:number;respawnStatus?:'pending'|'fulfilled';}
+export interface FaunaSave {id:string;species:FaunaSpecies;x:number;y:number;hp:number;maxHp:number;zoneId:string;alive:boolean;state:'idle'|'walk'|'flee'|'attack'|'hit'|'dead';targetNpcId?:string;roamTarget?:{x:number;y:number};fleeUntil?:number;attackReadyAt:number;nextThinkAt:number;lootCreated:boolean;restUntil?:number;deathAt?:number;respawnStatus?:'pending'|'fulfilled';}
 export interface FaunaRespawnSave {id:string;zoneId:string;sourceDeathId:string;requestedAtMs:number;dueAtMs:number;attempts:number;lastFailure?:string;}
 export interface FaunaRespawnZoneStats {totalSpawned:number;failedAttempts:number;lastFailure?:string;lastSpawnAtMs?:number;}
 export interface RiverFishSave {id:string;species:'common'|'spirit';x:number;y:number;seed:number;component:number;depthState:'surface-near'|'diving'|'deep-swim'|'rising';phaseMs:number;targetX?:number;targetY?:number;invalidReason?:string;caughtBy?:string;}
-export interface EnvironmentSave {objects:EnvironmentObjectSave[];drops:GroundDropSave[];processedEventIds:string[];defeatedBeastIds:string[];resourceNodes?:ResourceNodeSave[];fauna?:FaunaSave[];faunaRespawns?:FaunaRespawnSave[];faunaSpawnSerial?:number;faunaRespawnStats?:Record<string,FaunaRespawnZoneStats>;fish?:RiverFishSave[];mapId?:string;}
+export interface EnvironmentSave {objects:EnvironmentObjectSave[];drops:GroundDropSave[];processedEventIds:string[];defeatedBeastIds:string[];timberSources?:{id:string;x:number;y:number;renewAt?:number;cuts?:number}[];resourceNodes?:ResourceNodeSave[];fauna?:FaunaSave[];faunaRespawns?:FaunaRespawnSave[];faunaSpawnSerial?:number;faunaClockMs?:number;faunaRespawnStats?:Record<string,FaunaRespawnZoneStats>;fish?:RiverFishSave[];mapId?:string;}
 export type CommissionType='repair'|'escort'|'hunt';
 export type CommissionStatus='posted'|'accepted'|'in_progress'|'paused'|'completed'|'claimed'|'failed'|'expired'|'cancelled';
 export interface CommissionSave {
   commissionId:string;worldId:string;issuerId:string;type:CommissionType;title:string;description:string;targetId:string;target:{x:number;y:number};areaId:string;
   requirements:{profession?:NPCProfession;minRealmIndex?:number};reward:{currency:'spirit_stones';amount:number};rewardSourceId:string;rewardEscrow:number;
   materialsCost:Partial<Record<TradeItemId,number>>;materialsConsumed:boolean;createdDay:number;createdMinute:number;dueAt:number;
-  acceptedBy:string|null;progress:number;status:CommissionStatus;sourceEventId:string;rewardTransactionId?:string;materialTransactionId?:string;lastTransitionId?:string;pauseReason?:string;
+  acceptedBy:string|null;progress:number;status:CommissionStatus;sourceEventId:string;rewardTransactionId?:string;materialTransactionId?:string;lastTransitionId?:string;pauseReason?:string;reviewedBy?:string;reviewedAt?:number;
 }
 export interface CommissionTransaction {id:string;commissionId:string;type:'escrow'|'refund'|'materials'|'reward';day:number;minute:number;fromId:string;toId:string;amount:number;items?:MarketStock[];}
 export interface EconomySave { remainderMinutes:number; transactions:TradeRecord[]; }

@@ -24,7 +24,18 @@ export function damageEnvironment(world:DivineWorldSave,objectId:string,eventId:
  remember(state,eventId);const strikePower=Math.floor(rawDamage*skillMultiplier*.58);const realmPenetration=Math.floor(Math.max(0,realmIndex)*2);const damage=Math.max(0,strikePower-Math.max(0,obj.defense-realmPenetration));if(!damage)return {object:obj,damage:0,before:obj.hp,after:obj.hp,changed:false,destroyed:false};
  const before=obj.hp;obj.hp=Math.max(0,obj.hp-damage);let destroyed=false;if(obj.hp===0){obj.status='destroyed';obj.collision=null;destroyed=true}else if(obj.hp<=obj.maxHp*.5)obj.status='damaged';if(obj.hp!==before&&before>obj.maxHp*.5&&obj.hp<=obj.maxHp*.5)obj.repairGeneration=(obj.repairGeneration??0)+1;return {object:obj,damage,before,after:obj.hp,changed:obj.hp!==before,destroyed};
 }
-export function harvestHerbNode(world:DivineWorldSave,nodeId:string,npcId:string,eventId:string){const state=ensureEnvironment(world),node=state.resourceNodes?.find(n=>n.id===nodeId),npc=world.npcs.find(n=>n.id===npcId);if(!node||node.kind!=='herb'||node.itemId!=='spirit_herb'||node.amount<=0||node.reservedBy!==npcId||!npc?.alive||state.processedEventIds.includes(eventId))return null;remember(state,eventId);const before=node.amount;node.amount--;if(node.amount===0)node.depletedAt=world.clock.day*1440+world.clock.minute;const stack=npc.inventory.find(item=>item.itemId==='spirit_herb');if(stack)stack.count++;else npc.inventory.push({itemId:'spirit_herb',count:1});node.reservedBy=undefined;return{node,before,after:node.amount,itemId:'spirit_herb' as const,count:1};}
+export function harvestHerbNode(world:DivineWorldSave,nodeId:string,npcId:string,eventId:string){const state=ensureEnvironment(world),node=state.resourceNodes?.find(n=>n.id===nodeId),npc=world.npcs.find(n=>n.id===npcId);if(!node||node.kind!=='herb'||node.itemId!=='spirit_herb'||node.amount<=0||node.reservedBy!==npcId||!npc?.alive||state.processedEventIds.includes(eventId))return null;remember(state,eventId);const before=node.amount;node.amount--;node.harvestCount=(node.harvestCount??0)+1;node.nextGrowthAt??=world.clock.day*1440+world.clock.minute+360;if(node.amount===0)node.depletedAt=world.clock.day*1440+world.clock.minute;const stack=npc.inventory.find(item=>item.itemId==='spirit_herb');if(stack)stack.count++;else npc.inventory.push({itemId:'spirit_herb',count:1});node.reservedBy=undefined;return{node,before,after:node.amount,itemId:'spirit_herb' as const,count:1};}
+export function regrowHerbNodes(world:DivineWorldSave){
+  const now=world.clock.day*1440+world.clock.minute;
+  for(const node of ensureEnvironment(world).resourceNodes??[]){
+    if(node.amount>=node.maxAmount){node.nextGrowthAt=undefined;continue}
+    node.nextGrowthAt??=(node.depletedAt??now)+360;
+    if(now<node.nextGrowthAt)continue;
+    node.amount++;
+    node.depletedAt=undefined;
+    node.nextGrowthAt=node.amount<node.maxAmount?now+360:undefined;
+  }
+}
 export function releaseHerbNode(world:DivineWorldSave,nodeId:string,npcId:string){const node=ensureEnvironment(world).resourceNodes?.find(n=>n.id===nodeId);if(!node||node.reservedBy!==npcId)return false;node.reservedBy=undefined;return true;}
 function roll(seed:string){let h=2166136261;for(const c of seed)h=Math.imul(h^c.charCodeAt(0),16777619);return (h>>>0)/4294967296}
 function pushDrop(world:DivineWorldSave,sourceId:string,eventId:string,itemId:TradeItemId,count:number,x:number,y:number){const state=ensureEnvironment(world);const id=`drop:${eventId}:${itemId}`;if(state.drops.some(d=>d.id===id))return;state.drops.push({id,itemId,count,x,y,sourceId,createdDay:world.clock.day,createdMinute:world.clock.minute,status:'ground'})}

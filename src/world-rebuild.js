@@ -28,7 +28,7 @@ function mountWorldPage(archive){
  document.body.innerHTML=`<main id="world-shell"><div id="world-game" aria-label="Bản đồ Thanh Vân Ký"></div>
  <section id="world-toolbar" aria-label="Điều khiển bản đồ">
   <div class="brand"><span>☯</span><div><b>THANH VÂN KÝ</b><small>THIÊN ĐẠO · GIÁM THẾ</small></div></div>
-  <nav class="main-actions"><span id="heaven-wallet" aria-live="polite"></span><button id="open-map">Bản đồ</button><button id="open-roster">Cư dân <i>108</i></button><button id="open-heaven-shop">Thiên Đạo</button><button id="open-dev" aria-expanded="false">☰</button></nav>
+  <nav class="main-actions"><span id="heaven-wallet" aria-live="polite"></span><button id="open-map">Bản đồ</button><button id="open-roster">Cư dân <i>108</i></button><button id="open-living-world">Nhật ký</button><button id="open-heaven-shop">Thiên Đạo</button><button id="open-dev" aria-expanded="false">☰</button></nav>
  </section>
  <aside id="world-caption"><b id="world-area-title">Đang tải bản đồ…</b><span id="world-camera-status">Thế giới đang được khởi tạo</span></aside>
  <aside id="world-save-state" class="${archive.ok?'':'warning'}" title="Lưu cũ được giữ an toàn">${archive.ok?'Lưu thế giới an toàn':`Lưu gốc được giữ · ${archive.error}`}</aside>

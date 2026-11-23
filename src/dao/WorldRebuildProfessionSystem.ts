@@ -1,4 +1,4 @@
-import { damageEnvironment, releaseHerbNode } from './EnvironmentalSystem';
+import { damageEnvironment, regrowHerbNodes, releaseHerbNode } from './EnvironmentalSystem';
 import { activeCommissionForNPC, activeCommissionForTarget, chooseRepairCandidate, ensureCommissions, openRepairCommissions, postRepairCommission, startRepairCommission, tickCommissions, visitCommissionBoard, advanceRepairCommission } from './CommissionSystem';
 import type { DivineWorldSave, EnvironmentObjectSave, ResourceNodeSave, SimNPC } from './types';
 
@@ -68,7 +68,7 @@ function tickRepairWorkers(world:DivineWorldSave,board:{x:number;y:number},canRe
    const c=openRepairCommissions(world).find(row=>row.commissionId===npc.professionTask?.targetId);
    if(c&&distance(npc,board)<=42&&visitCommissionBoard(world,npc,c.commissionId,board,world.heaven.possession?.npcId??null)){npc.professionTask={kind:'repair',targetId:c.commissionId,state:'travelling'};continue}
   }
-  const candidate=openRepairCommissions(world).find(c=>chooseRepairCandidate(world,c,board,world.heaven.possession?.npcId??null)?.id===npc.id&&canReach(npc,board));
+  const candidate=openRepairCommissions(world).sort((a,b)=>Number(Boolean(b.reviewedBy))-Number(Boolean(a.reviewedBy))).find(c=>chooseRepairCandidate(world,c,board,world.heaven.possession?.npcId??null)?.id===npc.id&&canReach(npc,board));
   if(candidate){setRepairPlan(npc,board,'seeking','commission-board');npc.professionTask={kind:'repair',targetId:candidate.commissionId,state:'seeking'};if(distance(npc,board)<=42&&visitCommissionBoard(world,npc,candidate.commissionId,board,world.heaven.possession?.npcId??null)){npc.professionTask={kind:'repair',targetId:candidate.commissionId,state:'travelling'}}}
   else if(npc.professionTask?.kind==='repair'){npc.professionTask=undefined;npc.decisionSlot=undefined;if(npc.assignedCommissionId)npc.assignedCommissionId=null;if(npc.goalAction==='commission'){npc.goalAction='rest';npc.actionTarget={...(npc.home??{x:npc.x,y:npc.y})}}}
  }
@@ -83,13 +83,19 @@ function chooseHerbNode(world:DivineWorldSave,npc:SimNPC,canReach:Reach){
 }
 function tickHerbGatherers(world:DivineWorldSave,canReach:Reach){
  for(const npc of world.npcs.filter(n=>n.alive&&n.populationRole==='herb_gatherer')){
+  if(npc.goalAction==='flee'&&world.clock.day*1440+world.clock.minute<(npc.faunaEvadeUntil??0)){
+    if(npc.assignedResourceNodeId)releaseHerbNode(world,npc.assignedResourceNodeId,npc.id);
+    npc.assignedResourceNodeId=undefined;npc.professionTask=undefined;continue;
+  }
+  if(npc.decisionSlot?.endsWith(':herb-craft')||npc.goalAction==='trade'&&npc.decisionSlot?.endsWith(':deliver'))continue;
   const env=world.environment!,activeId=npc.assignedResourceNodeId,node=activeId?env.resourceNodes?.find(n=>n.id===activeId):undefined;
-  if(node&&node.amount>0&&node.reservedBy===npc.id&&node.danger<=dangerTolerance(npc)&&canReach(npc,node)){
+  const needsBreak=npc.hp<28||npc.fatigue>=82||npc.hunger>=68||npc.safety<35||world.clock.minute<360||world.clock.minute>=1200;
+  if(!needsBreak&&node&&node.amount>0&&node.reservedBy===npc.id&&node.danger<=dangerTolerance(npc)&&canReach(npc,node)){
    npc.professionTask={kind:'herb-gather',targetId:node.id,state:distance(npc,node)<=22?'working':'travelling'};npc.goalAction='gather';npc.actionTarget={x:node.x,y:node.y};npc.decisionSlot=`profession:gather:${node.id}`;npc.shortGoal=distance(npc,node)<=22?'Đang hái linh thảo tại điểm đã chọn':'Đang tìm đường tới linh thảo';
    continue;
   }
   if(activeId){if(node?.reservedBy===npc.id)releaseHerbNode(world,activeId,npc.id);npc.assignedResourceNodeId=undefined;npc.professionTask=undefined;if(npc.decisionSlot?.startsWith('profession:gather:'))npc.decisionSlot=undefined}
-  if(npc.hp<28||npc.fatigue>92||npc.hunger>88){npc.goalAction='rest';npc.actionTarget={...(npc.home??{x:npc.x,y:npc.y})};npc.shortGoal='Nghỉ dưỡng trước khi tiếp tục hái thuốc';continue}
+  if(needsBreak)continue
   const target=chooseHerbNode(world,npc,canReach);
   if(!target){npc.goalAction='rest';npc.professionTask={kind:'herb-gather',targetId:'',state:'blocked',lastReason:(env.resourceNodes??[]).some(n=>n.amount>0)?'danger-or-no-path':'all-nodes-depleted'};npc.shortGoal='Chưa có linh thảo an toàn và còn hàng';continue}
   if(target.reservedBy&&target.reservedBy!==npc.id)continue;
@@ -98,6 +104,10 @@ function tickHerbGatherers(world:DivineWorldSave,canReach:Reach){
 }
 
 export function tickWorldRebuildProfessionWork(world:DivineWorldSave,board:{x:number;y:number},canReach:Reach){
+ if(world.clock.minute%10===0)regrowHerbNodes(world);
+ for(const node of world.environment?.resourceNodes??[]){
+   if(node.reservedBy&&!world.npcs.some(n=>n.id===node.reservedBy&&n.alive&&n.assignedResourceNodeId===node.id))node.reservedBy=undefined;
+ }
  ensureCommissions(world);publishRepairJobs(world);tickCommissions(world);tickRepairWorkers(world,board,canReach);tickHerbGatherers(world,canReach);
 }
 

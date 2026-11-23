@@ -36,6 +36,37 @@ try {
   const eater=npcs.find(n=>n.profession==='dan_thuong');eater.x=2595;eater.y=640;eater.inventory=[{itemId:'ration',count:1}];eater.hunger=75;eater.goalAction='eat';eater.actionTarget={x:2595,y:640};new (load('AutonomousNPCSystem').AutonomousNPCSystem)([eater],()=>{},world).tick(11,1,420);assert.ok(Math.abs(eater.hunger-7.297)<1e-9);assert.equal(EconomySystem.count(eater.inventory,'ration'),0);
   const worker=npcs.find(n=>n.profession==='dan_thuong'&&n.id!==eater.id);worker.x=2740;worker.y=824;worker.spiritStones=0;const village=world.factions.find(f=>f.id==='qingyun-village');worker.goalAction='work';worker.actionProgress=0;const villageWealth=village.wealth;new (load('AutonomousNPCSystem').AutonomousNPCSystem)([worker],()=>{},world).tick(76,1,600);assert.equal(worker.spiritStones,5);assert.equal(village.wealth,villageWealth-5);
   const cultivator=npcs.find(n=>n.profession==='tu_si');cultivator.x=650;cultivator.y=685;cultivator.goalAction='cultivate';cultivator.actionProgress=0;cultivator.xp=cultivationRequired(cultivator.realmIndex,cultivator.realmLevel);cultivator.inventory=[{itemId:'qi_pill',count:1}];const oldLevel=cultivator.realmLevel;new (load('AutonomousNPCSystem').AutonomousNPCSystem)([cultivator],()=>{},world).tick(61,1,600);assert.equal(cultivator.realmLevel,oldLevel+1);assert.equal(EconomySystem.count(cultivator.inventory,'qi_pill'),0);
+  const occupationWorld=structuredClone(world);
+  const model=new (load('AutonomousNPCSystem').AutonomousNPCSystem)(occupationWorld.npcs,()=>{},occupationWorld);
+  const alchemist=occupationWorld.npcs.find(n=>n.profession==='dan_su');
+  Object.assign(alchemist,{x:2965,y:632,hunger:2,fatigue:0,goalAction:'work',decisionSlot:'1:work',
+    actionTarget:{x:2965,y:632},actionProgress:74,inventory:[{itemId:'spirit_herb',count:2}]});
+  model.tickNpc(alchemist,1,1,600);
+  assert.equal(EconomySystem.count(alchemist.inventory,'qi_pill'),1);
+  assert.equal(EconomySystem.count(alchemist.inventory,'spirit_herb'),0);
+  const guard=occupationWorld.npcs.find(n=>n.profession==='ho_ve');
+  Object.assign(guard,{x:2370,y:836,hunger:2,fatigue:0,safety:60,goalAction:'patrol',decisionSlot:'1:patrol',
+    actionTarget:{x:2370,y:836},actionProgress:59});
+  model.tickNpc(guard,1,1,600);
+  assert.ok(guard.safety>=72);
+  const trader=occupationWorld.npcs.find(n=>n.profession==='thuong_nhan'),shop=occupationWorld.shops.find(s=>s.id==='city-market');
+  Object.assign(trader,{x:2740,y:824,hunger:2,fatigue:0,goalAction:'trade',decisionSlot:'1:trade',
+    actionTarget:{x:2740,y:824},actionProgress:24,inventory:[{itemId:'wood',count:2}]});
+  const stones=trader.spiritStones,wood=EconomySystem.count(shop.stock,'wood');
+  model.tickNpc(trader,1,1,600);
+  assert.ok(trader.spiritStones>stones);
+  assert.equal(EconomySystem.count(shop.stock,'wood'),wood+2);
+  const tavern=occupationWorld.npcs.find(n=>n.profession==='dan_thuong');
+  const kitchen=occupationWorld.shops.find(s=>s.id==='city-food');
+  const pantry=occupationWorld.factions.find(f=>f.id==='qingyun-village');
+  kitchen.stock=[];
+  Object.assign(tavern,{populationRole:'tavern_staff',x:2740,y:824,hunger:2,fatigue:0,goalAction:'work',
+    decisionSlot:'1:work',actionTarget:{x:2740,y:824},actionProgress:74});
+  const pantryCount=EconomySystem.count(pantry.treasury,'ration');
+  model.tickNpc(tavern,1,1,600);
+  assert.equal(EconomySystem.count(kitchen.stock,'ration'),4);
+  assert.equal(EconomySystem.count(pantry.treasury,'ration'),pantryCount-4);
+  console.log('PASS declared alchemist, guard, merchant and tavern actions change real world state.');
   const buyer=npcs[0],market=world.shops.find(s=>s.id==='city-market');const money=buyer.spiritStones,stock=EconomySystem.count(market.stock,'ration');ok(EconomySystem.buyFromShop(world,buyer,market.id,'ration',1,1,600));assert.equal(buyer.spiritStones,money-5);assert.equal(EconomySystem.count(market.stock,'ration'),stock-1);assert.equal(EconomySystem.count(buyer.inventory,'ration'),1);const fail=EconomySystem.buyFromShop(world,buyer,market.id,'ration',stock+4,1,600);assert.equal(fail.ok,false);assert.equal(EconomySystem.count(market.stock,'ration'),stock-1);
   const possessions={...world.heaven,divinePower:50,possession:null};const snapshot={realm:buyer.realmIndex,x:buyer.x,items:JSON.stringify(buyer.inventory)};assert.equal(PossessionSystem.start(possessions,buyer).ok,true);assert.equal(possessions.divinePower,45);PossessionSystem.end(possessions);assert.equal(possessions.mode,'heavenly');assert.equal(buyer.realmIndex,snapshot.realm);assert.equal(buyer.x,snapshot.x);assert.equal(JSON.stringify(buyer.inventory),snapshot.items);
   const protectedWorld={...world,rewardedEventIds:[],heaven:{...world.heaven,divinePower:10,divinePowerMax:100,fragments:0},events:[]};const eventSystem=new WorldEventSystem(protectedWorld.events,protectedWorld);const siege={id:'siege-test',day:1,remaining:0,remainingMinutes:0,status:'completed'};protectedWorld.sieges=[siege];eventSystem.publish({id:siege.id,day:1,minute:800,type:'beast-siege',description:'test',status:'completed'});assert.equal(WorldRewardSystem.claimBeastSiege(protectedWorld,eventSystem,siege),true);assert.equal(protectedWorld.heaven.divinePower,30);assert.equal(protectedWorld.heaven.fragments,5);assert.equal(WorldRewardSystem.claimBeastSiege(protectedWorld,eventSystem,siege),false);

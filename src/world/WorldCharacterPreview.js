@@ -50,11 +50,13 @@ export class WorldCharacterPreview {
   }
   reset(){this.mount.reset();this.character.combat.cancel();}
 
-  canMountAt(x,y){return mountedPositionAllowed(x,y,(px,py)=>this.scene.canOccupy(px,py),11);}
+  canMountAt(x,y,ignoreId){return this.scene.groundPositionOpen(this.npc,x,y,true,ignoreId)&&mountedPositionAllowed(x,y,(px,py)=>this.scene.canOccupy(px,py),11);}
 
   moveMounted(x,y){
     for(const [px,py] of [[x,y],[x,this.sprite.y],[this.sprite.x,y]]){
-      if(this.canMountAt(px,py)&&this.scene.clearFaunaLine(this.sprite,{x:px,y:py}))return {x:px,y:py};
+      if(!this.canMountAt(px,py))continue;
+      const move=this.scene.moveOnGround(this.npc,this.sprite,px,py,false);
+      if(move)return move;
     }
     return null;
   }
@@ -63,14 +65,14 @@ export class WorldCharacterPreview {
     const {scene,npc,sprite,mount}=this;
     if(scene.possessedNpcId!==npc.id)return false;
     if(mount.state==='absent'){
-      const open=[[0,0],[20,0],[-20,0],[0,20],[0,-20]].find(([dx,dy])=>this.canMountAt(sprite.x+dx,sprite.y+dy)&&scene.clearFaunaLine(sprite,{x:sprite.x+dx,y:sprite.y+dy}));
+      const open=[[26,0],[-26,0],[0,26],[0,-26],[36,0],[-36,0],[0,36],[0,-36]].find(([dx,dy])=>this.canMountAt(sprite.x+dx,sprite.y+dy)&&scene.clearFaunaLine(sprite,{x:sprite.x+dx,y:sprite.y+dy}));
       if(!open){scene.worldPopulationToast('Cần khoảng trống để gọi Huyền Hổ.');return false;}
       mount.summon(sprite.x+open[0],sprite.y+open[1],scene.playerFacing);
       scene.worldPopulationToast('Huyền Hổ đã đến. Nhấn M để lên yên.');return true;
     }
-    if(!mount.attached&&!this.canMountAt(mount.x,mount.y))return false;
+    if(!mount.attached&&!this.canMountAt(mount.x,mount.y,'parked-tiger'))return false;
     if(!mount.attached&&!scene.clearFaunaLine(sprite,{x:mount.x,y:mount.y}))return false;
-    const canStand=(x,y)=>scene.canOccupy(x,y)&&scene.clearFaunaLine(sprite,{x,y});
+    const canStand=(x,y)=>scene.groundPositionOpen(npc,x,y,false,mount.attached?undefined:'parked-tiger')&&scene.clearFaunaLine(sprite,{x,y});
     const ok=mount.toggle(sprite.x,sprite.y,scene.playerFacing,canStand,(x,y)=>{
       sprite.setPosition(x,y).setDepth(y);npc.x=x;npc.y=y;
     });

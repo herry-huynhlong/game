@@ -11,6 +11,7 @@ const HANDS = {down:[43,62],up:[20,62],left:[27,61],right:[36,61]};
 export class CharacterRenderer {
   constructor(scene, x, y, appearance) {
     this.appearance = validateAppearance(appearance);
+    this.resolvedParts = new Map();
     this.grips = scene.cache.json.get('rig-grips');
     this.registry = scene.cache.json.get('rig-variants-registry');
     this.timeline = new CharacterAnimationController();
@@ -33,6 +34,7 @@ export class CharacterRenderer {
   customize(appearance) {
     const previous=this.appearance.weapon;
     this.appearance = validateAppearance(appearance);
+    this.resolvedParts.clear();
     if(previous!==this.appearance.weapon)this.combat.equip(this.appearance.weapon,this.direction,Boolean(this.combatAtlas));
     this.apply();
   }
@@ -64,16 +66,20 @@ export class CharacterRenderer {
     const hair=`/${appearance.hair}/${appearance.hairColor}`;
     const set=(part,key=part,x=0,y=rise,visible=true)=>{
       const sprite=layers[part];
-      const enhanced=['face','eyes','eyebrows','beard'].includes(part)||key.endsWith('/earth')||key.endsWith('/chestnut');
-      const original=(rig==='original'&&!enhanced)||part==='weapon';
-      const texture=original?'rig-parts':'rig-variants';
-      let frame=`${original?'':rig+'/'}${direction}/${key}`;
-      if(!sprite.scene.textures.get(texture).has(frame)) {
-        frame=`${original?'':rig+'/'}${direction}/${part}`;
-        visible=visible&&sprite.scene.textures.get(texture).has(frame);
+      const partKey=direction+'/'+key;
+      let resolved=this.resolvedParts.get(partKey);
+      if(!resolved){
+        const enhanced=part==='face'||part==='eyes'||part==='eyebrows'||part==='beard'||key.endsWith('/earth')||key.endsWith('/chestnut');
+        const original=(rig==='original'&&!enhanced)||part==='weapon';
+        const texture=sprite.scene.textures.get(original?'rig-parts':'rig-variants');
+        const prefix=(original?'':rig+'/')+direction+'/';
+        const frameName=texture.has(prefix+key)?prefix+key:prefix+part;
+        resolved={frame:texture.has(frameName)?texture.get(frameName):null,anchor:this.registry?.anchors?.[frameName]};
+        this.resolvedParts.set(partKey,resolved);
       }
-      if(visible&&(sprite.texture.key!==texture||sprite.frame.name!==frame))sprite.setTexture(texture,frame);
-      const anchor=this.registry?.anchors?.[frame];
+      visible=visible&&Boolean(resolved.frame);
+      if(visible&&sprite.frame!==resolved.frame)sprite.setFrame(resolved.frame);
+      const {anchor}=resolved;
       const px=x-32+(anchor?.[0]??0),py=y-93+(anchor?.[1]??0);
       if(sprite.x!==px||sprite.y!==py)sprite.setPosition(px,py);
       if(sprite.visible!==visible)sprite.setVisible(visible);

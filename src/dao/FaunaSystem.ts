@@ -1,10 +1,24 @@
-import type { DivineWorldSave, EnvironmentSave, FaunaRespawnSave, FaunaRespawnZoneStats, FaunaSave, FaunaSpecies, GroundDropSave, TradeItemId } from './types';
+import type { DivineWorldSave, EnvironmentSave, FaunaRespawnSave, FaunaRespawnZoneStats, FaunaSave, FaunaSpecies, GroundDropSave, SimNPC, TradeItemId } from './types';
 
 export const FAUNA_SPECIES = {
   deer: { name:'Hươu rừng', combatPower:0, attackDamage:0, hp:44, defense:1, speed:46, fleeSpeed:86, attackRange:0, cooldownMs:0, itemId:'deer_meat' as TradeItemId, color:'nâu' },
   scorpion: { name:'Bọ cạp yêu cấp thấp', combatPower:12, attackDamage:5, hp:34, defense:2, speed:20, fleeSpeed:0, attackRange:30, cooldownMs:2400, itemId:'scorpion_venom' as TradeItemId, color:'đất đỏ' },
   snake: { name:'Rắn yêu cấp thấp', combatPower:21, attackDamage:8, hp:42, defense:3, speed:32, fleeSpeed:0, attackRange:38, cooldownMs:1900, itemId:'snake_skin' as TradeItemId, color:'lục nâu' },
 } as const;
+export const FAUNA_BEHAVIOR = {
+ deer:{notice:82,leash:100,retreatHealth:.50,rest:4,territorial:false},
+ scorpion:{notice:48,leash:92,retreatHealth:.23,rest:6,territorial:true},
+ snake:{notice:66,leash:116,retreatHealth:.30,rest:5,territorial:true},
+} as const satisfies Record<FaunaSpecies,{notice:number;leash:number;retreatHealth:number;rest:number;territorial:boolean}>;
+
+export function hunterTolerance(npc:Pick<SimNPC,'hp'|'aiProfile'|'fatigue'|'spiritStones'>,maxHp:number,power:number){
+ const courage=npc.aiProfile?.axes.courage??50,caution=npc.aiProfile?.axes.caution??50;
+ return {
+   retreatHp:maxHp*Math.max(.36,Math.min(.72,.48+(caution-courage)*.003+npc.fatigue*.001)),
+   search:Math.round(510+courage*4-caution*2),
+   allowedPower:Math.max(0,power*(.51+courage*.004-caution*.002))*Math.min(1,npc.hp/maxHp+.15),
+ };
+}
 export const FAUNA_ZONE_CAP=7;
 export const FAUNA_ZONE_COUNTS: Record<string, Partial<Record<FaunaSpecies, number>>> = {
   'southern-outskirts':{deer:5,scorpion:1,snake:1}, 'forest-outer':{deer:3,scorpion:2,snake:2},

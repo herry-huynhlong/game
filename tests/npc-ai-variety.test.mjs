@@ -46,5 +46,40 @@ assert.equal(decisionsObserved,54,'simulation spans multiple work, training and 
 assert.ok(longRun.filter(n=>n.profession==='nong_dan').every(n=>['farm','eat','rest','socialize','trade'].includes(n.goalAction)),'farmers remain in livelihood-appropriate actions');
 assert.ok(longRun.filter(n=>n.profession==='tu_si').every(n=>['cultivate','eat','rest','socialize','gather','mission'].includes(n.goalAction)),'cultivators remain in cultivation/sect-appropriate actions');
 assert.ok(longRun.find(n=>n.id==='qingyun-07').aiProfile&&longRun.find(n=>n.id==='qingyun-01').aiProfile,'profiles survive repeated simulation ticks');
+const disciple={...structuredClone(cultivators[0]),id:'failed-major-realm',populationRole:'low_disciple',
+  realmIndex:0,realmLevel:9,xp:10000,technique:'sword',talent:25,fatigue:43,actionCooldown:0,hunger:10,
+  action:'cultivate',goalAction:'cultivate',decisionSlot:'6:cultivate',actionProgress:59,actionTarget:{x:650,y:685},
+  x:650,y:685,hp:130,inventory:[{itemId:'qi_pill',count:3}]};
+const breakthroughEvents=[];
+const failing=new AutonomousNPCSystem([disciple],event=>breakthroughEvents.push(event));
+failing.tick(1,6,630);
+assert.equal(disciple.realmIndex,0);
+assert.equal(disciple.realmLevel,9);
+assert.equal(disciple.actionCooldown,240);
+assert.equal(disciple.inventory.reduce((count,item)=>count+item.count,0),2,'Exactly one pill is consumed');
+assert.equal(disciple.xp,412,'Failed breakthrough retains 85% of the required progress');
+assert.equal(breakthroughEvents.filter(event=>event.type==='npc-breakthrough-failed').length,1);
+disciple.actionProgress=59;
+failing.tick(1,6,631);
+assert.equal(disciple.inventory.reduce((count,item)=>count+item.count,0),2);
+assert.equal(breakthroughEvents.length,1,'Cooldown prevents a duplicate attempt');
+assert.equal(JSON.parse(JSON.stringify(disciple)).actionCooldown,239);
+
+const buyer={...structuredClone(disciple),id:'pill-buyer',inventory:[],spiritStones:20,
+  xp:485,fatigue:0,actionCooldown:0,decisionSlot:'6:shop',goalAction:'shop',actionProgress:44,
+  actionTarget:{x:2965,y:632},x:2965,y:632};
+const apothecary={id:'city-apothecary',ownerId:'merchant',cash:30,stock:[{itemId:'qi_pill',count:2}],
+  openHour:6,closeHour:20,sellPrices:{qi_pill:15}};
+const pillWorld={clock:{day:6,minute:632},shops:[apothecary],factions:[],economy:{transactions:[]}};
+const purchases=[];
+new AutonomousNPCSystem([buyer],event=>purchases.push(event),pillWorld).tickNpc(buyer,1,6,632);
+assert.equal(buyer.spiritStones,5);
+assert.deepEqual(buyer.inventory,[{itemId:'qi_pill',count:1}]);
+assert.equal(apothecary.cash,45);
+assert.equal(apothecary.stock[0].count,1);
+assert.equal(pillWorld.economy.transactions.length,1);
+assert.equal(purchases[0].targetId,'merchant');
+console.log('PASS: deterministic failed major breakthrough, preserved cooldown, and real pill purchase.');
+
 fs.rmSync(temp,{recursive:true,force:true});
 console.log('NPC.AI-VARIETY.1 passed: seeded persistent identity, role-specific utility choices, injury/fatigue responses, hysteresis, no free rewards from scoring, save/load and 3-day decision schedule.');

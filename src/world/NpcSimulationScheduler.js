@@ -21,7 +21,10 @@ export class NpcSimulationScheduler {
       const distance = Math.max(view.x - npc.x, npc.x - view.right, view.y - npc.y, npc.y - view.bottom);
       const previous = entry.level;
       const controlled = npc.id === possessedId;
-      entry.visible = npc.alive && (distance <= 36 || (controlled && distance <= 92));
+      const horizontalPadding=controlled?92:entry.visible?46:38;
+      const lowerPadding=controlled?92:entry.visible?72:62;
+      entry.visible=npc.alive&&npc.x>=view.x-horizontalPadding&&npc.x<=view.right+horizontalPadding&&
+        npc.y>=view.y-horizontalPadding&&npc.y<=view.bottom+lowerPadding;
       entry.level = controlled || urgentIds.has(npc.id) || distance <= (previous === 0 ? 132 : 84)
         ? 0 : distance <= (previous < 2 ? 610 : 490) ? 1 : 2;
       if (!npc.alive) continue;
@@ -43,7 +46,7 @@ export class NpcSimulationScheduler {
     return { moving, thinking };
   }
 
-  accrueMinute(possessedId) {
+  accrueMinute(possessedId, arrivalTolerance=()=>25) {
     for (const entry of this.byId.values()) {
       const { npc } = entry;
       if (!npc.alive || npc.id === possessedId) continue;
@@ -51,7 +54,7 @@ export class NpcSimulationScheduler {
       const target = npc.actionTarget ?? npc.home ?? npc;
       const key = npc.goalAction + ':' + target.x + ':' + target.y;
       if (key !== entry.workKey) { entry.workKey = key; entry.workMinutes = 0; }
-      if (npc.goalAction === 'idle' || Math.hypot(npc.x-target.x,npc.y-target.y) < 25) entry.workMinutes++;
+      if (npc.goalAction === 'idle' || Math.hypot(npc.x-target.x,npc.y-target.y) < arrivalTolerance(npc)) entry.workMinutes++;
     }
   }
 
@@ -60,8 +63,8 @@ export class NpcSimulationScheduler {
     entry.thinkDue = this.time + THINK_INTERVAL[entry.level];
   }
 
-  elapsedForMove(entry) {
-    const delta = Math.min(MOVE_INTERVAL[2]+60, Math.max(0,this.time-entry.lastMove));
+  elapsedForMove(entry,maxDelta=MOVE_INTERVAL[2]+60) {
+    const delta = Math.min(maxDelta, Math.max(0,this.time-entry.lastMove));
     entry.lastMove = this.time;
     entry.moveDue = this.time + MOVE_INTERVAL[entry.level];
     return delta;

@@ -30,11 +30,25 @@ export function commitHeavenChange(scene, npc, change) {
   const power = heaven.divinePower, ledger = structuredClone(shopLedger(world));
   const inventory = npc && structuredClone(npc.inventory), skills = npc?.skills?.slice();
   const active = npc?.activeHeavenSkill;
+  const events = world.events?.slice(), memories = npc?.memories?.slice();
   let result;
   try {
     result = change();
+    if (result.ok && npc && world.clock && events && memories) {
+      const previous = new Map(ledger.map(row => [row.id,row.owner]));
+      for (const row of shopLedger(world)) {
+        if (row.giftedTo !== npc.id || row.owner !== npc.id || previous.get(row.id) === npc.id) continue;
+        const {day,minute}=world.clock, id='living-heaven-gift:'+row.id;
+        const description=npc.name+' nhận '+itemName(row.itemId)+' từ Thiên Đạo.';
+        npc.memories=[...npc.memories,{day,text:description,kind:'heaven',sourceId:id,itemId:row.itemId}].slice(-12);
+        world.events.push({id,day,minute,type:'heaven-shop-gift',actorId:'heaven',targetId:npc.id,description,status:'completed'});
+        if(world.events.length>400)world.events.splice(0,world.events.length-400);
+      }
+    }
     if (result.ok && scene.persistPopulation()) return result;
   } catch { result = failed("Giao dịch không thể hoàn tất."); }
+  if(events)world.events.splice(0,world.events.length,...events);
+  if(npc&&memories)npc.memories=memories;
   heaven.divinePower = power;
   heaven.shopLedger = ledger;
   if (npc) {
