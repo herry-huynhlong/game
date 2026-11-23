@@ -10,6 +10,7 @@ export const ITEM_CATALOG:Record<string,ItemDefinition>={
   book_spirit_guard:{id:'book_spirit_guard',name:'Bí kíp Hộ Thể Linh Cương',kind:'special',tier:'mortal',quality:'middle',description:'Tăng phòng thủ trong thời gian ngắn.',value:0},
   river_fish_common:{id:'river_fish_common',name:'Cá sông',kind:'material',tier:'mortal',quality:'low',description:'Cá thường câu từ sông.',value:0},
   river_fish_spirit:{id:'river_fish_spirit',name:'Linh cá',kind:'material',tier:'spirit',quality:'middle',description:'Linh cá câu từ sông.',value:0},
+  training_crossbow:{id:'training_crossbow',name:'Nỏ Thiết Mộc',kind:'weapon',tier:'mortal',quality:'middle',description:'Nỏ hai tay, phải nạp sau mỗi phát.',value:18},
   iron_sword:{id:'iron_sword',name:'Thiết Mộc Kiếm',kind:'weapon',tier:'mortal',quality:'middle',description:'Kiếm gỗ lõi thiết mộc dùng luyện kiếm.',value:12},
   iron_dao:{id:'iron_dao',name:'Thiết Diệp Đao',kind:'weapon',tier:'mortal',quality:'middle',description:'Đao một lưỡi cong nhẹ, rèn từ sắt thô và cán gỗ sơn dầu.',value:16},
   qi_pill:{id:'qi_pill',name:'Tụ Khí Đan',kind:'pill',tier:'artifact',quality:'low',description:'Đan dược hỗ trợ người Luyện Khí.',value:18},

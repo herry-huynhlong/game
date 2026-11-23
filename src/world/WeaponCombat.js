@@ -1,4 +1,5 @@
 export const WORLD_WEAPONS = Object.freeze({
+  training_crossbow: Object.freeze({id:'training_crossbow',name:'Nỏ Thiết Mộc',kind:'crossbow',attack:3,minRealm:0,range:300,width:9,skillRange:0,skillWidth:0}),
   iron_dao: Object.freeze({ id: 'iron_dao', name: 'Thiết Diệp Đao', kind: 'dao', attack: 4, minRealm: 0, range: 58, width: 34, skillRange: 66, skillWidth: 38 }),
   iron_sword: Object.freeze({ id: 'iron_sword', name: 'Thiết Mộc Kiếm', kind: 'jian', attack: 3, minRealm: 0, range: 70, width: 16, skillRange: 78, skillWidth: 12 }),
   mortal_gift_sword: Object.freeze({ id: 'mortal_gift_sword', name: 'Phàm Thiết Kiếm', kind: 'jian', attack: 3, minRealm: 0, range: 70, width: 16, skillRange: 78, skillWidth: 12 }),
@@ -28,6 +29,7 @@ export function setNpcWeapon(npc, itemId = null) {
 
 export function weaponAttackMode(weapon, combo = 1, skill = false) {
   if (!weapon) return { animation: `unarmed_${combo}`, hit: skill ? 'unarmed_skill' : 'unarmed' };
+  if (weapon.kind === 'crossbow') return {animation:'crossbowShoot',hit:'thrust',range:weapon.range,width:weapon.width,multiplier:1};
   if (weapon.kind === 'dao') return { animation: `dao_slash_${Math.min(3, combo)}`, hit: 'slash', range: skill ? weapon.skillRange : weapon.range, width: skill ? weapon.skillWidth : weapon.width, multiplier: skill ? 1.12 : [1, 1.06, 1.14][Math.min(2, combo - 1)] };
   if (skill) return { animation: 'jian_thrust', hit: 'thrust', range: weapon.skillRange, width: weapon.skillWidth, multiplier: 1.12 };
   if (combo === 2) return { animation: 'jian_slash', hit: 'short_slash', range: weapon.range - 8, width: 26, multiplier: 1.04 };

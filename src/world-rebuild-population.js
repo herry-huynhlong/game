@@ -1,3 +1,4 @@
+import { ensureWorldNpcAppearances } from './world/NpcAppearanceProfiles.js';
 import { createWorldUuid } from './world/WorldId.ts';
 import { HEAVEN_DEFAULTS } from './dao/HeavenlyDaoSystem.ts';
 import { ensureNPCVisualStyles } from './dao/CharacterAppearance.ts';
@@ -109,12 +110,13 @@ export function loadWorldPopulation(storage, map) {
   if (raw) {
     try {
       const world = JSON.parse(raw);
-      if (world?.population?.initialized && world.population.spawnVersion === 1 && world.npcs?.length === 108) return { world, fresh: false };
+      if (world?.population?.initialized && world.population.spawnVersion === 1 && world.npcs?.length >= 108) { ensureWorldNpcAppearances(world); return { world, fresh: false }; }
     } catch { /* A corrupt new-world save is preserved; do not import or overwrite legacy keys. */ }
     throw new Error('Bản lưu WORLD.REBUILD.1-C không hợp lệ. Đã giữ nguyên dữ liệu để tránh ghi đè.');
   }
   const seed = `qingyun-${createWorldUuid()}`;
   const world = makeFreshWorld(seed, map, solids);
+  ensureWorldNpcAppearances(world);
   storage.setItem(WORLD_POPULATION_SAVE_KEY, JSON.stringify(world));
   return { world, fresh: true };
 }

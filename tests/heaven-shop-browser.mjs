@@ -190,7 +190,7 @@ try {
   })()`);
   assert.ok(combat);
   await delay(180);
-  await aim(await run(`(()=>{${fixture}return screen(actor.x-${combat.dx},actor.y-${combat.dy})})()`));
+  await aim(await run(`(()=>{${fixture}return screen(actor.x-(${combat.dx}),actor.y-(${combat.dy}))})()`));
   await key('J');
   await delay(750);
   assert.equal((await save()).events.filter(e=>e.id.startsWith('heaven-strike:')&&e.actorId===npc.id).length,0);
@@ -269,7 +269,7 @@ try {
     await click('#possess-end');
     await click('#open-heaven-shop');
     await click('[data-heaven-tab=skills]');
-    await click('[data-heaven-list] article:nth-child(3) button');
+    await click('[data-heaven-list] article:nth-of-type(3) button');
     await click('[data-heaven-tab=gift]');
     await choose('[data-heaven-list] select',hunter.id);
     await click('[data-heaven-list] article button');
@@ -308,8 +308,8 @@ try {
     assert.ok(guard);
     await click('#open-heaven-shop');
     await click('[data-heaven-tab=skills]');
-    await click('[data-heaven-list] article:nth-child(2) button');
-    await click('[data-heaven-list] article:nth-child(4) button');
+    await click('[data-heaven-list] article:nth-of-type(2) button');
+    await click('[data-heaven-list] article:nth-of-type(4) button');
     await click('[data-heaven-tab=gift]');
     await choose('[data-heaven-list] select',guard.id);
     await click('[data-heaven-list] article button');

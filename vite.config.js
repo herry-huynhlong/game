@@ -9,6 +9,8 @@ export default defineConfig({
   server:{watch:{ignored:['**/.headless-profile*','**/.headless-profile*/**']}},
   plugins:[copyRuntimeWorldMap()],
   build:{rollupOptions:{input:{
+    npcXianxiaEditor:fileURLToPath(new URL('./npc-xianxia-editor.html',import.meta.url)),
+    npcXianxiaGallery:fileURLToPath(new URL('./npc-xianxia-gallery.html',import.meta.url)),
     main:fileURLToPath(new URL('./index.html',import.meta.url)),
     characterShowcase:fileURLToPath(new URL('./gfx5b4b-showcase.html',import.meta.url)),
     characterStudy:fileURLToPath(new URL('./gfx5b4c-a2-study.html',import.meta.url)),

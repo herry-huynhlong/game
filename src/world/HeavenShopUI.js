@@ -47,6 +47,7 @@ export function mountHeavenShop(scene) {
       : tab === 'gift' ? [...records, ...Object.keys(SHOP).filter(itemId => !records.some(r => r.itemId === itemId)).map(itemId => ({itemId}))] : records;
     let section = '';
     for (const row of rows) {
+      if(row.itemId==='training_crossbow'&&!row.id&&!scene.characterRigPreview)continue;
       const entry = SHOP[row.itemId];
       if (!entry) continue;
       const group = row.id ? 'Kho Thiên Đạo' : 'Mua từ Thương Điếm';

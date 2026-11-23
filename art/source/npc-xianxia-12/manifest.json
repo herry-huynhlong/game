@@ -1,0 +1,146 @@
+[
+  {
+    "id": 1,
+    "name": "Thanh Y Kiếm Khách",
+    "source": "npc_01-generated.png",
+    "size": [
+      64,
+      96
+    ],
+    "direction": "south",
+    "animation": "static",
+    "authorship": "OpenAI image_gen + raster normalization"
+  },
+  {
+    "id": 2,
+    "name": "Ngân Hồ Tiên Tử",
+    "source": "npc_02-generated.png",
+    "size": [
+      64,
+      96
+    ],
+    "direction": "south",
+    "animation": "static",
+    "authorship": "OpenAI image_gen + raster normalization"
+  },
+  {
+    "id": 3,
+    "name": "Tử Lam Thánh Nữ",
+    "source": "npc_03-generated.png",
+    "size": [
+      80,
+      112
+    ],
+    "direction": "south",
+    "animation": "static",
+    "authorship": "OpenAI image_gen + raster normalization"
+  },
+  {
+    "id": 4,
+    "name": "Xích Viêm Ma Quân",
+    "source": "npc_04-generated.png",
+    "size": [
+      64,
+      96
+    ],
+    "direction": "south",
+    "animation": "static",
+    "authorship": "OpenAI image_gen + raster normalization"
+  },
+  {
+    "id": 5,
+    "name": "Thanh Bào Đạo Trưởng",
+    "source": "npc_05-generated.png",
+    "size": [
+      64,
+      96
+    ],
+    "direction": "south",
+    "animation": "static",
+    "authorship": "OpenAI image_gen + raster normalization"
+  },
+  {
+    "id": 6,
+    "name": "Hắc Y Sát Thủ",
+    "source": "npc_06-generated.png",
+    "size": [
+      64,
+      96
+    ],
+    "direction": "south",
+    "animation": "static",
+    "authorship": "OpenAI image_gen + raster normalization"
+  },
+  {
+    "id": 7,
+    "name": "Bạch Huyền Chân Nhân",
+    "source": "npc_07-generated.png",
+    "size": [
+      64,
+      96
+    ],
+    "direction": "south",
+    "animation": "static",
+    "authorship": "OpenAI image_gen + raster normalization"
+  },
+  {
+    "id": 8,
+    "name": "Tử Linh Tiên Nữ",
+    "source": "npc_08-generated.png",
+    "size": [
+      64,
+      96
+    ],
+    "direction": "south",
+    "animation": "static",
+    "authorship": "OpenAI image_gen + raster normalization"
+  },
+  {
+    "id": 9,
+    "name": "Cuồng Phong Kiếm Tu",
+    "source": "npc_09-generated.png",
+    "size": [
+      64,
+      96
+    ],
+    "direction": "south",
+    "animation": "static",
+    "authorship": "OpenAI image_gen + raster normalization"
+  },
+  {
+    "id": 10,
+    "name": "Kim Cang Võ Tăng",
+    "source": "npc_10-generated.png",
+    "size": [
+      64,
+      96
+    ],
+    "direction": "south",
+    "animation": "static",
+    "authorship": "OpenAI image_gen + raster normalization"
+  },
+  {
+    "id": 11,
+    "name": "Kim Bào Lão Tổ",
+    "source": "npc_11-generated.png",
+    "size": [
+      80,
+      112
+    ],
+    "direction": "south",
+    "animation": "static",
+    "authorship": "OpenAI image_gen + raster normalization"
+  },
+  {
+    "id": 12,
+    "name": "Phàm Nhân",
+    "source": "npc_12-generated.png",
+    "size": [
+      64,
+      96
+    ],
+    "direction": "south",
+    "animation": "static",
+    "authorship": "OpenAI image_gen + raster normalization"
+  }
+]

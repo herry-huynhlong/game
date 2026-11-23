@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Thanh Vân Ký · Chỉnh ngoại hình NPC</title></head>
+<body>
+<main>
+  <header><a href="./">Thanh Vân Ký</a><h1>Chỉnh ngoại hình NPC</h1></header>
+  <div class="editor">
+    <section class="preview" aria-label="Sân thử nhân vật">
+      <div id="map-stage"></div>
+      <section aria-label="Sân chiến đấu và Huyền Hổ">
+        <div class="toolbar"><button id="arena-attack">Đánh / Bắn · J</button><button id="arena-aim">Ngắm nỏ · K</button><button id="arena-reload">Nạp nỏ · R</button><button id="arena-summon">Gọi Huyền Hổ</button><button id="arena-mount">Lên / xuống · M</button></div>
+        <div class="toolbar"><label>Tốc độ <select id="arena-rate"><option value="1">1×</option><option value="0.5">½×</option><option value="0.25">¼×</option><option value="0">Dừng</option></select></label><button id="arena-step">Bước 1 frame</button><label><input id="arena-debug" type="checkbox"> Hiện điểm neo và vùng trúng đòn</label></div>
+        <output id="arena-state" aria-live="off"></output>
+      </section>
+      <div class="toolbar"><label>Động tác <select id="motion"><option value="idle">Đứng yên</option><option value="walk">Đi bộ</option><option value="run">Chạy</option></select></label><label>Hướng <select id="direction"><option value="down">Nam</option><option value="up">Bắc</option><option value="left">Tây</option><option value="right">Đông</option></select></label><label><input id="stress" type="checkbox"> Thử 60 NPC</label></div>
+      <p>WASD hoặc phím mũi tên để di chuyển. Giữ Shift để chạy.</p>
+    </section>
+    <section class="controls" aria-label="Ngoại hình">
+      <label>Nhân vật <select id="npc"><option value="npc_01">Thanh Y Kiếm Khách</option></select></label>
+      <div id="appearance-fields"></div>
+      <div class="actions"><button id="save">Lưu</button><button id="load">Tải bản lưu</button><button id="export">Xuất JSON</button><button id="world-preview">Thử trong WorldScene</button><button id="import">Nhập JSON</button><input id="file" type="file" accept=".json,application/json" hidden></div>
+      <p id="status" role="status"></p>
+    </section>
+  </div>
+<section class="compare" aria-labelledby="compare-title"><h2 id="compare-title">So sánh ngoại hình</h2><label>Xem <select id="compare-field"></select></label><div id="compare-stage"></div></section>
+<section id="npc-appearance-roster" class="compare" hidden>
+  <h2>Ngoại hình cư dân</h2><p id="roster-counts"></p>
+  <div class="toolbar"><label>Vai trò <select id="roster-role"><option value="">Tất cả</option></select></label><label>Môn phái <select id="roster-faction"><option value="">Tất cả</option></select></label><button id="roster-prev">Trang trước</button><output id="roster-page"></output><button id="roster-next">Trang sau</button></div>
+  <div id="npc-roster-gallery" aria-label="Gallery toàn bộ cư dân theo trang"></div>
+  <label for="roster-select">Chọn một hoặc nhiều cư dân trên trang</label><select id="roster-select" multiple size="6"></select>
+  <div class="toolbar"><button id="roster-random-one">Xem trước random một NPC</button><button id="roster-random-selected">Xem trước random các NPC đã chọn</button><button id="roster-lock">Khóa ngoại hình</button><button id="roster-manual">Xem trước chỉnh sửa</button><button id="roster-confirm">Xác nhận lưu</button><button id="roster-cancel">Hủy xem trước</button></div>
+  <p id="roster-status" role="status"></p>
+</section>
+</main>
+<script type="module" src="/src/npc-xianxia-editor.js"></script>
+</body></html>

@@ -35,6 +35,7 @@ export class WorldHeavenActions {
     const scene = this.scene, weapon = weaponForNpc(npc), ai = Boolean(target), now = Date.now();
     const skill = SKILLS[skillId];
     const fail = message => { if (!ai) scene.worldPopulationToast(message); return false; };
+    if(weapon?.kind==='crossbow'&&(!skill||skill.weapon))return fail('Dùng nỏ trong chế độ Character Rig, hoặc đổi sang vũ khí khác.');
     if (skillId && (!skill || !npc.skills?.includes(skillId))) return fail('Hãy lĩnh ngộ bí kíp và gán võ kỹ vào phím K.');
     if (skill?.weapon && weapon?.kind !== skill.weapon) return fail('Chưa trang bị vũ khí phù hợp với võ kỹ.');
     if (skill && (npc.heavenSkillReadyAt ?? 0) > now) return fail('Võ kỹ đang hồi chiêu.');
@@ -86,6 +87,18 @@ export class WorldHeavenActions {
     return true;
   }
 
+  launchBolt(npc, tip, ux, uy, damage) {
+    if(this.shots.length>=32)return false;
+    const scene=this.scene;
+    const x=tip.x,y=npc.y+uy*8;
+    if(!scene.canOccupy(x,y))return false;
+    const sprite=scene.add.image(tip.x,tip.y,'combat-mount','bolt').setOrigin(1,.5)
+      .setRotation(Math.atan2(uy,ux)).setDepth(npc.y+1);
+    this.shots.push({id:createWorldUuid(),npc,x,y,ux,uy,range:300,width:7,sprite,
+      start:scene.time.now,travel:0,speed:530,visible:true,hits:1,struck:new Set(),damage,elevation:tip.y-y,bolt:true});
+    return true;
+  }
+
   inLane(origin, target, ux, uy, length, width) {
     const dx = target.x - origin.x, dy = target.y - origin.y, along = dx * ux + dy * uy;
     return along > 0 && along <= length && Math.abs(dx * uy - dy * ux) <= width;
@@ -134,8 +147,8 @@ export class WorldHeavenActions {
         }
       }
       if (!shot.hits || shot.travel >= shot.range || !shot.npc.alive) { shot.sprite.destroy(); return false; }
-      shot.sprite.setPosition(shot.x, shot.y - 15).setDepth(shot.y + 1).setVisible(shot.visible)
-        .setFrame(shot.frame + Math.floor((scene.time.now - shot.start) / 68) % 3);
+      shot.sprite.setPosition(shot.x, shot.y + (shot.elevation ?? -15)).setDepth(shot.y + 1).setVisible(shot.visible);
+      if(!shot.bolt)shot.sprite.setFrame(shot.frame + Math.floor((scene.time.now - shot.start) / 68) % 3);
       return true;
     });
   }

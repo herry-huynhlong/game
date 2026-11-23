@@ -1,0 +1,20 @@
+{
+  "id": "npc_01",
+  "bodyType": "female_slender",
+  "face": "fair",
+  "hair": "bun",
+  "hairColor": "ink",
+  "eyes": "matching",
+  "eyebrows": "matching",
+  "beard": "matching",
+  "expression": "neutral",
+  "outfit": "fairy",
+  "outfitColor": "jade",
+  "pants": "matching",
+  "shoes": "matching",
+  "weapon": "sword",
+  "headwear": "matching",
+  "accessory": "matching",
+  "direction": "right",
+  "motion": "run"
+}

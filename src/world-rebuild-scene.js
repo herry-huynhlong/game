@@ -1,3 +1,7 @@
+import { WorldNpcAppearanceFleet } from './world/WorldNpcAppearanceFleet.js';
+import { loadCombatMountAssets } from './world/CombatMountAssets.js';
+import { loadCharacterAssets } from './world/CharacterAssetRegistry.js';
+import { WorldCharacterPreview } from './world/WorldCharacterPreview.js';
 import Phaser from 'phaser';
 import { createWorldUuid, loadWorldPopulation, WORLD_POPULATION_SAVE_KEY } from './world-rebuild-population.js';
 import { AutonomousNPCSystem } from './dao/AutonomousNPCSystem.ts';
@@ -24,6 +28,8 @@ const CARDINAL_STEPS=[[1,0],[-1,0],[0,1],[0,-1]];
 const FOOTPRINT=[[-8,-4],[8,-4],[-8,4],[8,4]];
 const MAP_URL='/maps/world-rebuild-1b.tmj';
 const WORLD=Object.freeze({width:224*32,height:144*32});
+const LEGACY_NPC_RENDER=new URLSearchParams(location.search).get('legacyNpc')==='1';
+const CHARACTER_RIG_PREVIEW=new URLSearchParams(location.search).get('characterRig')==='1';
 const PAPERDOLL_PREVIEW=new URLSearchParams(location.search).get('paperDoll')==='1';
 const PAPERDOLL_IDS=Array.from({length:24},(_,i)=>`P${String(i+1).padStart(2,'0')}`);
 const PAPERDOLL_ROLE_POOLS=Object.freeze({commoner:['P01','P02','P03','P04'],low_disciple:['P05','P06','P07'],elder:['P08'],sect_leader:['P09'],merchant:['P10','P11'],tavern_staff:['P12'],city_guard:['P13','P14'],repair_worker:['P15'],hunter:['P16'],herb_gatherer:['P17'],quest_clerk:['P18'],independent_cultivator:['P19','P20','P21','P22','P23']});
@@ -37,6 +43,7 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.load.on('loaderror',file=>window.__worldBoot?.setPhase('assets','failed',`${file.key}: ${file.src}`));
     this.load.once('complete',()=>window.__worldBoot?.setPhase('assets','complete'));
     this.load.tilemapTiledJSON('rebuild-world-map',MAP_URL);
+    if(!this.paperDollPreview&&(!LEGACY_NPC_RENDER||CHARACTER_RIG_PREVIEW)){loadCharacterAssets(this);loadCombatMountAssets(this);}
     this.load.spritesheet('rebuild-terrain','/assets/tilesets/gfx5b5_area_terrain.png',{frameWidth:32,frameHeight:32});
     this.load.spritesheet('rebuild-buildings','/assets/props/settlement_buildings.png',{frameWidth:192,frameHeight:192});
     this.load.spritesheet('rebuild-ancient-tree','/assets/props/ancient-tree-v2.png',{frameWidth:112,frameHeight:96});
@@ -112,6 +119,7 @@ export class RebuildWorldScene extends Phaser.Scene {
     window.__worldBoot?.setPhase('ecosystem','running');
     this.initFauna();
     this.scheduler=new NpcSimulationScheduler(this.populationWorld.npcs);
+    if(!this.paperDollPreview&&!LEGACY_NPC_RENDER&&this.textures.exists('rig-variants'))this.npcAppearanceFleet=new WorldNpcAppearanceFleet(this);
     this.performancePanel=new WorldPerformancePanel(this);
     const flush=()=>{this.performancePanel.previousFrame=undefined;if(document.hidden)this.persistPopulation()};
     document.addEventListener('visibilitychange',flush);
@@ -134,16 +142,21 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.environmentGraphics=this.add.graphics().setDepth(10000);
     this.refreshProfessionVisuals();
     this.collisionGraphics=this.add.graphics().setDepth(20000).setVisible(false);this.drawCollisionDebug();
-    this.input.keyboard?.addCapture(['SPACE']);this.keys=this.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,PLUS,MINUS,C,ONE,TWO,THREE,FOUR,J,K,E,F,ESC')??{};
-    for(const key of ['J','K','F']) {
+    this.input.keyboard?.addCapture(['SPACE']);this.keys=this.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,PLUS,MINUS,C,ONE,TWO,THREE,FOUR,J,K,E,F,M,R,Q,ESC,SHIFT')??{};
+    for(const key of ['J','K','F','M','R','Q']) {
       this.keys[key]?.on('down',(_key,event)=>{
-        if(event.ctrlKey||event.altKey||event.metaKey||event.target?.matches?.('input,textarea,[contenteditable]'))return;
+        if(event.repeat||event.ctrlKey||event.altKey||event.metaKey||event.target?.matches?.('input,textarea,[contenteditable]'))return;
         this.handlePossessedAction(key);
       });
     }
     this.bindCameraControls();
     const initial=new URLSearchParams(location.search).get('region');this.gotoRegion(REGION_CENTERS[initial]?initial:'city',false);
     this.initPossessionHud();this.restorePossession();
+    if(this.characterRigPreview&&!this.possessedNpcId){
+      this.selectNPC(this.characterRigPreview.npc.id);
+      const {npc}=this.characterRigPreview;
+      this.navigateCameraTo(npc.x,npc.y,'character-preview',true,1.25);
+    }
     window.__worldRebuild={
       ready:()=>this.sys.isActive()&&this.map?.width===224&&this.map?.height===144&&this.objectSprites.length===scenery.length,
       getState:()=>this.getState(),gotoRegion:(id)=>this.gotoRegion(id),setZoom:(zoom)=>this.setZoom(zoom),getMinimapState:()=>this.getMinimapState(),
@@ -153,6 +166,7 @@ export class RebuildWorldScene extends Phaser.Scene {
       getProfessionState:()=>this.getProfessionState(),damageBuilding:(id,eventId,damage,realm=0)=>this.damageBuilding(id,eventId,damage,realm),
       getFaunaState:()=>this.getFaunaState(),
       getPerformance:()=>this.performancePanel.snapshot(),
+      getNpcAppearanceReport:()=>this.npcAppearanceFleet?.report()??{legacy:this.populationWorld.npcs.length},
       getWeaponState:()=>this.getWeaponState(),equipPossessedWeapon:id=>this.equipPossessedWeapon(id),attackTest:new URLSearchParams(location.search).has('testMode')?(targetId,skill=false)=>this.performPossessedAttack(targetId,skill):undefined,
       getModularAppearanceState:()=>this.getModularAppearanceState(),getPaperDollAppearanceState:()=>this.getPaperDollAppearanceState(),
       getEcologyState:()=>this.getEcologyState(),
@@ -206,6 +220,10 @@ export class RebuildWorldScene extends Phaser.Scene {
       if(!this.paperDollPreview)this.createNPCModularSprites(n,sprite);
       const label=this.add.text(n.x,n.y-48,n.name,{fontFamily:'serif',fontSize:'11px',color:'#f3e3bd',stroke:'#172018',strokeThickness:3}).setOrigin(.5,1).setDepth(n.y+10).setVisible(false);this.npcLabels??=new Map();this.npcLabels.set(n.id,label);
     }
+    if(CHARACTER_RIG_PREVIEW&&!this.paperDollPreview&&this.textures.exists('rig-variants')) {
+      const npc=this.populationWorld.npcs.find(candidate=>candidate.alive&&candidate.populationRole==='low_disciple');
+      if(npc) this.characterRigPreview=new WorldCharacterPreview(this,npc,this.npcSprites.get(npc.id));
+    }
     this.syncWeaponVisuals();
     this.populationDebug=document.createElement('aside');this.populationDebug.id='population-debug';this.populationDebug.innerHTML='<button type="button" aria-expanded="false">108 cư dân · AI</button><section hidden></section>';
     this.populationDebug.style.cssText='position:fixed;right:14px;top:112px;z-index:20;color:#f1e7cc;font:12px/1.45 monospace;pointer-events:auto';this.populationDebug.hidden=true;
@@ -222,7 +240,7 @@ export class RebuildWorldScene extends Phaser.Scene {
   }
   syncNPCModularVisuals(){
     if(!this.populationWorld||this.paperDollPreview)return;
-    for(const npc of this.populationWorld.npcs){const actor=this.npcSprites.get(npc.id),parts=this.modularVisuals.get(npc.id);if(!actor||!parts?.length)continue;if(!actor.visible||!npc.alive){for(const overlay of parts)if(overlay.visible)overlay.setVisible(false);continue}const baseFrame=Number(actor.frame?.name)||0,row=Math.floor(baseFrame/8)%4,phase=actor.getData('moving')?Math.min(2,Math.floor((baseFrame%8)*3/8)):0,frame=row*3+phase;
+    for(const npc of this.populationWorld.npcs){const actor=this.npcSprites.get(npc.id),parts=this.modularVisuals.get(npc.id);if(!actor||!parts?.length)continue;if(!actor.visible||!npc.alive||actor.alpha<.01){for(const overlay of parts)if(overlay.visible)overlay.setVisible(false);continue}const baseFrame=Number(actor.frame?.name)||0,row=Math.floor(baseFrame/8)%4,phase=actor.getData('moving')?Math.min(2,Math.floor((baseFrame%8)*3/8)):0,frame=row*3+phase;
       for(const overlay of parts){const frameIndex=overlay.getData('frameOffset')+frame;if(overlay.getData('lastModularFrame')!==frameIndex){overlay.setFrame(frameIndex);overlay.setData('lastModularFrame',frameIndex)}const kind=overlay.getData('partKind'),isBack=row===1,depth=actor.depth+(isBack&&['hair','accessory'].includes(kind)?-0.12:kind==='outfit'?.02:kind==='face'?.04:kind==='hair'?.06:.08);if(overlay.x!==actor.x||overlay.y!==actor.y)overlay.setPosition(actor.x,actor.y);if(overlay.depth!==depth)overlay.setDepth(depth);if(!overlay.visible)overlay.setVisible(true)}
     }
   }
@@ -236,8 +254,9 @@ export class RebuildWorldScene extends Phaser.Scene {
   restorePossession(){const session=this.populationWorld?.heaven?.possession;if(!session)return;const npc=this.populationWorld.npcs.find(n=>n.id===session.npcId&&n.alive&&!n.ascended);if(!npc){PossessionSystem.end(this.populationWorld.heaven);this.persistPopulation();return}this.possessedNpcId=npc.id;this.selectedNpcId=npc.id;this.cameraFollowSuspended=false;this.cameras.main.centerOn(npc.x,npc.y);this.worldPopulationToast(`Đã khôi phục nhập thân ${npc.name} sau khi tải lại.`)}
   getPossessionState(){const npc=this.populationWorld?.npcs.find(n=>n.id===this.possessedNpcId);return{active:Boolean(npc),npcId:npc?.id??null,name:npc?.name??null,hp:npc?.hp??null,x:npc?.x??null,y:npc?.y??null,realmIndex:npc?.realmIndex??null,inventory:npc?.inventory?.map(i=>({...i}))??[],divinePower:this.populationWorld?.heaven?.divinePower??0,targetFaunaId:this.selectedFaunaId}}
   getWeaponState(){const npcs=this.populationWorld?.npcs??[];return{provisioning:this.populationWorld?.weaponProvisioning??null,armed:npcs.filter(n=>weaponForNpc(n)).map(n=>({id:n.id,name:n.name,role:n.populationRole,weapon:weaponForNpc(n).id,owned:n.inventory.filter(i=>weaponForNpc({...n,equippedWeapon:i.itemId})).map(i=>i.itemId)})),unarmed:npcs.filter(n=>n.alive&&!weaponForNpc(n)).length,activeNpcId:this.possessedNpcId}}
-  equipPossessedWeapon(itemId){const npc=this.populationWorld?.npcs.find(n=>n.id===this.possessedNpcId&&n.alive);if(!npc||!(itemId===ROD ? hasRod(npc) && Boolean(npc.equippedWeapon=ROD) : setNpcWeapon(npc,itemId))){this.worldPopulationToast(itemId?'NPC không sở hữu vũ khí này.':'Không thể tháo vũ khí lúc này.');return false}this.heavenActions.stopFishing();this.syncWeaponVisuals();this.persistPopulation();this.possessionHudSignature='';this.refreshPossessionHud();this.worldPopulationToast(itemId?`Đã trang bị ${weaponForNpc(npc)?.name??itemName(itemId)}.`:'Đã tháo vũ khí.');return true}
+  equipPossessedWeapon(itemId){const npc=this.populationWorld?.npcs.find(n=>n.id===this.possessedNpcId&&n.alive);if((itemId==='training_crossbow'&&this.characterRigPreview?.npc!==npc)||this.characterRigPreview?.mount.locked||(itemId===ROD&&this.characterRigPreview?.mount.attached))return false;if(!npc||!(itemId===ROD ? hasRod(npc) && Boolean(npc.equippedWeapon=ROD) : setNpcWeapon(npc,itemId))){this.worldPopulationToast(itemId?'NPC không sở hữu vũ khí này.':'Không thể tháo vũ khí lúc này.');return false}this.heavenActions.stopFishing();this.syncWeaponVisuals();this.persistPopulation();this.possessionHudSignature='';this.refreshPossessionHud();this.worldPopulationToast(itemId?`Đã trang bị ${weaponForNpc(npc)?.name??itemName(itemId)}.`:'Đã tháo vũ khí.');return true}
   syncWeaponVisuals(){if(!this.populationWorld)return;for(const npc of this.populationWorld.npcs){const actor=this.npcSprites.get(npc.id);if(!actor)continue;const weapon=weaponForNpc(npc);let overlay=this.weaponSprites.get(npc.id);
+    if(actor.alpha<.01||weapon?.kind==='crossbow'){if(overlay?.visible)overlay.setVisible(false);continue}
     if(rodEquipped(npc)){syncRodVisual(this,npc,actor,overlay);continue}
     if(overlay?.getData('weaponId')===ROD){overlay.destroy();this.weaponSprites.delete(npc.id);overlay=null}
     if(!weapon){if(overlay?.visible)overlay.setVisible(false);continue}const texture=weapon.kind==='dao'?'weapon-overlay-iron_dao':'weapon-overlay-iron_sword';if(!this.textures.exists(texture)){if(overlay?.visible)overlay.setVisible(false);continue}if(!overlay){overlay=this.add.sprite(actor.x,actor.y,texture,0).setOrigin(.5,1).setName(`weapon:${npc.id}`);overlay.setData('weaponId',weapon.id);this.weaponSprites.set(npc.id,overlay)}else if(overlay.getData('weaponId')!==weapon.id){overlay.setTexture(texture);overlay.setData('weaponId',weapon.id)}const visible=Boolean(npc.alive&&actor.visible);if(!visible){if(overlay.visible)overlay.setVisible(false);continue}const state=this.weaponAttackStates.get(npc.id);let frame;if(state&&this.time.now<state.until){const phase=Math.min(5,Math.floor((this.time.now-state.started)/55));frame=state.row*8+state.dirIndex*8+phase}else{if(state)this.weaponAttackStates.delete(npc.id);const actorFrame=Number(actor.frame?.name);frame=Number.isInteger(actorFrame)&&actorFrame>=0&&actorFrame<288?actorFrame:0}if(Number(overlay.frame?.name)!==frame)overlay.setFrame(frame);const direction=actor.anims.currentAnim?.key?.split('_').at(-1)??'down',depth=actor.depth+(direction==='up'||direction==='left'?-0.15:0.15);if(overlay.x!==actor.x||overlay.y!==actor.y)overlay.setPosition(actor.x,actor.y);if(overlay.depth!==depth)overlay.setDepth(depth);if(!overlay.visible)overlay.setVisible(true)}}
@@ -262,13 +281,13 @@ export class RebuildWorldScene extends Phaser.Scene {
       const duty=this.npcRoleTitle(selected);
       const style=selected.visualStyleId,portrait=style&&this.textures.exists(style)?'<div class="npc-portrait" role="img" aria-label="Chân dung cư dân"><img alt="" src="/assets/characters/'+style+'.png" style="width:336px;height:1890px;max-width:none;display:block"></div>':'';
       const eligible=selected.alive&&!selected.ascended,disabled=!eligible||heaven.possession||heaven.divinePower<PossessionSystem.cost(selected);
-      panel.innerHTML='<header><span>Hồ sơ cư dân</span><button id="npc-card-close" aria-label="Đóng">×</button></header><div class="npc-card-body">'+portrait+'<div><b>'+selected.name+'</b><small>'+duty+'</small><small>Cảnh giới '+selected.realmIndex+'/'+selected.realmLevel+' · HP '+Math.round(selected.hp)+'</small><small class="npc-action">'+(selected.shortGoal??selected.aiDecision?.reason??'Đang sinh hoạt')+'</small></div></div><div style="display:flex;gap:6px"><button id="npc-gift" class="gold-button" '+(!eligible?'disabled':'')+'>Ban tặng</button><button id="possess-start" class="gold-button" '+(disabled?'disabled':'')+'>Nhập thân · '+PossessionSystem.cost(selected)+' Thần Lực</button></div>';
+      panel.innerHTML='<header><span>Hồ sơ cư dân</span><button id="npc-card-close" aria-label="Đóng">×</button></header><div class="npc-card-body">'+portrait+'<div><b>'+selected.name+'</b><small>'+duty+'</small><small>Cảnh giới '+selected.realmIndex+'/'+selected.realmLevel+' · HP '+Math.round(selected.hp)+'</small><small class="npc-action">'+(selected.shortGoal??selected.aiDecision?.reason??'Đang sinh hoạt')+'</small></div></div><div style="display:flex;gap:6px"><button id="npc-gift" class="gold-button" '+(!eligible?'disabled':'')+'>Ban tặng</button><button id="possess-start" class="gold-button" '+(disabled?'disabled':'')+'>Nhập thân · '+PossessionSystem.cost(selected)+' Thần Lực</button></div><a href="/npc-xianxia-editor.html?npc='+encodeURIComponent(selected.id)+'">Ngoại hình cư dân</a>';
       panel.querySelector('#npc-gift').onclick=()=>this.openNpcGift(selected.id);panel.querySelector('#npc-card-close').onclick=()=>this.closeNpcCard();panel.querySelector('#possess-start').onclick=()=>this.beginPossession();return;
     }
-     const stats=cultivationStats(active),liveFauna=this.populationWorld.environment.fauna.filter(f=>f.alive),target=this.populationWorld.environment.fauna.find(f=>f.id===this.selectedFaunaId),drop=(this.populationWorld.environment.drops??[]).find(d=>d.status==='ground'&&Math.hypot(active.x-d.x,active.y-d.y)<120),items=active.inventory.map(i=>itemName(i.itemId)+' ×'+i.count).join(' · ')||'Trống',style=active.visualStyleId,weapon=weaponForNpc(active),ownedWeapons=weaponChoices(active),weaponOptions='<option value="">Tay không</option>'+(hasRod(active)?'<option value="'+ROD+'" '+(rodEquipped(active)?'selected':'')+'>Cần câu phổ thông</option>':'')+ownedWeapons.map(w=>'<option value="'+w.id+'" '+(w.id===weapon?.id?'selected':'')+'>'+w.name+' · '+(w.kind==='dao'?'chém':'đâm/chém')+'</option>').join('');
+     const stats=cultivationStats(active),liveFauna=this.populationWorld.environment.fauna.filter(f=>f.alive),target=this.populationWorld.environment.fauna.find(f=>f.id===this.selectedFaunaId),drop=(this.populationWorld.environment.drops??[]).find(d=>d.status==='ground'&&Math.hypot(active.x-d.x,active.y-d.y)<120),items=active.inventory.map(i=>itemName(i.itemId)+' ×'+i.count).join(' · ')||'Trống',style=active.visualStyleId,weapon=weaponForNpc(active),ownedWeapons=weaponChoices(active).filter(w=>w.kind!=='crossbow'||this.characterRigPreview?.npc===active),weaponOptions='<option value="">Tay không</option>'+(hasRod(active)?'<option value="'+ROD+'" '+(rodEquipped(active)?'selected':'')+'>Cần câu phổ thông</option>':'')+ownedWeapons.map(w=>'<option value="'+w.id+'" '+(w.id===weapon?.id?'selected':'')+'>'+w.name+' · '+(w.kind==='crossbow'?'bắn/nạp':w.kind==='dao'?'chém':'đâm/chém')+'</option>').join('');
     const portrait=style&&this.textures.exists(style)?'<div class="npc-portrait" role="img" aria-label="Chân dung cư dân"><img alt="" src="/assets/characters/'+style+'.png" style="width:336px;height:1890px;max-width:none;display:block"></div>':'';
     const faunaOptions=liveFauna.map(f=>'<option value="'+f.id+'" '+(f.id===target?.id?'selected':'')+'>'+FAUNA_SPECIES[f.species].name+'</option>').join('');
-     panel.innerHTML='<header><span>Nhập thân · '+active.name+'</span><button id="possess-end" aria-label="Rời nhập thân">↗</button></header><div class="npc-card-body compact">'+portrait+'<div><b>Cảnh giới '+active.realmIndex+'/'+active.realmLevel+'</b><small>HP '+Math.max(0,Math.round(active.hp))+'/'+Math.round(stats.hpMax)+' · Thần lực '+Math.floor(heaven.divinePower)+'</small><small class="bar"><i style="width:'+Math.max(0,Math.min(100,active.hp/stats.hpMax*100))+'%"></i></small></div></div><label class="weapon-select">Vũ khí · '+(rodEquipped(active)?itemName(ROD):weapon?.name??'Chưa trang bị')+'<select id="equipment-weapon">'+weaponOptions+'</select></label><select id="possess-fauna" aria-label="Mục tiêu"><option value="">Chọn mục tiêu</option>'+faunaOptions+'</select><small class="hud-detail">Mục tiêu: '+(target?FAUNA_SPECIES[target.species].name+' · HP '+target.hp:'chưa chọn')+' · Rơi: '+(drop?drop.itemId+' ×'+drop.count:'không có')+'</small><details><summary>Túi đồ · '+active.inventory.reduce((n,i)=>n+i.count,0)+' món</summary><small>'+items+'</small></details><small class="hud-controls">WASD · J đánh · K võ kỹ · E nhặt · F câu · Esc rời</small>';
+     panel.innerHTML='<header><span>Nhập thân · '+active.name+'</span><button id="possess-end" aria-label="Rời nhập thân">↗</button></header><div class="npc-card-body compact">'+portrait+'<div><b>Cảnh giới '+active.realmIndex+'/'+active.realmLevel+'</b><small>HP '+Math.max(0,Math.round(active.hp))+'/'+Math.round(stats.hpMax)+' · Thần lực '+Math.floor(heaven.divinePower)+'</small><small class="bar"><i style="width:'+Math.max(0,Math.min(100,active.hp/stats.hpMax*100))+'%"></i></small></div></div><label class="weapon-select">Vũ khí · '+(rodEquipped(active)?itemName(ROD):weapon?.name??'Chưa trang bị')+'<select id="equipment-weapon">'+weaponOptions+'</select></label><select id="possess-fauna" aria-label="Mục tiêu"><option value="">Chọn mục tiêu</option>'+faunaOptions+'</select><small class="hud-detail">Mục tiêu: '+(target?FAUNA_SPECIES[target.species].name+' · HP '+target.hp:'chưa chọn')+' · Rơi: '+(drop?drop.itemId+' ×'+drop.count:'không có')+'</small><details><summary>Túi đồ · '+active.inventory.reduce((n,i)=>n+i.count,0)+' món</summary><small>'+items+'</small></details><small class="hud-controls">WASD · J đánh · K võ kỹ · E nhặt · F câu · Esc rời'+(this.characterRigPreview?.npc===active?' · M gọi/lên/xuống Huyền Hổ · Q ngắm · R nạp nỏ':'')+'</small>';
      mountSkillPanel(this,panel,active);
      panel.querySelector('#possess-fauna').onchange=e=>e.target.value&&this.selectFaunaTarget(e.target.value);panel.querySelector('#equipment-weapon').onchange=e=>this.equipPossessedWeapon(e.target.value||null);panel.querySelector('#possess-end').onclick=()=>this.endPossession();
   }
@@ -468,12 +487,24 @@ export class RebuildWorldScene extends Phaser.Scene {
   handlePossessedAction(key) {
     const npc=this.populationWorld.npcs.find(n=>n.id===this.possessedNpcId&&n.alive);
     if(!npc)return;
+    const rig=this.characterRigPreview?.npc===npc?this.characterRigPreview:null;
+    if(key==='M')return rig?.toggleMount();
+    if(rig?.mount.locked)return;
+    if(key==='Q'||key==='R'){
+      const combat=rig?.character.combat;
+      if(combat?.weapon!=='crossbow'||combat.action)return;
+      if(key==='Q')combat.aim=!combat.aim;
+      else if(!combat.loaded)combat.start('crossbowReload',this.playerFacing);
+      return;
+    }
+    if(key==='F'&&rig?.mount.attached)return this.worldPopulationToast('Hãy xuống Huyền Hổ trước khi câu cá.');
     if(key==='F')return this.heavenActions.fish(npc);
+    if(key==='J'&&rig?.attack())return;
     if(key==='J')return this.heavenActions.fire(npc,null);
     if(npc.activeHeavenSkill)return this.heavenActions.fire(npc,npc.activeHeavenSkill);
     this.worldPopulationToast('Chọn võ kỹ đã học trong bảng nhập thân để gán vào K.');
   }
-  updatePossessedPlayer(dt){if(!this.possessedNpcId)return;const npc=this.populationWorld.npcs.find(n=>n.id===this.possessedNpcId),sprite=this.npcSprites.get(this.possessedNpcId);if(!npc?.alive||!sprite){this.endPossession('NPC đã tử vong; nhập thân kết thúc theo trạng thái thật.');return}if(this.scheduler.byId.get(npc.id)?.visible&&!sprite.visible){sprite.setVisible(true);sprite.anims.resume()}const status=PossessionSystem.tick(this.populationWorld.heaven,npc,dt);if(status==='depleted'||status==='dead'){this.endPossession(status==='dead'?'NPC đã tử vong; nhập thân kết thúc.':'Thần Lực chu kỳ đã cạn; nhập thân kết thúc.');return}let dx=0,dy=0;if(this.keys?.A?.isDown||this.keys?.LEFT?.isDown)dx--;if(this.keys?.D?.isDown||this.keys?.RIGHT?.isDown)dx++;if(this.keys?.W?.isDown||this.keys?.UP?.isDown)dy--;if(this.keys?.S?.isDown||this.keys?.DOWN?.isDown)dy++;const moving=dx!==0||dy!==0;if(moving){this.heavenActions.stopFishing();this.cameraFollowSuspended=false;const length=Math.hypot(dx,dy);dx/=length;dy/=length;this.playerFacing=Math.abs(dx)>Math.abs(dy)?(dx<0?'left':'right'):(dy<0?'up':'down');const speed=this.keys?.SHIFT?.isDown?178:118,move=this.canOccupyOrSlide(sprite.x+dx*speed*dt/1000,sprite.y+dy*speed*dt/1000,sprite);if(move){sprite.setPosition(move.x,move.y).setDepth(move.y);npc.x=move.x;npc.y=move.y;npc.action='travel';npc.shortGoal='Đang được Thiên Đạo điều khiển';sprite.setData('moving',true);sprite.play(`${this.npcTextureFor(npc)}_walk_${this.playerFacing}`,true)}else{sprite.setData('moving',false);sprite.play(`${this.npcTextureFor(npc)}_idle_${this.playerFacing}`,true)}}else{sprite.setData('moving',false);npc.x=sprite.x;npc.y=sprite.y;sprite.play(`${this.npcTextureFor(npc)}_idle_${this.playerFacing}`,true)}if(!this.cameraFollowSuspended)this.cameras.main.centerOn(npc.x,npc.y);this.clampCamera();this.playerAttackCooldown=Math.max(0,this.playerAttackCooldown-dt/1000);this.playerSkillCooldown=Math.max(0,this.playerSkillCooldown-dt/1000);
+  updatePossessedPlayer(dt){if(!this.possessedNpcId)return;const npc=this.populationWorld.npcs.find(n=>n.id===this.possessedNpcId),sprite=this.npcSprites.get(this.possessedNpcId);if(!npc?.alive||!sprite){this.endPossession('NPC đã tử vong; nhập thân kết thúc theo trạng thái thật.');return}if(this.scheduler.byId.get(npc.id)?.visible&&!sprite.visible){sprite.setVisible(true);sprite.anims.resume()}const status=PossessionSystem.tick(this.populationWorld.heaven,npc,dt);if(status==='depleted'||status==='dead'){this.endPossession(status==='dead'?'NPC đã tử vong; nhập thân kết thúc.':'Thần Lực chu kỳ đã cạn; nhập thân kết thúc.');return}let dx=0,dy=0;if(this.keys?.A?.isDown||this.keys?.LEFT?.isDown)dx--;if(this.keys?.D?.isDown||this.keys?.RIGHT?.isDown)dx++;if(this.keys?.W?.isDown||this.keys?.UP?.isDown)dy--;if(this.keys?.S?.isDown||this.keys?.DOWN?.isDown)dy++;const rig=this.characterRigPreview?.npc===npc?this.characterRigPreview:null;const moving=!rig?.mount.locked&&(dx!==0||dy!==0);if(moving){this.heavenActions.stopFishing();this.cameraFollowSuspended=false;const length=Math.hypot(dx,dy);dx/=length;dy/=length;this.playerFacing=Math.abs(dx)>Math.abs(dy)?(dx<0?'left':'right'):(dy<0?'up':'down');const mounted=rig?.mount.attached;const speed=mounted?(this.keys?.SHIFT?.isDown?234:155):(this.keys?.SHIFT?.isDown?178:118);const x=sprite.x+dx*speed*dt/1000,y=sprite.y+dy*speed*dt/1000;const move=mounted?rig.moveMounted(x,y):this.canOccupyOrSlide(x,y,sprite);if(move){sprite.setPosition(move.x,move.y).setDepth(move.y);npc.x=move.x;npc.y=move.y;npc.action='travel';npc.shortGoal='Đang được Thiên Đạo điều khiển';sprite.setData('moving',true);sprite.play(`${this.npcTextureFor(npc)}_walk_${this.playerFacing}`,true)}else{sprite.setData('moving',false);sprite.play(`${this.npcTextureFor(npc)}_idle_${this.playerFacing}`,true)}}else{sprite.setData('moving',false);npc.x=sprite.x;npc.y=sprite.y;sprite.play(`${this.npcTextureFor(npc)}_idle_${this.playerFacing}`,true)}if(!this.cameraFollowSuspended)this.cameras.main.centerOn(npc.x,npc.y);this.clampCamera();this.playerAttackCooldown=Math.max(0,this.playerAttackCooldown-dt/1000);this.playerSkillCooldown=Math.max(0,this.playerSkillCooldown-dt/1000);
     updateSkillStatus(this,npc);
     if(Phaser.Input.Keyboard.JustDown(this.keys.E)){const drop=(this.populationWorld.environment.drops??[]).filter(d=>d.status==='ground').sort((a,b)=>Math.hypot(npc.x-a.x,npc.y-a.y)-Math.hypot(npc.x-b.x,npc.y-b.y))[0];if(!drop)this.worldPopulationToast('Không có vật phẩm rơi gần đây.');else if(Math.hypot(npc.x-drop.x,npc.y-drop.y)>32)this.worldPopulationToast('Tiến sát chiến lợi phẩm rồi nhấn E để nhặt.');else{const result=this.claimFaunaDropForNpc(drop.id,npc.id,`possessed-pickup:${createWorldUuid()}`);this.worldPopulationToast(result?`Đã nhặt ${result.itemId} ×${result.count} vào túi ${npc.name}.`:'Vật phẩm đã được nhặt hoặc không còn hợp lệ.');this.refreshHud()}}
     if(Phaser.Input.Keyboard.JustDown(this.keys.ESC))this.endPossession();}
@@ -524,7 +555,13 @@ export class RebuildWorldScene extends Phaser.Scene {
   update(time,delta){
     if(document.hidden)return;
     this.windClock+=Math.min(delta,60);this.updateWindFrames();
-    this.updatePopulation(time,delta);this.syncNPCModularVisuals();this.syncWeaponVisuals();
+    this.updatePopulation(time,delta);
+    if(this.characterRigPreview){
+      const {npc}=this.characterRigPreview;
+      this.characterRigPreview.sync(Math.min(delta,60),weaponForNpc(npc),rodEquipped(npc));
+    }
+    this.npcAppearanceFleet?.update(time,Math.min(delta,60));
+    this.syncNPCModularVisuals();this.syncWeaponVisuals();
     this.tickFaunaRespawns(delta);
     for(let i=0;i<this.flowSprites.length;i++){const sprite=this.flowSprites[i];if(!this.inSceneryView(sprite,80))continue;const frame=8+((Math.floor(time/sprite.getData('flowPeriod'))+sprite.getData('flowPhase'))%8);if(frame!==sprite.getData('flowFrame')){sprite.setFrame(frame);sprite.setData('flowFrame',frame)}}
     const speed=680*delta/1000/this.cameras.main.zoom;

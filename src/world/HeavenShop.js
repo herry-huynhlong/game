@@ -15,6 +15,7 @@ export const SHOP = Object.freeze({
   book_crescent_wave: { price: 6, skill: 'crescent_wave' },
   book_spirit_thrust: { price: 5, skill: 'spirit_thrust' },
   book_spirit_guard: { price: 5, skill: 'spirit_guard' },
+  training_crossbow: { price: 7 },
 });
 
 export const itemName = id => ITEM_CATALOG[id]?.name ?? id;
