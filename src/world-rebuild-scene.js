@@ -1,3 +1,5 @@
+import { CityScenery, cityPropFrame } from './world/CityScenery.js';
+import { placeCityResidents } from './world/CityResidents.js';
 import { PassageTraffic } from './world/PassageTraffic.js';
 import { PROFESSION_BEHAVIORS, SPECIAL_DUTIES } from './dao/ProfessionBehaviorRegistry.ts';
 import { WorkstationSlots } from './world/WorkstationSlots.js';
@@ -50,6 +52,10 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.load.on('loaderror',file=>window.__worldBoot?.setPhase('assets','failed',`${file.key}: ${file.src}`));
     this.load.once('complete',()=>window.__worldBoot?.setPhase('assets','complete'));
     this.load.tilemapTiledJSON('rebuild-world-map',MAP_URL);
+    this.load.image('city-palace','/assets/city-redesign/city-palace.png');
+    this.load.image('courtyard-ground','/assets/city-redesign/courtyard-ground.png');
+    this.load.json('courtyard-bounds','/assets/city-redesign/object-bounds.json');
+    this.load.spritesheet('courtyard-objects','/assets/city-redesign/courtyard-objects.png',{frameWidth:192,frameHeight:176});
     if(!this.paperDollPreview&&(!LEGACY_NPC_RENDER||CHARACTER_RIG_PREVIEW)){loadCharacterAssets(this);loadCombatMountAssets(this);}
     this.load.spritesheet('rebuild-terrain','/assets/tilesets/gfx5b5_area_terrain.png',{frameWidth:32,frameHeight:32});
     this.load.spritesheet('rebuild-buildings','/assets/props/settlement_buildings.png',{frameWidth:192,frameHeight:192});
@@ -97,18 +103,33 @@ export class RebuildWorldScene extends Phaser.Scene {
       this.map.addTilesetImage('WorldMarketStalls','market-stalls',128,112,0,0),
       ...[['T03-mountain-pine',400,96,112],['T04-broadleaf',408,96,112],['T05-willow',416,96,112],['T06-monster-ancient',424,96,112],['H02-city-home',432,160,144],['H03-market-shop',433,160,144],['H04-sect-dorm',434,160,144],['H05-wilderness-hut',435,160,144]].map(([name,gid,w,h])=>this.map.addTilesetImage(name,`rebuild-${gid}`,w,h,0,0)),
       this.map.addTilesetImage('QingyunWallGateKit','rebuild-wall-kit',64,64,0,0),
+      this.map.addTilesetImage('QingyunCourtyardGround','courtyard-ground',32,32,0,0),
+      this.map.addTilesetImage('QingyunPalace','city-palace',320,256,0,0),
+      this.map.addTilesetImage('QingyunCourtyardObjects','courtyard-objects',192,176,0,0),
     ].filter(Boolean);
-    if(sets.length!==20)throw new Error(`Map tileset load mismatch (${sets.length}/20)`);
-    const terrainLayers=['GroundBase','Water','Shore','GroundDetails','TerrainTransitions','Roads','Cliffs']
+    if(sets.length!==23)throw new Error(`Map tileset load mismatch (${sets.length}/23)`);
+    const terrainLayers=['GroundBase','Water','Shore','GroundDetails','TerrainTransitions','Roads','CityEdges','Cliffs']
       .map((name,depth)=>this.map.createLayer(name,sets,0,0)?.setDepth(depth)).filter(Boolean);
     this.terrainCache=WorldTerrainAtlas.create(this,terrainLayers,sets);
     this.worldWidth=this.map.widthInPixels;this.worldHeight=this.map.heightInPixels;this.physics.world.setBounds(0,0,this.worldWidth,this.worldHeight);
     this.cameras.main.setBounds(0,0,this.worldWidth,this.worldHeight).setZoom(.72).setRoundPixels(true);
+    const cityBounds=this.cache.json.get('courtyard-bounds');
+    const cityTexture=this.textures.get('courtyard-objects');
+    cityBounds.forEach(([left,top,right,bottom],frame)=>{
+      cityTexture.add(cityPropFrame(frame),0,(frame%8)*192+left,Math.floor(frame/8)*176+top,right-left,bottom-top);
+    });
     const scenery=['StaticDecor','Buildings','MarketDecor','Roofs'].flatMap(name=>this.map.getObjectLayer(name)?.objects??[]);
     this.objectSprites=scenery.map(obj=>{
-      const gid=obj.gid,entry=gid>=257&&gid<297?['rebuild-buildings',gid-257]:gid>=297&&gid<312?['rebuild-ancient-tree',gid-297]:gid>=312&&gid<320?['rebuild-bamboo',gid-312]:gid>=320&&gid<330?['rebuild-rocks',gid-320]:gid===330?['rebuild-farmhouse',0]:gid>=400&&gid<408?['rebuild-400',gid-400]:gid>=408&&gid<416?['rebuild-408',gid-408]:gid>=416&&gid<424?['rebuild-416',gid-416]:gid>=424&&gid<432?['rebuild-424',gid-424]:gid>=432&&gid<=435?[`rebuild-${gid}`,0]:gid>=436&&gid<444?['rebuild-wall-kit',gid-436]:gid>=508&&gid<516?['rebuild-water-props',gid-508]:gid>=516&&gid<520?['rebuild-directional-gates',gid-516]:gid>=520&&gid<524?['city-structures',gid-520]:gid>=524&&gid<531?['market-stalls',gid-524]:null;
+      const gid=obj.gid,entry=gid>=257&&gid<297?['rebuild-buildings',gid-257]:gid>=297&&gid<312?['rebuild-ancient-tree',gid-297]:gid>=312&&gid<320?['rebuild-bamboo',gid-312]:gid>=320&&gid<330?['rebuild-rocks',gid-320]:gid===330?['rebuild-farmhouse',0]:gid>=400&&gid<408?['rebuild-400',gid-400]:gid>=408&&gid<416?['rebuild-408',gid-408]:gid>=416&&gid<424?['rebuild-416',gid-416]:gid>=424&&gid<432?['rebuild-424',gid-424]:gid>=432&&gid<=435?[`rebuild-${gid}`,0]:gid>=436&&gid<444?['rebuild-wall-kit',gid-436]:gid>=508&&gid<516?['rebuild-water-props',gid-508]:gid>=516&&gid<520?['rebuild-directional-gates',gid-516]:gid>=520&&gid<524?['city-structures',gid-520]:gid>=524&&gid<531?['market-stalls',gid-524]:gid>=640&&gid<672?['courtyard-objects',gid-640]:gid===676?['city-palace',undefined]:null;
       if(!entry)throw new Error(`Unknown Tiled art GID ${gid} (${obj.name})`);
-      const sprite=this.add.sprite((obj.x??0)+(obj.width??0)/2,(obj.y??0)-(obj.height??0)/2,entry[0],entry[1]).setOrigin(.5,.5).setDisplaySize(obj.width??0,obj.height??0).setRotation(Phaser.Math.DegToRad(obj.rotation??0)).setDepth((obj.y??0)+10).setName(obj.name||`prop-${obj.id}`);
+      let x=obj.x+obj.width/2,y=obj.y-obj.height/2,width=obj.width,height=obj.height,frame=entry[1];
+      if(entry[0]==='courtyard-objects'){
+        const [left,top,right,bottom]=cityBounds[frame],sx=width/192,sy=height/176;
+        width=(right-left)*sx;height=(bottom-top)*sy;
+        x=obj.x+left*sx+width/2;y=obj.y-obj.height+top*sy+height/2;
+        frame=cityPropFrame(frame);
+      }
+      const sprite=this.add.sprite(x,y,entry[0],frame).setOrigin(.5,.5).setDisplaySize(width,height).setRotation(Phaser.Math.DegToRad(obj.rotation??0)).setDepth(this.prop(obj,'depthY')??((obj.y??0)+10)).setName(obj.name||`prop-${obj.id}`);
       sprite.setData('tiledObject',obj);const buildingId=this.prop(obj,'buildingId');if(buildingId)this.buildingSprites.set(buildingId,sprite);
       let frames=null,durations=null;
       if(gid>=400&&gid<432){const speciesStart=gid<408?400:gid<416?408:gid<424?416:424;frames=Array.from({length:8},(_,i)=>i);durations=speciesStart===400?[160,160,180,160,160,180,160,160]:speciesStart===408?[170,180,170,170,180,170,170,180]:speciesStart===416?[200,200,220,200,200,220,200,200]:[220,220,240,220,220,240,220,220];sprite.setData('windKind',`T${String(3+Math.floor((speciesStart-400)/8)).padStart(2,'0')}`)}
@@ -117,13 +138,14 @@ export class RebuildWorldScene extends Phaser.Scene {
       if(frames){const objectName=obj.name||String(obj.id),windPeriod=durations.reduce((a,b)=>a+b,0);sprite.setData('windFrames',frames);sprite.setData('windDurations',durations);sprite.setData('windPeriod',windPeriod);sprite.setData('windPhase',this.stableHash(objectName)%windPeriod);sprite.setData('windFrame',-1);this.windSprites.push(sprite)}
       return sprite;
     });
+    this.cityScenery=new CityScenery(this,this.objectSprites);
     this.flowSprites=(this.map.getObjectLayer('FlowEffects')?.objects??[]).map(obj=>{const phase=Number(this.prop(obj,'phase')??0),period=Number(this.prop(obj,'period')??150);const sprite=this.add.sprite(obj.x??0,obj.y??0,'rebuild-water-motion',8+phase).setDepth((obj.y??0)+12).setAlpha(.68);sprite.setData('flowPhase',phase);sprite.setData('flowPeriod',period);sprite.setData('flowFrame',-1);return sprite});
     this.sceneryBounds=[...this.objectSprites,...this.flowSprites].map(sprite=>{
       const radius=Math.hypot(sprite.displayWidth,sprite.displayHeight)/2;
       return {sprite,left:sprite.x-radius,right:sprite.x+radius,top:sprite.y-radius,bottom:sprite.y+radius};
     });
     this.updateWindFrames();
-    this.collisionRects=(this.map.getObjectLayer('Collision')?.objects??[]).map(o=>({x:o.x,y:o.y,width:o.width,height:o.height,name:o.name}));
+    this.collisionRects=(this.map.getObjectLayer('Collision')?.objects??[]).map(o=>({x:o.x,y:o.y,width:o.width,height:o.height,name:o.name,kind:this.prop(o,'kind')}));
     this.markers=(this.map.getObjectLayer('NavigationMarkers')?.objects??[]).map(o=>({id:this.prop(o,'markerId'),x:o.x,y:o.y,region:this.prop(o,'regionId')}));
     this.roadLayer=this.map.layers.find(layer=>layer.name==='Roads');
     this.navCell=16;
@@ -261,6 +283,9 @@ export class RebuildWorldScene extends Phaser.Scene {
   initPopulation(){
     const loadStarted=performance.now();
     const loaded=loadWorldPopulation(this.paperDollPreview?this.readOnlyPreviewStorage():localStorage,this.map);this.populationLoadMs=performance.now()-loadStarted;this.populationWorld=loaded.world;this.populationFresh=loaded.fresh;if(!this.paperDollPreview)this.populationSaveGuard=new SaveGuard(localStorage,WORLD_POPULATION_SAVE_KEY);ensureWorldRebuildEnvironment(this.populationWorld,{layers:['Buildings','NavigationMarkers','ResourceNodes'].map(name=>({name,objects:this.map.getObjectLayer(name)?.objects??[]}))});
+    const center=this.markers.find(m=>m.id==='city-center');
+    this.cityMigratedResidents=placeCityResidents(this.populationWorld.npcs,this.collisionRects.filter(r=>r.kind==='city-redesign-solid'),
+      (x,y,w,h)=>this.footprintTerrainOpen(x,y,w,h),(point)=>this.canReachPoint(center,point),this.markers,loaded.fresh);
     const provisioning=provisionWorldWeapons(this.populationWorld),partsChanged=ensureNPCModularAppearances(this.populationWorld.npcs);if(provisioning.changed||partsChanged)this.persistPopulation();
     this.initLivingTimber();
     this.populationSimulation=new AutonomousNPCSystem(this.populationWorld.npcs,event=>{const id=`population-event:${this.populationWorld.clock.day}:${this.populationWorld.clock.minute}:${event.type}:${event.actorId??''}:${this.populationWorld.events.length}`;this.populationWorld.events.push({id,...event});if(this.populationWorld.events.length>400)this.populationWorld.events.shift()},this.populationWorld);
@@ -516,13 +541,21 @@ export class RebuildWorldScene extends Phaser.Scene {
     }
     this.refreshLivingTimber();
   }
-  setNpcGoalTarget(npc){if(npc.goalAction==='flee'&&this.faunaNow()<(npc.faunaEvadeUntil??0))return npc.actionTarget;if(npc.goalAction==='shop'||npc.decisionSlot?.endsWith(':herb-craft'))return this.markers.find(m=>m.id==='market-stall-01')??npc.actionTarget;if(npc.goalAction==='work'&&!npc.timberSourceId){
+  setNpcGoalTarget(npc){if(npc.goalAction==='flee'&&this.faunaNow()<(npc.faunaEvadeUntil??0))return npc.actionTarget;if(npc.goalAction==='shop'||npc.decisionSlot?.endsWith(':herb-craft'))return this.markers.find(m=>m.id==='apothecary-entrance')??npc.actionTarget;
+    if(npc.goalAction==='trade'&&['tho_re','dan_su'].includes(npc.profession)){
+      const place=npc.profession==='tho_re'?'forge-entrance':'apothecary-entrance';
+      return this.markers.find(m=>m.id===place)??npc.actionTarget;
+    }
+    if(npc.goalAction==='trade'&&npc.populationRole==='merchant')return this.markers.find(m=>m.id===npc.stallId+'-vendor')??npc.actionTarget;
+    if(npc.goalAction==='work'&&!npc.timberSourceId){
+      const facility=npc.profession==='tho_re'?'forge-entrance':['dan_su','duoc_su'].includes(npc.profession)?'apothecary-entrance':null;
+      if(facility&&!npc.assignedCommissionId&&!npc.decisionSlot?.startsWith('env-repair:'))return this.markers.find(m=>m.id===facility)??npc.actionTarget;
       const duty=SPECIAL_DUTIES[npc.populationRole]??PROFESSION_BEHAVIORS[npc.profession];
       const marker=duty?.action==='work'&&this.markers.find(m=>m.id===duty.station);
       if(marker)return marker;
     }if(npc.goalAction==='farm'&&npc.populationRole){const hasSeed=npc.inventory.some(i=>i.itemId==='rice_seed'&&i.count>0);const seedStore=this.populationWorld.factions.find(f=>f.id==='qingyun-village')?.treasury.some(i=>i.itemId==='rice_seed'&&i.count>0);
       return hasSeed?(npc.workPosition??npc.actionTarget):(this.markers.find(m=>m.id===(seedStore?'south-outskirts':'city-center'))??npc.actionTarget)}if(npc.timberSourceId){const source=this.populationWorld.environment.timberSources?.find(s=>s.id===npc.timberSourceId);if(source)return source}if(npc.goalAction==='trade'&&['nong_dan','duoc_su','dan_thuong'].includes(npc.profession)&&npc.populationRole){
-      const marker=npc.profession==='nong_dan'?'south-outskirts':'city-center';
+      const marker=npc.profession==='nong_dan'?'south-outskirts':npc.profession==='duoc_su'?'apothecary-entrance':npc.inventory.some(i=>i.itemId==='wood'&&i.count>0)?'lumber-yard':'provisions-entrance';
       return this.markers.find(m=>m.id===marker)??npc.actionTarget;
     }
     if(npc.goalAction==='rest'){
@@ -535,7 +568,7 @@ export class RebuildWorldScene extends Phaser.Scene {
       if(npc.home&&factions.some(f=>(f.name===npc.faction||f.id==='qingyun-village')&&f.treasury.some(i=>i.itemId==='ration'&&i.count>0)))return npc.home;
       const stored=this.workstations?.claims.get(npc.id);
       if(stored?.action==='eat'&&!npc.pathBlocked)return {x:stored.anchorX,y:stored.anchorY};
-      const places=this.markers.filter(m=>m.id==='tavern-entrance'||m.id==='market-stall-01').filter(m=>this.canReachPoint(npc,m));
+      const places=this.markers.filter(m=>m.id==='tavern-entrance'||m.id==='provisions-entrance').filter(m=>this.canReachPoint(npc,m));
       return places.sort((a,b)=>Math.hypot(a.x-npc.x,a.y-npc.y)-Math.hypot(b.x-npc.x,b.y-npc.y))[0]??npc.workPosition??npc.actionTarget;
     }if(npc.populationRole==='herb_gatherer'){const danger=(this.populationWorld.environment?.fauna??[]).filter(f=>f.alive&&f.species!=='deer'&&Math.hypot(f.x-npc.x,f.y-npc.y)<105).sort((a,b)=>Math.hypot(a.x-npc.x,a.y-npc.y)-Math.hypot(b.x-npc.x,b.y-npc.y))[0];if(danger){const dx=npc.x-danger.x,dy=npc.y-danger.y,d=Math.max(1,Math.hypot(dx,dy));npc.goalAction='flee';npc.shortGoal='Rút khỏi yêu thú gần đây';return this.findOpenPosition(npc.x+dx/d*100,npc.y+dy/d*100,this.collisionRects,[])}}if(npc.faunaHuntTargetId){const f=this.populationWorld.environment?.fauna?.find(x=>x.id===npc.faunaHuntTargetId);if(f?.alive)return this.hunterApproach(npc,f);const drop=this.populationWorld.environment?.drops?.find(d=>d.sourceId===npc.faunaHuntTargetId&&d.status==='ground');if(drop)return{x:drop.x,y:drop.y}}if(npc.lawResponse?.status==='responding'||npc.lawResponse?.status==='at-scene'){const target=this.populationWorld.npcs.find(n=>n.id===npc.lawResponse.targetId&&n.alive);if(target)return{x:target.x,y:target.y}}if(npc.assignedCommissionId||npc.decisionSlot==='commission-board'){const c=this.populationWorld.commissions?.find(x=>x.commissionId===(npc.assignedCommissionId??npc.professionTask?.targetId));return npc.decisionSlot==='commission-board'?(this.populationWorld.commissionBoard??npc.actionTarget):c?.target??npc.actionTarget}if(npc.populationRole==='herb_gatherer'&&npc.assignedResourceNodeId){const node=this.populationWorld.environment?.resourceNodes?.find(x=>x.id===npc.assignedResourceNodeId);if(node)return{x:node.x,y:node.y}}let id='city-center';if(npc.authorityRole==='city_master')id='city-hall-entrance';else if(npc.populationRole==='merchant'&&(npc.goalAction==='trade'||npc.goalAction==='shop'))id=npc.stallId;else if(npc.populationRole==='tavern_staff')id='tavern-entrance';else if(npc.populationRole==='quest_clerk'||npc.populationRole==='repair_worker')id='quest-office';else if(npc.populationRole==='city_guard'&&npc.patrolPoints?.length)id=null;else if(npc.goalAction==='cultivate')id='sect-yard';else if(npc.goalAction==='farm')id='south-outskirts';else if(npc.goalAction==='mission'||npc.goalAction==='recruit')id='sect-yard';else if(npc.goalAction==='gather')id=npc.populationRole==='herb_gatherer'?'forest-outer':'south-outskirts';else if(npc.goalAction==='eat'||npc.goalAction==='trade'||npc.goalAction==='work')id=npc.populationRole==='repair_worker'||npc.populationRole==='quest_clerk'?'quest-office':npc.populationRole==='tavern_staff'?'tavern-entrance':'city-center';else if(npc.goalAction==='rest'||npc.goalAction==='flee'||npc.goalAction==='idle')return npc.home;let target;if(npc.populationRole==='city_guard'&&npc.patrolPoints?.length){const p=npc.patrolPoints[npc.patrolIndex??0];target={x:p.x,y:p.y}}else if(npc.workPosition)target=npc.workPosition;else{const marker=this.markers.find(m=>m.id===id)||this.markers.find(m=>m.id==='city-center');target=marker?{x:marker.x,y:marker.y}:npc.actionTarget}return target}
   urgentNpcIds() {
@@ -864,6 +897,9 @@ export class RebuildWorldScene extends Phaser.Scene {
     if(this.keys?.MINUS?.isDown)this.setZoom(this.cameras.main.zoom/1.01);
     this.clampCamera();
     this.updateSceneryVisibility();
+    const cityFxStarted=performance.now();
+    this.cityScenery.update(time,this.populationWorld.clock.minute);
+    this.cityFxMs=performance.now()-cityFxStarted;
     this.terrainCache?.update(this.cameras.main);
     const uiStarted=performance.now();
     this.minimap?.update();if(time>=(this.nextWorldHudAt??0)){this.nextWorldHudAt=time+150;this.refreshHud()}

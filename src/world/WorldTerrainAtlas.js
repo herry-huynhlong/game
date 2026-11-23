@@ -9,6 +9,8 @@ export class WorldTerrainAtlas {
     const gl=scene.game.renderer.gl;
     if(!gl||layers.length===0||gl.getParameter(gl.MAX_TEXTURE_SIZE)<1024)return null;
     const {map}=scene, groupIds=new Map(), groups=[];
+    const cityGround=tilesets.find(tileset=>tileset.name==='QingyunCourtyardGround');
+    const opaqueCityMaterial=tile=>cityGround&&tile.index>=cityGround.firstgid&&tile.index<cityGround.firstgid+96;
     const data=[];
     for(let y=0;y<map.height;y++){
       const row=[];
@@ -16,7 +18,11 @@ export class WorldTerrainAtlas {
         const tiles=[];
         for(const layer of layers){
           const tile=layer.layer.data[y][x];
-          if(tile?.index>=0&&tile.visible&&tile.alpha)tiles.push({tile,alpha:tile.alpha*layer.alpha});
+          if(tile?.index>=0&&tile.visible&&tile.alpha){
+            const alpha=tile.alpha*layer.alpha;
+            if(alpha===1&&opaqueCityMaterial(tile))tiles.length=0;
+            tiles.push({tile,alpha});
+          }
         }
         const signature=tiles.map(({tile,alpha})=>[tile.index,tile.rotation,Number(tile.flipX),Number(tile.flipY),alpha].join(':')).join('|');
         if(!groupIds.has(signature)){

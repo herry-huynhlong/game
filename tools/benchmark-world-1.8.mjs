@@ -67,7 +67,8 @@ try {
       const environment=await evaluate(`(()=>{
         const s=window.__worldRebuildGame.scene.getScene('world-rebuild-1b'),r=s.game.renderer;
         window.performanceScene=s;
-        s.gotoMarker('city-center',.95);
+        s.gotoMarker(${JSON.stringify(process.env.BENCH_CITY_MARKER??'city-center')},.95);
+        if(${Boolean(process.env.BENCH_CITY_NIGHT)})s.populationWorld.clock.minute=1180;
         if(${Boolean(process.env.BENCH_TILES)}&&s.terrainCache){
           s.terrainCache.setActive(false);
           s.terrainCache.update=()=>{};
@@ -137,7 +138,7 @@ try {
           [s.npcAppearanceFleet,'update','appearance'],[s,'syncWeaponVisuals','weapon'],
           [s,'syncNPCModularVisuals','legacyParts'],[s.children,'depthSort','depthSort'],
           [s,'refreshProfessionVisuals','environmentGraphics'],[s,'refreshHud','hud'],[s.minimap,'update','minimap'],
-          [s.livingWorldPanel,'update','livingUI'],[r,'render','cameraRender']
+          [s.livingWorldPanel,'update','livingUI'],[s.cityScenery,'update','cityEffects'],[r,'render','cameraRender']
         ])wrap(object,method,key);
         for(const layer of s.children.list)if(layer.type==='TilemapLayer')wrap(layer,'cull','tileCull');
         window.runProfile={totals,counts};
