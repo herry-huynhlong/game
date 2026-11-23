@@ -56,9 +56,19 @@ requireText(roster, 'P09', 'P09 sect-leader mapping');
 requireText(roster, 'P24', 'P24 city-master mapping');
 requireText(read('src/world-rebuild-scene.js'), 'PAPERDOLL_PREVIEW', 'WorldScene Paper Doll preview/runtime toggle');
 requireFile('maps/world-rebuild-1b.tmj', 'runtime world map source');
+const monsterFiles=['wolf-normal','wolf-elite','boar-normal','boar-elite','toad-normal','toad-elite','monster-fx','monster-loot'];
+requireFile('monster-gallery.html','monster gallery source');
+requireFile('monster-movement.html','monster movement lab source');
+requireFile('public/assets/effects/flying-swords.png','flying sword sprites');
+for(const name of monsterFiles)requireFile('public/assets/fauna/monster-v2/'+name+'.png','monster sprite');
+
 
 if (process.argv.includes('--dist')) {
   requireFile('dist/index.html', 'production entry point');
+  requireFile('dist/monster-gallery.html','built monster gallery');
+  requireFile('dist/monster-movement.html','built monster movement lab');
+  requireFile('dist/assets/effects/flying-swords.png','built flying sword sprites');
+  for(const name of monsterFiles)requireFile('dist/assets/fauna/monster-v2/'+name+'.png','built monster sprite');
   requireFile('dist/maps/world-rebuild-1b.tmj', 'copied production world map');
   const builtImages = imagesUnder('dist/assets/npc-paperdoll-lab/presets');
   for (let i = 1; i <= 24; i++) {
@@ -66,4 +76,4 @@ if (process.argv.includes('--dist')) {
     if (!hasPresetImage(builtImages, id)) throw new Error(`Built Paper Doll image missing: ${id}`);
   }
 }
-console.log(`Release validation passed${process.argv.includes('--dist') ? ' (production output)' : ''}: 24 presets, roster mappings, P09/P24, world map, and no tracked secrets.`);
+console.log(`Release validation passed${process.argv.includes('--dist') ? ' (production output)' : ''}: 24 presets, roster mappings, P09/P24, world map, monster gallery and sprites, and no tracked secrets.`);

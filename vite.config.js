@@ -11,6 +11,8 @@ export default defineConfig({
   build:{rollupOptions:{input:{
     npcXianxiaEditor:fileURLToPath(new URL('./npc-xianxia-editor.html',import.meta.url)),
     npcXianxiaGallery:fileURLToPath(new URL('./npc-xianxia-gallery.html',import.meta.url)),
+    monsterMovement:fileURLToPath(new URL('./monster-movement.html',import.meta.url)),
+    monsterGallery:fileURLToPath(new URL('./monster-gallery.html',import.meta.url)),
     main:fileURLToPath(new URL('./index.html',import.meta.url)),
     characterShowcase:fileURLToPath(new URL('./gfx5b4b-showcase.html',import.meta.url)),
     characterStudy:fileURLToPath(new URL('./gfx5b4c-a2-study.html',import.meta.url)),

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kiểm thử di chuyển yêu thú · Thanh Vân Ký</title>
+  <style>
+    *{box-sizing:border-box} body{margin:0;background:#101b17;color:#dfd4b4;font:15px system-ui}
+    main{width:min(1000px,100% - 24px);margin:22px auto} h1{font-size:24px}
+    nav, header{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    header{justify-content:space-between} a{color:#b4d9c6}
+    button,select,input{background:#20342b;border:1px solid #687c66;padding:8px;color:#f0dfb6;font:inherit}
+    #seed{width:90px} #arena{margin-top:14px;border:1px solid #687c66;overflow:hidden} canvas{display:block;image-rendering:pixelated;max-width:100%;height:auto!important}
+    output{display:block;margin-top:10px;font:13px monospace;line-height:1.6} label{white-space:nowrap}
+  </style>
+</head>
+<body><main>
+  <header><h1>Kiểm thử di chuyển yêu thú</h1><a href="/">Về thế giới</a></header>
+  <nav>
+    <label>Tình huống <select id="case"></select></label>
+    <label>Seed <input id="seed" type="number" value="27183"></label>
+    <label><input id="baseline" type="checkbox"> Mô phỏng cách cũ</label>
+    <button id="run" type="button">Chạy</button><button id="step" type="button">+1 giây</button>
+    <button id="reset" type="button">Đặt lại</button><button id="export" type="button">Xuất JSON</button>
+  </nav>
+  <div id="arena"></div><output id="report"></output>
+</main><script type="module" src="/src/monster-movement-lab.js"></script></body>
+</html>

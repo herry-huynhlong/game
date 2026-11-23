@@ -44,7 +44,7 @@ for(const speed of [1,2,4]){
   for(let i=0;i<8;i++)wall.recover();
   assert.deepEqual(wall.overlaps(),[]);
 }
-const gate=new PassageTraffic([{id:'gate-test',a:{x:206,y:140},b:{x:294,y:140}}]);
+const gate=new PassageTraffic([{id:'gate-test',a:{x:206,y:140},b:{x:294,y:140}}],p=>Math.abs(p.x-250)>55||p.y===140);
 const west=make('west',202,140),east=make('east',298,140);
 assert.ok(gate.guide(west,{x:420,y:140},0).target);
 assert.equal(gate.guide(east,{x:80,y:140},1).wait,true);

@@ -1,0 +1,32 @@
+#merchant-prompt {
+  position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%); z-index: 24;
+  padding: 9px 14px; color: #f3dfae; background: #162c24; border: 1px solid #bda06c;
+  font: 600 13px system-ui; min-height: 38px; cursor: pointer;
+}
+#merchant-panel {
+  width: min(525px, calc(100vw - 24px)); max-height: calc(100dvh - 32px); box-sizing: border-box;
+  padding: 0; border: 1px solid #bda06c; color: #eee0bb; background: #142820;
+  font: 14px/1.35 system-ui; overflow: auto;
+}
+#merchant-panel::backdrop { background: #070e0bb8; }
+#merchant-panel header { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; background: #20392d; padding: 12px 14px; border-bottom: 1px solid #8a724a; }
+#merchant-panel header img { image-rendering: pixelated; background: #2e4938; border: 1px solid #998254; }
+#merchant-panel header img:not([src]) { visibility: hidden; }
+#merchant-panel h2 { font: 700 20px Georgia,serif; margin: 0; }
+#merchant-panel p { margin: 4px 0; }
+#merchant-panel nav, #merchant-panel form { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 10px 14px; }
+#merchant-panel nav span { margin-left: auto; color: #f3d995; }
+#merchant-panel button, #merchant-panel input { background: #284336; color: #f0deae; border: 1px solid #8c774f; font: inherit; min-height: 38px; padding: 4px 11px; }
+#merchant-panel button { cursor: pointer; }
+#merchant-panel button[aria-pressed=true] { background: #43503b; border-color: #d8b97e; }
+#merchant-panel button:disabled { opacity: .52; cursor: default; }
+#merchant-panel .trade-list { padding: 0 14px; height: min(36dvh, 290px); overflow: auto; }
+#merchant-panel .trade-row { display: grid; grid-template-columns: 28px minmax(0,1fr); gap: 10px; align-items: center; text-align: left; padding: 7px 9px; width: 100%; margin-block-end: 5px; }
+#merchant-panel .trade-row small { display: block; color: #c8cfb2; }
+#merchant-panel .trade-icon { display: grid; place-items: center; height: 28px; width: 28px; background: #192b23; color: #d6be83; border: 1px solid #667356; }
+#merchant-panel .trade-icon[data-kind=herb] { color: #9cd0a6; }
+#merchant-panel .trade-icon[data-kind=pill] { color: #bdafd8; }
+#merchant-panel .trade-loot { border: 0; background-image: url('/assets/fauna/monster-v2/monster-loot.png'); background-size: 224px 28px; image-rendering: pixelated; }
+#merchant-panel input { width: 76px; }
+#merchant-panel form p { flex: 1 0 125px; color: #f0d69d; }
+#merchant-panel [data-message] { padding: 0 14px 10px; margin: 0; color: #b9e3cb; min-height: 20px; }

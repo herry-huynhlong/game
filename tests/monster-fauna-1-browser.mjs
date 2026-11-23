@@ -1,20 +1,176 @@
-import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import net from 'node:net';import {spawn} from 'node:child_process';import {setTimeout as delay} from 'node:timers/promises';
-const base='http://127.0.0.1:5175/?testMode=1',chrome=path.join(process.env.PROGRAMFILES??'C:\\Program Files','Google','Chrome','Application','chrome.exe'),out=path.resolve('art/previews/monster-fauna-1');fs.mkdirSync(out,{recursive:true});
-await fetch(base);const profile=fs.mkdtempSync(path.join(os.tmpdir(),'monster-fauna-1-cdp-')),port=await new Promise(resolve=>{const s=net.createServer();s.listen(0,'127.0.0.1',()=>{const p=s.address().port;s.close(()=>resolve(p))})});
-const proc=spawn(chrome,[`--user-data-dir=${profile}`,`--remote-debugging-port=${port}`,'--remote-allow-origins=*','--no-first-run','--no-default-browser-check','--headless=new','--hide-scrollbars','--window-size=1440,900','--force-device-scale-factor=1','--disable-background-timer-throttling','--disable-renderer-backgrounding',base],{stdio:'ignore',windowsHide:true});let ws,seq=0;const pending=new Map(),errors=[],failed=[];
-try{let targets=[];for(let i=0;i<120;i++){try{targets=await fetch(`http://127.0.0.1:${port}/json/list`).then(r=>r.json());if(targets.some(t=>t.type==='page'))break}catch{}await delay(100)}const page=targets.find(t=>t.type==='page');if(!page)throw Error('Chrome page unavailable');ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.addEventListener('open',r,{once:true});ws.addEventListener('error',j,{once:true})});ws.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.method==='Runtime.exceptionThrown')errors.push(m.params.exceptionDetails?.exception?.description??m.params.exceptionDetails?.text);if(m.method==='Network.loadingFailed'&&m.params.errorText!=='net::ERR_ABORTED')failed.push(m.params.errorText);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.reject(Error(m.error.message)):p.resolve(m.result)}});const send=(method,params={})=>new Promise((resolve,reject)=>{const id=++seq;pending.set(id,{resolve,reject});ws.send(JSON.stringify({id,method,params}))});const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.exception?.description??r.exceptionDetails.text);return r.result?.value};const shot=async n=>{const s=await send('Page.captureScreenshot',{format:'png',fromSurface:true});fs.writeFileSync(path.join(out,n),Buffer.from(s.data,'base64'))};
- let ready=false;for(let i=0;i<200;i++){try{ready=await ev('window.__worldRebuild?.ready()')}catch{}if(ready)break;await delay(100)}if(!ready)throw Error('WorldScene did not become ready');await delay(1500);
- const initial={state:await ev('window.__worldRebuild.getState()'),population:await ev('window.__worldRebuild.getPopulationState()'),fauna:await ev('window.__worldRebuild.getFaunaState()')};if(initial.state.npcCount!==108||initial.fauna.count!==28||initial.fauna.zones.some(z=>z.living!==7||z.cap!==7))throw Error(`runtime population mismatch: ${initial.state.npcCount} NPC, ${initial.fauna.count} fauna, habitats ${JSON.stringify(initial.fauna.zones)}`);await send('Input.dispatchKeyEvent',{type:'keyDown',key:'F3',code:'F3',windowsVirtualKeyCode:114});await send('Input.dispatchKeyEvent',{type:'keyUp',key:'F3',code:'F3',windowsVirtualKeyCode:114});const debug=await ev(`(()=>{const p=document.querySelector('#ecology-debug');return{visible:p&&!p.hidden,text:p?.querySelector('section')?.innerText??''}})()`);if(!debug.visible||!debug.text.includes('7/7')||!debug.text.includes('Habitat / respawn'))throw Error(`F3 debug did not show habitat respawn counters: ${JSON.stringify(debug)}`);await shot('fauna-respawn-debug.png');await send('Input.dispatchKeyEvent',{type:'keyDown',key:'F3',code:'F3',windowsVirtualKeyCode:114});await send('Input.dispatchKeyEvent',{type:'keyUp',key:'F3',code:'F3',windowsVirtualKeyCode:114});
- await ev("window.__worldRebuild.gotoRegion('forest-outer')");await delay(700);await shot('fauna-forest-world.png');for(const id of ['deer','scorpion','snake']){const f=initial.fauna.records.find(x=>x.species===id&&x.alive);if(!f)throw Error(`No ${id}`);await ev(`window.__worldRebuild.gotoFauna(${JSON.stringify(f.id)})`);await delay(650);await shot(`fauna-${id}-runtime.png`);for(let k=0;k<12;k++){await shot(`${id}-frame-${String(k).padStart(2,'0')}.png`);await delay(120)}}
- const hunterAndDeer=await ev(`(()=>{const f=window.__worldRebuild.getFaunaState().records.filter(x=>x.species==='deer'&&x.alive);const h=JSON.parse(localStorage.getItem('world-rebuild-1c-v1')).npcs.filter(n=>n.populationRole==='hunter'&&n.alive);let best=null;for(const a of h)for(const b of f){const d=Math.hypot(a.x-b.x,a.y-b.y);if(!best||d<best.d)best={h:a,f:b,d}}return best})()`);if(!hunterAndDeer)throw Error('No hunter/deer pair');
- const huntStarted=await ev(`window.__worldRebuild.testStartHunterHunt(${JSON.stringify(hunterAndDeer.h.id)},${JSON.stringify(hunterAndDeer.f.id)})`);if(!huntStarted)throw Error('Hunter task not accepted');await ev(`window.__worldRebuild.gotoFauna(${JSON.stringify(hunterAndDeer.f.id)})`);await delay(400);
- const huntFrames=[];for(let i=0;i<110;i++){if(i%2===0)await shot(`hunt-frame-${String(i/2).padStart(3,'0')}.png`);const s=await ev(`(()=>{const w=JSON.parse(localStorage.getItem('world-rebuild-1c-v1')),h=w.npcs.find(n=>n.id===${JSON.stringify(hunterAndDeer.h.id)}),f=w.environment.fauna.find(n=>n.id===${JSON.stringify(hunterAndDeer.f.id)});return{hunter:h&&{x:h.x,y:h.y,items:h.inventory},fauna:f&&{alive:f.alive,hp:f.hp,x:f.x,y:f.y},drop:w.environment.drops.find(d=>d.sourceId===${JSON.stringify(hunterAndDeer.f.id)})}})()`);if(i%10===0)huntFrames.push({second:i,state:s});if(s.drop?.status==='claimed')break;await delay(1000)}
- const hunted=await ev(`(()=>{const w=JSON.parse(localStorage.getItem('world-rebuild-1c-v1')),h=w.npcs.find(n=>n.id===${JSON.stringify(hunterAndDeer.h.id)}),f=w.environment.fauna.find(n=>n.id===${JSON.stringify(hunterAndDeer.f.id)}),d=w.environment.drops.find(n=>n.sourceId===${JSON.stringify(hunterAndDeer.f.id)});return{hunter:{id:h.id,x:h.x,y:h.y,items:h.inventory},fauna:{id:f.id,alive:f.alive,hp:f.hp},drop:d??null}})()`);await shot('fauna-hunter-cycle-final.png');
- const frameCompare=await ev(`(()=>{const s=window.__worldRebuild.getFaunaState();return Object.fromEntries(['deer','scorpion','snake'].map(id=>[id,s.records.filter(f=>f.species===id).map(f=>({id:f.id,frame:f.frame,visible:f.visible,state:f.state}))]))})()`);
- await send('Page.reload');let reloaded=false;for(let i=0;i<200;i++){try{reloaded=await ev('window.__worldRebuild?.ready()')}catch{}if(reloaded)break;await delay(100)}if(!reloaded)throw Error('WorldScene did not reload');const safeViewFauna=initial.fauna.records.find(f=>f.zoneId==='southern-outskirts'&&f.alive);await ev(`window.__worldRebuild.gotoFauna(${JSON.stringify(safeViewFauna.id)})`);await delay(2200);const after=await ev('window.__worldRebuild.getFaunaState()'),save=await ev(`(()=>{const w=JSON.parse(localStorage.getItem('world-rebuild-1c-v1'));return{npcCount:w.npcs.length,faunaCount:w.environment.fauna.length,defeated:w.environment.defeatedBeastIds,drops:w.environment.drops.filter(d=>d.sourceId.startsWith('fauna:')).map(d=>({id:d.id,status:d.status,claimedBy:d.claimedBy})),hunter:w.npcs.find(n=>n.id===${JSON.stringify(hunterAndDeer.h.id)})}})()`);await shot('fauna-save-load.png');
- const performance=[];for(let i=0;i<5;i++){performance.push(await ev('window.__worldRebuild.getPopulationState()'));await delay(1000)}const meanFps=performance.reduce((s,p)=>s+p.fps,0)/performance.length;
- const result={url:base,initial:{npcCount:initial.state.npcCount,fauna:initial.fauna.count,alive:initial.fauna.alive,species:initial.fauna.species,zones:initial.state.encounterZones,habitats:initial.fauna.zones,faunaRecords:initial.fauna.records.map(f=>({id:f.id,species:f.species,zoneId:f.zoneId,x:f.x,y:f.y}))},hunterCycle:{pair:{hunterId:hunterAndDeer.h.id,faunaId:hunterAndDeer.f.id,startDistance:hunterAndDeer.d},huntFrames,hunted},animationFrames:frameCompare,reload:{ready:reloaded,before:initial.fauna.count,after:after.count,afterAlive:after.alive,afterZones:after.zones,save},performance:{samples:performance.map(p=>({fps:p.fps,frameAvgMs:p.frameAvgMs,frameP95Ms:p.frameP95Ms,aiCostMs:p.aiCostMs,visible:p.visible})),meanFps},errors,failed};fs.writeFileSync(path.join(out,'verification.json'),JSON.stringify(result,null,2));console.log(JSON.stringify({initial:result.initial,hunterCycle:result.hunterCycle,reload:result.reload,performance:result.performance,errors,failed},null,2));
- const huntedZone=after.zones.find(z=>z.zoneId===hunterAndDeer.f.zoneId),hasNewHuntedZoneFauna=after.records.some(f=>f.zoneId===hunterAndDeer.f.zoneId&&!initial.fauna.records.some(old=>old.id===f.id));
- const huntCompleted=Boolean(hunted.fauna&&!hunted.fauna.alive),completedHuntValid=!huntCompleted||(hunted.drop?.status==='claimed'&&hunted.hunter.items.some(i=>i.itemId==='deer_meat'&&i.count>=1)&&huntedZone?.living===7&&hasNewHuntedZoneFauna);
- if(!reloaded||!completedHuntValid||after.zones.some(z=>z.living>z.cap)||errors.length||failed.length){console.error(JSON.stringify({huntCompleted,hunted,huntedZone,hasNewHuntedZoneFauna,afterZones:after.zones,errors,failed},null,2));process.exitCode=1}else if(!huntCompleted)console.warn('Chrome smoke passed; hunter did not finish this bounded chase, so the respawn kill/replacement assertion is covered by the deterministic system test.');
-}catch(e){console.error(e.stack||e);process.exitCode=1}finally{try{if(ws?.readyState===WebSocket.OPEN){ws.send(JSON.stringify({id:++seq,method:'Browser.close'}));await delay(100)}}catch{}try{proc.kill()}catch{}try{fs.rmSync(profile,{recursive:true,force:true})}catch{}}
+import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
+import { setTimeout as sleep } from 'node:timers/promises';
+
+const origin=process.env.GAME_TEST_ORIGIN ?? 'http://127.0.0.1:5183';
+const port=Number(process.env.PERF_DEBUG_PORT??9265);
+const output=resolve('art/previews/monster-v2');
+const profile=await mkdtemp(join(tmpdir(),'tvk-lod-'));
+await mkdir(output,{recursive:true});
+const chrome=spawn(process.env.CHROME_EXE??'C:/Program Files/Google/Chrome/Application/chrome.exe',[
+  '--headless=new','--no-first-run',
+  '--remote-debugging-port='+port,'--window-size=1600,1050','--user-data-dir='+profile,'about:blank',
+],{stdio:'ignore',windowsHide:true});
+let ws;
+try {
+  let target;
+  for(let i=0;i<100&&!target;i++){
+    try{target=(await (await fetch('http://127.0.0.1:'+port+'/json/list')).json()).find(page=>page.type==='page')}catch{}
+    if(!target)await sleep(100);
+  }
+  assert.ok(target);
+  ws=new WebSocket(target.webSocketDebuggerUrl);
+  await new Promise((ok,fail)=>{ws.onopen=ok;ws.onerror=fail});
+  let id=0;
+  const pending=new Map(),errors=[],failed=[];
+  ws.onmessage=event=>{
+    const m=JSON.parse(event.data);
+    if(m.id){const req=pending.get(m.id);pending.delete(m.id);if(req)m.error?req.fail(Error(m.error.message)):req.ok(m.result)}
+    if(m.method==='Runtime.exceptionThrown')errors.push(m.params.exceptionDetails.exception?.description??m.params.exceptionDetails.text);
+    if(m.method==='Network.responseReceived'&&m.params.response.status>=400&&!m.params.response.url.endsWith('/favicon.ico'))failed.push(m.params.response.url);
+  };
+  function send(method,params={}) {
+    return new Promise((ok,fail)=>{pending.set(++id,{ok,fail});ws.send(JSON.stringify({id,method,params}))});
+  }
+  async function run(expression) {
+    const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});
+    if(r.exceptionDetails)throw Error(r.exceptionDetails.exception?.description??r.exceptionDetails.text);
+    return r.result.value;
+  }
+  const scene="const s=window.__worldRebuildGame.scene.getScene('world-rebuild-1b');";
+  const evalScene=code=>run(`(()=>{${scene}${code}})()`);
+  async function ready(){
+    for(let i=0;i<100;i++){if(await run('Boolean(window.__worldRebuild?.ready())'))return;await sleep(125)}
+    throw Error('WorldScene not ready: '+JSON.stringify(errors));
+  }
+  await send('Page.enable');await send('Runtime.enable');await send('Network.enable');
+  await send('Page.addScriptToEvaluateOnNewDocument',{source:`
+    const uuid=crypto.randomUUID?.bind(crypto);
+    if(uuid){let first=true;crypto.randomUUID=()=>{if(first){first=false;return '2d36bc60-3269-4fe4-877b-0cea1df03455'}return uuid()}}
+  `});
+  const visit=async(path,expression)=>{
+    await send('Page.navigate',{url:origin+path});
+    for(let i=0;i<100;i++){if(await run(expression))return;await sleep(125);}
+    throw Error('Failed to load '+path+' '+JSON.stringify({errors,failed}));
+  };
+  const shot=async name=>{
+    const image=await send('Page.captureScreenshot',{format:'png'});
+    await writeFile(join(output,name+'.png'),Buffer.from(image.data,'base64'));
+  };
+  await visit('/?testMode=1','Boolean(window.__worldRebuild?.ready())');
+  await sleep(750);
+  const world=await evalScene(`
+    const w=s.populationWorld,env=w.environment,state=s.getFaunaState(),water=s.map.layers.find(l=>l.name==='Water');
+    return {npc:w.npcs.length,fish:s.riverFishSystem?.getState(s.cameras.main)?.count,version:env.monsterVersion,
+      zones:state.zones.map(z=>({id:z.zoneId,species:z.species,cap:z.cap,living:z.living,elite:z.elite})),
+      invalid:state.records.filter(f=>s.monsterSafe(f)||water?.data[Math.floor(f.y/32)]?.[Math.floor(f.x/32)]?.index>=0||!s.groundPositionOpen(f,f.x,f.y)).map(f=>f.id),
+      ids:env.fauna.map(f=>[f.id,f.rank,f.species]),tiger:s.textures.exists('mount-tiger')};
+  `);
+  assert.equal(world.npc,108);assert.equal(world.version,2);assert.ok(world.fish>0);
+  assert.deepEqual(world.invalid,[]);assert.ok(world.zones.every(z=>z.cap===z.living&&z.elite<=1));
+  assert.deepEqual([...new Set(world.ids.map(f=>f[2]))].sort(),['boar','toad','wolf']);
+  const screenshots={};
+  for(const species of ['wolf','boar','toad']){
+    await evalScene(`
+      const f=s.populationWorld.environment.fauna.find(a=>a.species===${JSON.stringify(species)}&&a.alive);
+      s.selectedFaunaId=f.id;s.cameraTween?.stop();s.cameraTween=null;
+      s.setZoom(1.25);s.cameras.main.centerOn(f.x,f.y);
+    `);
+    await sleep(370);
+    screenshots[species]=await evalScene(`return s.getFaunaState().records.filter(f=>f.species===${JSON.stringify(species)}&&f.visible).length`);
+    assert.ok(screenshots[species]>0);
+    await shot('world-'+species);
+  }
+  const offCamera=await evalScene(`
+    s.gotoMarker('city-center',1);
+    const beasts=s.populationWorld.environment.fauna.filter(f=>f.species==='wolf');
+    const initial=beasts.map(f=>[f.x,f.y]);
+    for(let i=0;i<24;i++)s.updatePopulation(performance.now(),250,250);
+    return beasts.filter((f,i)=>Math.hypot(f.x-initial[i][0],f.y-initial[i][1])>4).length;
+  `);
+  assert.ok(offCamera>0,'forest wolves move while city is viewed');
+  const hunt=await evalScene(`
+    const w=s.populationWorld,h=w.npcs.find(n=>n.populationRole==='hunter'&&n.alive);
+    const f=w.environment.fauna.filter(f=>f.alive&&f.species==='wolf'&&f.rank==='normal')
+      .find(f=>[[-34,0],[34,0],[0,29],[0,-29]].some(([x,y])=>s.groundPositionOpen(h,f.x+x,f.y+y)&&s.monsterLine(f,{x:f.x+x,y:f.y+y})));
+    if(!h||!f)return null;
+    const [dx,dy]=[[-34,0],[34,0],[0,29],[0,-29]].find(([x,y])=>s.groundPositionOpen(h,f.x+x,f.y+y)&&s.monsterLine(f,{x:f.x+x,y:f.y+y}));
+    Object.assign(h,{x:f.x+dx,y:f.y+dy,hp:100,fatigue:0,safety:75,faunaAttackReadyAt:0,faunaEvadeUntil:0});
+    s.npcSprites.get(h.id).setPosition(h.x,h.y);
+    w.clock.minute=620;f.hp=1;
+    window.__worldRebuild.testStartHunterHunt(h.id,f.id);s.syncGroundOccupancy();s.tickHunters(s.faunaNow());
+    const drop=w.environment.drops.find(d=>d.sourceId===f.id);
+    if(!drop)return {killed:!f.alive,claimed:false};
+    if(Math.hypot(h.x-drop.x,h.y-drop.y)>30){
+      const length=Math.hypot(h.x-f.x,h.y-f.y),point={x:f.x+dx*27/length,y:f.y+dy*27/length};
+      const movement=s.moveOnGround(h,s.npcSprites.get(h.id),point.x,point.y,false);
+      if(movement){Object.assign(h,movement);s.npcSprites.get(h.id).setPosition(h.x,h.y);}
+    }
+    s.tickHunters(s.faunaNow());s.persistPopulation();
+    return {killed:!f.alive,claimed:drop.status==='claimed',holder:h.id,item:drop.itemId,count:h.inventory.find(i=>i.itemId===drop.itemId)?.count??0,
+      drop:drop.id,queue:w.environment.faunaRespawns.some(q=>q.sourceDeathId===f.id)};
+  `);
+  assert.ok(hunt?.killed&&hunt.claimed&&hunt.count&&hunt.queue,JSON.stringify(hunt));
+  await send('Page.reload',{ignoreCache:true});await ready();
+  const persisted=await evalScene(`
+    const w=s.populationWorld,d=w.environment.drops.find(d=>d.id===${JSON.stringify(hunt.drop)});
+    return {claimed:d?.status==='claimed',holder:d?.claimedBy,valid:w.environment.fauna.every(f=>['wolf','boar','toad'].includes(f.species)&&['normal','elite'].includes(f.rank))};
+  `);
+  assert.deepEqual(persisted,{claimed:true,holder:hunt.holder,valid:true});
+
+  await visit('/monster-gallery.html','Boolean(window.__monsterGallery?.beast)');
+  assert.equal(await run("document.querySelectorAll('#variants button').length"),6);
+  const arena=[];
+  for(const species of ['wolf','boar','toad'])for(const rank of ['normal','elite']){
+    const fixture=await run(`(()=>{
+      const s=window.__monsterGallery;
+      document.querySelector('[data-variant="${species}-${rank}"]').click();
+      const skills=Array.from(document.getElementById('skill').options,o=>o.value);
+      const results=[];
+      for(const id of skills){
+        document.getElementById('skill').value=id;
+        document.getElementById('direction').value='east';
+        document.getElementById('preview').click();
+        const started=Boolean(s.beast.cast);
+        let touched=s.hunter.hp<135,phases=new Set();
+        for(let i=0;i<130;i++){
+          s.step();phases.add(s.beast.state);touched||=s.hunter.hp<135;
+        }
+        results.push({id,started,touched,phases:[...phases]});
+      }
+      document.getElementById('duel').click();
+      for(let i=0;i<330;i++)s.step();
+      const duel={hp:s.beast.hp,hunter:s.hunter.hp,loot:s.environment.drops.length};
+      document.getElementById('reset').click();
+      document.getElementById('collision').checked=true;
+      return {species:s.id,rank:s.rank,results,duel};
+    })()`);
+    assert.ok(fixture.results.every(k=>k.started),JSON.stringify(fixture));
+    assert.ok(fixture.duel.hp<100||fixture.duel.hunter<135);
+    arena.push(fixture);await sleep(150);await shot(species+'-'+rank);
+  }
+  await run(`document.querySelector('[data-variant="toad-elite"]').click();document.getElementById('skill').value='skyfall';document.getElementById('direction').value='east';document.getElementById('preview').click();`);
+  await sleep(600);await shot('arena-skyfall');
+  for(const [species,skill,steps] of [['wolf','phantom-pounce',16],['boar','quake',22],['toad','poison-mist',24]]){
+    await run(`(()=>{
+      const s=window.__monsterGallery;
+      document.querySelector('[data-variant="${species}-elite"]').click();
+      document.getElementById('skill').value='${skill}';
+      document.getElementById('direction').value='east';
+      document.getElementById('preview').click();
+      for(let i=0;i<${steps};i++)s.step();
+    })()`);
+    await sleep(90);
+    await shot('arena-'+skill);
+  }
+  await visit('/npc-xianxia-editor.html','Boolean(document.querySelector("#map-stage canvas")&&document.querySelector("#appearance-fields select"))');
+  await sleep(200);
+  assert.ok(await run("document.getElementById('arena-summon').textContent.includes('Huyền Hổ')"));
+  assert.deepEqual(errors,[]);assert.deepEqual(failed,[]);
+  const report={world,screenshots,offCamera,hunt,persisted,arena,editor:true,errors,failed};
+  await writeFile(join(output,'verification.json'),JSON.stringify(report,null,2));
+  console.log(JSON.stringify({zones:world.zones,offCamera,hunt,arena:arena.map(f=>[f.species,f.rank,f.duel]),editor:report.editor}));
+}finally{ws?.close();chrome.kill();}

@@ -5,3 +5,17 @@ const {SaveGuard}=await import('data:text/javascript;base64,'+Buffer.from(bundle
 const data=new Map([['save','original']]);const storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
 const one=new SaveGuard(storage,'save'),two=new SaveGuard(storage,'save');assert.equal(one.write('new-state'),true);assert.equal(two.write('stale-state'),false);assert.equal(data.get('save'),'new-state');assert.equal(one.write('next-state'),true);const reloaded=new SaveGuard(storage,'save');assert.equal(reloaded.write('reloaded-state'),true);assert.equal(one.write('old-again'),false);assert.equal(data.get('save'),'reloaded-state');
 console.log('PASS: concurrent tabs cannot overwrite a changed save');
+import { appearanceEdits } from '../src/world/NpcAppearanceSync.js';
+const snapshot=(hp,hair)=>JSON.stringify({worldId:'qingyun',npcs:[{id:'one',hp,modularAppearance:{look:{hair}}}]});
+data.set('save',snapshot(100,'bun'));
+const worldTab=new SaveGuard(storage,'save');
+const lookChange=snapshot(100,'loose');
+data.set('save',lookChange);
+assert.equal(worldTab.acceptExternal(lookChange,appearanceEdits).get('one').look.hair,'loose');
+assert.equal(worldTab.write(snapshot(94,'loose')),true);
+const gameplayChange=snapshot(90,'short');
+data.set('save',gameplayChange);
+assert.equal(worldTab.acceptExternal(gameplayChange,appearanceEdits),null);
+assert.equal(worldTab.write(snapshot(84,'loose')),false);
+assert.equal(data.get('save'),gameplayChange);
+console.log('PASS: cosmetic edits are adopted without accepting competing gameplay writes');

@@ -5,8 +5,9 @@ import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-const chrome = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
-const port = 9225;
+const chrome = process.env.CHROME_EXE ?? 'C:/Program Files/Google/Chrome/Application/chrome.exe';
+const port = Number(process.env.PERF_DEBUG_PORT ?? 9225);
+const origin = process.env.GAME_TEST_ORIGIN ?? 'http://127.0.0.1:5175';
 const profile = await mkdtemp(path.join(os.tmpdir(), 'qingyun-weapon-test-'));
 const shots = path.resolve('art/previews/weapons/browser');
 await mkdir(shots, { recursive: true });
@@ -19,8 +20,8 @@ async function until(fn, ms=20000) {
   throw new Error('Timed out waiting for Chrome DevTools');
 }
 try {
-  browser=spawn(chrome,[`--remote-debugging-port=${port}`,`--user-data-dir=${profile}`,'--no-first-run','--no-default-browser-check','--disable-background-networking','--disable-extensions','--window-size=1360,900','--force-device-scale-factor=1','http://127.0.0.1:5175/?testMode=1'],{stdio:'ignore',windowsHide:true});
-  const target=await until(async()=>{const r=await fetch(`http://127.0.0.1:${port}/json/list`);return(await r.json()).find(x=>x.type==='page'&&x.url.includes('127.0.0.1:5175'))});
+  browser=spawn(chrome,[...(process.env.GAME_TEST_HEADLESS?['--headless=new']:[]),`--remote-debugging-port=${port}`,`--user-data-dir=${profile}`,'--no-first-run','--no-default-browser-check','--disable-background-networking','--disable-extensions','--window-size=1360,900','--force-device-scale-factor=1',origin+'/?testMode=1'],{stdio:'ignore',windowsHide:true});
+  const target=await until(async()=>{const r=await fetch(`http://127.0.0.1:${port}/json/list`);return(await r.json()).find(x=>x.type==='page'&&x.url.startsWith(origin))});
   ws=new WebSocket(target.webSocketDebuggerUrl);
   await new Promise((resolve,reject)=>{ws.onopen=resolve;ws.onerror=reject});
   let id=0;const pending=new Map();let pageErrors=[];

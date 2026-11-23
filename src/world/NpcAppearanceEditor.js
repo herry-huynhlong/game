@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { formatRealm } from '../systems/RealmConfig.ts';
 import { SaveGuard } from '../dao/SaveGuard.ts';
 import { WORLD_POPULATION_SAVE_KEY } from '../world-rebuild-population.js';
 import { CharacterRenderer } from './CharacterRenderer.js';
@@ -46,9 +47,12 @@ export function mountNpcRoster({onSelect}){
     $('roster-confirm').disabled=!draft.size;$('roster-cancel').disabled=!draft.size;
     $('roster-lock').disabled=!active;$('roster-manual').disabled=!active||lookOf(byId.get(active)).locked;
     $('roster-lock').textContent=active&&lookOf(byId.get(active)).locked?'Mở khóa':'Khóa ngoại hình';
+    const current=byId.get(active);
+    $('roster-cultivation').textContent=current?current.name+' · '+formatRealm(current):'';
+    $('roster-cultivation').hidden=!current;
     const list=$('roster-select');list.replaceChildren();
     for(const npc of currentPage()){
-      const option=new Option(`${npc.name} · ${label(npc)}${lookOf(npc).locked?' · khóa':''}`,npc.id);
+      const option=new Option(`${npc.name} · ${label(npc)} · ${formatRealm(npc)}${lookOf(npc).locked?' · khóa':''}`,npc.id);
       option.selected=selected.has(npc.id);list.add(option);
     }
     gallery?.draw();
@@ -138,7 +142,7 @@ export function mountNpcRoster({onSelect}){
         this.add.text(x,y+78,npc.name,{fontFamily:'Arial',fontSize:'12px',color:'#e6d2aa'}).setOrigin(.5,0);
         const role=this.add.text(x,y+94,`${label(npc)} · ${factionName(npc)}`,{fontFamily:'Arial',fontSize:'9px',color:'#bdd2bc'}).setOrigin(.5,0);
         if(role.width>134)role.setScale(134/role.width,1);
-        const text=this.add.text(x,y+109,npc.id,{fontFamily:'Arial',fontSize:'8px',color:'#aab8a9'}).setOrigin(.5,0);
+        const text=this.add.text(x,y+109,formatRealm(npc),{fontFamily:'Arial',fontSize:'8px',color:'#aab8a9'}).setOrigin(.5,0);
         if(text.width>134)text.setScale(134/text.width,1);
       }
     }

@@ -1,5 +1,6 @@
 import { cultivationStats } from '../systems/CultivationSystem.ts';
-import { cultivationRequired } from '../systems/RealmConfig.ts';
+import { formatRealm, realmPosition } from '../systems/RealmConfig.ts';
+import { residentCultivation } from './ResidentProfile.js';
 import { TECHNIQUES } from '../systems/TechniqueSystem.ts';
 
 const PAGE_SIZE = 24;
@@ -116,7 +117,7 @@ export class LivingWorldPanel {
         row.className = 'living-row';
         const hour = String(Math.floor(event.minute/60)).padStart(2,'0');
         const minute = String(event.minute%60).padStart(2,'0');
-        add(row,'small',`Ngày ${event.day} · ${hour}:${minute}${npc?' · '+npc.name:''}`);
+        add(row,'small',`Ngày ${event.day} · ${hour}:${minute}${npc?' · '+npc.name+' · hiện tại '+formatRealm(npc):''}`);
         if (npc) row.onclick = () => this.focus(npc);
       }
     }
@@ -163,6 +164,7 @@ export class LivingWorldPanel {
       }
       row.npc=npc;
       update(row.label,npc.name+' · '+duty);
+      row.label.title=formatRealm(npc);
       update(row.activity,group+' · '+(names[npc.action]??npc.action)+' · '+Math.floor(npc.actionProgress??0)+' phút tại điểm làm việc');
       update(row.goal,npc.shortGoal??names[npc.goalAction]??'');
     }
@@ -170,7 +172,7 @@ export class LivingWorldPanel {
 
   inspect(npc, world) {
     const list = this.body, scene = this.scene;
-    const stats = cultivationStats(npc), required = cultivationRequired(npc.realmIndex,npc.realmLevel);
+    const stats = realmPosition(npc)&&npc.techniqueMastery?cultivationStats(npc):null, cultivation=residentCultivation(npc);
     const location = p => p ? `(${Math.round(p.x)}, ${Math.round(p.y)})` : 'Chưa có';
     const activity = npc.actionTarget ? Math.hypot(npc.x-npc.actionTarget.x,npc.y-npc.actionTarget.y) : 0;
     add(list,'h4',npc.name+' · '+scene.npcRoleTitle(npc));
@@ -184,8 +186,9 @@ export class LivingWorldPanel {
     const route=scene.npcRoutes.get(npc.id)?.points?.length??0,slot=scene.workstations.claims.get(npc.id);
     add(list,'small','Tính cách '+npc.personality+' · Tuyến '+route+' điểm · '+(slot?'Chỗ đã đặt '+location(slot):'Chưa đặt chỗ'));
     add(list,'h4','Sinh hoạt và tu luyện');
-    add(list,'p',`Sinh lực ${Math.round(npc.hp)}/${Math.round(stats.hpMax)} · Đói ${Math.round(npc.hunger)}% · Thể lực ${Math.round(100-npc.fatigue)}% · An toàn ${Math.round(npc.safety)}% · Nhu cầu giao tiếp ${Math.round(npc.socialNeed??20)}%`);
-    add(list,'p',`Linh thạch ${npc.spiritStones} · ${TECHNIQUES[npc.technique]?.name??npc.technique} cấp ${npc.techniqueMastery?.[npc.technique]??1} · Cảnh ${npc.realmIndex}/${npc.realmLevel} · Tu vi ${Math.floor(npc.xp)}/${required}`);
+    add(list,'p',`Sinh lực ${Math.round(npc.hp)}/${stats?.hpMax??'—'} · Đói ${Math.round(npc.hunger)}% · Thể lực ${Math.round(100-npc.fatigue)}% · An toàn ${Math.round(npc.safety)}% · Nhu cầu giao tiếp ${Math.round(npc.socialNeed??20)}%`);
+    add(list,'p',`Linh thạch ${npc.spiritStones} · ${TECHNIQUES[npc.technique]?.name??npc.technique} cấp ${npc.techniqueMastery?.[npc.technique]??1} · ${formatRealm(npc)}${cultivation?' · Tu vi '+Math.floor(npc.xp)+' / '+cultivation.view.required:''}`);
+    if(cultivation?.note)add(list,'small',cultivation.note);
     add(list,'h4','Ký ức');
     if (!npc.memories.length) add(list,'p','Chưa có ký ức được ghi nhận.');
     for (const memory of npc.memories.slice(-6).reverse()) add(list,'small',`Ngày ${memory.day} · ${memory.text}`);

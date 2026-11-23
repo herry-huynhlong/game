@@ -1,3 +1,5 @@
+import { visualFlightPose } from './FlyingSword.js';
+import { flightOffset } from './FlyingSwordVisuals.js';
 import { MountSystem, mountedPositionAllowed } from './MountSystem.js';
 import { AXES, facing } from './CharacterCombat.js';
 import { weaponForNpc, isInWeaponArc } from './WeaponCombat.js';
@@ -40,12 +42,16 @@ export class WorldCharacterPreview {
     if(!visible) return false;
     const equipped=visualEquipment(weapon);
     if(character.appearance.weapon!==equipped) character.customize({...character.appearance,weapon:equipped});
-    const direction=possessed?this.scene.playerFacing:sprite.anims.currentAnim?.key.split('_').at(-1)??'down';
+    const f=npc.flight;
+    const direction=f?.heading??(possessed?this.scene.playerFacing:sprite.anims.currentAnim?.key.split('_').at(-1)??'down');
     const running=this.scene.possessedNpcId===npc.id&&this.scene.keys?.SHIFT?.isDown;
-    const motion=sprite.getData('moving')?(running?'run':'walk'):'idle';
-    character.root.setPosition(Math.round(sprite.x),Math.round(sprite.y)).setDepth(sprite.depth+.01);
+    const motion=!f&&sprite.getData('moving')?(running?'run':'walk'):'idle';
+    character.root.setPosition(Math.round(sprite.x),Math.round(sprite.y-flightOffset(f))).setDepth(sprite.depth+.01);
     this.mount.render(sprite.x,sprite.y,character.combat.action?.direction??direction,motion,distance);
+    const hadFlight=character.flightWeapon;
+    character.flightWeapon=Boolean(f);character.flightPose=visualFlightPose(f);
     character.advance(delta,motion,direction,Math.min(distance/character.root.scaleX,12));
+    if(f||hadFlight)character.apply();
     return true;
   }
   reset(){this.mount.reset();this.character.combat.cancel();}
@@ -63,7 +69,7 @@ export class WorldCharacterPreview {
 
   toggleMount(){
     const {scene,npc,sprite,mount}=this;
-    if(scene.possessedNpcId!==npc.id)return false;
+    if(scene.possessedNpcId!==npc.id||npc.flight)return false;
     if(mount.state==='absent'){
       const open=[[26,0],[-26,0],[0,26],[0,-26],[36,0],[-36,0],[0,36],[0,-36]].find(([dx,dy])=>this.canMountAt(sprite.x+dx,sprite.y+dy)&&scene.clearFaunaLine(sprite,{x:sprite.x+dx,y:sprite.y+dy}));
       if(!open){scene.worldPopulationToast('Cần khoảng trống để gọi Huyền Hổ.');return false;}

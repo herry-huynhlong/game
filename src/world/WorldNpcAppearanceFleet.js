@@ -1,3 +1,5 @@
+import { visualFlightPose } from './FlyingSword.js';
+import { flightOffset } from './FlyingSwordVisuals.js';
 import { CharacterRenderer } from './CharacterRenderer.js';
 import { validateAppearance } from './CharacterAppearance.js';
 import { visualEquipment } from './CharacterEquipment.js';
@@ -32,6 +34,7 @@ export class WorldNpcAppearanceFleet {
       const record=npc.modularAppearance;
       let entry=this.entries.get(npc.id);
       const attack=scene.weaponAttackStates.get(npc.id);
+      const flight=npc.flight;
       const reason=!record?'missing':rodEquipped(npc)?'fishing':attack&&time<attack.until?'combat':null;
       if(!npc.alive||!actor.visible||reason){
         if(entry?.renderer.root.visible)entry.renderer.root.setVisible(false);
@@ -63,19 +66,23 @@ export class WorldNpcAppearanceFleet {
       actor.showingModularPose=true;
       if(actor.alpha!==.001)actor.setAlpha(.001);
       if(!renderer.root.visible){renderer.root.setVisible(true);entry.x=actor.x;entry.y=actor.y;}
-      const x=Math.round(actor.x),y=Math.round(actor.y);
+      const x=Math.round(actor.x),y=Math.round(actor.y-flightOffset(flight));
       if(renderer.root.x!==x||renderer.root.y!==y)renderer.root.setPosition(x,y);
       if(renderer.root.depth!==actor.depth+.01)renderer.root.setDepth(actor.depth+.01);
       const possessed=scene.possessedNpcId===npc.id;
       const moving=actor.getData('moving');
       const key=actor.anims.currentAnim?.key;
       if(entry.animKey!==key){entry.animKey=key;entry.facing=key?.slice(key.lastIndexOf('_')+1);}
-      const direction=possessed?scene.playerFacing:entry.facing??'down';
-      const motion=moving?(possessed&&scene.keys?.SHIFT.isDown?'run':'walk'):'idle';
+      const direction=flight?.heading??(possessed?scene.playerFacing:entry.facing??'down');
+      const motion=!flight&&moving?(possessed&&scene.keys?.SHIFT.isDown?'run':'walk'):'idle';
+      const hadFlight=Boolean(renderer.flightWeapon);
+      renderer.flightWeapon=Boolean(flight);
+      renderer.flightPose=visualFlightPose(flight);
       entry.elapsed+=dt;
-      if(!possessed&&entry.elapsed<poseInterval&&renderer.direction===direction&&renderer.motion===motion)continue;
+      if(!possessed&&hadFlight===Boolean(flight)&&entry.elapsed<(flight?52:poseInterval)&&renderer.direction===direction&&renderer.motion===motion)continue;
       const distance=Math.hypot(actor.x-entry.x,actor.y-entry.y)/renderer.root.scaleX;
       renderer.advance(Math.min(160,entry.elapsed),motion,direction,Math.min(distance,18));
+      if(flight||hadFlight)renderer.apply();
       entry.x=actor.x;entry.y=actor.y;entry.elapsed=0;
     }
   }

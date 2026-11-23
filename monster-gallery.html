@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yêu thú · Thanh Vân Ký</title>
+<style>
+:root{color-scheme:dark;--jade:#84bba5;--gold:#d9bc79;--line:#3c5245}
+*{box-sizing:border-box}body{margin:0;background:#111b19;color:#f3e5c5;font:15px Georgia,serif}
+main{max-width:1120px;margin:auto;padding:24px}header{display:flex;justify-content:space-between;align-items:baseline;gap:16px;border-bottom:1px solid var(--line)}
+h1{font-size:32px;font-weight:normal}a{color:var(--gold)}#variants{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:18px 0}
+button,select,input{background:#1d3027;border:1px solid var(--line);padding:8px;color:inherit;font:inherit}button{cursor:pointer}
+#variants button{display:flex;align-items:center;text-align:left;gap:6px} .monster-thumb{display:block;width:80px;height:66px;flex:0 0 80px;background-position:-640px -3px;background-repeat:no-repeat;image-rendering:pixelated}
+button[aria-pressed=true]{border-color:var(--gold);color:#f6d284;background:#334535}
+.controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0}
+label{display:flex;align-items:center;gap:5px}#arena{border:1px solid var(--line);width:100%;height:480px;overflow:hidden;background:#253c30}
+canvas{image-rendering:pixelated}output{display:block;margin:12px 0;color:var(--jade)}small{color:#d6ccae}
+@media(max-width:620px){.monster-thumb{display:none}main{padding:12px}h1{font-size:25px}#variants{grid-template-columns:repeat(2,minmax(0,1fr))}#arena{height:360px}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>Yêu thú Thanh Vân Ký</h1><a href="/">Về thế giới</a></header>
+<nav id="variants" aria-label="Sáu dạng yêu thú"></nav>
+<div class="controls">
+<label>Hướng <select id="direction"><option value="south">Nam</option><option value="west">Tây</option><option value="east">Đông</option><option value="north">Bắc</option></select></label>
+<label>Hoạt ảnh <select id="pose"></select></label>
+<label>Khung <input id="frame" type="range" min="0" max="3" value="0" aria-label="Khung hình"></label>
+<label><input type="checkbox" id="play"> Phát lặp</label>
+<label>Zoom <select id="zoom"><option value="1">1×</option><option value="2" selected>2×</option><option value="4">4×</option></select></label>
+<label><input type="checkbox" id="collision"> Footprint</label>
+</div>
+<div class="controls"><label>Kỹ năng <select id="skill"></select></label><button id="preview">Diễn kỹ năng</button><button id="duel">Đấu với thợ săn</button><button id="reset">Đặt lại</button></div>
+<div id="arena" aria-label="Sân kiểm thử yêu thú"></div>
+<output id="status"></output>
+</main>
+<script type="module" src="/src/monster-gallery.js"></script>
+</body>
+</html>

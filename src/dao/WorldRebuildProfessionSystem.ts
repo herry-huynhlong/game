@@ -49,7 +49,7 @@ function setRepairPlan(npc:SimNPC,target:{x:number;y:number},state:'seeking'|'tr
 }
 
 function tickRepairWorkers(world:DivineWorldSave,board:{x:number;y:number},canReach:Reach){
- const workers=world.npcs.filter(n=>n.alive&&n.populationRole==='repair_worker');
+ const workers=world.npcs.filter(n=>n.alive&&!n.flight&&n.populationRole==='repair_worker');
  for(const npc of workers){
   let commission=activeCommissionForNPC(world,npc.id);
   if(commission){
@@ -82,7 +82,7 @@ function chooseHerbNode(world:DivineWorldSave,npc:SimNPC,canReach:Reach){
   .sort((a,b)=>b.score-a.score||distance(npc,a.node)-distance(npc,b.node)||a.node.id.localeCompare(b.node.id))[0]?.node;
 }
 function tickHerbGatherers(world:DivineWorldSave,canReach:Reach){
- for(const npc of world.npcs.filter(n=>n.alive&&n.populationRole==='herb_gatherer')){
+ for(const npc of world.npcs.filter(n=>n.alive&&!n.flight&&!n.marketVisit&&n.populationRole==='herb_gatherer')){
   if(npc.goalAction==='flee'&&world.clock.day*1440+world.clock.minute<(npc.faunaEvadeUntil??0)){
     if(npc.assignedResourceNodeId)releaseHerbNode(world,npc.assignedResourceNodeId,npc.id);
     npc.assignedResourceNodeId=undefined;npc.professionTask=undefined;continue;

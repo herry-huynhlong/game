@@ -1,26 +1,141 @@
-import assert from 'node:assert/strict';import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import {createRequire} from 'node:module';import {build} from 'esbuild';import {PNG} from 'pngjs';
-const root=process.cwd(),tmp=fs.mkdtempSync(path.join(os.tmpdir(),'monster-fauna-1-'));
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { build } from 'esbuild';
+import { createRequire } from 'node:module';
+import { PNG } from 'pngjs';
+import { GroundOccupancy, groundFootprint } from '../src/world/GroundOccupancy.js';
+
+const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'monster-v2-'));
 try{
- await build({entryPoints:['src/dao/FaunaSystem.ts','src/dao/EnvironmentalSystem.ts'],outdir:tmp,bundle:true,platform:'node',format:'cjs',target:'node20',outExtension:{'.js':'.cjs'},logLevel:'silent'});
- const req=createRequire(import.meta.url),load=n=>req(path.join(tmp,`${n}.cjs`)),{FAUNA_SPECIES,FAUNA_ZONE_CAP,ensureFauna,damageFauna,claimFaunaDrop,faunaAttackDamage,faunaCombatPower,resolveFaunaAttack,queueFaunaRespawn,processFaunaRespawns}=load('FaunaSystem');
- const map=JSON.parse(fs.readFileSync('maps/world-rebuild-1b.tmj','utf8')),zones=map.layers.find(l=>l.name==='FaunaZones').objects.map(o=>({zoneId:o.properties.find(p=>p.name==='zoneId').value,x:o.x,y:o.y,width:o.width,height:o.height}));
- const world={worldId:'test',clock:{day:1,minute:600,speed:1,paused:false},npcs:[{id:'hunter-fixture',alive:true,inventory:[]}],environment:{objects:[],drops:[],processedEventIds:[],defeatedBeastIds:[]}};
- const collision=(map.layers.find(l=>l.name==='Collision')?.objects??[]).map(c=>({x:c.x,y:c.y,w:c.width,h:c.height})),water=map.layers.find(l=>l.name==='Water').data;
- const open=(x,y)=>x>=0&&y>=0&&x<map.width*map.tilewidth&&y<map.height*map.tileheight&&water[Math.floor(y/32)*map.width+Math.floor(x/32)]===0&&!collision.some(c=>x+8>c.x&&x-8<c.x+c.w&&y+5>c.y&&y-5<c.y+c.h)&&!world.environment.fauna.some(f=>f.alive&&Math.hypot(f.x-x,f.y-y)<42);
- const fauna=ensureFauna(world,zones,open);
- assert.equal(fauna.length,28,'each of four authored habitats starts at its seven-animal target');assert.equal(new Set(fauna.map(f=>f.id)).size,fauna.length,'stable unique fauna IDs');for(const zone of zones)assert.equal(fauna.filter(f=>f.zoneId===zone.zoneId&&f.alive).length,FAUNA_ZONE_CAP,`${zone.zoneId} starts at 7/7`);
- assert.equal(faunaCombatPower('deer'),0);assert.equal(faunaAttackDamage('deer'),0);assert.ok(faunaCombatPower('scorpion')>0);assert.ok(faunaCombatPower('snake')>faunaCombatPower('scorpion'));
- const attackFixture=species=>structuredClone(fauna.find(f=>f.species===species));assert.equal(resolveFaunaAttack(attackFixture('deer'),20,0),0,'deer has no attack action, including at point-blank range');const scorpion=attackFixture('scorpion');assert.equal(resolveFaunaAttack(scorpion,20,31),0,'scorpion does not attack outside its short range');assert.equal(resolveFaunaAttack(scorpion,20,30),FAUNA_SPECIES.scorpion.attackDamage);assert.equal(resolveFaunaAttack(scorpion,21,1),0,'scorpion cooldown prevents repeat damage');assert.equal(resolveFaunaAttack(scorpion,23,30),FAUNA_SPECIES.scorpion.attackDamage);const snake=attackFixture('snake');assert.equal(resolveFaunaAttack(snake,30,39),0);assert.equal(resolveFaunaAttack(snake,30,38),FAUNA_SPECIES.snake.attackDamage);assert.equal(resolveFaunaAttack(snake,31,1),0,'snake cooldown prevents repeat damage');
- for(const f of fauna){const z=zones.find(x=>x.zoneId===f.zoneId);assert.ok(f.x>=z.x&&f.x<=z.x+z.width&&f.y>=z.y&&f.y<=z.y+z.height);assert.equal(collision.some(c=>f.x+8>c.x&&f.x-8<c.x+c.w&&f.y+5>c.y&&f.y-5<c.y+c.h),false,`${f.id} is outside authored collision`);assert.equal(water[Math.floor(f.y/32)*map.width+Math.floor(f.x/32)],0,`${f.id} cannot spawn on water`)}
- for(const species of ['deer','scorpion','snake']){
-  const f=fauna.find(x=>x.species===species);assert.ok(f);
-  const result=damageFauna(world,f.id,'hunter-fixture',100,`kill:${species}`);assert.equal(result.fauna.alive,false);assert.equal(result.drops.length,1);assert.equal(result.drops[0].itemId,FAUNA_SPECIES[species].itemId);assert.equal(damageFauna(world,f.id,'hunter-fixture',100,`kill:${species}`),null,'death damage replay is idempotent');assert.equal(world.environment.drops.filter(d=>d.sourceId===f.id).length,1);
-  assert.ok(claimFaunaDrop(world,result.drops[0].id,'hunter-fixture',`pickup:${species}`));assert.equal(claimFaunaDrop(world,result.drops[0].id,'hunter-fixture',`pickup:${species}`),null,'pickup replay is idempotent');assert.equal(world.npcs[0].inventory.find(i=>i.itemId===FAUNA_SPECIES[species].itemId)?.count,1);
- }
- const persisted=JSON.parse(JSON.stringify(world));assert.equal(persisted.environment.fauna.length,28);assert.equal(persisted.environment.drops.filter(d=>d.status==='ground').length,0);assert.equal(persisted.environment.defeatedBeastIds.length,3);assert.equal(persisted.npcs[0].inventory.reduce((n,i)=>n+i.count,0),3);
- const zone=zones.find(z=>z.zoneId==='southern-outskirts'),respawnWorld={worldId:'respawn-test',clock:{day:1,minute:600,speed:1,paused:false},npcs:[{id:'hunter-fixture',alive:true,inventory:[]}],environment:{objects:[],drops:[],processedEventIds:[],defeatedBeastIds:[]}},respawnFauna=ensureFauna(respawnWorld,zones,open),victims=respawnFauna.filter(f=>f.zoneId===zone.zoneId&&f.alive).slice(0,3),initialZoneAlive=respawnFauna.filter(f=>f.zoneId===zone.zoneId&&f.alive).length,now=1700000000000,oldIds=new Set(respawnFauna.map(f=>f.id));for(const [i,victim]of victims.entries()){damageFauna(respawnWorld,victim.id,'hunter-fixture',200,`respawn-kill:${i}`);assert.ok(queueFaunaRespawn(respawnWorld,victim,now,5000))}assert.equal(respawnWorld.environment.fauna.filter(f=>f.zoneId===zone.zoneId&&f.alive).length,initialZoneAlive-3);assert.equal(processFaunaRespawns(respawnWorld,zones,now+4999,(z,x,y)=>open(x,y)).spawned.length,0,'five-second deadline is not early');const queuedReload=JSON.parse(JSON.stringify(respawnWorld));const restoredQueue=processFaunaRespawns(queuedReload,zones,now+5000,(z,x,y)=>open(x,y));assert.equal(restoredQueue.spawned.length,3,'three death requests are serviced after reload');assert.equal(queuedReload.environment.fauna.filter(f=>f.zoneId===zone.zoneId&&f.alive).length,initialZoneAlive);assert.equal(new Set(queuedReload.environment.fauna.map(f=>f.id)).size,queuedReload.environment.fauna.length);assert.ok(restoredQueue.spawned.every(f=>!oldIds.has(f.id)));assert.equal(queuedReload.environment.drops.filter(d=>victims.some(v=>d.sourceId===v.id)).length,3,'each death retains its original one-time loot');assert.equal(processFaunaRespawns(queuedReload,zones,now+12000,(z,x,y)=>open(x,y)).spawned.length,0,'reload/retry cannot duplicate a replacement');
- const capped=JSON.parse(JSON.stringify(queuedReload)),dead=capped.environment.fauna.find(f=>f.zoneId===zone.zoneId&&!f.alive);dead.respawnStatus=undefined;queueFaunaRespawn(capped,dead,now,0);const cappedResult=processFaunaRespawns(capped,zones,now,(z,x,y)=>open(x,y));assert.equal(cappedResult.spawned.length,0);assert.equal(capped.environment.fauna.filter(f=>f.zoneId===zone.zoneId&&f.alive).length,initialZoneAlive,'a full habitat cancels redundant pending replacement');
- const blocked=JSON.parse(JSON.stringify(respawnWorld)),blockedZone=zones.find(z=>z.zoneId===victims[0].zoneId);const failed=processFaunaRespawns(blocked,zones,now+5000,()=>false);assert.equal(failed.spawned.length,0);assert.ok(blocked.environment.faunaRespawns.some(q=>q.zoneId===blockedZone.zoneId&&q.lastFailure==='no-safe-spawn-point'),'failed spawn remains queued with a diagnosable reason');assert.ok(blocked.environment.faunaRespawnStats[blockedZone.zoneId].failedAttempts>0);
- for(const id of ['deer','scorpion','snake']){const base=`public/assets/fauna/land/${id}/${id}`,spec=JSON.parse(fs.readFileSync(`art/source/monster-fauna-1/${id}.json`,'utf8'));assert.ok(fs.statSync(`art/source/monster-fauna-1/Fauna-${id}-32.aseprite`).size>1000);assert.equal(spec.frames.length,12);assert.deepEqual(spec.frames[0].layers.map(l=>l.name),['Ground shadow','Body and limbs','Markings and highlights']);const png=PNG.sync.read(fs.readFileSync(`${base}.png`));assert.deepEqual([png.width,png.height],[384,32]);assert.ok([...png.data].filter((_,i)=>i%4===3&&png.data[i]>0).length>300);const meta=JSON.parse(fs.readFileSync(`${base}.json`,'utf8'));assert.equal(meta.frameCount,12);assert.equal(meta.animations.move.end-meta.animations.move.start,3);if(id==='deer')assert.equal(meta.animations.attack,undefined,'deer must not expose an attack animation');const framePixels=i=>{const out=[];for(let y=0;y<32;y++)for(let x=0;x<32;x++){const j=(y*png.width+i*32+x)*4;out.push(png.data[j],png.data[j+1],png.data[j+2],png.data[j+3])}return out};for(const a of [2,3,4,5,6]){const left=framePixels(a),right=framePixels(a+1),diff=left.reduce((n,v,i)=>n+(v!==right[i]?1:0),0);assert.ok(diff>=16,`${id} animated frames ${a}/${a+1} are not materially different (${diff})`)}}
- console.log('MONSTER.RESPAWN.1 passed: four Tiled habitats cap at 7; delayed multi-death respawn survives save/load with new IDs, retained corpse/loot, cap cancellation and persistent failed-position retries; species combat/loot and animation sheets remain valid.');
-}finally{fs.rmSync(tmp,{recursive:true,force:true})}
+  await build({stdin:{contents:"export * from './src/dao/FaunaSystem.ts';export * from './src/dao/MonsterRegistry.ts';export * from './src/dao/MonsterCombat.ts';",resolveDir:process.cwd()},
+    outfile:path.join(tmp,'monster.cjs'),bundle:true,platform:'node',format:'cjs',logLevel:'silent'});
+  const m=createRequire(import.meta.url)(path.join(tmp,'monster.cjs'));
+  const makeWorld=(worldId='deterministic')=>({worldId,clock:{day:1,minute:600},
+    npcs:[{id:'hunter',alive:true,inventory:[]}],environment:{objects:[],drops:[],processedEventIds:[],defeatedBeastIds:[]}});
+  const map=JSON.parse(fs.readFileSync('maps/world-rebuild-1b.tmj','utf8'));
+  const layer=name=>map.layers.find(l=>l.name===name);
+  const zones=layer('FaunaZones').objects.map(o=>({...o,...Object.fromEntries(o.properties.map(p=>[p.name,p.value]))}));
+  const water=layer('Water').data,solids=layer('Collision').objects,city=layer('RegionMarkers').objects.find(o=>o.properties[0].value==='city');
+  const open=(z,x,y,species,rank)=>{
+    const {width,height}=groundFootprint({species,rank});
+    return !water[Math.floor(y/32)*map.width+Math.floor(x/32)]&&!m.insideHabitat({x,y},city)&&
+      !solids.some(r=>x+width/2>r.x&&x-width/2<r.x+r.width&&y+height/2>r.y&&y-height/2<r.y+r.height);
+  };
+  const world=makeWorld();
+  world.environment.fauna=[{id:'fauna:old:deer',species:'deer',alive:true}];
+  world.environment.drops=[{id:'already-owned',sourceId:'fauna:old:deer',itemId:'deer_meat',status:'claimed'}];
+  world.npcs[0].inventory.push({itemId:'deer_meat',count:2});
+  const beasts=m.ensureFauna(world,zones,open);
+  assert.equal(beasts.length,24);
+  assert.deepEqual([...new Set(beasts.map(b=>b.species))].sort(),['boar','toad','wolf']);
+  assert.ok(beasts.every(b=>zones.some(z=>z.zoneId===b.zoneId&&z.species===b.species&&m.insideHabitat(b,z)&&open(z,b.x,b.y,b.species,b.rank))));
+  assert.equal(world.npcs[0].inventory[0].count,2);
+  assert.equal(world.environment.drops[0].id,'already-owned');
+  const copy=structuredClone(world);
+  m.ensureFauna(copy,zones,open);assert.deepEqual(copy,world,'reload cannot reroll tiers or IDs');
+  const beast=beasts[0],habitat=zones.find(z=>z.zoneId===beast.zoneId);
+  const dead=m.damageFauna(world,beast.id,'hunter',200,'first');
+  assert.ok(!dead.fauna.alive&&dead.drops.length>=1);
+  assert.equal(m.damageFauna(world,beast.id,'hunter',200,'repeat'),null);
+  assert.ok(m.claimFaunaDrop(world,dead.drops[0].id,'hunter','claim'));
+  assert.equal(m.claimFaunaDrop(world,dead.drops[0].id,'hunter','claim-repeat'),null);
+  m.queueFaunaRespawn(world,beast,habitat.respawnMs);
+  assert.equal(m.queueFaunaRespawn(world,beast,habitat.respawnMs),null);
+  const restored=structuredClone(world);
+  assert.equal(m.processFaunaRespawns(restored,zones,habitat.respawnMs-1,open).spawned.length,0);
+  assert.equal(m.processFaunaRespawns(restored,zones,habitat.respawnMs,open).spawned.length,1);
+  assert.equal(m.processFaunaRespawns(restored,zones,habitat.respawnMs+10,open).spawned.length,0);
+  assert.equal(restored.environment.drops.find(d=>d.id===dead.drops[0].id).status,'claimed');
+  let elites=0;
+  for(let i=0;i<300;i++){
+    const sample=makeWorld('tier-sample:'+i);
+    m.ensureFauna(sample,[habitat],open);
+    const count=sample.environment.fauna.filter(b=>b.rank==='elite').length;assert.ok(count<=1);
+    elites+=count;
+    if(count){
+      const f=sample.environment.fauna.find(b=>b.rank==='elite');
+      m.damageFauna(sample,f.id,'hunter',1000,'fixture-kill');
+      m.queueFaunaRespawn(sample,f,1000);
+      assert.ok(sample.environment.eliteReadyAt[habitat.zoneId]>=100000);
+      assert.equal(m.processFaunaRespawns(sample,[habitat],1000,open).spawned[0].rank,'normal');
+    }
+  }
+  assert.ok(elites>=25&&elites<=140,`unexpected elite distribution ${elites}`);
+
+  function fixture(skillId,wall=false){
+    const skill=m.MONSTER_SKILLS[skillId],world=makeWorld(skillId),range=skill.mode==='contact'?skill.max-5:skill.mode==='tongue'?skill.max-12:(skill.min+skill.max)/2;
+    const f={id:'monster',species:skill.species,rank:skill.elite?'elite':'normal',x:260,y:250,home:{x:260,y:250},hp:87,maxHp:100,
+      zoneId:'arena',alive:true,state:'idle',attackReadyAt:0,nextThinkAt:Infinity};
+    const target={id:'hunter',x:260+range,y:250,alive:true,hp:500,inventory:[]};
+    const z={zoneId:'arena',x:0,y:0,width:620,height:500};
+    Object.assign(world.environment,{fauna:[f],monsterProjectiles:[],monsterHazards:[]});
+    const open=(x,y,hw=0)=>!wall||x+hw<=302||x-hw>=314;
+    const grid=new GroundOccupancy(open);
+    grid.sync([target],[f]);
+    const hits=[];
+    const combat=new m.MonsterCombat(world.environment,[z],{
+      targets:(p,r)=>Math.hypot(target.x-p.x,target.y-p.y)<=r?[target]:[],
+      move:(actor,point,avoid)=>{const position=grid.advance(grid.bodies.get(actor.id),point.x,point.y,avoid);if(position)Object.assign(actor,position);return Boolean(position);},
+      open:(actor,point)=>grid.open(grid.bodies.get(actor.id),point.x,point.y),
+      line:(a,b)=>!wall||(a.x<=302&&b.x<=302)||(a.x>=314&&b.x>=314),safe:()=>false,
+      damage:(_,amount,source,id)=>hits.push({amount,id,source}),avoid:()=>{},threat:()=>false,
+    });
+    return {combat,world,f,target,skill,grid,hits};
+  }
+  for(const id of m.MONSTER_SKILL_IDS){
+    const {combat,world,f,target,skill,grid,hits}=fixture(id);
+    assert.ok(m.startMonsterSkill(f,id,target,0),id);
+    for(let now=50;now<=skill.windup+skill.active+skill.recover+3000;now+=50){
+      combat.tick(now,50);
+      if(now<skill.windup)assert.equal(hits.length,0,id+' telegraph deals no damage');
+      assert.equal(grid.overlaps().length,0,id+' no physical overlap');
+    }
+    assert.equal(f.lastSkill,id);
+    if(skill.mode==='roar')assert.ok(f.buffUntil>0);
+    else if(skill.mode==='armor')assert.ok(f.armorUntil>0);
+    else assert.ok(hits.length>=1,id+' contact/impact');
+    if(!['mist','leap'].includes(skill.mode))assert.ok(hits.length<=1,id+' no repeated hit');
+    assert.equal(new Set(hits.map(h=>h.id)).size,hits.length);
+    assert.ok(JSON.stringify(world.environment).length);
+  }
+  for(const id of ['charge','skyfall','venom']){
+    const {combat,f,target,skill,grid}=fixture(id,true);
+    assert.ok(m.startMonsterSkill(f,id,target,0));
+    for(let t=50;t<skill.windup+skill.active+skill.recover+400;t+=50)combat.tick(t,50);
+    assert.ok(f.x+groundFootprint(f).width/2<=302,id+' never crosses the wall');
+    assert.equal(grid.overlaps().length,0);
+  }
+  {
+    const {combat,f,target,hits,skill}=fixture('fang');
+    m.startMonsterSkill(f,'fang',target,0);
+    combat.tick(skill.windup,50);
+    assert.equal(hits.length,1);
+    Object.assign(f,JSON.parse(JSON.stringify(f)));
+    combat.tick(skill.windup+50,50);
+    assert.equal(hits.length,1,'serialized cast cannot apply its contact event again');
+  }
+  {
+    const wolf=(id,x)=>({id,x,y:250,home:{x,y:250},state:'idle',zoneId:'pack',species:'wolf',rank:'normal',hp:68,maxHp:68,alive:true,nextThinkAt:0,attackReadyAt:0});
+    const alpha=wolf('alpha',200),follower=wolf('follower',110);
+    const visitor={id:'visitor',x:285,y:250,alive:true};
+    const env={fauna:[alpha,follower],monsterHazards:[],monsterProjectiles:[]};
+    const avoided=[];
+    const pack=new m.MonsterCombat(env,[{zoneId:'pack',x:0,y:0,width:620,height:500}],{
+      targets:(p,r)=>Math.hypot(p.x-visitor.x,p.y-visitor.y)<=r?[visitor]:[],
+      move:()=>true,open:()=>true,line:()=>true,safe:()=>false,damage:()=>{},
+      threat:()=>true,avoid:n=>avoided.push(n.id)
+    });
+    pack.tick(50,50);
+    assert.equal(alpha.targetNpcId,'visitor');
+    assert.equal(follower.targetNpcId,'visitor','a nearby wolf joins even beyond its own notice radius');
+    assert.ok(avoided.length>0,'a vulnerable NPC gets a retreat decision on detection');
+  }
+  for(const species of m.FAUNA_IDS)for(const rank of ['normal','elite']){
+    const png=PNG.sync.read(fs.readFileSync(`public/assets/fauna/monster-v2/${species}-${rank}.png`));
+    assert.deepEqual([png.width,png.height],[1280,576]);
+    assert.ok(png.data.some((v,i)=>i%4===3&&v>0));
+  }
+  console.log(`Monster 2.0: 24 spawns, ${elites} elite slots in 300 seeded worlds, 12 timed skills, swept walls, idempotent loot and save/load.`);
+}finally{fs.rmSync(tmp,{recursive:true,force:true});}

@@ -3,8 +3,8 @@
  "height": 144,
  "width": 224,
  "infinite": false,
- "nextlayerid": 24,
- "nextobjectid": 2107,
+ "nextlayerid": 25,
+ "nextobjectid": 2114,
  "orientation": "orthogonal",
  "renderorder": "right-down",
  "tiledversion": "1.12.2",
@@ -284911,134 +284911,282 @@
    "draworder": "topdown",
    "objects": [
     {
-     "id": 1536,
-     "name": "Ngoại thành · thú rừng cấp thấp",
-     "type": "fauna-zone",
-     "x": 2176,
-     "y": 3136,
-     "width": 832,
-     "height": 896,
+     "id": 2107,
+     "name": "Bìa rừng Thanh Ảnh",
+     "type": "monster-habitat",
+     "x": 1472,
+     "y": 1472,
+     "width": 512,
+     "height": 1888,
      "rotation": 0,
      "visible": true,
      "properties": [
       {
        "name": "zoneId",
        "type": "string",
-       "value": "southern-outskirts"
+       "value": "forest-rim"
       },
       {
-       "name": "habitat",
+       "name": "species",
        "type": "string",
-       "value": "grass-dry-rock-edge"
+       "value": "wolf"
       },
       {
-       "name": "speciesCounts",
-       "type": "string",
-       "value": "{\"deer\":2,\"scorpion\":1,\"snake\":1}"
-      },
-      {
-       "name": "maxPopulation",
-       "type": "int",
-       "value": 4
-      }
-     ]
-    },
-    {
-     "id": 1537,
-     "name": "Rìa rừng · bãi ăn và bụi đá",
-     "type": "fauna-zone",
-     "x": 1440,
-     "y": 1248,
-     "width": 608,
-     "height": 2848,
-     "rotation": 0,
-     "visible": true,
-     "properties": [
-      {
-       "name": "zoneId",
-       "type": "string",
-       "value": "forest-outer"
-      },
-      {
-       "name": "habitat",
-       "type": "string",
-       "value": "forest-edge"
-      },
-      {
-       "name": "speciesCounts",
-       "type": "string",
-       "value": "{\"deer\":3,\"scorpion\":2,\"snake\":1}"
-      },
-      {
-       "name": "maxPopulation",
-       "type": "int",
-       "value": 6
-      }
-     ]
-    },
-    {
-     "id": 1538,
-     "name": "Rừng giữa · khe đá",
-     "type": "fauna-zone",
-     "x": 864,
-     "y": 1248,
-     "width": 576,
-     "height": 3008,
-     "rotation": 0,
-     "visible": true,
-     "properties": [
-      {
-       "name": "zoneId",
-       "type": "string",
-       "value": "forest-middle"
-      },
-      {
-       "name": "habitat",
-       "type": "string",
-       "value": "rocky-forest"
-      },
-      {
-       "name": "speciesCounts",
-       "type": "string",
-       "value": "{\"deer\":1,\"scorpion\":2,\"snake\":2}"
-      },
-      {
-       "name": "maxPopulation",
+       "name": "cap",
        "type": "int",
        "value": 5
+      },
+      {
+       "name": "respawnMs",
+       "type": "int",
+       "value": 17000
+      },
+      {
+       "name": "activityRadius",
+       "type": "int",
+       "value": 160
+      },
+      {
+       "name": "leash",
+       "type": "int",
+       "value": 250
+      },
+      {
+       "name": "safeBuffer",
+       "type": "int",
+       "value": 90
       }
      ]
     },
     {
-     "id": 1539,
-     "name": "Rừng sâu · fauna cấp thấp",
-     "type": "fauna-zone",
-     "x": 0,
-     "y": 1152,
-     "width": 864,
-     "height": 3200,
+     "id": 2108,
+     "name": "Thung lũng Lang Ảnh",
+     "type": "monster-habitat",
+     "x": 560,
+     "y": 1456,
+     "width": 848,
+     "height": 1824,
      "rotation": 0,
      "visible": true,
      "properties": [
       {
        "name": "zoneId",
        "type": "string",
-       "value": "forest-deep"
+       "value": "forest-valley"
       },
       {
-       "name": "habitat",
+       "name": "species",
        "type": "string",
-       "value": "deep-forest-edge"
+       "value": "wolf"
       },
       {
-       "name": "speciesCounts",
+       "name": "cap",
+       "type": "int",
+       "value": 5
+      },
+      {
+       "name": "respawnMs",
+       "type": "int",
+       "value": 23000
+      },
+      {
+       "name": "activityRadius",
+       "type": "int",
+       "value": 160
+      },
+      {
+       "name": "leash",
+       "type": "int",
+       "value": 250
+      },
+      {
+       "name": "safeBuffer",
+       "type": "int",
+       "value": 90
+      }
+     ]
+    },
+    {
+     "id": 2109,
+     "name": "Chân núi Xích Nham",
+     "type": "monster-habitat",
+     "x": 2850,
+     "y": 360,
+     "width": 1430,
+     "height": 752,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "zoneId",
        "type": "string",
-       "value": "{\"scorpion\":2,\"snake\":2}"
+       "value": "north-foothills"
       },
       {
-       "name": "maxPopulation",
+       "name": "species",
+       "type": "string",
+       "value": "boar"
+      },
+      {
+       "name": "cap",
+       "type": "int",
+       "value": 5
+      },
+      {
+       "name": "respawnMs",
+       "type": "int",
+       "value": 24000
+      },
+      {
+       "name": "activityRadius",
+       "type": "int",
+       "value": 145
+      },
+      {
+       "name": "leash",
+       "type": "int",
+       "value": 225
+      },
+      {
+       "name": "safeBuffer",
+       "type": "int",
+       "value": 90
+      }
+     ]
+    },
+    {
+     "id": 2110,
+     "name": "Bãi ẩm ven sông phía Đông",
+     "type": "monster-habitat",
+     "x": 5700,
+     "y": 680,
+     "width": 570,
+     "height": 1200,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "zoneId",
+       "type": "string",
+       "value": "east-wetland"
+      },
+      {
+       "name": "species",
+       "type": "string",
+       "value": "toad"
+      },
+      {
+       "name": "cap",
+       "type": "int",
+       "value": 5
+      },
+      {
+       "name": "respawnMs",
+       "type": "int",
+       "value": 19000
+      },
+      {
+       "name": "activityRadius",
+       "type": "int",
+       "value": 145
+      },
+      {
+       "name": "leash",
+       "type": "int",
+       "value": 225
+      },
+      {
+       "name": "safeBuffer",
+       "type": "int",
+       "value": 90
+      }
+     ]
+    },
+    {
+     "id": 2111,
+     "name": "Bãi lau hạ lưu phía Đông",
+     "type": "monster-habitat",
+     "x": 5740,
+     "y": 2640,
+     "width": 570,
+     "height": 1260,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "zoneId",
+       "type": "string",
+       "value": "south-wetland"
+      },
+      {
+       "name": "species",
+       "type": "string",
+       "value": "toad"
+      },
+      {
+       "name": "cap",
        "type": "int",
        "value": 4
+      },
+      {
+       "name": "respawnMs",
+       "type": "int",
+       "value": 21000
+      },
+      {
+       "name": "activityRadius",
+       "type": "int",
+       "value": 145
+      },
+      {
+       "name": "leash",
+       "type": "int",
+       "value": 225
+      },
+      {
+       "name": "safeBuffer",
+       "type": "int",
+       "value": 90
+      }
+     ]
+    }
+   ]  },
+  {
+   "id": 24,
+   "name": "Airspace",
+   "type": "objectgroup",
+   "draworder": "topdown",
+   "opacity": 1,
+   "visible": true,
+   "x": 0,
+   "y": 0,
+   "objects": [
+    {
+     "id": 2112,
+     "name": "Trận cấm trên mái phủ thành chủ",
+     "type": "no-fly",
+     "x": 3856,
+     "y": 1656,
+     "width": 192,
+     "height": 96,
+     "rotation": 0,
+     "visible": true
+    },
+    {
+     "id": 2113,
+     "name": "Vách đỉnh núi phía Bắc",
+     "type": "high-obstacle",
+     "x": 3400,
+     "y": 270,
+     "width": 250,
+     "height": 164,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "ceiling",
+       "type": "int",
+       "value": 72
       }
      ]
     }

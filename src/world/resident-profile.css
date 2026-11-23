@@ -1,0 +1,115 @@
+#possession-panel {
+  --bronze: #a88b57;
+  position: fixed;
+  right: 16px;
+  bottom: 66px;
+  width: min(365px, calc(100vw - 32px));
+  max-height: calc(100dvh - 150px);
+  overflow-y: auto;
+  z-index: 18;
+  box-sizing: border-box;
+  color: #ede5d0;
+  background: #12231e;
+  border: 1px solid var(--bronze);
+  box-shadow: 0 8px 28px #050b0a99;
+  font: 13px/1.45 system-ui, sans-serif;
+  scrollbar-color: #81704b #14231e;
+}
+#possession-panel[hidden] { display: none; }
+#possession-panel .resident-header {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 12px 5px 16px;
+  background: #1c3028;
+  border-bottom: 1px solid #7a6747;
+}
+#possession-panel h2, #possession-panel h3 { margin: 0; font-family: Georgia, serif; }
+#possession-panel h2 { font-size: 15px; color: #dbc28c; }
+#possession-panel .resident-close { min-width: 36px; font-size: 18px; }
+#possession-panel .resident-body { padding: 14px 16px 16px; }
+#possession-panel .resident-identity {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+}
+#possession-panel .resident-portrait {
+  width: 96px;
+  height: 120px;
+  background: radial-gradient(ellipse at 52% 38%, #345448, #192d27 74%);
+  box-shadow: inset 0 0 0 1px #a58956, inset 0 0 0 4px #14221f;
+}
+#possession-panel .resident-portrait img {
+  display: block;
+  width: 96px;
+  height: 120px;
+  image-rendering: pixelated;
+}
+#possession-panel .resident-portrait img:not([src]) { visibility: hidden; }
+#possession-panel .resident-nameplate { overflow-wrap: anywhere; }
+#possession-panel h3 { font-size: 23px; line-height: 1.16; color: #fff0c8; }
+#possession-panel p { margin: 3px 0; }
+#possession-panel [data-profile="role"] { color: #e1d8bd; }
+#possession-panel [data-profile="faction"] { color: #adbfad; }
+#possession-panel .resident-realm { color: #efd798; font-size: 15px; font-weight: 650; margin-top: 6px; }
+#possession-panel .resident-flight { color: #c9b696; font-size: 12px; font-weight: 650; }
+#possession-panel .resident-flight[data-qualified="true"] { color: #a7dfc2; }
+#possession-panel .resident-flight-detail { color: #b8cbbc; font-size: 12px; margin-top: 9px; }
+#possession-panel .resident-activity {
+  color: #d5dcca;
+  padding: 7px 0;
+  border-bottom: 1px solid #546049;
+  overflow-wrap: anywhere;
+}
+#possession-panel .resident-stats { display: grid; gap: 6px; margin-top: 9px; }
+#possession-panel .resident-meter { display: grid; grid-template-columns: 1fr auto; gap: 1px 8px; }
+#possession-panel .resident-meter b { font-variant-numeric: tabular-nums; font-weight: 600; }
+#possession-panel progress {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 6px;
+  border: 0;
+  background: #2a3d31;
+  appearance: none;
+}
+#possession-panel progress::-webkit-progress-bar { background: #2a3d31; }
+#possession-panel progress::-webkit-progress-value { background: var(--meter); }
+#possession-panel progress::-moz-progress-bar { background: var(--meter); }
+#possession-panel .hp { --meter: #d98272; }
+#possession-panel .mp { --meter: #71bca7; }
+#possession-panel .xp { --meter: #d0ae63; }
+#possession-panel .resident-cultivation { color: #c7cdb5; font-size: 12px; }
+#possession-panel .resident-actions {
+  display: grid;
+  grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr);
+  gap: 7px;
+  margin-top: 10px;
+}
+#possession-panel button, #possession-panel .resident-actions a {
+  box-sizing: border-box;
+  min-height: 36px;
+  padding: 4px 8px;
+  border: 1px solid #776749;
+  background: #21362c;
+  color: #f0ddad;
+  font: inherit;
+  cursor: pointer;
+}
+#possession-panel .resident-actions a { text-align: center; display: grid; place-items: center; }
+#possession-panel .gold-button { border-color: var(--bronze); }
+#possession-panel button:disabled { opacity: .56; cursor: default; }
+#possession-panel select { display: block; width: 100%; margin: 4px 0; padding: 6px; color: #eee4cc; background: #22392c; }
+#possession-panel [data-profile="controls"] { margin-top: 8px; border-top: 1px solid #546049; padding-top: 8px; }
+#possession-panel .hud-detail, #possession-panel .hud-controls { display: block; margin-top: 6px; color: #c3cfb6; }
+#possession-panel details { margin-top: 5px; }
+#possession-panel.is-possessed .resident-identity { grid-template-columns: 72px minmax(0,1fr); }
+#possession-panel.is-possessed .resident-portrait,
+#possession-panel.is-possessed .resident-portrait img { width: 72px; height: 90px; }
+@media (max-width: 550px) {
+  #possession-panel { right: 8px; bottom: 46px; width: min(365px, calc(100vw - 16px)); max-height: min(70dvh, calc(100dvh - 112px)); }
+  #possession-panel button, #possession-panel .resident-actions a { min-height: 40px; }
+}

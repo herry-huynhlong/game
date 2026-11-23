@@ -49,7 +49,8 @@ try {
     actionTarget:{x:2370,y:836},actionProgress:59});
   model.tickNpc(guard,1,1,600);
   assert.ok(guard.safety>=72);
-  const trader=occupationWorld.npcs.find(n=>n.profession==='thuong_nhan'),shop=occupationWorld.shops.find(s=>s.id==='city-market');
+  const shop=occupationWorld.shops.find(s=>s.id==='city-market');
+  const trader=occupationWorld.npcs.find(n=>n.profession==='thuong_nhan'&&n.id!==shop.ownerId);
   Object.assign(trader,{x:2740,y:824,hunger:2,fatigue:0,goalAction:'trade',decisionSlot:'1:trade',
     actionTarget:{x:2740,y:824},actionProgress:24,inventory:[{itemId:'wood',count:2}]});
   const stones=trader.spiritStones,wood=EconomySystem.count(shop.stock,'wood');

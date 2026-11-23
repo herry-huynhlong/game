@@ -1,4 +1,4 @@
-import { REALMS, cultivationRequired } from './RealmConfig';
+import { REALMS, cultivationRequired, formatRealm } from './RealmConfig';
 import { techniqueEffects } from './TechniqueSystem';
 import type { CultivationSave, CultivationStats, SpiritualRootId, TechniqueId } from './CultivationTypes';
 import { weaponBonus } from '../dao/GiftItemSystem';
@@ -44,13 +44,13 @@ export function addCultivationXp(save: CultivationSave, amount: number): boolean
 
 export function breakthrough(save: CultivationSave): { success: boolean; from: string; to: string; oldRealmIndex: number; oldLevel: number } {
   const view = cultivationView(save);
-  const result = { success: false, from: `${view.realm} tầng ${view.level}`, to: '', oldRealmIndex: save.realmIndex, oldLevel: save.realmLevel };
+  const result = { success: false, from: formatRealm(save), to: '', oldRealmIndex: save.realmIndex, oldLevel: save.realmLevel };
   if (!view.canBreakthrough) return result;
   save.xp = 0;
   if (save.realmLevel < REALMS[save.realmIndex].maxLevel) save.realmLevel++;
   else { save.realmIndex++; save.realmLevel = 1; }
   result.success = true;
-  result.to = `${REALMS[save.realmIndex].name} tầng ${save.realmLevel}`;
+  result.to = formatRealm(save);
   return result;
 }
 

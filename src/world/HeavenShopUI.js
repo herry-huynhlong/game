@@ -122,7 +122,6 @@ export function mountSkillPanel(scene, panel, npc) {
     button.onclick = () => {
       const result = commitHeavenChange(scene, npc, () => learnHeavenBook(scene.populationWorld, npc, item.itemId));
       if (result.ok) {
-        scene.possessionHudSignature = '';
         scene.refreshPossessionHud();
       }
       scene.worldPopulationToast(result.message);

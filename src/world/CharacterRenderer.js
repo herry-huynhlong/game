@@ -55,11 +55,13 @@ export class CharacterRenderer {
     const side=direction==='left'||direction==='right';
     const sign=direction==='left'||direction==='up'?-1:1;
     const riding=this.riding;
+    const flight=this.flightPose,stance=flight?.mount??0;
+    const airCloth=flight?.cloth??0;
     const action=combat?.values;
     const shift=action?.[4]??0;
-    const rise=(riding?0:pose.rise)+shift+(this.rideBob??0);
+    const rise=(riding?0:pose.rise)*(1-stance)+shift+(this.rideBob??0)-Math.round(Math.sin(stance*Math.PI)*5);
     const {swing,cloth}=pose;
-    const sway=cloth*sign;
+    const sway=Math.max(-2,Math.min(2,Math.round((cloth*(1-stance)+airCloth*stance)*sign)));
     const armX=side?swing*sign:0;
     const armY=side?0:Math.round(swing*.6)*sign;
     const suffix=appearance.outfitColor==='jade'?'':'/'+appearance.outfitColor;
@@ -92,6 +94,11 @@ export class CharacterRenderer {
     const feet=['leftShoe','rightShoe'];
     for(const [i,part] of feet.entries()) {
       const travel=pose.feet[i]*sign;
+      if(flight){
+        const x=side?(i===0?-9:10):(i===0?-3:3),y=side?(i===0?-1:1):(i===0?-7:6);
+        set(part,part+shoes,Math.round(x*stance),Math.round(y*stance-(i===1?Math.sin(stance*Math.PI)*9:0)));
+        continue;
+      }
       set(part,part+shoes,riding?(side?-5+7*i:(i?8:-8)):side?travel:0,riding?-21+(side?2*i:0):(side?0:travel)-pose.lift[i],!riding||!side||i===1);
     }
     set('outerCloth','outerCloth'+suffix);
@@ -103,16 +110,16 @@ export class CharacterRenderer {
     const forwardX=side?sign:0,forwardY=side?0:sign;
     const twoHands=combat?.weapon==='crossbow';
     const active=Boolean(action||riding);
-    const handX=active?forwardX*reach:armX;
-    const handY=active?lift+Math.round(forwardY*reach*.42):armY;
+    const handX=flight?Math.round((side?7*sign:5)*stance):active?forwardX*reach:armX;
+    const handY=flight?-Math.round((7+(flight.lean??0))*stance):active?lift+Math.round(forwardY*reach*.42):armY;
     const holdingBack=direction==='up';
     const mainPart=holdingBack?'leftArm':'rightArm';
     const supportPart=holdingBack?'rightArm':'leftArm';
     const anchors=this.registry?.[rig]?.arms?.[direction];
     const supportBaseX=anchors?.support[1][0]??(side?x+3:63-x);
     const supportBaseY=anchors?.support[1][1]??y;
-    const supportX=twoHands?x+handX+(side?forwardX*8:4)-supportBaseX:active?forwardX*off:-armX;
-    const supportY=twoHands?y+handY+forwardY*6-supportBaseY:active?Math.round(forwardY*off*.36)-2:-armY;
+    const supportX=flight?Math.round((side?-6*sign:-5)*stance):twoHands?x+handX+(side?forwardX*8:4)-supportBaseX:active?forwardX*off:-armX;
+    const supportY=flight?-Math.round(4*stance):twoHands?y+handY+forwardY*6-supportBaseY:active?Math.round(forwardY*off*.36)-2:-armY;
     const hand=(part,startX,startY,dx,dy,shoulder)=>{
       const layer=layers[part];
       set(part,part+suffix,0,rise);
@@ -139,7 +146,8 @@ export class CharacterRenderer {
     set('accessory','accessory',side?sway:0,rise,appearance.accessory!=='none');
     this.attachments={hand:{x:x+handX-32,y:y+handY+rise-93}};
     const weapon=layers.weapon;
-    if(combat&&['sword','saber','crossbow'].includes(combat.weapon)){
+    if(this.flightWeapon)weapon.setVisible(false);
+    else if(combat&&['sword','saber','crossbow'].includes(combat.weapon)){
       const style=combat.weapon==='crossbow'?(action[5]==='guard'?'hold':action[5]):action[5];
       const key=`weapon/${combat.weapon}/${direction}/${style}`;
       const weaponAnchor=this.combatAtlas.origins[key];

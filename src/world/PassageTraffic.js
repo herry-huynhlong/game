@@ -1,41 +1,65 @@
 export class PassageTraffic {
-  constructor(gates){
+  constructor(gates,open=()=>true){
+    this.open=open;
     this.gates=gates.map(({a,b,id})=>{
       const horizontal=Math.abs(a.x-b.x)>Math.abs(a.y-b.y);
-      return {id,horizontal,x:(a.x+b.x)/2,y:(a.y+b.y)/2,approach:Math.hypot(a.x-b.x,a.y-b.y)/2+72,
-        core:28,direction:0,until:0,waiting:new Map(),inside:new Map()};
+      const gate={id,horizontal,x:(a.x+b.x)/2,y:(a.y+b.y)/2,approach:124,clear:53,requests:new Map(),current:null};
+      gate.lanes=[12,16,20].find(offset=>[-offset,offset].every(across=>
+        Array.from({length:21},(_,i)=>this.position(gate,i*6-60,across)).every(p=>open(p))))??0;
+      return gate;
     });
+  }
+
+  position(g,along,across){
+    return g.horizontal?{x:g.x+along,y:g.y+across}:{x:g.x+across,y:g.y+along};
   }
 
   guide(npc,target,time){
     for(const gate of this.gates){
-      const {horizontal,x,y,approach,core}=gate;
+      const {horizontal,x,y,approach,clear,requests}=gate;
       const along=horizontal?npc.x-x:npc.y-y,across=horizontal?npc.y-y:npc.x-x;
       const go=horizontal?target.x-x:target.y-y;
-      if(Math.abs(along)>approach||Math.abs(across)>88||Math.abs(go)<core||Math.sign(along)===Math.sign(go))continue;
       const direction=Math.sign(go);
-      for(const [id,request] of gate.waiting)if(time-request.seen>2000)gate.waiting.delete(id);
-      for(const [id,record] of gate.inside)if(!record.actor.alive||Math.abs((horizontal?record.actor.x-x:record.actor.y-y))>core+14||time-record.seen>2600)gate.inside.delete(id);
-      const waiting=gate.waiting.get(npc.id)??{direction,since:time,seen:time};
-      waiting.direction=direction;waiting.seen=time;gate.waiting.set(npc.id,waiting);
-      const occupying=gate.inside.get(npc.id);
-      if(!gate.inside.size&&(!gate.direction||time>=gate.until)){
-        const head=[...gate.waiting.values()].sort((a,b)=>a.since-b.since)[0];
-        gate.direction=head.direction;gate.until=time+2800;
+      for(const [id,r] of requests)if(!r.actor.alive||r.actor.flight||time-r.seen>2600){
+        requests.delete(id);
+        if(gate.current===id)gate.current=null;
       }
-      const clear=direction===gate.direction&&(time<gate.until||gate.inside.size===0);
-      if(!clear&&!occupying&&Math.abs(along)>core+14){
-        const side=-direction*52,stop=along;
-        const bay=horizontal?{x:x+stop,y:y+side}:{x:x+side,y:y+stop};
-        return {wait:true,id:gate.id,target:bay};
+      let request=requests.get(npc.id);
+      if(request&&(direction!==request.direction||along*direction>=clear||Math.abs(across)>140)){
+        requests.delete(npc.id);
+        if(gate.current===npc.id)gate.current=null;
+        request=null;
       }
-      if(Math.abs(along)<=core+14){
-        gate.inside.set(npc.id,{actor:npc,direction,seen:time});
-        gate.waiting.delete(npc.id);
+      if(!request){
+        if(Math.abs(along)>approach||Math.abs(across)>85||Math.abs(go)<clear||along*direction>=0)continue;
+        request={actor:npc,direction,seen:time,entered:time,stage:'approach'};
+        requests.set(npc.id,request);
       }
-      // Guide through the opening, retaining the original goal outside it.
-      const delta=Math.abs(along)>core+14?-direction*(core+10):direction*(core+17);
-      return {id:gate.id,target:horizontal?{x:x+delta,y}:{x,y:y+delta}};
+      request.seen=time;
+      if(gate.lanes){
+        const lane=direction*gate.lanes;
+        const entry=this.position(gate,-direction*(clear+7),lane);
+        if(request.stage==='approach'&&(Math.hypot(npc.x-entry.x,npc.y-entry.y)<7||along*direction>-clear+8))request.stage='cross';
+        return {id:gate.id,stage:request.stage,target:request.stage==='approach'?entry:this.position(gate,direction*(clear+6),lane)};
+      }
+      // Gates with insufficient clearance retain a single admission token.
+      if(!gate.current){
+        const first=[...requests.values()].sort((a,b)=>a.entered-b.entered)[0];
+        gate.current=first.actor.id;
+      }
+      if(gate.current!==npc.id&&Math.abs(along)>31){
+        if(!request.bay){
+          const stops=[88,112,136,160].flatMap(depth=>[42,-42,70,-70].map(offset=>
+            this.position(gate,-direction*depth,offset)));
+          request.bay=stops.filter(p=>this.open(p)&&![...requests.values()].some(r=>r.bay&&Math.hypot(p.x-r.bay.x,p.y-r.bay.y)<22))
+            .sort((a,b)=>Math.hypot(npc.x-a.x,npc.y-a.y)-Math.hypot(npc.x-b.x,npc.y-b.y))[0]??{x:npc.x,y:npc.y};
+        }
+        return {id:gate.id,wait:true,target:request.bay};
+      }
+      request.bay=null;
+      const entry=this.position(gate,-direction*(clear+11),0);
+      if(request.stage==='approach'&&(Math.hypot(npc.x-entry.x,npc.y-entry.y)<5||along*direction>-clear+8))request.stage='cross';
+      return {id:gate.id,stage:request.stage,target:request.stage==='approach'?entry:this.position(gate,direction*(clear+6),0)};
     }
     return null;
   }

@@ -25,3 +25,19 @@ export function cultivationRequired(realmIndex: number, level: number): number {
   if (realm === 0) return Math.round(80 + (floor - 1) * 35 + Math.max(0, floor - 4) ** 2 * 5);
   return Math.round(600 + realm * 280 + (floor - 1) * (130 + realm * 35));
 }
+export type RealmPosition = { realmIndex?: number; realmLevel?: number };
+
+export function realmPosition(save: RealmPosition) {
+  const { realmIndex, realmLevel } = save;
+  if (typeof realmIndex !== 'number' || !Number.isInteger(realmIndex) ||
+      typeof realmLevel !== 'number' || !Number.isInteger(realmLevel)) return null;
+  const realm = REALMS[realmIndex];
+  return realm && realmLevel >= 1 && realmLevel <= realm.maxLevel
+    ? { realm, level: realmLevel, index: realmIndex }
+    : null;
+}
+
+export function formatRealm(save: RealmPosition): string {
+  const position = realmPosition(save);
+  return position ? `${position.realm.name} tầng ${position.level}` : 'Chưa có tu vi';
+}

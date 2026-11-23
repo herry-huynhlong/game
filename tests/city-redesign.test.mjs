@@ -26,7 +26,7 @@ assert.ok(decorations.filter(o=>prop(o,'kind')==='city-house').length>=35);
 assert.equal(decorations.filter(o=>prop(o,'kind')==='city-workshop').length,4);
 assert.ok(decorations.some(o=>prop(o,'cityEffect')==='bloom'));
 assert.deepEqual(layer(city,'MarketDecor'),layer(previous,'MarketDecor'));
-assert.deepEqual(layer(city,'FaunaZones'),layer(previous,'FaunaZones'));
+assert.deepEqual([...new Set(layer(city,'FaunaZones').objects.map(o=>prop(o,'species')))].sort(),['boar','toad','wolf']);
 assert.ok(layer(city,'CityEdges').data.some(Boolean));
 const collision=layer(city,'Collision').objects;
 const newSolids=collision.filter(o=>prop(o,'kind')==='city-redesign-solid');

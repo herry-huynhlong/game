@@ -1,3 +1,4 @@
+import { blocksGroundCombat, aboveGroundCombat } from './FlyingSword.js';
 import { EconomySystem } from '../dao/EconomySystem.ts';
 import { SKILLS, hasRod, itemName, rodEquipped } from './HeavenShop.js';
 import { weaponAttackMode, weaponForNpc } from './WeaponCombat.js';
@@ -33,6 +34,7 @@ export class WorldHeavenActions {
 
   fire(npc, skillId, target = null) {
     const scene = this.scene, weapon = weaponForNpc(npc), ai = Boolean(target), now = Date.now();
+    if(blocksGroundCombat(npc)||aboveGroundCombat(target))return false;
     const skill = SKILLS[skillId];
     const fail = message => { if (!ai) scene.worldPopulationToast(message); return false; };
     if(weapon?.kind==='crossbow'&&(!skill||skill.weapon))return fail('Dùng nỏ trong chế độ Character Rig, hoặc đổi sang vũ khí khác.');
@@ -126,7 +128,7 @@ export class WorldHeavenActions {
         const bx = Math.floor(x / BUCKET), by = Math.floor(y / BUCKET);
         for (let iy = by - 1; iy <= by + 1 && shot.hits > 0; iy++) for (let ix = bx - 1; ix <= bx + 1 && shot.hits > 0; ix++) {
           for (const { target, fauna } of buckets.get(ix + ',' + iy) ?? []) {
-            if (!shot.hits || target === shot.npc || !target.alive || shot.struck.has(target.id) || (!fauna && shot.ai)) continue;
+            if (!shot.hits || target === shot.npc || !target.alive || aboveGroundCombat(target) || shot.struck.has(target.id) || (!fauna && shot.ai)) continue;
             if (Math.hypot(target.x - x, target.y - y) > shot.width + 5 ||
                 !this.inLane({x:x-shot.ux*10,y:y-shot.uy*10},target,shot.ux,shot.uy,20,shot.width+4) ||
                 !scene.clearFaunaLine(shot, target) || !scene.canOccupy(target.x, target.y)) continue;

@@ -29,7 +29,7 @@ export function placeCityResidents(npcs,citySolids,terrainOpen,connected,markers
     if(!live(n))continue;
     const {width,height}=groundFootprint(n),hw=width/2,hh=height/2;
     const open=(x,y)=>terrainOpen(x,y,hw+1,hh+1)&&connected({x,y});
-    if(inNewSolid(n,hw,hh)){
+    if(!n.flight&&inNewSolid(n,hw,hh)){
       const next=nearest(n,open,occupied);
       if(!next)throw new Error('Không tìm thấy vị trí hợp lệ gần '+n.id);
       Object.assign(n,next);

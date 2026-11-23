@@ -6,7 +6,9 @@ const STEP=5;
 
 export function groundFootprint(actor,mounted=false) {
   const species=actor.species, broad=actor.modularAppearance?.look?.bodyType==='male_strong';
-  const shape=mounted?[24,18]:species==='tiger'?[24,18]:species==='deer'?[24,13]:species==='scorpion'?[17,11]:species==='snake'?[14,8]:broad?[18,10]:[16,8];
+  const shapes={wolf:[28,14],boar:[37,20],toad:[29,19]};
+  const monster=shapes[species],extra=actor.rank==='elite'?5:0;
+  const shape=mounted?[24,18]:monster?[monster[0]+extra,monster[1]+extra]:species==='tiger'?[24,18]:species==='deer'?[24,13]:species==='scorpion'?[17,11]:species==='snake'?[14,8]:broad?[18,10]:[16,8];
   return {width:shape[0],height:shape[1],category:species?GROUND_FAUNA:GROUND_NPC,mask:MASK,
     radius:Math.max(...shape)/2,personalRadius:Math.max(...shape)/2+6};
 }
@@ -90,7 +92,7 @@ export class GroundOccupancy {
     return true;
   }
 
-  advance(body,x,y,allowAvoid=true){
+  advance(body,x,y,allowAvoid=true,permitted=()=>true){
     const dx=x-body.x,dy=y-body.y,d=Math.hypot(dx,dy);
     if(d<.01)return null;
     const vx=dx/d,vy=dy/d,n=Math.ceil(d/STEP),step=d/n;
@@ -98,14 +100,14 @@ export class GroundOccupancy {
     // The same relative right-hand side is used for opposing actors.
     for(let i=0;i<n;i++){
       const px=body.x+vx*step,py=body.y+vy*step;
-      if(this.open(body,px,py,true)){this.place(body,px,py);continue;}
+      if(permitted(px,py)&&this.open(body,px,py,true)){this.place(body,px,py);continue;}
       if(!allowAvoid)break;
       let moved=false;
       for(const side of [.9,1,-.9,-1]){
         const forward=Math.sqrt(1-side*side);
         const ax=body.x+(vx*forward-vy*side)*step;
         const ay=body.y+(vy*forward+vx*side)*step;
-        if(!this.open(body,ax,ay,true))continue;
+        if(!permitted(ax,ay)||!this.open(body,ax,ay,true))continue;
         this.place(body,ax,ay);moved=true;break;
       }
       if(!moved)break;
@@ -113,18 +115,18 @@ export class GroundOccupancy {
     return body.x!==startX||body.y!==startY?{x:body.x,y:body.y}:null;
   }
 
-  recover(limit=12){
+  recover(limit=12,select=()=>true,permitted=()=>true){
     const adjusted=[];
     for(const body of this.bodies.values()){
       if(adjusted.length>=limit)break;
-      if(!body.actor.alive||body.actor.fixed)continue;
+      if(!body.actor.alive||body.actor.fixed||!select(body))continue;
       for(const other of this.near(body.x,body.y,body.radius+(this.maxRadius??12))){
         if(other.id===body.id||!intersection(body,body.x,body.y,other))continue;
         const dx=body.x-other.x,dy=body.y-other.y;
         const angle=dx||dy?Math.atan2(dy,dx):body.id<other.id?0:Math.PI;
         for(const offset of [0,Math.PI/2,-Math.PI/2,Math.PI]){
           const x=body.x+Math.cos(angle+offset)*2,y=body.y+Math.sin(angle+offset)*2;
-          if(!this.open(body,x,y,true))continue;
+          if(!permitted(body,x,y)||!this.open(body,x,y,true))continue;
           this.place(body,x,y);adjusted.push(body);break;
         }
         break;
