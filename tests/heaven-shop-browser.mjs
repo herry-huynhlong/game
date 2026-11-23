@@ -64,7 +64,7 @@ try {
     const result=await send('Page.captureScreenshot',{format:'png'});
     await writeFile(join(output,name+'.png'),Buffer.from(result.data,'base64'));
   }
-  const click = selector => run(`document.querySelector(${JSON.stringify(selector)}).click()`);
+  const click = async selector => {await delay(700); return run(`document.querySelector(${JSON.stringify(selector)}).click()`);};
   const choose = (selector,value) => run(`(()=>{const select=document.querySelector(${JSON.stringify(selector)});select.value=${JSON.stringify(value)};select.dispatchEvent(new Event('change',{bubbles:true}));})()`);
   const key = async key=>{
     for (const type of ['rawKeyDown','keyUp']) {

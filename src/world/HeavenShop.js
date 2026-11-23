@@ -29,8 +29,11 @@ export function commitHeavenChange(scene, npc, change) {
   const power = heaven.divinePower, ledger = structuredClone(shopLedger(world));
   const inventory = npc && structuredClone(npc.inventory), skills = npc?.skills?.slice();
   const active = npc?.activeHeavenSkill;
-  const result = change();
-  if (!result.ok || scene.persistPopulation()) return result;
+  let result;
+  try {
+    result = change();
+    if (result.ok && scene.persistPopulation()) return result;
+  } catch { result = failed("Giao dịch không thể hoàn tất."); }
   heaven.divinePower = power;
   heaven.shopLedger = ledger;
   if (npc) {
@@ -38,13 +41,13 @@ export function commitHeavenChange(scene, npc, change) {
     npc.skills = skills;
     npc.activeHeavenSkill = active;
   }
-  return failed('Không ghi được bản lưu. Hãy tải lại trò chơi trước khi thao tác.');
+  return result?.ok ? failed('Không ghi được bản lưu. Hãy tải lại trò chơi trước khi thao tác.') : result;
 }
 
 export function buyHeavenItem(world, itemId, id) {
   const entry = Object.hasOwn(SHOP, itemId) && SHOP[itemId];
   const ledger = shopLedger(world);
-  if (world.heaven.possession || !entry || !id || ledger.some(row => row.id === id)) return failed('Giao dịch không hợp lệ hoặc đã xử lý.');
+  if (world.heaven.possession || !entry || !Number.isFinite(entry.price) || entry.price < 0 || !Number.isFinite(world.heaven.divinePower) || !id || ledger.some(row => row.id === id)) return failed('Giao dịch không hợp lệ hoặc đã xử lý.');
   if (ledger.some(row => row.itemId === itemId && row.owner === 'heaven')) return failed('Kho đã có mặt hàng này. Hãy ban vật phẩm trước khi mua thêm.');
   if (!DivineResourceSystem.spendPower(world.heaven, entry.price)) return failed('Không đủ Thần Lực.');
   ledger.push({ id, itemId, price: entry.price, boughtAt: Date.now(), owner: 'heaven' });
@@ -53,7 +56,7 @@ export function buyHeavenItem(world, itemId, id) {
 
 export function giftHeavenItem(world, id, npc) {
   const row = shopLedger(world).find(entry => entry.id === id && entry.owner === 'heaven');
-  if (world.heaven.possession || !row || !npc?.alive || npc.ascended || !world.npcs.includes(npc)) return failed('Vật phẩm hoặc cư dân không hợp lệ.');
+  if (world.heaven.possession || !row || !npc?.alive || npc.ascended || !world.npcs.includes(npc) || !Array.isArray(npc.inventory)) return failed('Vật phẩm hoặc cư dân không hợp lệ.');
   EconomySystem.add(npc.inventory, row.itemId, 1);
   row.owner = npc.id;
   row.giftedTo = npc.id;
@@ -75,4 +78,19 @@ export function learnHeavenBook(world, npc, itemId) {
   (npc.skills ??= []).push(skillId);
   npc.activeHeavenSkill ??= skillId;
   return done('Đã lĩnh ngộ ' + SKILLS[skillId].name + '.');
+}
+
+/** Reuse purchase and transfer on an isolated transaction, committing both together. */
+export function buyAndGiftHeavenItem(world, itemId, npc, id) {
+  if (!npc?.alive || npc.ascended || !world.npcs.includes(npc) || !Array.isArray(npc.inventory)) return failed('Cư dân không thể nhận vật phẩm.');
+  const stagedNpc = {...npc, inventory: structuredClone(npc.inventory)};
+  const staged = {heaven: {...world.heaven, shopLedger: structuredClone(shopLedger(world))}, npcs: [stagedNpc]};
+  const bought = buyHeavenItem(staged, itemId, id);
+  if (!bought.ok) return bought;
+  const gifted = giftHeavenItem(staged, id, stagedNpc);
+  if (!gifted.ok) return gifted;
+  world.heaven.divinePower = staged.heaven.divinePower;
+  world.heaven.shopLedger = staged.heaven.shopLedger;
+  npc.inventory = stagedNpc.inventory;
+  return gifted;
 }
