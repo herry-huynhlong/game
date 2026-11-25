@@ -1,4 +1,5 @@
 import type { CultivationSave, SpiritualRootId, TechniqueId } from '../systems/CultivationTypes';
+import type { TribulationSave } from './TribulationSystem';
 
 export type NPCAction = 'idle'|'travel'|'rest'|'cultivate'|'gather'|'eat'|'socialize'|'trade'|'guard'|'flee'|'fight'|'farm'|'work'|'patrol'|'shop'|'recruit'|'mission'|'teach'|'commission';
 export type NPCProfession = 'tu_si'|'dan_su'|'thuong_nhan'|'duoc_su'|'ho_ve'|'dan_thuong'|'tho_re'|'nong_dan';
@@ -21,13 +22,24 @@ export interface FlyingSwordSave {
   phaseMs:number; total:number; speed:number; wait:number;
   landingHeight?:number; goalAction?:NPCAction; urgent?:boolean; manual?:boolean; landRequested?:boolean; emergency?:boolean; lifting?:boolean; fast?:boolean;
 }
+export interface SkyStepSave {
+  mode:'SkyStep';
+  phase:'cast'|'vanish'|'travel'|'arrive'|'recover';
+  from:{x:number;y:number}; landing:{x:number;y:number}; goal:{x:number;y:number};
+  elapsed:number; manual:boolean; heading:'up'|'down'|'left'|'right';
+}
 export interface MarketVisitSave {
   shopId:string; side:'buy'|'sell'; itemId:TradeItemId; count:number; expiresAt:number;
   repaths?:number; avoidSlot?:{x:number;y:number};
 }
 export interface SimNPC {
+  westPoison?:number;
+  wallLevel?:1;
+  tribulation?:TribulationSave; tribulationAttempts?:number; manualMeditation?:boolean; meditationBlockedUntil?:number;
+  meditationSpot?:{x:number;y:number};
   marketVisit?:MarketVisitSave; marketRetryAt?:number;
   flight?:FlyingSwordSave; flightCooldown?:number;
+  skyStep?:SkyStepSave; skyStepCooldown?:number;
   id:string; name:string; age:number; lifespan:number; gender:'nam'|'nữ'; appearance:'cultivator'|'steward';
   x:number; y:number; realmIndex:number; realmLevel:number; xp:number; spiritualRoot:SpiritualRootId; technique:TechniqueId;
   techniqueMastery:Record<TechniqueId,number>; techniqueProgress:Record<TechniqueId,number>;
@@ -42,7 +54,7 @@ export interface SimNPC {
   aiProfile?:NPCAIProfile; aiDecision?:NPCAIDecision; populationRole?:PopulationRole; populationDuty?:string; authorityRole?:NPCAuthorityRole; authorityScope?:'city'|'sect';
   spawnRegionId?:string;workplaceId?:string;stallId?:string;guardPostId?:string;workPosition?:{x:number;y:number};patrolPoints?:{x:number;y:number}[];patrolIndex?:number;pathBlocked?:boolean;lawResponse?:{incidentId:string;status:'responding'|'at-scene';targetId:string;returnTarget?:{x:number;y:number}};
   activeHeavenSkill?:string|null; heavenSkillReadyAt?:number; heavenGuardUntil?:number;
-  assignedResourceNodeId?:string;faunaHuntTargetId?:string;faunaHuntLimitDay?:number;faunaHuntsToday?:number;professionTask?:{kind:'repair'|'herb-gather';targetId:string;state:'seeking'|'travelling'|'working'|'blocked';lastReason?:string;inventoryBefore?:number};
+  assignedResourceNodeId?:string;resourceRouteCooldown?:{nodeId:string;until:number};faunaHuntTargetId?:string;faunaHuntLimitDay?:number;faunaHuntsToday?:number;professionTask?:{kind:'repair'|'herb-gather';targetId:string;state:'seeking'|'travelling'|'working'|'blocked';lastReason?:string;inventoryBefore?:number};
 }
 export type NPCCultivation = Pick<CultivationSave,'realmIndex'|'realmLevel'|'xp'|'spiritualRoot'|'technique'|'techniqueMastery'|'techniqueProgress'>;
 export interface WorldClockSave { day:number; minute:number; speed:1|2|4; paused:boolean; }
@@ -56,7 +68,7 @@ export interface AscendedCultivatorRecord { id:string; npc:SimNPC; originWorldId
 export interface BeastSiegeSave { id:string; day:number; remaining:number; remainingMinutes:number; status:'occurred'|'completed'|'failed'|'rewarded'; }
 export type TradeItemId='ration'|'rice_seed'|'wood'|'iron_ore'|'spirit_herb'|'wolf_pelt'|'wolf_fang'|'demon_core'|'deer_meat'|'scorpion_venom'|'snake_skin'|'boar_tusk'|'crimson_plate'|'toad_sac'|'jade_venom'|'elite_beast_core'|'qi_pill'|'healing_pill'|'iron_sword'|'iron_dao'|'mortal_gift_sword'|'qingfeng_sword';
 export interface MarketStock { itemId:TradeItemId; count:number; }
-export interface ShopSave { id:string; name:string; ownerId:string; areaId:string; openHour:number; closeHour:number; cash:number; stock:MarketStock[]; buyPrices:Partial<Record<TradeItemId,number>>; sellPrices:Partial<Record<TradeItemId,number>>; healingBrewDay?:number; }
+export interface ShopSave { id:string; name:string; ownerId:string; areaId:string; openHour:number; closeHour:number; cash:number; stock:MarketStock[]; buyPrices:Partial<Record<TradeItemId,number>>; sellPrices:Partial<Record<TradeItemId,number>>; healingBrewDay?:number; nextQiBrewAt?:number; }
 export interface TradeRecord { id:string; day:number; minute:number; buyerId:string; sellerId:string; shopId?:string; itemId:TradeItemId; count:number; unitPrice:number; }
 export interface FactionSave { id:string; name:string; type:'city'|'sect'|'village'|'guild'; leaderId:string|null; memberIds:string[]; areaId:string; treasury:MarketStock[]; wealth:number; relations:Record<string,number>; security:number; reputation:number; power:number; territory:string[]; }
 export interface SettlementSave { id:string; name:string; populationLimit:number; food:number; materials:MarketStock[]; security:number; guardCaptainId:string|null; lastSiegeDay:number; cityMasterId?:string; }
@@ -72,7 +84,7 @@ export interface MonsterCast {skillId:string;sequence:number;started:number;orig
 export interface MonsterHazard {id:string;sourceId:string;position:MonsterPoint;radius:number;expires:number;nextPulse:number;damage:number;}
 export interface MonsterProjectile {id:string;sourceId:string;position:MonsterPoint;direction:MonsterPoint;range:number;damage:number;}
 
-export interface FaunaSave {id:string;species:FaunaSpecies;rank:MonsterRank;x:number;y:number;hp:number;maxHp:number;zoneId:string;home:MonsterPoint;alive:boolean;state:MonsterState;targetNpcId?:string;roamTarget?:MonsterPoint;direction?:'south'|'north'|'west'|'east';attackReadyAt:number;nextThinkAt:number;lootCreated:boolean;deathAt?:number;respawnStatus?:'pending'|'fulfilled';hurtUntil?:number;buffUntil?:number;armorUntil?:number;sequence?:number;cooldowns?:Record<string,number>;cast?:MonsterCast;alertUntil?:number;rageUntil?:number;lastSkill?:string;}
+export interface FaunaSave {realmIndex?:number;realmLevel?:number;id:string;species:FaunaSpecies;rank:MonsterRank;x:number;y:number;hp:number;maxHp:number;zoneId:string;home:MonsterPoint;alive:boolean;state:MonsterState;targetNpcId?:string;roamTarget?:MonsterPoint;direction?:'south'|'north'|'west'|'east';attackReadyAt:number;nextThinkAt:number;lootCreated:boolean;deathAt?:number;respawnStatus?:'pending'|'fulfilled';hurtUntil?:number;buffUntil?:number;armorUntil?:number;sequence?:number;cooldowns?:Record<string,number>;cast?:MonsterCast;alertUntil?:number;rageUntil?:number;lastSkill?:string;}
 
 export interface FaunaRespawnSave {id:string;zoneId:string;sourceDeathId:string;requestedAtMs:number;dueAtMs:number;attempts:number;lastFailure?:string;}
 export interface FaunaRespawnZoneStats {totalSpawned:number;failedAttempts:number;lastFailure?:string;lastSpawnAtMs?:number;}

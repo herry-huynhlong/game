@@ -24,6 +24,7 @@ const property = (object: any, name: string) => Array.isArray(object.properties)
 
 /** Lives in the main WorldScene and uses its Tiled Water layer as the fish's walkable domain. */
 export class WorldRiverFishSystem {
+  private offsetX = 0;
   private originX = 0; private originY = 0; private gridWidth = 0; private gridHeight = 0;
   private passable = new Uint8Array(); private componentAt = new Int32Array();
   private cells: Cell[] = []; private cellsByComponent = new Map<number, Cell[]>(); private fish: FishRuntime[] = [];
@@ -31,6 +32,7 @@ export class WorldRiverFishSystem {
   private bridgeRects: { x: number; y: number; right: number; bottom: number }[] = [];
 
   constructor(private scene: Phaser.Scene, private map: Phaser.Tilemaps.Tilemap, private environment: EnvironmentSave) {
+    this.offsetX = Number((map.properties as { name:string; value:unknown }[]).find(p=>p.name==='westOffsetX')?.value ?? 0);
     const layer = map.getLayer('Water');
     if (!layer) throw new Error('WorldScene không có layer Tiled Water');
     const minX = map.width, minY = map.height; let maxX = -1, maxY = -1;
@@ -44,7 +46,7 @@ export class WorldRiverFishSystem {
       if (gid >= WATER_FIRST_GID && gid <= WATER_LAST_GID && !ROCK_GIDS.has(gid)) { left = Math.min(left, x); top = Math.min(top, y); }
     }
     if (!this.waterTiles || maxX < left) throw new Error('Layer Water không chứa nước hợp lệ cho cá');
-    this.originX = left * map.tileWidth; this.originY = top * map.tileHeight;
+    this.originX = left * map.tileWidth - this.offsetX; this.originY = top * map.tileHeight;
     this.gridWidth = (maxX - left + 1) * map.tileWidth / STEP; this.gridHeight = (maxY - top + 1) * map.tileHeight / STEP;
     this.passable = new Uint8Array(this.gridWidth * this.gridHeight);
     this.componentAt = new Int32Array(this.passable.length); this.componentAt.fill(-1);
@@ -58,8 +60,9 @@ export class WorldRiverFishSystem {
     for (let gy = 0; gy < this.gridHeight; gy++) for (let gx = 0; gx < this.gridWidth; gx++) {
       const index = gy * this.gridWidth + gx, wx = this.originX + (gx + .5) * STEP, wy = this.originY + (gy + .5) * STEP;
       const waterAt = (x: number, y: number) => {
-        if (x < 0 || y < 0 || x >= map.widthInPixels || y >= map.heightInPixels) return false;
-        const gid = layer.data[Math.floor(y / map.tileHeight)]?.[Math.floor(x / map.tileWidth)]?.index ?? -1;
+        const tileX = x + this.offsetX;
+        if (tileX < 0 || y < 0 || tileX >= map.widthInPixels || y >= map.heightInPixels) return false;
+        const gid = layer.data[Math.floor(y / map.tileHeight)]?.[Math.floor(tileX / map.tileWidth)]?.index ?? -1;
         return gid >= WATER_FIRST_GID && gid <= WATER_LAST_GID && !ROCK_GIDS.has(gid);
       };
       if (bodySamples.every(p => waterAt(wx + p.x, wy + p.y)) && !this.bridgeRects.some(r => wx + 16 > r.x && wx - 16 < r.right && wy + 12 > r.y && wy - 12 < r.bottom)) this.passable[index] = 1;
@@ -153,7 +156,7 @@ export class WorldRiverFishSystem {
   }
 
   isWaterTile(x: number, y: number) {
-    const gid = this.map.getLayer('Water')?.data[Math.floor(y / this.map.tileHeight)]?.[Math.floor(x / this.map.tileWidth)]?.index ?? -1;
+    const gid = this.map.getLayer('Water')?.data[Math.floor(y / this.map.tileHeight)]?.[Math.floor((x + this.offsetX) / this.map.tileWidth)]?.index ?? -1;
     return gid >= WATER_FIRST_GID && gid <= WATER_LAST_GID && !ROCK_GIDS.has(gid);
   }
 

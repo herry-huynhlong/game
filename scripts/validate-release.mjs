@@ -56,6 +56,12 @@ requireText(roster, 'P09', 'P09 sect-leader mapping');
 requireText(roster, 'P24', 'P24 city-master mapping');
 requireText(read('src/world-rebuild-scene.js'), 'PAPERDOLL_PREVIEW', 'WorldScene Paper Doll preview/runtime toggle');
 requireFile('maps/world-rebuild-1b.tmj', 'runtime world map source');
+requireFile('public/assets/west-wilds/terrain.png', 'West Wilds tile atlas');
+requireFile('public/assets/west-wilds/landmarks.png', 'West Wilds landmark atlas');
+requireFile('public/assets/old-road/path.png', 'Old Road tile atlas');
+requireFile('public/assets/old-road/ground.png', 'Old Road ground atlas');
+requireFile('public/assets/society/facilities.png', 'city services and production atlas');
+requireFile('public/assets/old-road/props.png', 'Old Road pavilion and scenery atlas');
 const monsterFiles=['wolf-normal','wolf-elite','boar-normal','boar-elite','toad-normal','toad-elite','monster-fx','monster-loot'];
 requireFile('monster-gallery.html','monster gallery source');
 requireFile('monster-movement.html','monster movement lab source');
@@ -70,6 +76,12 @@ if (process.argv.includes('--dist')) {
   requireFile('dist/assets/effects/flying-swords.png','built flying sword sprites');
   for(const name of monsterFiles)requireFile('dist/assets/fauna/monster-v2/'+name+'.png','built monster sprite');
   requireFile('dist/maps/world-rebuild-1b.tmj', 'copied production world map');
+  requireFile('dist/assets/west-wilds/terrain.png', 'copied West Wilds tile atlas');
+  requireFile('dist/assets/west-wilds/landmarks.png', 'copied West Wilds landmark atlas');
+  requireFile('dist/assets/old-road/path.png', 'copied Old Road tile atlas');
+  requireFile('dist/assets/old-road/ground.png', 'copied Old Road ground atlas');
+  requireFile('dist/assets/society/facilities.png', 'copied city services and production atlas');
+  requireFile('dist/assets/old-road/props.png', 'copied Old Road scenery atlas');
   const builtImages = imagesUnder('dist/assets/npc-paperdoll-lab/presets');
   for (let i = 1; i <= 24; i++) {
     const id = `P${String(i).padStart(2, '0')}`;

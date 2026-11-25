@@ -9,7 +9,8 @@ export function cultivationView(save: Pick<CultivationSave, 'realmIndex'|'realmL
   const index = Math.max(0, Math.min(REALMS.length - 1, save.realmIndex));
   const realm = REALMS[index];
   const required = cultivationRequired(index, save.realmLevel);
-  const canBreakthrough = index < REALMS.length - 1 && save.realmLevel <= realm.maxLevel && save.xp >= required;
+  const canBreakthrough = save.realmLevel>=1&&save.realmLevel<=realm.maxLevel&&save.xp>=required&&
+    (save.realmLevel<realm.maxLevel||index<REALMS.length-1);
   return { realm: realm.name, level: save.realmLevel, xp: Math.min(save.xp, required), required, canBreakthrough, breakthroughLabel: realm.breakthrough };
 }
 
@@ -52,6 +53,24 @@ export function breakthrough(save: CultivationSave): { success: boolean; from: s
   result.success = true;
   result.to = formatRealm(save);
   return result;
+}
+
+export function advancesQiMinor(save: Pick<CultivationSave,'realmIndex'|'realmLevel'>) {
+  return save.realmIndex===0&&save.realmLevel>=1&&save.realmLevel<REALMS[0].maxLevel;
+}
+
+export function advanceQiMinor(save: CultivationSave) {
+  const attained:string[]=[];
+  while(advancesQiMinor(save)){
+    const cost=cultivationRequired(0,save.realmLevel);
+    if(save.xp<cost)break;
+    save.xp-=cost;
+    save.realmLevel++;
+    attained.push(formatRealm(save));
+  }
+  if(attained.length&&save.realmLevel===REALMS[0].maxLevel)
+    save.xp=Math.min(save.xp,cultivationRequired(0,save.realmLevel));
+  return attained;
 }
 
 export function getZoneCultivation(position: { x: number; y: number }, zones: Array<{ name?: string; x?: number; y?: number; width?: number; height?: number; properties?: Array<{name:string;value:any}> }>, veins: Array<{x:number;y:number}>): { name: string; multiplier: number } {

@@ -1,6 +1,7 @@
 import { damageEnvironment, regrowHerbNodes, releaseHerbNode } from './EnvironmentalSystem';
 import { activeCommissionForNPC, activeCommissionForTarget, chooseRepairCandidate, ensureCommissions, openRepairCommissions, postRepairCommission, startRepairCommission, tickCommissions, visitCommissionBoard, advanceRepairCommission } from './CommissionSystem';
 import type { DivineWorldSave, EnvironmentObjectSave, ResourceNodeSave, SimNPC } from './types';
+import { professionInterrupted } from './AutonomousNPCSystem';
 
 type TiledObject={id:number;name:string;x:number;y:number;width:number;height:number;properties?:Array<{name:string;value:unknown}>};
 type Reach=(from:{x:number;y:number},to:{x:number;y:number})=>boolean;
@@ -14,13 +15,15 @@ export function ensureWorldRebuildEnvironment(world:DivineWorldSave,map:{layers:
  env.objects??=[];env.drops??=[];env.processedEventIds??=[];env.defeatedBeastIds??=[];env.resourceNodes??=[];
  const entrances:Record<string,string>={'city-lord-residence':'city-hall-entrance','commission-hall':'quest-office','inn-cloud-arrival':'inn-entrance','tavern-pine-shadow':'tavern-entrance'};
  const markers=new Map(layer('NavigationMarkers').map(o=>[String(prop(o,'markerId')??''),{x:o.x,y:o.y}]));
- for(const mapObject of layer('Buildings')){
+ const sectStations=new Map(layer('SectCampusStations').map(o=>[String(prop(o,'station')??''),{x:o.x,y:o.y}]));
+ for(const mapObject of [...layer('Buildings'),...layer('SectCampusArt')]){
   const id=String(prop(mapObject,'buildingId')??'');if(!id||!id.includes('-'))continue;
-  const site=markers.get(entrances[id]??'');if(!site)continue;
+  const isSect=id.startsWith('sect-campus-');
+  const site=isSect?sectStations.get(id.slice(12)):markers.get(entrances[id]??'');if(!site)continue;
   const hitbox={x:mapObject.x,y:mapObject.y,width:mapObject.width,height:mapObject.height};
   const footprint={x:mapObject.x+mapObject.width*.2,y:mapObject.y+mapObject.height-38,width:mapObject.width*.6,height:18};
   const saved=env.objects.find(o=>o.id===id);
-  if(!saved){const object:EnvironmentObjectSave={id,kind:'house',x:site.x-64,y:site.y-34,maxHp:180,hp:180,defense:25,status:'intact',ownerFactionId:'qingyun-city',collision:{...footprint},restoreCollision:{...footprint},hitbox,repairable:true,repairProgress:0,repairGeneration:0,mapObjectId:mapObject.id,repairSite:{...site}};env.objects.push(object)}
+  if(!saved){const object:EnvironmentObjectSave={id,kind:'house',x:site.x-64,y:site.y-34,maxHp:180,hp:180,defense:25,status:'intact',ownerFactionId:isSect?'qingyun-sect':'qingyun-city',collision:{...footprint},restoreCollision:{...footprint},hitbox,repairable:true,repairProgress:0,repairGeneration:0,mapObjectId:mapObject.id,repairSite:{...site}};env.objects.push(object)}
   else{saved.mapObjectId??=mapObject.id;saved.repairSite??={...site};saved.hitbox??=hitbox;saved.repairGeneration??=0;saved.restoreCollision??={...footprint};if(saved.status==='intact'&&!saved.collision)saved.collision={...saved.restoreCollision}}
  }
  for(const mapObject of layer('ResourceNodes')){
@@ -38,7 +41,7 @@ function publishRepairJobs(world:DivineWorldSave){
  const env=world.environment;if(!env)return;
  for(const object of env.objects){if(!object.repairable||object.status==='intact'||activeCommissionForTarget(world,object.id))continue;
   const eventId=`world-rebuild-repair:${object.id}:${object.repairGeneration??0}`;
-  postRepairCommission(world,object,eventId,'Thanh Vân Thành');
+  postRepairCommission(world,object,eventId,object.ownerFactionId==='qingyun-sect'?'Thanh Vân Tông':'Thanh Vân Thành');
  }
 }
 
@@ -51,6 +54,7 @@ function setRepairPlan(npc:SimNPC,target:{x:number;y:number},state:'seeking'|'tr
 function tickRepairWorkers(world:DivineWorldSave,board:{x:number;y:number},canReach:Reach){
  const workers=world.npcs.filter(n=>n.alive&&!n.flight&&n.populationRole==='repair_worker');
  for(const npc of workers){
+  if(professionInterrupted(npc,world))continue;
   let commission=activeCommissionForNPC(world,npc.id);
   if(commission){
    const object=world.environment?.objects.find(o=>o.id===commission!.targetId);if(!object){npc.professionTask={kind:'repair',targetId:commission.targetId,state:'blocked',lastReason:'missing-building'};continue}
@@ -77,7 +81,8 @@ function tickRepairWorkers(world:DivineWorldSave,board:{x:number;y:number},canRe
 function dangerTolerance(npc:SimNPC){const axes=npc.aiProfile?.axes,courage=axes?.courage??40,caution=axes?.caution??50;if(npc.hp<42||npc.fatigue>85)return 10;return Math.max(8,Math.min(45,36+courage*.18-caution*.28+(npc.safety-50)*.08))}
 function chooseHerbNode(world:DivineWorldSave,npc:SimNPC,canReach:Reach){
  const nodes=world.environment?.resourceNodes??[],axes=npc.aiProfile?.axes;
- return nodes.filter(node=>node.kind==='herb'&&node.itemId==='spirit_herb'&&node.amount>0&&(!node.reservedBy||node.reservedBy===npc.id)&&node.danger<=dangerTolerance(npc)&&canReach(npc,node))
+ const cooldown=npc.resourceRouteCooldown,now=world.clock.day*1440+world.clock.minute;
+ return nodes.filter(node=>(cooldown?.nodeId!==node.id||cooldown.until<=now)&&!node.id.startsWith('sect-plot-')&&node.kind==='herb'&&node.itemId==='spirit_herb'&&node.amount>0&&(!node.reservedBy||node.reservedBy===npc.id)&&node.danger<=dangerTolerance(npc)&&canReach(npc,node))
   .map(node=>({node,score:38+(axes?.diligence??45)*.2+(npc.personality==='thực tế'?8:0)+(npc.schedule.some(s=>s.action==='work')?4:0)-distance(npc,node)/95-node.danger*.45-npc.hunger*.12-npc.fatigue*.22}))
   .sort((a,b)=>b.score-a.score||distance(npc,a.node)-distance(npc,b.node)||a.node.id.localeCompare(b.node.id))[0]?.node;
 }
@@ -89,7 +94,7 @@ function tickHerbGatherers(world:DivineWorldSave,canReach:Reach){
   }
   if(npc.decisionSlot?.endsWith(':herb-craft')||npc.goalAction==='trade'&&npc.decisionSlot?.endsWith(':deliver'))continue;
   const env=world.environment!,activeId=npc.assignedResourceNodeId,node=activeId?env.resourceNodes?.find(n=>n.id===activeId):undefined;
-  const needsBreak=npc.hp<28||npc.fatigue>=82||npc.hunger>=68||npc.safety<35||world.clock.minute<360||world.clock.minute>=1200;
+  const needsBreak=professionInterrupted(npc,world)||npc.hp<28||npc.safety<35||world.clock.minute<360||world.clock.minute>=1200;
   if(!needsBreak&&node&&node.amount>0&&node.reservedBy===npc.id&&node.danger<=dangerTolerance(npc)&&canReach(npc,node)){
    npc.professionTask={kind:'herb-gather',targetId:node.id,state:distance(npc,node)<=22?'working':'travelling'};npc.goalAction='gather';npc.actionTarget={x:node.x,y:node.y};npc.decisionSlot=`profession:gather:${node.id}`;npc.shortGoal=distance(npc,node)<=22?'Đang hái linh thảo tại điểm đã chọn':'Đang tìm đường tới linh thảo';
    continue;
@@ -97,7 +102,18 @@ function tickHerbGatherers(world:DivineWorldSave,canReach:Reach){
   if(activeId){if(node?.reservedBy===npc.id)releaseHerbNode(world,activeId,npc.id);npc.assignedResourceNodeId=undefined;npc.professionTask=undefined;if(npc.decisionSlot?.startsWith('profession:gather:'))npc.decisionSlot=undefined}
   if(needsBreak)continue
   const target=chooseHerbNode(world,npc,canReach);
-  if(!target){npc.goalAction='rest';npc.professionTask={kind:'herb-gather',targetId:'',state:'blocked',lastReason:(env.resourceNodes??[]).some(n=>n.amount>0)?'danger-or-no-path':'all-nodes-depleted'};npc.shortGoal='Chưa có linh thảo an toàn và còn hàng';continue}
+  if(!target){
+   const available=(env.resourceNodes??[]).filter(n=>n.kind==='herb'&&n.itemId==='spirit_herb'&&n.amount>0);
+   const safe=available.filter(n=>n.danger<=dangerTolerance(npc));
+   const reachable=safe.filter(n=>canReach(npc,n));
+   const reason=!available.length?'all-nodes-depleted':!safe.length?'unsafe-nodes':!reachable.length?'no-reachable-node':
+      reachable.some(n=>n.id===npc.resourceRouteCooldown?.nodeId&&npc.resourceRouteCooldown.until>world.clock.day*1440+world.clock.minute)
+        ?'route-retry-backoff':'nodes-reserved';
+   npc.goalAction='rest';
+   npc.professionTask={kind:'herb-gather',targetId:'',state:'blocked',lastReason:reason};
+   npc.shortGoal='Chờ linh thảo trống, an toàn và còn hàng';
+   continue;
+  }
   if(target.reservedBy&&target.reservedBy!==npc.id)continue;
   target.reservedBy=npc.id;npc.assignedResourceNodeId=target.id;npc.professionTask={kind:'herb-gather',targetId:target.id,state:'travelling',inventoryBefore:ITEM_COUNT(npc)};npc.goalAction='gather';npc.actionTarget={x:target.x,y:target.y};npc.decisionSlot=`profession:gather:${target.id}`;npc.shortGoal='Đang tìm đường tới linh thảo';
  }

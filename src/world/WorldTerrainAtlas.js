@@ -73,7 +73,9 @@ export class WorldTerrainAtlas {
     texture.refresh();
     this.renderMap=scene.make.tilemap({data,tileWidth:edge,tileHeight:edge});
     const atlas=this.renderMap.addTilesetImage(TEXTURE_KEY,TEXTURE_KEY,edge,edge,0,0,0);
-    this.renderLayer=this.renderMap.createLayer(0,atlas,0,0,true).setDepth(0);
+    // Phaser 4.2.1's GPU submitter adds the layer translation to both the matrix
+    // and the local quad. Standard TilemapLayers use the full world origin.
+    this.renderLayer=this.renderMap.createLayer(0,atlas,(scene.worldMinX??0)/2,0,true).setDepth(0);
     this.setActive(true);
     scene.events.once('shutdown',()=>{
       this.renderMap.destroy();

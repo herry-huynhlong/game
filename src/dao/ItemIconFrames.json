@@ -1,0 +1,158 @@
+{
+  "qingling_herb": [
+    0,
+    0
+  ],
+  "purple_jade_fungus": [
+    32,
+    0
+  ],
+  "violet_mist_flower": [
+    64,
+    0
+  ],
+  "thunder_fruit": [
+    96,
+    0
+  ],
+  "ancient_blood_lotus": [
+    128,
+    0
+  ],
+  "detox_pill": [
+    160,
+    0
+  ],
+  "fishing_rod_basic": [
+    192,
+    0
+  ],
+  "book_qingyun_wave": [
+    224,
+    0
+  ],
+  "book_crescent_wave": [
+    0,
+    32
+  ],
+  "book_spirit_thrust": [
+    32,
+    32
+  ],
+  "book_spirit_guard": [
+    64,
+    32
+  ],
+  "river_fish_common": [
+    96,
+    32
+  ],
+  "river_fish_spirit": [
+    128,
+    32
+  ],
+  "training_crossbow": [
+    160,
+    32
+  ],
+  "mortal_gift_sword": [
+    192,
+    32
+  ],
+  "qingfeng_sword": [
+    224,
+    32
+  ],
+  "iron_sword": [
+    0,
+    64
+  ],
+  "iron_dao": [
+    32,
+    64
+  ],
+  "qi_pill": [
+    64,
+    64
+  ],
+  "healing_pill": [
+    96,
+    64
+  ],
+  "spirit_herb": [
+    128,
+    64
+  ],
+  "protective_talisman": [
+    160,
+    64
+  ],
+  "jade_token": [
+    192,
+    64
+  ],
+  "ration": [
+    224,
+    64
+  ],
+  "rice_seed": [
+    0,
+    96
+  ],
+  "wood": [
+    32,
+    96
+  ],
+  "iron_ore": [
+    64,
+    96
+  ],
+  "wolf_pelt": [
+    96,
+    96
+  ],
+  "wolf_fang": [
+    128,
+    96
+  ],
+  "demon_core": [
+    160,
+    96
+  ],
+  "deer_meat": [
+    192,
+    96
+  ],
+  "scorpion_venom": [
+    224,
+    96
+  ],
+  "snake_skin": [
+    0,
+    128
+  ],
+  "boar_tusk": [
+    32,
+    128
+  ],
+  "crimson_plate": [
+    64,
+    128
+  ],
+  "toad_sac": [
+    96,
+    128
+  ],
+  "jade_venom": [
+    128,
+    128
+  ],
+  "elite_beast_core": [
+    160,
+    128
+  ],
+  "unknown": [
+    192,
+    128
+  ]
+}

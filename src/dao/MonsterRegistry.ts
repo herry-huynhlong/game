@@ -25,5 +25,14 @@ export type MonsterSkillId=keyof typeof MONSTER_SKILLS;
 export type MonsterSkill=(typeof MONSTER_SKILLS)[MonsterSkillId];
 export const monsterSkill=(id:string)=>MONSTER_SKILLS[id as MonsterSkillId] as (MonsterSkill & {elite?:boolean})|undefined;
 export const FAUNA_IDS=Object.keys(FAUNA_SPECIES) as FaunaSpecies[];
+const westernNames:Record<string,string>={
+  'west-outer':'Thanh Phong Lang', 'west-inner':'Thiết Giáp Sơn Trư', 'west-poison':'Hắc Trạch Độc Thiềm',
+  'west-ancient':'Hắc Viêm Ma Lang', 'west-forbidden':'Cổ Nham Trư Vương',
+};
+export const faunaName=(beast:{species:FaunaSpecies;zoneId:string})=>westernNames[beast.zoneId]??FAUNA_SPECIES[beast.species].name;
+// Ritual rank of the actual species/variant, independent of the current HP.
+const faunaTiers={wolf:4,boar:6,toad:5} as const;
+export const faunaRealm=(beast:{species:FaunaSpecies;rank:string;realmIndex?:number;realmLevel?:number})=>
+  ({realmIndex:beast.realmIndex??(beast.rank==='elite'?1:0),realmLevel:beast.realmLevel??(beast.rank==='elite'?2:faunaTiers[beast.species])});
 export const MONSTER_SKILL_IDS=Object.keys(MONSTER_SKILLS) as MonsterSkillId[];
 export const hashMonster=(value:string)=>Array.from(value).reduce((h,c)=>Math.imul(h^c.charCodeAt(0),16777619)>>>0,2166136261);

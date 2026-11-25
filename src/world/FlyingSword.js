@@ -8,9 +8,9 @@ export const FLIGHT = Object.freeze({
   cooldown:6500, commitment:1700, separation:36, landingPadding:11,
   phases:Object.freeze({SummonSword:420,MountSword:310,TakeOff:620,Landing:620,DismountSword:290,DismissSword:340}),
 });
-export const travelMode=(npc,mount)=>npc.flight?'FlyingSword':mount?.attached||mount?.locked?'MountedBeast':'Ground';
-export const blocksGroundCombat=npc=>Boolean(npc?.flight);
-export const aboveGroundCombat=npc=>(npc?.flight?.altitude??0)>=16;
+export const travelMode=(npc,mount)=>npc.skyStep?'SkyStep':npc.flight?'FlyingSword':mount?.attached||mount?.locked?'MountedBeast':'Ground';
+export const blocksGroundCombat=npc=>Boolean(npc?.flight||npc?.skyStep);
+export const aboveGroundCombat=npc=>(npc?.flight?.altitude??0)>=16||npc?.skyStep?.phase==='travel';
 const point=({x,y})=>({x,y});
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const smooth=t=>t*t*(3-2*t);
@@ -42,7 +42,9 @@ export const FLIGHT_REASONS=Object.freeze({
 export function flightEligibility(npc,{mount,locked=false}={}){
   if(!npc?.alive||npc.ascended)return {ok:false,reason:'inactive'};
   if(!meetsFlightRealm(npc))return {ok:false,reason:'realm'};
-  if(travelMode(npc,mount)==='MountedBeast'||locked)return {ok:false,reason:'busy'};
+  if(npc.wallLevel||npc.skyStep||travelMode(npc,mount)==='MountedBeast'||locked||npc.manualMeditation||
+     (npc.tribulation&&npc.tribulation.phase!=='travel')||
+     (npc.action==='cultivate'&&npc.actionTarget&&dist(npc,npc.actionTarget)<18))return {ok:false,reason:'busy'};
   const sword=weaponForNpc(npc);
   const source=sword?.kind==='jian'?sword.id:!npc.equippedWeapon&&npc.skills?.includes('qi-sword')?'qi-sword':null;
   if(!source)return {ok:false,reason:'sword'};
@@ -56,12 +58,12 @@ const flightSpeed=npc=>FLIGHT.speed*(1+Math.max(0,npc.realmIndex-1)*.12);
 const flightCost=npc=>FLIGHT.costPerSecond/Math.max(1,1+(npc.realmIndex-1)*.16);
 
 export class AerialNavigation {
-  constructor(width,height,zones=[]){
-    this.width=width;this.height=height;this.zones=zones;
+  constructor(width,height,zones=[],minX=0){
+    this.minX=minX;this.width=width;this.height=height;this.zones=zones;
   }
   open(p,height=FLIGHT.cruiseHeight){
     const pad=FLIGHT.clearance;
-    return p.x>=pad&&p.y>=pad&&p.x<=this.width-pad&&p.y<=this.height-pad&&
+    return p.x>=this.minX+pad&&p.y>=pad&&p.x<=this.width-pad&&p.y<=this.height-pad&&
       !this.zones.some(r=>height<=r.ceiling&&p.x>r.x-pad&&p.x<r.x+r.width+pad&&p.y>r.y-pad&&p.y<r.y+r.height+pad);
   }
   line(a,b,height=FLIGHT.cruiseHeight){

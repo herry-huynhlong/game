@@ -60,6 +60,7 @@ export class NpcSimulationScheduler {
 
   finishDecision(entry) {
     entry.minutes = entry.workMinutes = 0;
+    entry.lastDecision = this.time;
     entry.thinkDue = this.time + THINK_INTERVAL[entry.level];
   }
 

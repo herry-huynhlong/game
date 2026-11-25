@@ -1,0 +1,17 @@
+.resident-item-icon {
+  display: block;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  box-sizing: content-box;
+  border: 1px solid #657063;
+  background: #1d3029 url('/assets/items/inventory-icons.png') no-repeat;
+  background-size: 384px auto;
+  image-rendering: pixelated;
+}
+.resident-item-icon[data-quality=middle] { border-color: #71ab97; }
+.resident-item-icon[data-quality=high] { border-color: #deb66e; }
+.resident-items { display: grid; gap: 5px; max-height: 245px; overflow: auto; padding: 6px 0; }
+.resident-item { display: grid; grid-template-columns: 50px minmax(0,1fr) auto; gap: 8px; align-items: center; }
+.resident-item small { display: block; line-height: 1.3; }
+.resident-item button { padding-inline: 8px; min-height: 34px; }

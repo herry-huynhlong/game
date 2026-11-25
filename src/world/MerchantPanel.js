@@ -1,23 +1,7 @@
 import './merchant-panel.css';
 import { ITEM_CATALOG } from '../dao/ItemCatalog.ts';
 import { EconomySystem } from '../dao/EconomySystem.ts';
-import { LOOT_ICON } from './MonsterVisuals.js';
-
-const qualities={low:'Hạ phẩm',middle:'Trung phẩm',high:'Thượng phẩm'};
-const icons={pill:'●',herb:'✿',weapon:'⚔',material:'◆'};
-function icon(item){
-  const element=document.createElement('span');
-  element.className='trade-icon';
-  element.setAttribute('aria-hidden','true');
-  if(Object.hasOwn(LOOT_ICON,item.id)){
-    element.classList.add('trade-loot');
-    element.style.backgroundPositionX=(-LOOT_ICON[item.id]*28)+'px';
-  }else{
-    element.dataset.kind=item.kind;
-    element.textContent=icons[item.kind]??'◇';
-  }
-  return element;
-}
+import { makeItemIcon,itemQualities } from './ResidentInventory.js';
 
 export class MerchantPanel {
   constructor(scene){
@@ -109,9 +93,9 @@ export class MerchantPanel {
         const button=document.createElement('button');button.type='button';button.className='trade-row';button.dataset.item=item.id;
         button.setAttribute('aria-pressed',String(this.selected===item.id));
         const copy=document.createElement('span'),name=document.createElement('b'),detail=document.createElement('small'),description=document.createElement('small');
-        name.textContent=item.name;detail.textContent=qualities[item.quality]+' · '+count+' món · '+price+' linh thạch / món';description.textContent=item.description;
+        name.textContent=item.name;detail.textContent=itemQualities[item.quality]+' · '+count+' món · '+price+' linh thạch / món';description.textContent=item.description;
         copy.append(name,detail,description);
-        button.append(icon(item),copy);button.onclick=()=>{this.selected=item.id;this.amount.value='1';this.render();};
+        button.append(makeItemIcon(item.id),copy);button.onclick=()=>{this.selected=item.id;this.amount.value='1';this.render();};
         this.list.append(button);
       }
       this.list.scrollTop=scroll;

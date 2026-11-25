@@ -5,6 +5,7 @@ import { ensureNPCVisualStyles } from './dao/CharacterAppearance.ts';
 import { ensureNPCPopulation, NPC_POPULATION_QUOTAS } from './dao/NPCPopulationRegistry.ts';
 import { ensureAuthorityAndRealmProfiles } from './dao/NPCAuthoritySystem.ts';
 import { createFactions, createSettlement, createShops } from './dao/SettlementSystem.ts';
+import { migrateWorldLayout, worldLayout } from './world/WorldLayout.js';
 
 export const WORLD_POPULATION_SAVE_KEY = 'world-rebuild-1c-v1';
 
@@ -38,7 +39,8 @@ function findOpen(x, y, solids, occupied, worldWidth, worldHeight) {
 function makeFreshWorld(seed, map, solids) {
   const worldId = `world-rebuild-1c:${seed}`;
   const world = {
-    version: 1, worldId, access: [{ playerId: 'local-player', role: 'owner' }],
+    version: 1, layoutVersion: worldLayout(map).worldLayoutVersion??1,
+    worldId, access: [{ playerId: 'local-player', role: 'owner' }],
     clock: { day: 1, minute: 480, speed: 1, paused: false },
     heaven: structuredClone({ ...HEAVEN_DEFAULTS, originWorldId: worldId, playerId: 'local-player', mode: 'heavenly' }),
     npcs: [], events: [], rewardedEventIds: [], sieges: [], lastSiegeDay: 0, ascendedRecords: [],
@@ -105,12 +107,17 @@ function makeFreshWorld(seed, map, solids) {
 }
 
 export function loadWorldPopulation(storage, map) {
-  const solids = (map.getObjectLayer('Collision')?.objects ?? []).map(o => ({ x: o.x, y: o.y, width: o.width, height: o.height }));
+  const solids = ['Collision','SectCampusCollision','SocietyCollision'].flatMap(name=>map.getObjectLayer(name)?.objects??[])
+    .filter(o=>!o.properties?.some(p=>p.name==='retiredSect'&&p.value));
   const raw = storage.getItem(WORLD_POPULATION_SAVE_KEY);
   if (raw) {
     try {
       const world = JSON.parse(raw);
-      if (world?.population?.initialized && world.population.spawnVersion === 1 && world.npcs?.length >= 108) { ensureWorldNpcAppearances(world); return { world, fresh: false }; }
+      if (world?.population?.initialized && world.population.spawnVersion === 1 && world.npcs?.length >= 108) {
+        migrateWorldLayout(world,map);
+        ensureWorldNpcAppearances(world);
+        return { world, fresh: false };
+      }
     } catch { /* A corrupt new-world save is preserved; do not import or overwrite legacy keys. */ }
     throw new Error('Bản lưu WORLD.REBUILD.1-C không hợp lệ. Đã giữ nguyên dữ liệu để tránh ghi đè.');
   }

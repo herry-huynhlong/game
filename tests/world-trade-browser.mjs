@@ -75,7 +75,8 @@ try {
     const v=s.merchants.shops.get('city-market');
     const n=w.npcs.find(n=>n.populationRole==='commoner'&&n.alive);
     window.tradeCase={owner:v.owner.id,actor:n.id,shop:v.shop.id};
-    Object.assign(v.owner,{x:v.position.x,y:v.position.y,hunger:10,fatigue:10,safety:100,goalAction:'trade'});
+    Object.assign(v.owner,{...v.position,hunger:10,fatigue:10,safety:100,decisionSlot:undefined,actionProgress:0});
+    s.populationSimulation.tickNpc(v.owner,1,w.clock.day,w.clock.minute,0);
     s.npcSprites.get(v.owner.id).setPosition(v.owner.x,v.owner.y);
     const directions=[[-1,0,'KeyD','d',68],[1,0,'KeyA','a',65],[0,-1,'KeyS','s',83],[0,1,'KeyW','w',87]];
     const casePoint=directions.map(([dx,dy,...key])=>({x:v.position.x+dx*79,y:v.position.y+dy*79,key})).find(p=>
@@ -151,6 +152,9 @@ try {
   await writeFile(join(output,'trade-player.json'),JSON.stringify({layout,before,buy,sell,resumed,reloaded,errors,failed},null,2));
   const market=await evalScene(`
     const w=s.populationWorld,m=s.merchants,v=m.shops.get('city-market');
+    Object.assign(v.owner,{...v.position,hunger:10,fatigue:10,safety:100,decisionSlot:undefined,actionProgress:0});
+    s.populationSimulation.tickNpc(v.owner,1,w.clock.day,w.clock.minute,0);
+    s.npcSprites.get(v.owner.id).setPosition(v.position.x,v.position.y);
     const hunters=w.npcs.filter(n=>n.alive&&n.populationRole==='hunter').slice(0,5);
     const ids=new Set(hunters.map(n=>n.id));
     m.nextDecision=new Map(w.npcs.filter(n=>!ids.has(n.id)).map(n=>[n.id,Infinity]));
@@ -216,8 +220,9 @@ try {
     const n=w.npcs.find(n=>n.alive&&n.populationRole==='commoner'&&n.id!==s.possessedNpcId);
     const count=(items,id)=>items.find(i=>i.itemId===id)?.count??0;
     w.clock.minute=610;
-    Object.assign(owner,{x:v.position.x,y:v.position.y,hunger:10,fatigue:10,safety:100,goalAction:'work'});
+    Object.assign(owner,{...v.position,hunger:10,fatigue:10,safety:100,decisionSlot:undefined,actionProgress:0});
     v.retryAt=0;v.shop.healingBrewDay=undefined;
+    s.populationSimulation.tickNpc(owner,1,w.clock.day,w.clock.minute,0);
     v.shop.stock=[{itemId:'spirit_herb',count:4}];
     const pulse=()=>{s.scheduler.time+=500;m.tick(s.scheduler.time);};
     pulse();
@@ -231,6 +236,7 @@ try {
     m.propose(n);
     const health=n.hp;
     w.clock.minute=v.shop.closeHour*60;
+    s.populationSimulation.tickNpc(owner,1,w.clock.day,w.clock.minute,0);
     m.tick(s.scheduler.time+500);
     return {manufactured,noDuplicate,item:choice.itemId,paid:result.ok,stones:n.spiritStones,remaining,health,
       healingConsumed:count(n.inventory,'healing_pill')===0,closed:!m.serving(v),returning:owner.goalAction==='rest'};

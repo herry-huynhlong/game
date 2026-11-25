@@ -28,13 +28,32 @@ try{
   world.environment.drops=[{id:'already-owned',sourceId:'fauna:old:deer',itemId:'deer_meat',status:'claimed'}];
   world.npcs[0].inventory.push({itemId:'deer_meat',count:2});
   const beasts=m.ensureFauna(world,zones,open);
-  assert.equal(beasts.length,24);
+  assert.equal(beasts.length,50);
+  const western=beasts.filter(b=>b.zoneId.startsWith('west-'));
+  assert.equal(western.length,18);
+  assert.deepEqual([...new Set(western.map(b=>b.realmIndex))].sort(),[0,1,2,3]);
+  assert.equal(beasts.filter(b=>b.zoneId.startsWith('old-road-')&&b.rank==='normal').length,8);
   assert.deepEqual([...new Set(beasts.map(b=>b.species))].sort(),['boar','toad','wolf']);
   assert.ok(beasts.every(b=>zones.some(z=>z.zoneId===b.zoneId&&z.species===b.species&&m.insideHabitat(b,z)&&open(z,b.x,b.y,b.species,b.rank))));
   assert.equal(world.npcs[0].inventory[0].count,2);
   assert.equal(world.environment.drops[0].id,'already-owned');
   const copy=structuredClone(world);
   m.ensureFauna(copy,zones,open);assert.deepEqual(copy,world,'reload cannot reroll tiers or IDs');
+  const legacy=makeWorld();
+  const originals=m.ensureFauna(legacy,zones.filter(z=>!z.normalOnly),open).map(b=>b.id);
+  m.ensureFauna(legacy,zones,open);
+  assert.deepEqual(legacy.environment.fauna.slice(0,24).map(b=>b.id),originals);
+  assert.equal(legacy.environment.fauna.length,50);
+  const outer=m.damageFauna(legacy,legacy.environment.fauna[24].id,'hunter',200,'old-road-hunt');
+  const outerZone=zones.find(z=>z.zoneId===outer.fauna.zoneId);
+  m.queueFaunaRespawn(legacy,outer.fauna,outerZone.respawnMs);
+  const pending=structuredClone(legacy);
+  m.ensureFauna(pending,zones,open);
+  assert.equal(pending.environment.fauna.length,50,'reloading a slain beast does not fill the slot early');
+  assert.equal(m.processFaunaRespawns(pending,zones,outerZone.respawnMs-1,open).spawned.length,0);
+  const blocked=m.processFaunaRespawns(pending,zones,outerZone.respawnMs,()=>false);
+  assert.equal(blocked.failed.length,1);
+  assert.equal(m.processFaunaRespawns(pending,zones,outerZone.respawnMs+2500,open).spawned[0].rank,'normal');
   const beast=beasts[0],habitat=zones.find(z=>z.zoneId===beast.zoneId);
   const dead=m.damageFauna(world,beast.id,'hunter',200,'first');
   assert.ok(!dead.fauna.alive&&dead.drops.length>=1);
@@ -137,5 +156,5 @@ try{
     assert.deepEqual([png.width,png.height],[1280,576]);
     assert.ok(png.data.some((v,i)=>i%4===3&&v>0));
   }
-  console.log(`Monster 2.0: 24 spawns, ${elites} elite slots in 300 seeded worlds, 12 timed skills, swept walls, idempotent loot and save/load.`);
+  console.log(`Monster 2.0: 24 existing and 8 Old Road spawns, ${elites} elite slots in 300 seeded worlds, 12 timed skills, swept walls, idempotent loot and save/load.`);
 }finally{fs.rmSync(tmp,{recursive:true,force:true});}

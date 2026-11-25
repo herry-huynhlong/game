@@ -3,6 +3,7 @@ import { validateAppearance } from './CharacterAppearance.js';
 import { CharacterAnimationController } from './CharacterAnimationController.js';
 import { rigFor } from './CharacterAssetRegistry.js';
 import { weaponPlacement } from './CharacterEquipment.js';
+import { meditationAnchors, seatedTexture } from './SeatedCharacterArt.js';
 
 const PARTS = ['hairBack','body','pants','leftShoe','rightShoe','hem','outerCloth','innerCloth',
   'leftArm','rightArm','face','eyes','eyebrows','beard','hairFront','headwear','accessory','weapon','effect'];
@@ -43,7 +44,7 @@ export class CharacterRenderer {
     const changed=this.timeline.advance(delta,motion,direction,distance);
     const wasActing=Boolean(this.combat.action);
     this.combat.advance(delta,(event,action)=>{this.apply();this.onActionEvent?.(event,action,this.attachments);});
-    if(changed||wasActing||this.riding||this.combat.weapon==='crossbow')this.apply();
+    if(changed||wasActing||this.riding||this.combat.weapon==='crossbow'||this.meditation||this.seated?.visible)this.apply();
   }
 
   apply() {
@@ -86,6 +87,36 @@ export class CharacterRenderer {
       if(sprite.x!==px||sprite.y!==py)sprite.setPosition(px,py);
       if(sprite.visible!==visible)sprite.setVisible(visible);
     };
+    const meditation=this.meditation;
+    if(meditation?.amount>.20&&!riding&&!flight&&!action){
+      const stage=meditation.amount<.56?1:meditation.amount<.90?2:3;
+      const breath=stage===3&&Boolean(meditation.breath||meditation.shocked)?1:0;
+      const anchors=meditationAnchors(appearance,direction,stage,breath);
+      this.meditationAnchors=anchors;
+      const [x,y]=anchors.shift;
+      const texture=seatedTexture(layers.body.scene.textures,appearance,direction,stage,breath);
+      if(!this.seated){
+        this.seated=layers.body.scene.add.image(-32,-93,texture).setOrigin(0);
+        this.root.add(this.seated);
+      }
+      if(this.seated.texture.key!==texture)this.seated.setTexture(texture);
+      this.seated.setVisible(true);
+      if(meditation.shocked)this.seated.setTint(0xbfc9ff);
+      else this.seated.clearTint();
+      for(const part of PARTS)layers[part].setVisible(false);
+      set('hairBack','hairBack'+hair,x,y);
+      set('face',`face/${appearance.face}/${appearance.expression}`,x,y);
+      set('eyes',`eyes/${appearance.eyes}`,x,y,meditation.name!=='BreakthroughPrepare');
+      set('eyebrows',`eyebrows/${appearance.eyebrows}`,x,y);
+      set('beard',`beard/${appearance.beard}`,x,y,appearance.beard!=='none'&&(appearance.beard==='silver'||appearance.face==='elder'));
+      set('hairFront','hairFront'+hair,x,y);
+      set('headwear','headwear',x,y,appearance.headwear!=='none'&&appearance.hair==='bun');
+      for(const layer of [layers.hairBack,this.seated,layers.face,layers.eyes,layers.eyebrows,layers.beard,layers.hairFront,layers.headwear])this.root.bringToTop(layer);
+      this.lastLayerDirection=null;
+      return;
+    }
+    this.meditationAnchors=null;
+    this.seated?.setVisible(false);
     set('hairBack','hairBack'+hair,sway);
     set('body');
     const pants = appearance.pants === 'charcoal' ? '/charcoal' : '';

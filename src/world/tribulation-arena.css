@@ -1,0 +1,19 @@
+#tribulation-arena {
+  position: fixed; z-index: 26; left: 15px; bottom: 54px;
+  width: min(405px, calc(100vw - 30px)); box-sizing: border-box;
+  max-height: calc(100dvh - 130px); overflow: auto;
+  color: #e9d9b1; background: #18251de8; border: 1px solid #a38b59;
+  padding: 12px; font: 12px/1.35 system-ui, sans-serif;
+}
+#tribulation-arena header { border-bottom: 1px solid #7b6845; padding-bottom: 5px; margin-bottom: 8px; }
+#tribulation-arena h2 { margin: 0; font: 700 20px Georgia, serif; }
+#tribulation-arena p { margin: 2px 0; }
+#tribulation-arena .arena-fields { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 7px; }
+#tribulation-arena .arena-fields label, #tribulation-arena .arena-timeline { display: grid; gap: 4px; }
+#tribulation-arena .arena-options, #tribulation-arena .arena-playback { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+#tribulation-arena select, #tribulation-arena button {
+  min-height: 32px; min-width: 0; max-width: 100%; border: 1px solid #8a754e;
+  color: #f2e1b8; background: #29382b; padding: 4px 5px; font: inherit;
+}
+#tribulation-arena input { accent-color: #d2b478; min-width: 0; }
+#tribulation-arena output { display: block; margin-top: 5px; font-variant-numeric: tabular-nums; }

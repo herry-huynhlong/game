@@ -1,16 +1,19 @@
 import { EconomySystem } from '../dao/EconomySystem.ts';
-import { cultivationStats } from '../systems/CultivationSystem.ts';
+import { advancesQiMinor, cultivationStats } from '../systems/CultivationSystem.ts';
 import { cultivationRequired } from '../systems/RealmConfig.ts';
 import { ITEM_CATALOG } from '../dao/ItemCatalog.ts';
+import { equipBestWeapon } from '../dao/GiftItemSystem.ts';
+import { livelihoodNeed } from '../dao/AutonomousNPCSystem.ts';
 
 const RANGE=64;
-const FACILITIES={'city-food':'tavern-entrance','city-apothecary':'apothecary-entrance','city-forge':'forge-entrance','city-inn':'inn-entrance'};
+const FACILITIES={'sect-dining-hall':'sect-food','sect-treasure-pavilion':'sect-market','city-food':'tavern-entrance','city-apothecary':'apothecary-entrance','city-forge':'forge-entrance','city-inn':'inn-entrance'};
+const shopAction=id=>id==='city-food'||id==='city-apothecary'||id==='city-forge'?'work':'trade';
 const TROPHIES=['wolf_fang','wolf_pelt','demon_core','boar_tusk','crimson_plate','toad_sac','jade_venom','elite_beast_core'];
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const point=(x,y)=>({x,y});
 const rings=[24,40,54,74,96,120];
 const offsets=[[1,0],[-1,0],[0,1],[0,-1],[.71,.71],[-.71,.71],[.71,-.71],[-.71,-.71]];
-const urgent=n=>n.goalAction==='fight'||n.goalAction==='flee'||n.faunaHuntTargetId||n.lawResponse?.status==='responding'||n.decisionSlot?.startsWith('mandate:');
+const urgent=n=>n.goalAction==='fight'||n.goalAction==='flee'||n.skyStep||n.tribulation||n.manualMeditation||n.faunaHuntTargetId||n.lawResponse?.status==='responding'||n.decisionSlot?.startsWith('mandate:');
 
 export class WorldMerchants {
   constructor(scene){
@@ -52,18 +55,27 @@ export class WorldMerchants {
   }
   onDuty(venue){
     const {owner,shop}=venue;
-    return EconomySystem.isOpen(shop,this.world.clock.minute)&&owner.alive&&!owner.ascended&&!owner.flight&&
-      owner.id!==this.scene.possessedNpcId&&owner.hunger<76&&owner.fatigue<86&&owner.safety>=28&&!urgent(owner)&&
-      (venue.retryAt??0)<=this.scene.scheduler.time;
+    return EconomySystem.isOpen(shop,this.world.clock.minute)&&(venue.retryAt??0)<=this.scene.scheduler.time&&
+      owner.alive&&!owner.ascended&&!owner.flight&&!owner.marketVisit&&
+      owner.id!==this.scene.possessedNpcId&&owner.safety>=35&&!urgent(owner)&&!livelihoodNeed(owner,this.world)&&
+      owner.decisionSlot==='shop-shift:'+shop.id&&owner.goalAction===shopAction(shop.id);
+  }
+  dutyFor(npc){
+    const venue=this.byOwner.get(npc.id);
+    if(!venue)return;
+    const {shop,position}=venue;
+    return {id:shop.id,name:shop.name,position,open:EconomySystem.isOpen(shop,this.world.clock.minute),
+      action:shopAction(shop.id),
+      reachable:(venue.retryAt??0)<=this.scene.scheduler.time};
   }
   replanStation(npc){
     const venue=this.byOwner.get(npc.id);
     if(venue)venue.retryAt=this.scene.scheduler.time+12000;
     return Boolean(venue);
   }
-  serving(venue){return venue&&this.onDuty(venue)&&distance(venue.owner,venue.position)<25;}
+  serving(venue){return venue&&this.onDuty(venue)&&venue.owner.action===venue.owner.goalAction&&distance(venue.owner,venue.position)<=12.01;}
   canTrade(npc,venue){
-    return Boolean(npc?.alive&&!npc.ascended&&!npc.flight&&this.serving(venue)&&
+    return Boolean(npc?.alive&&!npc.ascended&&!npc.flight&&!npc.wallLevel&&this.serving(venue)&&
       venue.owner.id!==npc.id&&distance(venue.owner,npc)<=RANGE&&this.line(npc,venue.owner));
   }
   nearest(npc,preferredId,facing){
@@ -77,7 +89,8 @@ export class WorldMerchants {
   }
   station(npc){
     const venue=this.byOwner.get(npc.id);
-    return venue&&this.onDuty(venue)?venue.position:null;
+    return venue&&npc.decisionSlot==='shop-shift:'+venue.shop.id&&
+      npc.goalAction===shopAction(venue.shop.id)?venue.position:null;
   }
   quote(npc,venue,side,itemId,count){
     if(!this.canTrade(npc,venue))return {ok:false,message:'Cần đứng gần thương nhân đang mở cửa, cùng phía với lối đi.'};
@@ -113,8 +126,13 @@ export class WorldMerchants {
     if(this.world.events.length>400)this.world.events.splice(0,this.world.events.length-400);
   }
   propose(n){
-    if(this.byOwner.has(n.id)||urgent(n)||n.marketRetryAt>this.now())return null;
+    if(this.byOwner.has(n.id)||urgent(n)||n.decisionSlot?.startsWith('sect-campus:')||
+      n.decisionSlot?.startsWith('society:')||n.marketRetryAt>this.now())return null;
     const count=id=>EconomySystem.count(n.inventory,id);
+    const need=livelihoodNeed(n,this.world);
+    if(need==='eat'||n.goalAction==='eat'){
+      return count('ration')||count('deer_meat')?null:{side:'buy',itemId:'ration',count:1,preferred:n.faction==='Thanh Vân Tông'?'sect-dining-hall':'city-food'};
+    }
     if(n.hp<cultivationStats(n).hpMax*.55){
       if(EconomySystem.remove(n.inventory,'healing_pill',1)){
         n.hp=Math.min(cultivationStats(n).hpMax,n.hp+Math.ceil(cultivationStats(n).hpMax*.35));
@@ -126,22 +144,27 @@ export class WorldMerchants {
           return {side:'buy',itemId:'healing_pill',count:1,preferred:'city-apothecary'};
       }
     }
+    if(need==='rest'||n.goalAction==='rest')return null;
     const sell=(items,reserve=0)=>items.map(id=>[id,EconomySystem.sellable(this.world,n,id)-reserve]).find(([,amount])=>amount>0);
     const sale=n.populationRole==='hunter'?sell(TROPHIES):
       n.populationRole==='herb_gatherer'?sell(['spirit_herb'],1):
       n.profession==='nong_dan'?sell(['ration'],2):n.goalAction==='trade'?sell(['wood','iron_sword','qi_pill','spirit_herb']):null;
     if(sale)return {side:'sell',itemId:sale[0],count:sale[1],preferred:n.populationRole==='herb_gatherer'?'city-apothecary':'city-market'};
-    if(n.hunger>=58&&!count('ration')&&!count('deer_meat'))return {side:'buy',itemId:'ration',count:1,preferred:'city-food'};
-    if(n.profession==='tu_si'&&!count('qi_pill')&&(n.goalAction==='shop'||n.xp>=cultivationRequired(n.realmIndex,n.realmLevel)))
+    if(n.populationRole==='hunter'&&!n.equippedWeapon&&!count('iron_sword')&&!count('iron_dao'))
+      return {side:'buy',itemId:'iron_sword',count:1,preferred:'city-forge'};
+    if(n.profession==='tu_si'&&!advancesQiMinor(n)&&!count('qi_pill')&&(n.goalAction==='shop'||n.xp>=cultivationRequired(n.realmIndex,n.realmLevel)))
       return {side:'buy',itemId:'qi_pill',count:1,preferred:'city-apothecary'};
     return null;
   }
   start(n,intent){
     if(!intent||n.marketVisit||n.marketRetryAt>this.now()||urgent(n))return false;
-    const {side,itemId,count,preferred}=intent;
+    const {side,itemId,count,preferred,onlyPreferred=false}=intent;
+    const meal=side==='buy'&&itemId==='ration'&&n.goalAction==='eat';
+    const need=livelihoodNeed(n,this.world);
+    if(!meal&&(need==='eat'||need==='rest'&&itemId!=='healing_pill'))return false;
     const options=[];
     for(const v of this.shops.values()){
-      if(v.owner===n||!this.onDuty(v)||!this.scene.canReachPoint(n,v.position))continue;
+      if(v.owner===n||onlyPreferred&&v.shop.id!==preferred||!this.onDuty(v)||!this.scene.canReachPoint(n,v.position))continue;
       const price=(side==='buy'?v.shop.sellPrices:v.shop.buyPrices)[itemId];
       if(!price)continue;
       const amount=Math.min(count,side==='buy'?Math.min(EconomySystem.count(v.shop.stock,itemId),Math.floor(n.spiritStones/price)):
@@ -150,9 +173,18 @@ export class WorldMerchants {
     }
     const best=options.sort((a,b)=>a.rank-b.rank)[0];
     if(!best){n.marketRetryAt=this.now()+14;return false;}
-    n.marketVisit={side,itemId,count:best.amount,shopId:best.v.shop.id,expiresAt:this.now()+112};
-    this.scene.workstations.release(n.id);this.scene.npcRoutes.delete(n.id);
+    const journey=distance(n,best.v.position);
+    n.marketVisit={side,itemId,count:best.amount,shopId:best.v.shop.id,
+      expiresAt:this.now()+112+(journey>950?Math.ceil(journey/18):0),longJourney:journey>950};
+    this.assignVisitPlan(n,best.v,meal);
     return true;
+  }
+  assignVisitPlan(n,venue,meal){
+    n.goalAction=meal?'eat':n.marketVisit.side==='buy'?'shop':'trade';
+    n.action='travel';n.actionProgress=0;n.decisionSlot='market:'+venue.shop.id;
+    n.actionTarget=venue.queue[0]??venue.counter[0];
+    this.scene.resetNpcRoute(n);
+    this.scene.scheduler.byId.get(n.id).waitingForSlot=false;
   }
   redirect(n,side,shopId,itemId,count){
     const venue=this.shops.get(shopId);
@@ -177,14 +209,18 @@ export class WorldMerchants {
   }
   cancel(n,reason){
     if(!n.marketVisit)return false;
-    delete n.marketVisit;this.slots.delete(n.id);this.scene.npcRoutes.delete(n.id);
-    n.marketRetryAt=this.now()+24;n.pathBlocked=false;n.actionProgress=0;
-    if(!urgent(n)){
-      n.goalAction='rest';n.decisionSlot=undefined;n.action='travel';n.shortGoal=reason;
-      n.actionTarget=point(n.home?.x??n.x,n.home?.y??n.y);
+    const meal=n.goalAction==='eat'&&n.marketVisit.itemId==='ration';
+    delete n.marketVisit;this.slots.delete(n.id);
+    n.marketRetryAt=this.now()+24;
+    if(!urgent(n)&&n.decisionSlot?.startsWith('market:')){
+      const hasFood=meal&&n.inventory.some(i=>i.count>0&&(i.itemId==='ration'||i.itemId==='deer_meat'));
+      n.goalAction=meal?'eat':'rest';
+      n.decisionSlot=hasFood?'need:eat':undefined;n.action=hasFood?'eat':'travel';n.shortGoal=reason;
+      n.actionTarget=meal?point(n.x,n.y):point(n.home?.x??n.x,n.home?.y??n.y);n.actionProgress=0;
     }
+    this.scene.resetNpcRoute(n);
     const entry=this.scene.scheduler.byId.get(n.id);
-    if(entry){entry.waitingForSlot=false;entry.retryAt=0;entry.thinkDue=0;}
+    if(entry){entry.waitingForSlot=false;entry.thinkDue=0;}
     return true;
   }
   reroute(n){
@@ -216,34 +252,23 @@ export class WorldMerchants {
       const npc=npcs.find(n=>n.id===id);
       if(!npc?.alive||!npc.marketVisit||id===possessed||npc.marketVisit.shopId!==claim.venue.shop.id)this.slots.delete(id);
     }
-    for(const [id,venue] of this.byOwner){
-      const n=venue.owner;
-      if(!this.onDuty(venue)||n.marketVisit){
-        if(venue.assigned&&!EconomySystem.isOpen(venue.shop,this.world.clock.minute)&&!urgent(n)&&
-          n.alive&&id!==possessed&&n.actionTarget&&distance(n.actionTarget,venue.position)<1){
-          n.goalAction='rest';n.actionTarget=n.home;n.decisionSlot=undefined;n.actionProgress=0;
-          n.shortGoal='Đã đóng cửa '+venue.shop.name+' · về nghỉ';
-          this.scene.npcRoutes.delete(id);
-        }
-        venue.assigned=false;
-        continue;
-      }
-      const entry=this.scene.scheduler.byId.get(id);
-      const makesStock=['city-forge','city-apothecary','city-food'].includes(venue.shop.id);
-      if(n.goalAction!=='trade'||!n.decisionSlot?.endsWith(':deliver'))n.goalAction=makesStock?'work':'trade';
-      n.actionTarget=venue.position;
-      venue.assigned=true;
-      n.shortGoal=this.serving(venue)?'Đang trực '+venue.shop.name:'Đến '+venue.shop.name+' mở cửa';
-      if(entry?.waitingForSlot){entry.waitingForSlot=false;this.scene.workstations.release(id);}
+    for(const venue of this.byOwner.values()){
+      if(!this.serving(venue))continue;
       const {shop}=venue,day=this.world.clock.day;
       if(shop.id==='city-apothecary'&&this.serving(venue)&&shop.healingBrewDay!==day&&
         EconomySystem.count(shop.stock,'healing_pill')<4&&EconomySystem.remove(shop.stock,'spirit_herb',2)){
         EconomySystem.add(shop.stock,'healing_pill',1);shop.healingBrewDay=day;
         this.scene.requestBackgroundSave();
       }
+      if(shop.id==='city-apothecary'&&this.serving(venue)&&this.now()>=(shop.nextQiBrewAt??0)&&
+        EconomySystem.count(shop.stock,'qi_pill')<3&&EconomySystem.count(shop.stock,'spirit_herb')>=4){
+        EconomySystem.remove(shop.stock,'spirit_herb',2);
+        EconomySystem.add(shop.stock,'qi_pill',1);shop.nextQiBrewAt=this.now()+90;
+        this.scene.requestBackgroundSave();
+      }
     }
     for(const n of npcs){
-      if(!n.alive||n.ascended||n.id===possessed||n.flight||this.byOwner.has(n.id))continue;
+      if(!n.alive||n.ascended||n.id===possessed||n.flight)continue;
       if(!n.marketVisit&&time>=(this.nextDecision?.get(n.id)??0)){
         (this.nextDecision??=new Map()).set(n.id,time+2500+(n.id.charCodeAt(n.id.length-1)%11)*120);
         this.start(n,this.propose(n));
@@ -251,9 +276,16 @@ export class WorldMerchants {
       const visit=n.marketVisit;
       if(!visit)continue;
       const venue=this.shops.get(visit.shopId);
-      if(!venue||this.now()>=visit.expiresAt||urgent(n)||!this.onDuty(venue)){
+      const need=livelihoodNeed(n,this.world);
+      if(need==='eat'&&visit.itemId!=='ration'||need==='rest'&&visit.itemId!=='healing_pill'){
+        this.cancel(n,'Tạm hoãn giao dịch để nghỉ hoặc tìm thức ăn');continue;
+      }
+      const keepVisit=visit.longJourney&&venue&&(distance(n,venue.position)>162||
+        EconomySystem.isOpen(venue.shop,this.world.clock.minute));
+      if(!venue||this.now()>=visit.expiresAt||urgent(n)||!keepVisit&&!this.onDuty(venue)){
         this.cancel(n,'Chưa thể giao dịch · trở lại lịch sinh hoạt');continue;
       }
+      if(!n.decisionSlot?.startsWith('market:'))this.assignVisitPlan(n,venue,visit.itemId==='ration'&&need==='eat');
       const entry=this.scene.scheduler.byId.get(n.id);
       entry.waitingForSlot=false;
       const near=distance(n,venue.position)<162;
@@ -263,13 +295,17 @@ export class WorldMerchants {
         if(!claim)claim=this.claim(n,venue,false);
         if(!claim){this.cancel(n,'Quầy đang đầy · sẽ ghé lại sau');continue;}
       }
-      n.goalAction=visit.side==='buy'?'shop':'trade';
       const approach=venue.queue.length?venue.queue:venue.counter;
       const index=[...n.id].reduce((hash,letter)=>(hash*31+letter.charCodeAt(0))>>>0,0)%approach.length;
-      n.actionTarget=claim?.point??approach[index];
+      const target=claim?.point??approach[index];
+      if(distance(target,n.actionTarget)>4){
+        n.actionTarget=target;
+        this.scene.resetNpcRoute(n);
+      }
       n.shortGoal=claim&&!claim.counter?'Đang chờ tới lượt tại '+venue.shop.name:'Đi giao dịch tại '+venue.shop.name;
       if(!claim?.counter||distance(n,claim.point)>10||!this.canTrade(n,venue))continue;
       const result=this.execute(n,venue,visit.side,visit.itemId,visit.count);
+      if(result.ok&&visit.side==='buy'&&ITEM_CATALOG[visit.itemId]?.kind==='weapon')equipBestWeapon(n);
       this.cancel(n,result.ok?'Đã giao dịch · rời quầy':result.message);
     }
   }

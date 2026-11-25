@@ -1,8 +1,16 @@
+import ITEM_ICON_FRAMES from './ItemIconFrames.json';
+
 export type ItemKind='weapon'|'treasure'|'pill'|'talisman'|'herb'|'material'|'special';
 export type ItemTier='mortal'|'artifact'|'spirit'|'treasure'|'spiritual-treasure'|'immortal'|'divine';
 export type ItemQuality='low'|'middle'|'high';
-export interface ItemDefinition { id:string; name:string; kind:ItemKind; tier:ItemTier; quality:ItemQuality; description:string; value:number; }
+export interface ItemDefinition { id:string; name:string; kind:ItemKind; tier:ItemTier; quality:ItemQuality; description:string; value:number; icon?:readonly number[]; }
 export const ITEM_CATALOG:Record<string,ItemDefinition>={
+  qingling_herb:{id:'qingling_herb',name:'Thanh Linh Thảo',kind:'herb',tier:'mortal',quality:'low',description:'Linh thảo Thanh Mộc dùng luyện Tụ Khí Đan.',value:8},
+  purple_jade_fungus:{id:'purple_jade_fungus',name:'Tử Ngọc Linh Chi',kind:'herb',tier:'artifact',quality:'middle',description:'Linh chi Nội Lâm dùng luyện Tụ Khí Đan.',value:24},
+  violet_mist_flower:{id:'violet_mist_flower',name:'Tử Vụ Linh Hoa',kind:'herb',tier:'artifact',quality:'high',description:'Linh hoa Độc Lâm dùng luyện Giải Độc Đan.',value:42},
+  thunder_fruit:{id:'thunder_fruit',name:'Lôi Linh Quả',kind:'herb',tier:'spirit',quality:'high',description:'Linh quả Thâm Lâm có thể luyện thành Tụ Khí Đan.',value:82},
+  ancient_blood_lotus:{id:'ancient_blood_lotus',name:'Thái Cổ Huyết Liên',kind:'herb',tier:'treasure',quality:'high',description:'Thiên tài địa bảo của Cấm Địa, cho nhiều đan hơn khi luyện.',value:160},
+  detox_pill:{id:'detox_pill',name:'Giải Độc Đan',kind:'pill',tier:'artifact',quality:'middle',description:'Giúp giải linh độc của Hắc Vụ khi cơ thể tích độc.',value:28},
   fishing_rod_basic:{id:'fishing_rod_basic',name:'Cần câu phổ thông',kind:'special',tier:'mortal',quality:'low',description:'Cần tre có dây và phao, dùng ở bờ sông.',value:0},
   book_qingyun_wave:{id:'book_qingyun_wave',name:'Bí kíp Thanh Vân Kiếm Khí',kind:'special',tier:'mortal',quality:'middle',description:'Kiếm khí tầm xa, thi triển bằng kiếm.',value:0},
   book_crescent_wave:{id:'book_crescent_wave',name:'Bí kíp Bán Nguyệt Đao Khí',kind:'special',tier:'mortal',quality:'middle',description:'Đao khí có thể chém trúng nhiều mục tiêu.',value:0},
@@ -36,3 +44,5 @@ export const ITEM_CATALOG:Record<string,ItemDefinition>={
   jade_venom:{id:'jade_venom',name:'Bích độc dịch',kind:'material',tier:'mortal',quality:'middle',description:'Linh độc đã được thu gom.',value:16},
   elite_beast_core:{id:'elite_beast_core',name:'Nội đan Tinh Anh',kind:'material',tier:'mortal',quality:'middle',description:'Tinh hoa của yêu thú Tinh Anh.',value:66},
 };
+export const itemIcon=(id:string)=>(ITEM_ICON_FRAMES as Record<string,readonly number[]>)[id]??ITEM_ICON_FRAMES.unknown;
+for(const item of Object.values(ITEM_CATALOG))item.icon=itemIcon(item.id);

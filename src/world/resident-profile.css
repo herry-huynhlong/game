@@ -12,10 +12,11 @@
   background: #12231e;
   border: 1px solid var(--bronze);
   box-shadow: 0 8px 28px #050b0a99;
-  font: 13px/1.45 system-ui, sans-serif;
+  font: 14px/1.5 "Segoe UI", Arial, sans-serif;
+  letter-spacing: normal;
   scrollbar-color: #81704b #14231e;
 }
-#possession-panel[hidden] { display: none; }
+#possession-panel[hidden], #possession-panel [hidden], #possession-panel [data-sheet][hidden] { display: none; }
 #possession-panel .resident-header {
   position: sticky;
   z-index: 1;
@@ -27,7 +28,7 @@
   background: #1c3028;
   border-bottom: 1px solid #7a6747;
 }
-#possession-panel h2, #possession-panel h3 { margin: 0; font-family: Georgia, serif; }
+#possession-panel h2, #possession-panel h3 { margin: 0; font-family: "Segoe UI", Arial, sans-serif; }
 #possession-panel h2 { font-size: 15px; color: #dbc28c; }
 #possession-panel .resident-close { min-width: 36px; font-size: 18px; }
 #possession-panel .resident-body { padding: 14px 16px 16px; }
@@ -51,7 +52,7 @@
 }
 #possession-panel .resident-portrait img:not([src]) { visibility: hidden; }
 #possession-panel .resident-nameplate { overflow-wrap: anywhere; }
-#possession-panel h3 { font-size: 23px; line-height: 1.16; color: #fff0c8; }
+#possession-panel h3 { font-size: 23px; line-height: 1.35; color: #fff0c8; }
 #possession-panel p { margin: 3px 0; }
 #possession-panel [data-profile="role"] { color: #e1d8bd; }
 #possession-panel [data-profile="faction"] { color: #adbfad; }
@@ -59,6 +60,19 @@
 #possession-panel .resident-flight { color: #c9b696; font-size: 12px; font-weight: 650; }
 #possession-panel .resident-flight[data-qualified="true"] { color: #a7dfc2; }
 #possession-panel .resident-flight-detail { color: #b8cbbc; font-size: 12px; margin-top: 9px; }
+#possession-panel .resident-tabs {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 5px;
+  margin: 12px 0 9px;
+}
+#possession-panel .resident-tabs [aria-pressed="true"] {
+  background: #354b37;
+  border-color: var(--bronze);
+  color: #fff0c8;
+}
+#possession-panel .resident-workplace, #possession-panel .resident-note { color: #c4ccad; font-size: 13px; }
+#possession-panel .resident-overview { margin-bottom: 9px; }
 #possession-panel .resident-activity {
   color: #d5dcca;
   padding: 7px 0;

@@ -1,7 +1,7 @@
 import type { TradeItemId } from './types';
 import { PROFESSION_BEHAVIORS, SPECIAL_DUTIES } from './ProfessionBehaviorRegistry';
-import { breakthrough, cultivationStats, cultivationView } from '../systems/CultivationSystem';
-import { cultivationRequired } from '../systems/RealmConfig';
+import { advanceQiMinor, advancesQiMinor, breakthrough, cultivationStats, cultivationView } from '../systems/CultivationSystem';
+import { cultivationRequired, REALMS } from '../systems/RealmConfig';
 import { TECHNIQUES, addTechniquePractice, techniqueEffects } from '../systems/TechniqueSystem';
 import type { SpiritualRootId, TechniqueId } from '../systems/CultivationTypes';
 import type { DivineWorldSave, NPCAction, NPCProfession, Personality, PopulationRole, SimNPC, WorldEvent } from './types';
@@ -78,7 +78,7 @@ export function chooseLivelihoodGoal(npc:SimNPC,scheduled:NPCAction,world?:Divin
   const available=EconomySystem.count(world?.settlement?.materials??[],'spirit_herb');
   if(available>0&&!lowHp)add('gather',16+axes.ambition*.16+axes.caution*.08+(scheduled==='gather'?18:0),`có ${available} linh thảo trong kho tài nguyên hữu hạn để thu thập`);
   const pillStock=world?.shops?.find(s=>s.id==='city-apothecary');
-  const wantsPill=npc.populationRole&&progress>=1&&!EconomySystem.count(npc.inventory,'qi_pill')&&npc.actionCooldown<=0&&pillStock&&EconomySystem.count(pillStock.stock,'qi_pill')>0;
+  const wantsPill=npc.populationRole&&!advancesQiMinor(npc)&&progress>=1&&!EconomySystem.count(npc.inventory,'qi_pill')&&npc.actionCooldown<=0&&pillStock&&EconomySystem.count(pillStock.stock,'qi_pill')>0;
   if(wantsPill&&!lowHp&&scheduled!=='rest'&&npc.spiritStones>=(pillStock.sellPrices.qi_pill??Infinity))add('shop',85,'Đã tới bình cảnh; đến hiệu thuốc mua Tụ Khí Đan từ tồn kho.');
   else if(wantsPill&&!lowHp&&scheduled==='cultivate'&&npc.spiritStones<(pillStock.sellPrices.qi_pill??Infinity))add('work',66,'Thiếu linh thạch để mua đan, tìm việc có trả công.');
   const mission=world?.sectMissions?.find(m=>m.assigneeId===npc.id&&m.status==='active');
@@ -105,8 +105,66 @@ function canSeekFood(npc:SimNPC,world?:DivineWorldSave){
  const merchant=world.shops?.some(s=>(s.id==='city-food'||s.id==='city-market')&&EconomySystem.count(s.stock,'ration')>0&&npc.spiritStones>=(s.sellPrices.ration??Infinity));
  return Boolean(store||merchant);
 }
-function pickGoal(npc:SimNPC,minute:number,day:number,force=false,world?:DivineWorldSave){
-  if(npc.goalAction==='flee'&&day*1440+minute<(npc.faunaEvadeUntil??0))return;
+type GuardRoutine={action:'rest'|'patrol'|'guard';position:{x:number;y:number};name:string;slot:string};
+
+type ShopDuty={id:string;name:string;position:{x:number;y:number};action:'work'|'trade';open:boolean;reachable:boolean};
+
+export function livelihoodNeed(n:SimNPC,world?:DivineWorldSave,mealTime=false):'eat'|'rest'|null{
+  const health=n.hp/cultivationStats(n).hpMax;
+  if(health<.33||n.decisionSlot==='need:rest'&&(health<.45||n.fatigue>57))return 'rest';
+  if((n.goalAction==='eat'&&n.hunger>44||n.hunger>=70||mealTime&&n.hunger>=55)&&canSeekFood(n,world))return 'eat';
+  return n.fatigue>=86?'rest':null;
+}
+
+export function professionInterrupted(n:SimNPC,world:DivineWorldSave){
+  return Boolean(n.marketVisit||n.skyStep||n.tribulation||n.manualMeditation||n.goalAction==='fight'||n.goalAction==='flee'||
+    n.decisionSlot?.startsWith('mandate:')||livelihoodNeed(n,world));
+}
+
+function setRoutine(n:SimNPC,action:NPCAction,slot:string,target:{x:number;y:number},label:string,force:boolean,at:number){
+  if(!force&&n.goalAction===action&&n.decisionSlot===slot)return;
+  n.goalAction=action;n.decisionSlot=slot;n.shortGoal=label;n.actionTarget=target;n.actionProgress=0;
+  n.action=Math.hypot(n.x-target.x,n.y-target.y)<25?action:'travel';
+  n.aiDecision={at,action,reason:label,scores:[]};
+}
+
+function pickGoal(npc:SimNPC,minute:number,day:number,force=false,world?:DivineWorldSave,duty?:ShopDuty,guard?:GuardRoutine){
+  const at=day*1440+minute;
+  if(world&&(npc.lawResponse?.status==='responding'||npc.lawResponse?.status==='at-scene')){
+    const target=world.npcs.find(n=>n.id===npc.lawResponse?.targetId&&n.alive);
+    if(target){
+      setRoutine(npc,'guard','city-law:'+npc.lawResponse.incidentId,{x:target.x,y:target.y},
+        'Ứng phó bạo lực trong thành',force,at);
+      return;
+    }
+  }
+  if(npc.marketVisit||npc.decisionSlot?.startsWith('sect-campus:')||npc.decisionSlot?.startsWith('society:'))return;
+  if(npc.goalAction==='flee'&&at<(npc.faunaEvadeUntil??0))return;
+  if(duty&&(npc.goalAction==='fight'||npc.goalAction==='flee')&&
+    (npc.faunaHuntTargetId||npc.lawResponse||npc.decisionSlot?.startsWith('duel:')))return;
+  const specialPlan=npc.decisionSlot?.startsWith('duel:')||npc.decisionSlot?.startsWith('mandate:');
+  if(npc.populationRole&&!specialPlan&&!npc.faunaHuntTargetId&&!npc.lawResponse){
+    const mealTime=duty&&[...npc.schedule].reverse().find(item=>item.hour<=Math.floor(minute/60))?.action==='eat';
+    const need=livelihoodNeed(npc,world,Boolean(mealTime));
+    const unsafe=npc.safety<35&&Boolean(duty||npc.profession!=='ho_ve'&&(npc.traits?.canDam??40)<65);
+    if(unsafe||need){
+      const action=unsafe?'flee':need!;
+      const target=action==='eat'&&(EconomySystem.count(npc.inventory,'ration')||EconomySystem.count(npc.inventory,'deer_meat'))
+        ?{x:npc.x,y:npc.y}:targetFor(npc,action,day,minute);
+      setRoutine(npc,action,'need:'+action,target,actionLabel(action),force,at);
+      return;
+    }
+  }
+  if(duty&&!specialPlan){
+    if(duty.open&&duty.reachable){
+      setRoutine(npc,duty.action,'shop-shift:'+duty.id,duty.position,'Đến '+duty.name,force,at);
+    }else{
+      const target=duty.open?{x:npc.x,y:npc.y}:npc.home??npc;
+      setRoutine(npc,'rest',duty.open?'shop-wait:'+duty.id:'shop-closed:'+duty.id,target,
+        duty.open?'Chờ lối tới cửa hàng':'Đã đóng cửa '+duty.name,force,at);
+    }
+    return;
+  }
   if(!force&&npc.decisionSlot?.endsWith(':herb-craft')&&npc.hunger<68&&npc.fatigue<78&&npc.safety>=40&&npc.hp>=cultivationStats(npc).hpMax*.45)return;
   if(!force&&npc.timberSourceId&&npc.goalAction==='work')return;
   if(npc.professionTask?.kind==='herb-gather'&&npc.assignedResourceNodeId&&npc.goalAction==='gather')return;
@@ -132,7 +190,12 @@ function pickGoal(npc:SimNPC,minute:number,day:number,force=false,world?:DivineW
     }
     return;
   }
-  const hour=Math.floor(minute/60);let action:NPCAction,reason='Lịch sinh hoạt phù hợp với nghề nghiệp.';
+  if(guard&&!specialPlan&&!npc.lawResponse&&npc.goalAction!=='flee'){
+    setRoutine(npc,guard.action,guard.slot,guard.position,guard.name,force,at);
+    return;
+  }
+  const stagger=npc.populationRole&&npc.populationRole!=='city_guard'?((npc.aiProfile?.seed??17)%43)-21:0;
+  const hour=Math.floor(((minute+stagger+1440)%1440)/60);let action:NPCAction,reason='Lịch sinh hoạt phù hợp với nghề nghiệp.';
   if(npc.hp<cultivationStats(npc).hpMax*.33){action='rest';reason='Bị thương nặng, trở về nơi trú để hồi phục.'}else if(npc.hunger>=75&&canSeekFood(npc,world)){action='eat';reason='Đói nghiêm trọng, ưu tiên tìm lương thực.'}else if(npc.fatigue>=90){action='rest';reason='Kiệt sức, cần nghỉ trước khi tiếp tục.'}else if(npc.safety<35&&npc.profession!=='ho_ve'&&(npc.traits?.canDam??40)<65){action='flee';reason='Khu vực nguy hiểm hơn mức NPC sẵn sàng chấp nhận.'}else if(!npc.populationRole&&npc.profession==='dan_thuong'&&npc.spiritStones<10){action='work';reason='Cần kiếm tiền trang trải sinh hoạt.'}else{const scheduled=[...npc.schedule].reverse().find(item=>item.hour<=hour);action=scheduled?.action??'rest';
   const shift=npc.populationRole&&SPECIAL_DUTIES[npc.populationRole];if(shift&&hour>=8&&hour<18&&action==='socialize')action=shift.action;if(npc.profession==='dan_thuong'&&action==='socialize'&&npc.personality==='cô độc')action='rest';if(world&&npc.populationRole&&(hour<5||hour>=21)&&!(npc.profession==='tu_si'&&(npc.aiProfile?.axes.discipline??0)>=68&&npc.fatigue<55&&npc.safety>=60)&&!(npc.populationRole==='city_guard'&&(npc.aiProfile?.seed??0)%3===0)){action='rest';reason='Đêm xuống, về nơi cư trú để ngủ.'}else if(npc.profession==='nong_dan'||npc.profession==='tu_si'||npc.populationRole){const choice=chooseLivelihoodGoal(npc,action,world);action=choice.action;reason=choice.reason;npc.aiDecision={at:day*1440+minute,action,reason,scores:choice.scores}}}
   const slot=`${day}:${action}`;if(!force&&npc.goalAction===action&&npc.decisionSlot===slot)return;
@@ -143,7 +206,10 @@ function pickGoal(npc:SimNPC,minute:number,day:number,force=false,world?:DivineW
 
 export class AutonomousNPCSystem {
   constructor(readonly npcs:SimNPC[],private readonly emit:(event:Omit<WorldEvent,'id'>)=>void,private readonly world?:DivineWorldSave,private readonly clearStrike?:(a:SimNPC,b:SimNPC)=>boolean,
-    private readonly market?:(n:SimNPC,side:'buy'|'sell',shopId:string,itemId:TradeItemId,count:number)=>ReturnType<typeof EconomySystem.buyFromShop>){}
+    private readonly market?:(n:SimNPC,side:'buy'|'sell',shopId:string,itemId:TradeItemId,count:number)=>ReturnType<typeof EconomySystem.buyFromShop>,
+    private readonly majorBreakthrough?:(npc:SimNPC)=>boolean,
+    private readonly shopDuty?:(npc:SimNPC)=>ShopDuty|undefined,
+    private readonly guardRoutine?:(n:SimNPC)=>GuardRoutine|undefined){}
   private shopTrade(n:SimNPC,side:'buy'|'sell',shop:string,item:TradeItemId,count:number,day:number,minute:number){
     if(this.market)return this.market(n,side,shop,item,count);
     return side==='buy'?EconomySystem.buyFromShop(this.world!,n,shop,item,count,day,minute):
@@ -157,17 +223,32 @@ export class AutonomousNPCSystem {
   tickShared(suspendedNpcId?:string|null){if(this.world){tickDuels(this.world,this.clearStrike);spreadBoard(this.world);for(const command of this.world.cultivationMandates??[]){const subject=this.npcs.find(x=>x.id===command.npcId);if(subject&&(!subject.alive||subject.ascended||subject.id===suspendedNpcId))applyCultivationMandate(this.world,subject,0,this.clearStrike)}syncDestinyEvents(this.world);for(const offer of this.world.treasureOffers??[]){if(offer.status==='pending'&&offer.sellerId!==suspendedNpcId){const seller=this.npcs.find(x=>x.id===offer.sellerId);if(seller)resolveTreasureOffer(this.world,offer,sellerAccepts(seller,offer))}}}}
   tickNpc(n:SimNPC,minutes:number,day:number,minute:number,activityMinutes?:number){
     if(!n.alive||minutes<=0)return;
-    if(n.decisionSlot?.startsWith('board:')&&this.world){const news=this.world.boardNews?.find(x=>`board:${x.id}`===n.decisionSlot),target=this.npcs.find(x=>x.id===news?.targetId&&x.alive&&!x.ascended);if(target&&news&&day<=news.expiresDay&&n.hunger<60&&n.fatigue<78&&n.safety>=35){n.actionTarget={x:target.x,y:target.y};if(Math.hypot(n.x-target.x,n.y-target.y)<50){news.reactions[n.id]='đã tiếp xúc';if(news.sourceEventId)discloseBoardSource(this.world,n,target,news.id);const offer=makeTreasureOffer(this.world,news,n,target);if(offer&&this.world.heaven.possession?.npcId!==target.id)resolveTreasureOffer(this.world,offer,sellerAccepts(target,offer));n.memories.push({day,text:`Tìm gặp ${target.name} để hỏi về bảo vật.`,kind:'news',sourceId:news.id,knownThrough:'witnessed',otherId:target.id,itemId:news.itemId});this.emit({day,minute,type:'board-visit',actorId:n.id,targetId:target.id,description:`${n.name} đã gặp ${target.name} để tìm hiểu bảo vật.`,data:{sourceId:news.id,itemId:news.itemId}});n.decisionSlot=undefined;n.goalAction='rest';n.actionProgress=0}}else{if(news)news.reactions[n.id]='gián đoạn';n.decisionSlot=undefined}}n.hunger=Math.min(100,n.hunger+minutes*.027);if(n.populationRole)n.socialNeed=Math.min(100,(n.socialNeed??20)+minutes*.03);n.fatigue=Math.min(100,n.fatigue+minutes*(n.goalAction==='cultivate'||n.goalAction==='gather'?0.018:.008));n.actionCooldown=Math.max(0,n.actionCooldown-minutes);n.mood=Math.max(0,Math.min(100,n.mood+(n.hunger<55&&n.fatigue<65?.015:-.02)*minutes));n.safety=Math.min(100,n.safety+Math.max(0,minutes*.005));const previousGoal=n.goalAction,previousTarget=n.actionTarget;pickGoal(n,minute,day,false,this.world);if(this.world)applyCultivationMandate(this.world,n,minutes,this.clearStrike);
+    this.advanceMinor(n,day,minute);
+    if(n.decisionSlot?.startsWith('board:')&&this.world){const news=this.world.boardNews?.find(x=>`board:${x.id}`===n.decisionSlot),target=this.npcs.find(x=>x.id===news?.targetId&&x.alive&&!x.ascended);if(target&&news&&day<=news.expiresDay&&n.hunger<60&&n.fatigue<78&&n.safety>=35){n.actionTarget={x:target.x,y:target.y};if(Math.hypot(n.x-target.x,n.y-target.y)<50){news.reactions[n.id]='đã tiếp xúc';if(news.sourceEventId)discloseBoardSource(this.world,n,target,news.id);const offer=makeTreasureOffer(this.world,news,n,target);if(offer&&this.world.heaven.possession?.npcId!==target.id)resolveTreasureOffer(this.world,offer,sellerAccepts(target,offer));n.memories.push({day,text:`Tìm gặp ${target.name} để hỏi về bảo vật.`,kind:'news',sourceId:news.id,knownThrough:'witnessed',otherId:target.id,itemId:news.itemId});this.emit({day,minute,type:'board-visit',actorId:n.id,targetId:target.id,description:`${n.name} đã gặp ${target.name} để tìm hiểu bảo vật.`,data:{sourceId:news.id,itemId:news.itemId}});n.decisionSlot=undefined;n.goalAction='rest';n.actionProgress=0}}else{if(news)news.reactions[n.id]='gián đoạn';n.decisionSlot=undefined}}n.hunger=Math.min(100,n.hunger+minutes*.027);if(n.populationRole)n.socialNeed=Math.min(100,(n.socialNeed??20)+minutes*.03);n.fatigue=Math.min(100,n.fatigue+minutes*(n.goalAction==='cultivate'||n.goalAction==='gather'?0.018:.008));n.actionCooldown=Math.max(0,n.actionCooldown-minutes);n.mood=Math.max(0,Math.min(100,n.mood+(n.hunger<55&&n.fatigue<65?.015:-.02)*minutes));n.safety=Math.min(100,n.safety+Math.max(0,minutes*.005));const previousGoal=n.goalAction,previousTarget=n.actionTarget;const duty=this.shopDuty?.(n),guard=this.guardRoutine?.(n);pickGoal(n,minute,day,false,this.world,duty,guard);if(this.world)applyCultivationMandate(this.world,n,minutes,this.clearStrike);
       const d=Math.hypot(n.x-n.actionTarget.x,n.y-n.actionTarget.y);if(n.goalAction==='idle'||d<25){n.action=n.goalAction==='travel'?'idle':n.goalAction;const worked=activityMinutes===undefined?minutes:n.goalAction===previousGoal&&n.actionTarget===previousTarget?activityMinutes:0;n.actionProgress+=worked;if(worked>0)this.perform(n,worked,day,minute)}else n.action='travel';
       if(this.world?.cultivationMandates?.some(c=>c.npcId===n.id&&c.kind==='gather'&&c.status==='active'&&(c.progress??0)>0&&n.decisionSlot==='mandate:'+c.id))n.action='gather';
-      if(n.actionProgress>=this.duration(n)){const queued=this.finish(n,day,minute);if(!queued)pickGoal(n,minute,day,true,this.world)}
+      if(n.actionProgress>=this.duration(n)){const queued=this.finish(n,day,minute);if(!queued)pickGoal(n,minute,day,true,this.world,duty,guard)}
       }
   private duration(npc:SimNPC){const action=npc.goalAction,profession=PROFESSION_BEHAVIORS[npc.profession];
   const duty=npc.populationRole&&SPECIAL_DUTIES[npc.populationRole];
   if(duty&&duty.action===action)return duty.minutes;
   if(profession.action===action&&action!=='socialize')return profession.minutes;
   return action==='commission'?Infinity:action==='rest'?90:action==='cultivate'?60:action==='gather'?45:action==='farm'?90:action==='work'?75:action==='trade'?25:action==='eat'?10:action==='patrol'||action==='guard'?60:action==='socialize'?40:45}
-  private perform(n:SimNPC,minutes:number,day:number,minute:number){if(n.action==='cultivate'){const rootRate=({metal:1.02,wood:1.08,water:1.05,fire:1.12,earth:0.96} as Record<string,number>)[n.spiritualRoot]??1;const ambitious=1+(n.traits?.thamVong??35)/500;const talentRate=.72+(n.talent??50)/180;const diligence=.8+(n.traits?.hamHoc??45)/250;const rate=4*rootRate*ambitious*talentRate*diligence*techniqueEffects(n.technique,n.techniqueMastery[n.technique]).cultivationRate;const required=cultivationRequired(n.realmIndex,n.realmLevel);n.xp=Math.min(required,n.xp+rate*minutes/10);
+  meditateAtRest(n:SimNPC,day:number,minute:number){
+    if(n.hp<cultivationStats(n).hpMax*.4||n.fatigue>=90||n.hunger>=85)return;
+    n.actionCooldown=Math.max(0,n.actionCooldown-1);
+    n.fatigue=Math.min(100,n.fatigue+.018);n.hunger=Math.min(100,n.hunger+.027);
+    n.actionProgress++;
+    this.perform(n,1,day,minute);
+    if(n.actionProgress>=this.duration(n)){this.breakthroughIfReady(n,day,minute);n.actionProgress=0;}
+  }
+  private perform(n:SimNPC,minutes:number,day:number,minute:number){if(n.action==='cultivate'){
+    if(day*1440+minute<(n.meditationBlockedUntil??0))return;
+    const stats=cultivationStats(n);
+    n.mp=Math.min(stats.mpMax,n.mp+stats.mpRegen*minutes/40);
+    const rootRate=({metal:1.02,wood:1.08,water:1.05,fire:1.12,earth:0.96} as Record<string,number>)[n.spiritualRoot]??1;const ambitious=1+(n.traits?.thamVong??35)/500;const talentRate=.72+(n.talent??50)/180;const diligence=.8+(n.traits?.hamHoc??45)/250;const rate=4*rootRate*ambitious*talentRate*diligence*techniqueEffects(n.technique,n.techniqueMastery[n.technique]).cultivationRate;const required=cultivationRequired(n.realmIndex,n.realmLevel);n.xp+=rate*minutes/10*((n.westPoison??0)>=45?.75:1);
+    if(advancesQiMinor(n)&&n.populationRole)this.advanceMinor(n,day,minute);
+    else n.xp=Math.min(required,n.xp);
       if(n.populationRole&&addTechniquePractice(n,n.technique,minutes*.25)){
         const detail=TECHNIQUES[n.technique].name+' cấp '+n.techniqueMastery[n.technique];
         this.remember(n,day,'Rèn luyện '+detail,'cultivation');
@@ -190,10 +271,10 @@ export class AutonomousNPCSystem {
     if(n.action==='socialize'){n.mood=Math.min(100,n.mood+minutes*.12);const nearby=this.npcs.find(other=>other.id!==n.id&&other.alive&&Math.hypot(other.x-n.x,other.y-n.y)<50);if(nearby){n.socialNeed=Math.max(0,(n.socialNeed??20)-minutes*.4);const social=(n.traits?.giaoTiep??40)/100;const gain=minutes*.08*social;n.relationships[nearby.id]=Math.min(100,(n.relationships[nearby.id]??0)+gain);nearby.relationships[n.id]=Math.min(100,(nearby.relationships[n.id]??0)+gain);if(!n.memories.some(m=>m.day===day&&m.kind==='social'&&m.otherId===nearby.id)){n.memories.push({day,text:`Trò chuyện cùng ${nearby.name}, đôi bên thêm thân thiết.`,kind:'social',otherId:nearby.id});if(n.memories.length>12)n.memories.shift()}}}
   }
   private finish(n:SimNPC,day:number,minute:number):boolean{switch(n.goalAction){case 'eat':{if(EconomySystem.remove(n.inventory,'deer_meat',1)){n.hunger=Math.max(0,n.hunger-60);this.remember(n,day,'Dùng một phần thịt từ chuyến săn.','need');break}
-      let ration=n.inventory.find(i=>i.itemId==='ration'&&i.count>0);if(!ration&&this.world){const homeFaction=this.world.factions.find(f=>f.name===n.faction);if(homeFaction&&EconomySystem.remove(homeFaction.treasury,'ration',1)){n.hunger=Math.max(0,n.hunger-55);this.remember(n,day,`Dùng lương thực từ kho ${homeFaction.name}.`,'need');break}if(n.faction!=='Hắc Phong Hội')for(const id of ['city-food','city-market']){const result=this.shopTrade(n,'buy',id,'ration',1,day,minute);if(result.ok){this.emit({day,minute,type:'npc-purchase',actorId:n.id,description:`${n.name} mua 1 lương thực tại ${id==='city-food'?'Tửu Quán':'Phường Thị'}.`});ration=n.inventory.find(i=>i.itemId==='ration');break}}}if(ration&&EconomySystem.remove(n.inventory,'ration',1)){n.hunger=Math.max(0,n.hunger-68);this.remember(n,day,'Dùng bữa bằng lương thực đã mua hoặc mang theo.','need')}else{const guild=n.populationRole||n.faction==='Thanh Vân Thôn'?this.world?.factions.find(f=>f.id==='qingyun-village'):undefined;if(guild&&EconomySystem.remove(guild.treasury,'ration',1)){n.hunger=Math.max(0,n.hunger-55);this.remember(n,day,'Nhận một phần lương thực cứu tế hữu hạn của thôn.','need')}else{n.mood=Math.max(0,n.mood-8);n.foodSearchAfter=day*1440+minute+90;
+      let ration=n.inventory.find(i=>i.itemId==='ration'&&i.count>0);if(!ration&&this.world){const homeFaction=this.world.factions.find(f=>f.name===n.faction);if(homeFaction&&EconomySystem.remove(homeFaction.treasury,'ration',1)){n.hunger=Math.max(0,n.hunger-55);this.remember(n,day,`Dùng lương thực từ kho ${homeFaction.name}.`,'need');break}if(n.faction!=='Hắc Phong Hội')for(const id of ['city-food','city-market']){const result=this.shopTrade(n,'buy',id,'ration',1,day,minute);if(result.ok){this.emit({day,minute,type:'npc-purchase',actorId:n.id,description:`${n.name} mua 1 lương thực tại ${id==='city-food'?'Tửu Quán':'Phường Thị'}.`});ration=n.inventory.find(i=>i.itemId==='ration');break}}}if(n.marketVisit)return true;if(ration&&EconomySystem.remove(n.inventory,'ration',1)){n.hunger=Math.max(0,n.hunger-68);this.remember(n,day,'Dùng bữa bằng lương thực đã mua hoặc mang theo.','need')}else{const guild=n.populationRole||n.faction==='Thanh Vân Thôn'?this.world?.factions.find(f=>f.id==='qingyun-village'):undefined;if(guild&&EconomySystem.remove(guild.treasury,'ration',1)){n.hunger=Math.max(0,n.hunger-55);this.remember(n,day,'Nhận một phần lương thực cứu tế hữu hạn của thôn.','need')}else{n.mood=Math.max(0,n.mood-8);n.foodSearchAfter=day*1440+minute+90;
       this.remember(n,day,'Không tìm được khẩu phần; sẽ tìm lại sau.','food-shortage')}}break}
       case 'rest':n.fatigue=Math.max(0,n.fatigue-45);this.remember(n,day,'Đã nghỉ ngơi hồi phục tại nơi cư trú.','need');break;
-      case 'cultivate':this.breakthroughIfReady(n,day,minute);break;
+      case 'cultivate':this.breakthroughIfReady(n,day,minute);if(n.tribulation){n.actionProgress=0;return true;}break;
       case 'farm':{if(!this.world)break;if(EconomySystem.count(n.inventory,'rice_seed')<1){const seeded=n.populationRole&&EconomySystem.withdrawFaction(this.world,n,'qingyun-village','rice_seed',1);const seedPurchase=seeded||this.shopTrade(n,'buy','city-market','rice_seed',1,day,minute).ok;if(!seedPurchase){this.remember(n,day,'Chưa mua được thóc giống; vụ mùa chưa bắt đầu.','farm-blocked');break}n.actionTarget=CITY_SITES['city-farm'];n.shortGoal='Mang giống tới ruộng';n.actionProgress=0;n.decisionSlot=`${day}:farm-field`;this.remember(n,day,seeded?'Đã nhận giống hữu hạn từ kho làng.':'Đã mua thóc giống bằng tiền thật.','farm');return true}if(EconomySystem.remove(n.inventory,'rice_seed',1)){const yieldCount=n.populationRole?8:4;AutonomousNPCSystem.addItem(n,'ration',yieldCount);if(n.populationRole)AutonomousNPCSystem.addItem(n,'rice_seed',1);this.remember(n,day,'Thu hoạch '+yieldCount+' phần lương thực sau khi gieo thóc giống.','production');this.emit({day,minute,type:'farm-harvest',actorId:n.id,description:`${n.name} thu hoạch ${yieldCount} lương thực từ một chu kỳ canh tác.`});n.goalAction='trade';n.shortGoal='Mang nông sản tới chợ';n.actionTarget=CITY_SITES['city-market'];n.actionProgress=0;n.decisionSlot=`${day}:deliver`;return true}break}
       case 'work':if(this.world&&n.populationRole==='tavern_staff'){
       const shop=this.world.shops.find(s=>s.id==='city-food'),pantry=this.world.factions.find(f=>f.id==='qingyun-village');
@@ -224,7 +305,14 @@ export class AutonomousNPCSystem {
       this.remember(n,day,'Đốn cây lấy 2 gỗ; cây cần ba ngày để mọc lại.','timber');
       this.emit({day,minute,type:'npc-timber-cut',actorId:n.id,targetId:source.id,description:n.name+' đốn cây và nhặt 2 gỗ.'});
       n.goalAction='trade';n.shortGoal='Mang gỗ ra Phường Thị';n.actionProgress=0;n.decisionSlot=day+':deliver';return true;
-    }if(n.profession==='dan_thuong'||n.populationRole&&n.profession==='tu_si'){const factionId=n.faction==='Thanh Vân Thôn'?'qingyun-village':n.faction==='Thanh Vân Tông'?'qingyun-sect':'qingyun-city';if(this.world&&EconomySystem.payWage(this.world,n,factionId,5))this.emit({day,minute,type:'npc-wage',actorId:n.id,description:`${n.name} nhận 5 linh thạch tiền công từ ${n.faction}.`})}else this.produce(n,day,minute);if(n.inventory.some(i=>i.itemId==='iron_sword'||i.itemId==='qi_pill')){n.goalAction='trade';n.shortGoal='Đưa sản phẩm tới cửa hàng';n.actionTarget=n.profession==='tho_re'?CITY_SITES['city-forge']:CITY_SITES['city-apothecary'];n.actionProgress=0;n.decisionSlot=`${day}:deliver`;return true}break;
+    }if(n.profession==='dan_thuong'||n.populationRole&&n.profession==='tu_si'){const factionId=n.faction==='Thanh Vân Thôn'?'qingyun-village':n.faction==='Thanh Vân Tông'?'qingyun-sect':'qingyun-city';if(this.world&&EconomySystem.payWage(this.world,n,factionId,5))this.emit({day,minute,type:'npc-wage',actorId:n.id,description:`${n.name} nhận 5 linh thạch tiền công từ ${n.faction}.`})}else this.produce(n,day,minute);
+      const duty=this.shopDuty?.(n),product=duty?.id==='city-forge'?'iron_sword':duty?.id==='city-apothecary'?'qi_pill':null;
+      if(product&&duty&&n.decisionSlot==='shop-shift:'+duty.id){
+        const count=EconomySystem.sellable(this.world!,n,product);
+        if(count>0)this.shopTrade(n,'sell',duty.id,product,count,day,minute);
+        break;
+      }
+      if(n.inventory.some(i=>i.itemId==='iron_sword'||i.itemId==='qi_pill')){n.goalAction='trade';n.shortGoal='Đưa sản phẩm tới cửa hàng';n.actionTarget=n.profession==='tho_re'?CITY_SITES['city-forge']:CITY_SITES['city-apothecary'];n.actionProgress=0;n.decisionSlot=`${day}:deliver`;return true}break;
       case 'shop':{
         if(!this.world||!n.populationRole||n.profession!=='tu_si')break;
         const outcome=this.shopTrade(n,'buy','city-apothecary','qi_pill',1,day,minute);
@@ -254,9 +342,23 @@ export class AutonomousNPCSystem {
   private produce(n:SimNPC,day:number,minute:number){if(!this.world)return;if(n.profession==='tho_re'){if(EconomySystem.count(n.inventory,'iron_ore')<2)this.shopTrade(n,'buy','city-forge','iron_ore',2,day,minute);if(EconomySystem.count(n.inventory,'wood')<1)this.shopTrade(n,'buy','city-forge','wood',1,day,minute);if(EconomySystem.count(n.inventory,'iron_ore')>=2&&EconomySystem.count(n.inventory,'wood')>=1){EconomySystem.remove(n.inventory,'iron_ore',2);EconomySystem.remove(n.inventory,'wood',1);AutonomousNPCSystem.addItem(n,'iron_sword',1);this.emit({day,minute,type:'smith-production',actorId:n.id,description:`${n.name} rèn 1 phàm kiếm từ 2 quặng và 1 gỗ.`})}}
     if(n.profession==='duoc_su'||n.profession==='dan_su'){if(EconomySystem.count(n.inventory,'spirit_herb')<2)this.shopTrade(n,'buy','city-apothecary','spirit_herb',2,day,minute);if(EconomySystem.remove(n.inventory,'spirit_herb',2)){AutonomousNPCSystem.addItem(n,'qi_pill',1);this.emit({day,minute,type:'alchemist-production',actorId:n.id,description:`${n.name} luyện 1 Tụ Khí Đan từ 2 linh thảo.`})}}
   }
-  private breakthroughIfReady(n:SimNPC,day:number,minute:number){if(n.populationRole&&n.actionCooldown>0)return;const required=cultivationRequired(n.realmIndex,n.realmLevel);if(n.xp<required||!cultivationView(n).canBreakthrough)return;let pill=n.inventory.find(i=>i.itemId==='qi_pill'&&i.count>0);if(!pill&&this.world&&n.populationRole&&n.faction==='Thanh Vân Tông'&&EconomySystem.withdrawFaction(this.world,n,'qingyun-sect','qi_pill',1))pill=n.inventory.find(i=>i.itemId==='qi_pill');
+  private advanceMinor(n:SimNPC,day:number,minute:number){
+    if(!n.populationRole||!advancesQiMinor(n)||n.xp<cultivationRequired(0,n.realmLevel))return;
+    const old=cultivationStats(n);
+    const attained=advanceQiMinor(n);
+    const next=cultivationStats(n);
+    n.hp=Math.min(next.hpMax,n.hp+next.hpMax-old.hpMax);
+    n.mp=Math.min(next.mpMax,n.mp+next.mpMax-old.mpMax);
+    const level=attained[attained.length-1];
+    this.emit({day,minute,type:'npc-minor-advance',actorId:n.id,description:n.name+' tự tu lên '+level+'.',
+      data:{realm:0,level:n.realmLevel,levels:attained.length}});
+  }
+  private breakthroughIfReady(n:SimNPC,day:number,minute:number){if(n.populationRole&&advancesQiMinor(n)){this.advanceMinor(n,day,minute);return;}if(n.populationRole&&n.actionCooldown>0)return;const required=cultivationRequired(n.realmIndex,n.realmLevel);if(n.xp<required||!cultivationView(n).canBreakthrough)return;let pill=n.inventory.find(i=>i.itemId==='qi_pill'&&i.count>0);if(!pill&&this.world&&n.populationRole&&n.faction==='Thanh Vân Tông'&&EconomySystem.withdrawFaction(this.world,n,'qingyun-sect','qi_pill',1))pill=n.inventory.find(i=>i.itemId==='qi_pill');
     if(!pill&&this.world&&!n.populationRole){const buy=this.shopTrade(n,'buy','city-apothecary','qi_pill',1,day,minute);if(buy.ok)pill=n.inventory.find(i=>i.itemId==='qi_pill')}
     if(!pill){this.remember(n,day,'Đủ tu vi nhưng thiếu Tụ Khí Đan để ổn định đột phá.','cultivation');if(n.populationRole)n.actionCooldown=120;return}
+    if(this.majorBreakthrough&&n.populationRole&&n.realmLevel===REALMS[n.realmIndex].maxLevel){
+      this.majorBreakthrough(n);return;
+    }
     const c={realmIndex:n.realmIndex,realmLevel:n.realmLevel,xp:n.xp,spiritualRoot:n.spiritualRoot,technique:n.technique,techniqueMastery:n.techniqueMastery,techniqueProgress:n.techniqueProgress};const old=cultivationStats(n);const result=breakthrough(c);if(!result.success||!EconomySystem.remove(n.inventory,'qi_pill',1))return;
     if(n.populationRole&&c.realmIndex>n.realmIndex){
       const health=n.hp/Math.max(1,old.hpMax);

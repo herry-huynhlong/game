@@ -2,7 +2,7 @@ import type { DivineWorldSave, EnvironmentSave, FaunaRespawnSave, FaunaSave, Fau
 import { FAUNA_SPECIES, MONSTER_SPAWN, hashMonster } from './MonsterRegistry';
 export { FAUNA_SPECIES } from './MonsterRegistry';
 
-export type FaunaZone={zoneId:string;name?:string;species:FaunaSpecies;cap:number;respawnMs:number;activityRadius?:number;leash?:number;safeBuffer?:number;x:number;y:number;width:number;height:number};
+export type FaunaZone={zoneId:string;name?:string;species:FaunaSpecies;cap:number;respawnMs:number;activityRadius?:number;leash?:number;safeBuffer?:number;normalOnly?:boolean;realmIndex?:number;realmLevel?:number;nocturnal?:boolean;x:number;y:number;width:number;height:number};
 type CanSpawn=(x:number,y:number,species:FaunaSpecies,rank:MonsterRank)=>boolean;
 export function insideHabitat(p:{x:number;y:number},z:FaunaZone,margin=0){
   return p.x>=z.x+margin&&p.y>=z.y+margin&&p.x<=z.x+z.width-margin&&p.y<=z.y+z.height-margin;
@@ -40,7 +40,7 @@ export function spawnFaunaInZone(world:DivineWorldSave,zone:FaunaZone,isOpen:Can
   if(live.length>=zone.cap)return {ok:false as const,reason:'zone-cap'};
   const serial=(env.faunaSpawnSerial??0)+1;
   const seed=hashMonster(world.worldId+':'+zone.zoneId+':'+serial);
-  const eligible=live.filter(f=>f.rank==='elite').length<MONSTER_SPAWN.eliteCap&&env.faunaClockMs>=(env.eliteReadyAt[zone.zoneId]??0);
+  const eligible=!zone.normalOnly&&live.filter(f=>f.rank==='elite').length<MONSTER_SPAWN.eliteCap&&env.faunaClockMs>=(env.eliteReadyAt[zone.zoneId]??0);
   const rank:MonsterRank=eligible&&seed%10000<MONSTER_SPAWN.eliteChance*10000?'elite':'normal';
   let value=seed;
   function unit(){value=(Math.imul(value,1664525)+1013904223)>>>0;return value/4294967296}
@@ -48,8 +48,8 @@ export function spawnFaunaInZone(world:DivineWorldSave,zone:FaunaZone,isOpen:Can
     const margin=28;
     const x=Math.round(zone.x+margin+unit()*(zone.width-margin*2)),y=Math.round(zone.y+margin+unit()*(zone.height-margin*2));
     if(!insideHabitat({x,y},zone,margin)||env.fauna.some(f=>f.alive&&Math.hypot(x-f.x,y-f.y)<53)||!isOpen(x,y,zone.species,rank))continue;
-    const species=zone.species,hp=FAUNA_SPECIES[species].hp+(rank==='elite'?55:0);
-    const beast:FaunaSave={id:`fauna:v2:${zone.zoneId}:${serial}`,species,rank,x,y,home:{x,y},hp,maxHp:hp,zoneId:zone.zoneId,alive:true,state:'idle',attackReadyAt:0,nextThinkAt:0,lootCreated:false};
+    const species=zone.species,hp=FAUNA_SPECIES[species].hp+(rank==='elite'?55:0)+(zone.realmIndex??0)*54;
+    const beast:FaunaSave={id:`fauna:v2:${zone.zoneId}:${serial}`,species,rank,x,y,home:{x,y},hp,maxHp:hp,realmIndex:zone.realmIndex,realmLevel:zone.realmLevel,zoneId:zone.zoneId,alive:true,state:'idle',attackReadyAt:0,nextThinkAt:0,lootCreated:false};
     env.faunaSpawnSerial=serial;env.fauna.push(beast);
     const stats=env.faunaRespawnStats[zone.zoneId]??={totalSpawned:0,failedAttempts:0};
     stats.totalSpawned++;stats.lastSpawnAtMs=env.faunaClockMs;
@@ -59,8 +59,10 @@ export function spawnFaunaInZone(world:DivineWorldSave,zone:FaunaZone,isOpen:Can
 }
 export function ensureFauna(world:DivineWorldSave,zones:FaunaZone[],isOpen:(zone:FaunaZone,...args:Parameters<CanSpawn>)=>boolean){
   const fresh=migrateFauna(world),env=envFor(world);
-  if(fresh)for(const zone of zones){
-    for(let i=0;i<zone.cap;i++)if(!spawnFaunaInZone(world,zone,(...args)=>isOpen(zone,...args)).ok)break;
+  for(const zone of zones){
+    if(!fresh&&!zone.normalOnly)continue;
+    const seeded=fresh?0:env.faunaRespawnStats[zone.zoneId]?.totalSpawned??0;
+    for(let i=seeded;i<zone.cap;i++)if(!spawnFaunaInZone(world,zone,(...args)=>isOpen(zone,...args)).ok)break;
   }
   return env.fauna;
 }

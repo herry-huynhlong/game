@@ -86,7 +86,8 @@ export class MonsterVisuals{
       if(Number(sprite.frame.name)!==frameIndex)sprite.setFrame(frameIndex);
       if(!f.alive)continue;
       const buff=now<(f.armorUntil??0)||now<(f.buffUntil??0);
-      const tint=buff?(f.species==='boar'?0xff9290:0xa4f0d4):f.state==='hit'?0xffd2bc:0xffffff;
+      const regionalTint=[0xc6edb5,0xd8b5a3,0xc9b4e5,0xd4bef5][f.realmIndex]??0xffffff;
+      const tint=buff?(f.species==='boar'?0xff9290:0xa4f0d4):f.state==='hit'?0xffd2bc:regionalTint;
       if(sprite.tint!==tint)sprite.setTint(tint);
       if(f.rank==='elite'||f.hp<f.maxHp||s.selectedFaunaId===f.id){
         const top=f.y-43-lift;

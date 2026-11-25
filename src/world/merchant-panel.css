@@ -21,12 +21,8 @@
 #merchant-panel button[aria-pressed=true] { background: #43503b; border-color: #d8b97e; }
 #merchant-panel button:disabled { opacity: .52; cursor: default; }
 #merchant-panel .trade-list { padding: 0 14px; height: min(36dvh, 290px); overflow: auto; }
-#merchant-panel .trade-row { display: grid; grid-template-columns: 28px minmax(0,1fr); gap: 10px; align-items: center; text-align: left; padding: 7px 9px; width: 100%; margin-block-end: 5px; }
+#merchant-panel .trade-row { display: grid; grid-template-columns: 50px minmax(0,1fr); gap: 10px; align-items: center; text-align: left; padding: 7px 9px; width: 100%; margin-block-end: 5px; }
 #merchant-panel .trade-row small { display: block; color: #c8cfb2; }
-#merchant-panel .trade-icon { display: grid; place-items: center; height: 28px; width: 28px; background: #192b23; color: #d6be83; border: 1px solid #667356; }
-#merchant-panel .trade-icon[data-kind=herb] { color: #9cd0a6; }
-#merchant-panel .trade-icon[data-kind=pill] { color: #bdafd8; }
-#merchant-panel .trade-loot { border: 0; background-image: url('/assets/fauna/monster-v2/monster-loot.png'); background-size: 224px 28px; image-rendering: pixelated; }
 #merchant-panel input { width: 76px; }
 #merchant-panel form p { flex: 1 0 125px; color: #f0d69d; }
 #merchant-panel [data-message] { padding: 0 14px 10px; margin: 0; color: #b9e3cb; min-height: 20px; }

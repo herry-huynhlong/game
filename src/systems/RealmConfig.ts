@@ -10,13 +10,12 @@ export interface RealmDefinition {
   breakthrough: string;
 }
 
-// Higher realms are data-only extension points in this part.
 export const REALMS: RealmDefinition[] = [
-  { id: 'qi', name: 'Luyện Khí', maxLevel: 9, hp: 100, mp: 60, attack: 19, defense: 1, absorption: 4, breakthrough: 'Tích lũy đủ tu vi tầng 9 để kết thành Trúc Cơ.' },
-  { id: 'foundation', name: 'Trúc Cơ', maxLevel: 9, hp: 180, mp: 110, attack: 31, defense: 5, absorption: 7, breakthrough: 'Cơ chế các đại cảnh giới sau sẽ được triển khai ở phần tiếp theo.' },
-  { id: 'golden-core', name: 'Kim Đan', maxLevel: 9, hp: 280, mp: 175, attack: 47, defense: 10, absorption: 10, breakthrough: 'Cơ chế các đại cảnh giới sau sẽ được triển khai ở phần tiếp theo.' },
-  { id: 'nascent-soul', name: 'Nguyên Anh', maxLevel: 9, hp: 410, mp: 260, attack: 68, defense: 16, absorption: 13, breakthrough: 'Cơ chế các đại cảnh giới sau sẽ được triển khai ở phần tiếp theo.' },
-  { id: 'divine-transformation', name: 'Hóa Thần', maxLevel: 9, hp: 580, mp: 380, attack: 94, defense: 24, absorption: 16, breakthrough: 'Cơ chế các đại cảnh giới sau sẽ được triển khai ở phần tiếp theo.' },
+  { id: 'qi', name: 'Luyện Khí', maxLevel: 9, hp: 100, mp: 60, attack: 19, defense: 1, absorption: 4, breakthrough: 'Viên mãn tầng 9 để chuẩn bị vượt Thiên Kiếp Trúc Cơ.' },
+  { id: 'foundation', name: 'Trúc Cơ', maxLevel: 9, hp: 180, mp: 110, attack: 31, defense: 5, absorption: 7, breakthrough: 'Viên mãn tầng 9 để chuẩn bị vượt Thiên Kiếp Kim Đan.' },
+  { id: 'golden-core', name: 'Kim Đan', maxLevel: 9, hp: 280, mp: 175, attack: 47, defense: 10, absorption: 10, breakthrough: 'Viên mãn tầng 9 để chuẩn bị vượt Thiên Kiếp Nguyên Anh.' },
+  { id: 'nascent-soul', name: 'Nguyên Anh', maxLevel: 9, hp: 410, mp: 260, attack: 68, defense: 16, absorption: 13, breakthrough: 'Viên mãn tầng 9 để chuẩn bị vượt Thiên Kiếp Hóa Thần.' },
+  { id: 'divine-transformation', name: 'Hóa Thần', maxLevel: 9, hp: 580, mp: 380, attack: 94, defense: 24, absorption: 16, breakthrough: 'Hóa Thần tầng 9 là giới hạn hiện tại.' },
 ];
 
 export function cultivationRequired(realmIndex: number, level: number): number {

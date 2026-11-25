@@ -53,22 +53,33 @@ type CombatPort={
   damage:(target:SimNPC,damage:number,sourceId:string,eventId:string)=>void;
   avoid:(target:SimNPC,f:FaunaSave)=>void;
   threat:(target:SimNPC,f:FaunaSave)=>boolean;
+  daylight?:()=>boolean;
+  cadence?:(f:FaunaSave)=>number;
   sound?:(id:string,point:MonsterPoint)=>void;
 };
 
 export class MonsterCombat {
   private noSlot=new Map<string,{target:string;since:number}>();
   private ignored=new Map<string,{target:string;until:number}>();
+  private lastMoveAt=new Map<string,number>();
   constructor(private env:EnvironmentSave,readonly zones:FaunaZone[],private port:CombatPort){}
   tick(now:number,step:number){
     const all=this.env.fauna??[];
     this.port.movement?.begin(now,all);
     for(const f of all){
-      if(!f.alive){this.noSlot.delete(f.id);this.ignored.delete(f.id);continue;}
+      if(!f.alive){this.noSlot.delete(f.id);this.ignored.delete(f.id);this.lastMoveAt.delete(f.id);continue;}
       const zone=this.zones.find(z=>z.zoneId===f.zoneId);
       if(!zone)continue;
+      const cadence=this.port.cadence?.(f)??step;
+      const last=this.lastMoveAt.get(f.id)??now-cadence;
+      const elapsed=Math.min(cadence,Math.max(step,now-last));
+      if(!f.cast&&!f.targetNpcId&&now-last<cadence)continue;
+      this.lastMoveAt.set(f.id,now);
       if(f.cast){this.port.movement?.halt(f,'đang thi triển');this.cast(f,now);continue;}
       if(now<(f.hurtUntil??0)){this.port.movement?.halt(f,'đang bị thương');f.state='hit';continue;}
+      if(zone.nocturnal&&this.port.daylight?.()&&!f.targetNpcId){
+        f.state='idle';f.roamTarget=undefined;this.port.movement?.halt(f,'nghỉ ban ngày');continue;
+      }
       if(now>=(f.nextThinkAt??0)){
         f.nextThinkAt=now+200+hashMonster(f.id)%70;
         this.decide(f,zone,all,now);
@@ -81,13 +92,13 @@ export class MonsterCombat {
       const hop=f.species==='toad'&&((now+hashMonster(f.id))%660)<210?0:1;
       if(!hop){this.port.movement?.halt(f,'chuẩn bị bước nhảy',true);continue;}
       if(this.port.movement){
-        const outcome=this.port.movement.route(f,goal,step,speed);
+        const outcome=this.port.movement.route(f,goal,elapsed,speed);
         if(outcome==='unreachable'){
           this.abandon(f,now);
         }
         continue;
       }
-      if(!this.move(f,toward(f,goal,Math.min(1,speed*step/1000/dist(f,goal))),zone,true)&&f.state==='patrol'){
+      if(!this.move(f,toward(f,goal,Math.min(1,speed*elapsed/1000/dist(f,goal))),zone,true)&&f.state==='patrol'){
         f.roamTarget=undefined;f.nextThinkAt=now+240;
       }
     }

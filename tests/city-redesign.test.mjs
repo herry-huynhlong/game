@@ -2,25 +2,30 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { PNG } from 'pngjs';
 import { placeCityResidents } from '../src/world/CityResidents.js';
+import {baseWorldMap} from './base-world-map.mjs';
 
 const read=name=>JSON.parse(readFileSync(new URL('../maps/'+name,import.meta.url),'utf8'));
 const previous=read('world-rebuild-1b-before-city-redesign.tmj');
-const city=read('world-rebuild-1b.tmj');
+const city=baseWorldMap(read('world-rebuild-1b.tmj'));
 const layer=(map,name)=>map.layers.find(item=>item.name===name);
 const prop=(obj,key)=>obj.properties?.find(p=>p.name===key)?.value;
-assert.deepEqual([city.width,city.height,city.tilewidth,city.tileheight],[224,144,32,32]);
+assert.deepEqual([city.width,city.height,city.tilewidth,city.tileheight],[224,184,32,32]);
 for(const name of ['GroundBase','Roads','Water','Shore','Cliffs','GroundDetails','TerrainTransitions']){
   const original=layer(previous,name).data, revised=layer(city,name).data;
   for(let i=0;i<original.length;i++){
     const x=i%city.width,y=Math.floor(i/city.width);
     if(x>=65&&x<=150&&y>=40&&y<=94)continue;
-    assert.equal(revised[i],original[i],name+' outside the city at '+x+','+y);
+    if((name==='GroundBase'||name==='Roads')&&x>=86&&x<143&&y>=123&&y<143)continue;
+    if(name==='Roads'&&x>=105&&x<=115&&y>=113&&y<123)continue;
+    if(name==='Roads'&&y>=132&&y<=139&&(x>=81&&x<=86||x>=142&&x<=154))continue;
+    const newY=y>=122?y+40:y;
+    assert.equal(revised[newY*city.width+x],original[i],name+' outside the city and sect campus at '+x+','+y);
   }
 }
 const markers=layer(city,'NavigationMarkers').objects;
 const previousNav=layer(previous,'NavigationMarkers').objects;
 const legacyIds=new Map(markers.map(m=>[m.id,m]));
-assert.ok(previousNav.every(m=>JSON.stringify(m)===JSON.stringify(legacyIds.get(m.id))));
+assert.ok(previousNav.every(m=>JSON.stringify({...m,y:m.y>=3904?m.y+1280:m.y})===JSON.stringify(legacyIds.get(m.id))));
 const decorations=layer(city,'StaticDecor').objects.filter(o=>prop(o,'district')==='city-redesign');
 assert.ok(decorations.filter(o=>prop(o,'kind')==='city-house').length>=35);
 assert.equal(decorations.filter(o=>prop(o,'kind')==='city-workshop').length,4);

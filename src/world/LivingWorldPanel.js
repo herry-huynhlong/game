@@ -42,7 +42,7 @@ export class LivingWorldPanel {
     const close = add(header,'button','Đóng');
     close.onclick = () => this.close();
     const nav = add(this.element,'nav','');
-    for (const [mode,label] of [['journal','Nhật ký'],['dashboard','108 cư dân']]) {
+    for (const [mode,label] of [['journal','Nhật ký'],['dashboard','108 cư dân'],['venues','Công trình']]) {
       add(nav,'button',label).onclick = () => this.open(mode);
     }
     const speeds=add(this.element,'nav','');speeds.className='simulation-speeds';
@@ -78,7 +78,7 @@ export class LivingWorldPanel {
     this.npcId = npcId;
     this.filter.hidden = mode !== 'dashboard';
     this.pages.hidden = mode !== 'dashboard';
-    this.title.textContent = {journal:'Nhật ký thế giới',dashboard:'Sinh hoạt 108 cư dân',inspector:'Hồ sơ sinh hoạt'}[mode];
+    this.title.textContent = {journal:'Nhật ký thế giới',dashboard:'Sinh hoạt 108 cư dân',inspector:'Hồ sơ sinh hoạt',venues:'Sản xuất và dịch vụ'}[mode];
     this.element.hidden = false;
     this.render();
   }
@@ -107,6 +107,8 @@ export class LivingWorldPanel {
     if (this.mode === 'inspector') {
       const npc = world.npcs.find(n => n.id === this.npcId);
       if (npc) this.inspect(npc,world);
+    } else if(this.mode==='venues'){
+      this.renderVenues();
     } else if (this.mode === 'journal') {
       this.lastEvent = world.events.at(-1);
       const entries = world.events.slice(-60).reverse();
@@ -118,10 +120,35 @@ export class LivingWorldPanel {
         const hour = String(Math.floor(event.minute/60)).padStart(2,'0');
         const minute = String(event.minute%60).padStart(2,'0');
         add(row,'small',`Ngày ${event.day} · ${hour}:${minute}${npc?' · '+npc.name+' · hiện tại '+formatRealm(npc):''}`);
-        if (npc) row.onclick = () => this.focus(npc);
+        if (npc) row.onclick = () => {
+          this.focus(npc);
+          if(event.id.startsWith('tribulation:')&&Number.isFinite(event.data?.x)&&Number.isFinite(event.data?.y))
+            this.scene.navigateCameraTo(event.data.x,event.data.y,'living-world');
+        };
       }
     }
     list.scrollTop = scroll;
+  }
+
+  renderVenues() {
+    const {scene,body}=this;
+    const society=scene.society,campus=scene.sectCampus;
+    for(const venue of society?.report()??[]){
+      const staff=scene.scheduler.byId.get(venue.staff)?.npc;
+      const heading=add(body,'button',venue.name);
+      heading.className='living-row';
+      heading.onclick=()=>scene.gotoRegion(venue.id);
+      add(body,'small',(venue.onDuty?'Đang trực · ':'Ngoài ca · ')+(staff?.name??'Chưa phân công'));
+      add(body,'small','Đang dùng '+venue.using+' · Đang đến '+venue.approaching+' · Chờ '+venue.waiting+' · Còn '+venue.free+'/'+venue.capacity+' chỗ');
+      add(body,'p','Doanh thu '+venue.revenue+' · Chi phí '+venue.costs+' · Quỹ '+venue.cash+' · Lượt phục vụ '+venue.served+
+        (venue.stock===null?'':' · Tồn kho '+venue.stock));
+    }
+    const state=campus.production.state;
+    add(body,'h4','Mỏ Linh Khoáng và Linh Điền');
+    const stored=Object.values(state.veins).reduce((a,v)=>a+v.amount,0);
+    add(body,'p',stored+' quặng còn lại · '+(state.totals.mined??0)+' đã khai thác · '+(state.totals.harvested??0)+' sản phẩm đã thu hoạch');
+    const budget=campus.state.budget;
+    if(budget)add(body,'p','Bảo khố dự phòng '+budget.reserve+' linh thạch · duyệt ngày '+budget.day);
   }
 
   renderDashboard(world) {
@@ -133,7 +160,7 @@ export class LivingWorldPanel {
     const query=this.filter.value.trim().toLocaleLowerCase('vi'),counts=new Map(),matching=[];
     let blocked=0,hungry=0,exhausted=0;
     for(const npc of world.npcs){
-      const group=category(npc),duty=this.scene.npcRoleTitle(npc);
+      const group=this.scene.society?.primary(npc)??category(npc),duty=this.scene.npcRoleTitle(npc);
       counts.set(group,(counts.get(group)??0)+1);
       if(npc.alive){
         blocked+=Number(Boolean(npc.pathBlocked));hungry+=Number(npc.hunger>=75);exhausted+=Number(npc.fatigue>=90);
@@ -185,10 +212,30 @@ export class LivingWorldPanel {
     add(list,'small',`Nơi ở ${location(npc.home)} · Nơi làm việc ${location(npc.workPosition)}`);
     const route=scene.npcRoutes.get(npc.id)?.points?.length??0,slot=scene.workstations.claims.get(npc.id);
     add(list,'small','Tính cách '+npc.personality+' · Tuyến '+route+' điểm · '+(slot?'Chỗ đã đặt '+location(slot):'Chưa đặt chỗ'));
+    const entry=scene.scheduler.byId.get(npc.id);
+    const problem=scene.getPopulationState().diagnostics.stuckExamples.find(r=>r.id===npc.id);
+    const society=scene.society,account=society?.account(npc),visit=society?.visits[npc.id];
+    if(entry)add(list,'small','Cập nhật AI '+(entry.lastDecision===undefined?'chưa chạy':Math.round((scene.scheduler.time-entry.lastDecision)/1000)+' giây trước')+
+      ' · '+(problem?'Kẹt '+(problem.noProgressMs/1000).toFixed(1)+' giây · '+problem.reason:entry.routeFailure??'Tuyến hiện tại có thể sử dụng'));
+    if(visit)add(list,'small','Chỗ dịch vụ '+visit.seat+' · '+visit.phase);
+    const secondary=society?.secondary(npc);
+    if(secondary)add(list,'p','Nghề phụ hoặc nơi kiêm nhiệm · '+secondary);
     add(list,'h4','Sinh hoạt và tu luyện');
     add(list,'p',`Sinh lực ${Math.round(npc.hp)}/${stats?.hpMax??'—'} · Đói ${Math.round(npc.hunger)}% · Thể lực ${Math.round(100-npc.fatigue)}% · An toàn ${Math.round(npc.safety)}% · Nhu cầu giao tiếp ${Math.round(npc.socialNeed??20)}%`);
     add(list,'p',`Linh thạch ${npc.spiritStones} · ${TECHNIQUES[npc.technique]?.name??npc.technique} cấp ${npc.techniqueMastery?.[npc.technique]??1} · ${formatRealm(npc)}${cultivation?' · Tu vi '+Math.floor(npc.xp)+' / '+cultivation.view.required:''}`);
+    if(account){
+      const {needs}=account;
+      add(list,'p','Khát '+Math.round(needs.thirst)+'% · Cần thư giãn '+Math.round(needs.leisure)+
+        '% · Cần giao lưu '+Math.round(needs.social)+'% · Tâm trạng '+Math.round(npc.mood)+'%');
+      add(list,'small','Tiền công dịch vụ '+account.income+' · Chi dịch vụ '+account.spending+
+        ' · Cống hiến '+(scene.sectCampus.state.credits[npc.id]??0));
+    }
     if(cultivation?.note)add(list,'small',cultivation.note);
+    add(list,'h4','Hoạt động gần đây');
+    for(const event of world.events.filter(e=>e.actorId===npc.id).slice(-8).reverse()){
+      const time=String(Math.floor(event.minute/60)).padStart(2,'0')+':'+String(event.minute%60).padStart(2,'0');
+      add(list,'small','Ngày '+event.day+' · '+time+' — '+event.description);
+    }
     add(list,'h4','Ký ức');
     if (!npc.memories.length) add(list,'p','Chưa có ký ức được ghi nhận.');
     for (const memory of npc.memories.slice(-6).reverse()) add(list,'small',`Ngày ${memory.day} · ${memory.text}`);

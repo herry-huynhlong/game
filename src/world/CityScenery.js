@@ -1,7 +1,5 @@
 export const cityPropFrame=index=>'city-prop-'+index;
 
-const NIGHT_COLOR=0x202b52;
-
 export class CityScenery {
   constructor(scene,sprites){
     this.scene=scene;
@@ -12,21 +10,15 @@ export class CityScenery {
       const x=object.x+object.width/2,y=object.y-24;
       this.animated.push({sprite,kind,x,y,phase:scene.stableHash(object.name)%100});
     }
-    this.tone=scene.add.rectangle(0,0,1,1,NIGHT_COLOR,0).setOrigin(0).setDepth(9200).setVisible(false);
     this.ripples=scene.add.graphics().setDepth(3900);
     this.lights=scene.add.graphics().setDepth(9201);
   }
 
-  update(time,minute){
+  update(time,night){
     if(time<(this.nextUpdate??0))return;
     this.nextUpdate=time+125;
     const started=performance.now();
-    const view=this.scene.cameras.main.worldView;
-    const urban=view.centerX>2048&&view.centerX<4864&&view.centerY>1248&&view.centerY<3072;
-    const night=urban?Math.min(1,Math.max(0,(minute-1080)/80,(350-minute)/65)):0;
     const zoom=this.scene.cameras.main.zoom;
-    this.tone.setVisible(night>0);
-    if(night>0)this.tone.setPosition(view.x-8,view.y-8).setSize(view.width+16,view.height+16).setFillStyle(NIGHT_COLOR,.46*night);
     this.lights.clear();
     this.ripples.clear();
     for(const {sprite,kind,x,y,phase} of this.animated){

@@ -22,7 +22,8 @@ export class WorldHeavenActions {
     const scene = this.scene;
     const pointer = scene.input.activePointer;
     const point = target ?? (scene.lastAttackPointer && scene.cameras.main.getWorldPoint(pointer.x, pointer.y));
-    const dx = point ? point.x - npc.x : 0, dy = point ? point.y - npc.y : 0;
+    const height = !target && npc.wallLevel ? scene.ramparts.height(npc) : 0;
+    const dx = point ? point.x - npc.x : 0, dy = point ? point.y - npc.y + height : 0;
     const distance = Math.hypot(dx, dy);
     return distance > 6 ? [dx / distance, dy / distance] : AXES[scene.playerFacing] ?? AXES.down;
   }
@@ -34,7 +35,7 @@ export class WorldHeavenActions {
 
   fire(npc, skillId, target = null) {
     const scene = this.scene, weapon = weaponForNpc(npc), ai = Boolean(target), now = Date.now();
-    if(blocksGroundCombat(npc)||aboveGroundCombat(target))return false;
+    if(blocksGroundCombat(npc)||aboveGroundCombat(target)||target&&(npc.wallLevel??0)!==(target.wallLevel??0))return false;
     const skill = SKILLS[skillId];
     const fail = message => { if (!ai) scene.worldPopulationToast(message); return false; };
     if(weapon?.kind==='crossbow'&&(!skill||skill.weapon))return fail('Dùng nỏ trong chế độ Character Rig, hoặc đổi sang vũ khí khác.');
@@ -58,8 +59,8 @@ export class WorldHeavenActions {
     const mode = weaponAttackMode(weapon, combo);
     const range = skill?.range ?? (weapon ? (weapon.kind === 'dao' ? 174 : 200) : 43);
     const width = skill?.width ?? (weapon?.kind === 'dao' ? 19 : 10);
-    if (ai && (Math.hypot(target.x - npc.x, target.y - npc.y) > range - 12 || !scene.clearFaunaLine(npc, target))) return false;
-    if (ai && scene.populationWorld.npcs.some(other => other !== npc && other.alive &&
+    if (ai && (Math.hypot(target.x - npc.x, target.y - npc.y) > range - 12 || !scene.clearCombatLine(npc, target))) return false;
+    if (ai && scene.populationWorld.npcs.some(other => other !== npc && other.alive && (npc.wallLevel??0)===(other.wallLevel??0) &&
       this.inLane(npc, other, ux, uy, range, width + 12))) return false;
     if (!ai) this.stopFishing();
     const dir = facing(ux, uy);
@@ -77,11 +78,11 @@ export class WorldHeavenActions {
     actor?.play(`${scene.npcTextureFor(npc)}_idle_${dir}`, true);
     scene.playWeaponPose(npc, skill ?? mode, dir);
     const effect = skill?.effect ?? (weapon?.kind === 'dao' ? 'dao' : mode.hit === 'thrust' ? 'thrust' : 'jian');
-    if (weapon || skill) scene.spawnWeaponFx(effect, dir, npc.x, npc.y - 16);
+    if (weapon || skill) scene.spawnWeaponFx(effect, dir, npc.x, npc.y - 16 - scene.ramparts.height(npc),scene.ramparts.depth(npc)+15);
     const sprite = scene.add.sprite(npc.x, npc.y - 15, 'heaven-projectiles', { dao: 0, jian: 3, thrust: 6 }[effect])
       .setRotation(Math.atan2(uy, ux)).setDepth(npc.y + 1).setVisible(false);
     this.shots.push({
-      id: createWorldUuid(), npc, ai, x: npc.x, y: npc.y, ux, uy, range, width, sprite,
+      id: createWorldUuid(), npc, ai, wallLevel:npc.wallLevel??0, x: npc.x, y: npc.y, ux, uy, range, width, sprite,
       start: scene.time.now + (weapon || skill ? 105 : 65), travel: 0, speed: effect === 'thrust' ? 630 : 450,
       frame: { dao: 0, jian: 3, thrust: 6 }[effect], visible: Boolean(weapon || skill), hits: skill?.hits ?? 1, struck: new Set(),
       damage: damageForStrike(npc.realmIndex, combo, Boolean(skill), cultivationStats(npc).attack, skill?.multiplier ?? mode.multiplier ?? 1),
@@ -93,17 +94,21 @@ export class WorldHeavenActions {
     if(this.shots.length>=32)return false;
     const scene=this.scene;
     const x=tip.x,y=npc.y+uy*8;
-    if(!scene.canOccupy(x,y))return false;
+    if(!this.shotOpen(npc,x,y))return false;
     const sprite=scene.add.image(tip.x,tip.y,'combat-mount','bolt').setOrigin(1,.5)
       .setRotation(Math.atan2(uy,ux)).setDepth(npc.y+1);
-    this.shots.push({id:createWorldUuid(),npc,x,y,ux,uy,range:300,width:7,sprite,
-      start:scene.time.now,travel:0,speed:530,visible:true,hits:1,struck:new Set(),damage,elevation:tip.y-y,bolt:true});
+    this.shots.push({id:createWorldUuid(),npc,wallLevel:npc.wallLevel??0,x,y,ux,uy,range:300,width:7,sprite,
+      start:scene.time.now,travel:0,speed:530,visible:true,hits:1,struck:new Set(),damage,elevation:tip.y-y+scene.ramparts.height(npc),bolt:true});
     return true;
   }
 
   inLane(origin, target, ux, uy, length, width) {
     const dx = target.x - origin.x, dy = target.y - origin.y, along = dx * ux + dy * uy;
     return along > 0 && along <= length && Math.abs(dx * uy - dy * ux) <= width;
+  }
+
+  shotOpen(shot,x,y) {
+    return shot.wallLevel ? this.scene.ramparts.open(x,y,0,0) : this.scene.canOccupy(x,y);
   }
 
   updateShots(dt) {
@@ -118,20 +123,21 @@ export class WorldHeavenActions {
     scene.populationWorld.npcs.forEach(npc => add(npc, false));
     scene.populationWorld.environment.fauna.forEach(fauna => add(fauna, true));
     this.shots = this.shots.filter(shot => {
+      if((shot.npc.wallLevel??0)!==shot.wallLevel){shot.sprite.destroy();return false;}
       if (scene.time.now < shot.start) return true;
       const step = Math.min(shot.range - shot.travel, shot.speed * dt / 1000);
       for (let travelled = 0; travelled < step && shot.hits > 0;) {
         const advance = Math.min(5, step - travelled);
         const x = shot.x + shot.ux * advance, y = shot.y + shot.uy * advance;
-        if (!scene.canOccupy(x, y)) { shot.hits = 0; break; }
+        if (!this.shotOpen(shot,x,y)) { shot.hits = 0; break; }
         shot.x = x; shot.y = y; travelled += advance; shot.travel += advance;
         const bx = Math.floor(x / BUCKET), by = Math.floor(y / BUCKET);
         for (let iy = by - 1; iy <= by + 1 && shot.hits > 0; iy++) for (let ix = bx - 1; ix <= bx + 1 && shot.hits > 0; ix++) {
           for (const { target, fauna } of buckets.get(ix + ',' + iy) ?? []) {
-            if (!shot.hits || target === shot.npc || !target.alive || aboveGroundCombat(target) || shot.struck.has(target.id) || (!fauna && shot.ai)) continue;
+            if (!shot.hits || target === shot.npc || !target.alive || aboveGroundCombat(target) || (target.wallLevel??0)!==shot.wallLevel || shot.struck.has(target.id) || (!fauna && shot.ai)) continue;
             if (Math.hypot(target.x - x, target.y - y) > shot.width + 5 ||
                 !this.inLane({x:x-shot.ux*10,y:y-shot.uy*10},target,shot.ux,shot.uy,20,shot.width+4) ||
-                !scene.clearFaunaLine(shot, target) || !scene.canOccupy(target.x, target.y)) continue;
+                !scene.clearCombatLine(shot,target) || !this.shotOpen(shot,target.x,target.y)) continue;
             const eventId = 'heaven-strike:' + shot.id + ':' + target.id;
             const result = fauna
               ? scene.applyFaunaDamage(target, shot.npc, shot.damage, eventId)
@@ -143,13 +149,13 @@ export class WorldHeavenActions {
             }
             shot.struck.add(target.id);
             shot.hits--;
-            scene.spawnWeaponFx('thrust', facing(shot.ux, shot.uy), target.x, target.y - 12);
+            scene.spawnWeaponFx('thrust', facing(shot.ux, shot.uy), target.x, target.y - 12 - scene.ramparts.height(target),scene.ramparts.depth(target)+15);
             if (result.incident) scene.worldPopulationToast('Luật thành: báo động vì tấn công cư dân.');
           }
         }
       }
       if (!shot.hits || shot.travel >= shot.range || !shot.npc.alive) { shot.sprite.destroy(); return false; }
-      shot.sprite.setPosition(shot.x, shot.y + (shot.elevation ?? -15)).setDepth(shot.y + 1).setVisible(shot.visible);
+      shot.sprite.setPosition(shot.x, shot.y + (shot.elevation ?? -15) - scene.ramparts.height(shot)).setDepth(scene.ramparts.depth(shot) + 1).setVisible(shot.visible);
       if(!shot.bolt)shot.sprite.setFrame(shot.frame + Math.floor((scene.time.now - shot.start) / 68) % 3);
       return true;
     });

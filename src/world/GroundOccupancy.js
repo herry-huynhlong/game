@@ -4,11 +4,11 @@ const MASK=GROUND_NPC|GROUND_FAUNA;
 const CELL=40;
 const STEP=5;
 
-export function groundFootprint(actor,mounted=false) {
+export function groundFootprint(actor,mounted=false,seated=false) {
   const species=actor.species, broad=actor.modularAppearance?.look?.bodyType==='male_strong';
   const shapes={wolf:[28,14],boar:[37,20],toad:[29,19]};
   const monster=shapes[species],extra=actor.rank==='elite'?5:0;
-  const shape=mounted?[24,18]:monster?[monster[0]+extra,monster[1]+extra]:species==='tiger'?[24,18]:species==='deer'?[24,13]:species==='scorpion'?[17,11]:species==='snake'?[14,8]:broad?[18,10]:[16,8];
+  const shape=mounted?[24,18]:monster?[monster[0]+extra,monster[1]+extra]:species==='tiger'?[24,18]:species==='deer'?[24,13]:species==='scorpion'?[17,11]:species==='snake'?[14,8]:seated?(broad?[24,14]:[22,12]):broad?[18,10]:[16,8];
   return {width:shape[0],height:shape[1],category:species?GROUND_FAUNA:GROUND_NPC,mask:MASK,
     radius:Math.max(...shape)/2,personalRadius:Math.max(...shape)/2+6};
 }
@@ -26,20 +26,25 @@ export class GroundOccupancy {
     this.buckets=new Map();
     this.bodies=new Map();
     this.pairsTested=0;
+    this.terrainChecks=0;
   }
 
-  sync(npcs,fauna,mountedId,parked=[]){
+  sync(npcs,fauna,mountedId,parked=[],isSeated=()=>false){
     let highest=0;
     for(const actors of [npcs,fauna,parked])for(const actor of actors){
       if(!actor.alive||actor.ascended)continue;
       const mounted=actor.id===mountedId;
+      const seated=!mounted&&isSeated(actor);
       let body=this.bodies.get(actor.id);
-      if(!body||body.mounted!==mounted){
-        this.remove(actor.id);
-        body={id:actor.id,actor,mounted,...groundFootprint(actor,mounted)};
+      if(!body){
+        body={id:actor.id,actor};
         this.bodies.set(actor.id,body);
       }
+      if(body.mounted!==mounted||body.seated!==seated){
+        Object.assign(body,{mounted,seated,...groundFootprint(actor,mounted,seated)});
+      }
       body.active=true;
+      body.floor=actor.wallLevel??0;
       this.place(body,actor.x,actor.y);
       highest=Math.max(highest,body.radius);
     }
@@ -48,6 +53,22 @@ export class GroundOccupancy {
       if(body.active)body.active=false;
       else this.remove(id);
     }
+  }
+
+  blockingBody(body,x,y,seatedOnly=false){
+    for(const other of this.near(x,y,body.radius+(this.maxRadius??12))){
+      if((body.floor??0)===(other.floor??0)&&(!seatedOnly||other.seated)&&body.id!==other.id&&intersection(body,x,y,other))return other;
+    }
+    return null;
+  }
+
+  clearSegment(body,from,to){
+    const steps=Math.max(1,Math.ceil(Math.hypot(to.x-from.x,to.y-from.y)/4));
+    for(let i=1;i<=steps;i++){
+      const t=i/steps;
+      if(!this.open(body,from.x+(to.x-from.x)*t,from.y+(to.y-from.y)*t))return false;
+    }
+    return true;
   }
 
   place(body,x,y){
@@ -82,9 +103,10 @@ export class GroundOccupancy {
   }
 
   open(body,x,y,escape=false){
+    this.terrainChecks++;
     if(!this.mapOpen(x,y,body.width/2,body.height/2,body))return false;
     for(const other of this.near(x,y,body.radius+(this.maxRadius??12))){
-      if(body.id===other.id||body.ignoreId===other.id||!(body.mask&other.category)||!(other.mask&body.category))continue;
+      if((body.floor??0)!==(other.floor??0)||body.id===other.id||body.ignoreId===other.id||!(body.mask&other.category)||!(other.mask&body.category))continue;
       this.pairsTested++;
       const hit=intersection(body,x,y,other);
       if(hit&&(!escape||hit>=intersection(body,body.x,body.y,other)-.001))return false;
@@ -92,23 +114,31 @@ export class GroundOccupancy {
     return true;
   }
 
-  advance(body,x,y,allowAvoid=true,permitted=()=>true){
+  advance(body,x,y,allowAvoid=true,permitted=()=>true,floorAt){
     const dx=x-body.x,dy=y-body.y,d=Math.hypot(dx,dy);
     if(d<.01)return null;
     const vx=dx/d,vy=dy/d,n=Math.ceil(d/STEP),step=d/n;
     const startX=body.x,startY=body.y;
+    const tryStep=(px,py)=>{
+      if(!permitted(px,py))return false;
+      const floor=body.floor;
+      if(floorAt)body.floor=floorAt(body,px,py);
+      if(!this.open(body,px,py,body.floor===floor)){body.floor=floor;return false;}
+      this.place(body,px,py);
+      return true;
+    };
     // The same relative right-hand side is used for opposing actors.
     for(let i=0;i<n;i++){
       const px=body.x+vx*step,py=body.y+vy*step;
-      if(permitted(px,py)&&this.open(body,px,py,true)){this.place(body,px,py);continue;}
+      if(tryStep(px,py))continue;
       if(!allowAvoid)break;
       let moved=false;
       for(const side of [.9,1,-.9,-1]){
         const forward=Math.sqrt(1-side*side);
         const ax=body.x+(vx*forward-vy*side)*step;
         const ay=body.y+(vy*forward+vx*side)*step;
-        if(!permitted(ax,ay)||!this.open(body,ax,ay,true))continue;
-        this.place(body,ax,ay);moved=true;break;
+        if(!tryStep(ax,ay))continue;
+        moved=true;break;
       }
       if(!moved)break;
     }
@@ -119,9 +149,9 @@ export class GroundOccupancy {
     const adjusted=[];
     for(const body of this.bodies.values()){
       if(adjusted.length>=limit)break;
-      if(!body.actor.alive||body.actor.fixed||!select(body))continue;
+      if(!body.actor.alive||body.actor.fixed||body.seated||!select(body))continue;
       for(const other of this.near(body.x,body.y,body.radius+(this.maxRadius??12))){
-        if(other.id===body.id||!intersection(body,body.x,body.y,other))continue;
+        if((body.floor??0)!==(other.floor??0)||other.id===body.id||!intersection(body,body.x,body.y,other))continue;
         const dx=body.x-other.x,dy=body.y-other.y;
         const angle=dx||dy?Math.atan2(dy,dx):body.id<other.id?0:Math.PI;
         for(const offset of [0,Math.PI/2,-Math.PI/2,Math.PI]){
@@ -140,7 +170,7 @@ export class GroundOccupancy {
     for(const body of this.bodies.values()){
       if(!body.actor.alive)continue;
       for(const other of this.near(body.x,body.y,body.radius+(this.maxRadius??12))){
-        if(body.id<other.id&&intersection(body,body.x,body.y,other))pairs.push([body,other]);
+        if((body.floor??0)===(other.floor??0)&&body.id<other.id&&intersection(body,body.x,body.y,other))pairs.push([body,other]);
       }
     }
     return pairs;

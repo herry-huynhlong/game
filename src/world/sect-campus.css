@@ -1,0 +1,7 @@
+.sect-campus-panel { width: min(720px, 92vw); max-height: 82vh; overflow: auto; border: 1px solid #a38955; padding: 22px; border-radius: 4px; font: 15px/1.45 Georgia, serif; color: #f1e0b6; background: #142822; box-shadow: 0 16px 54px #091511ba; }
+.sect-campus-panel::backdrop { background: #0b151993; }
+.sect-campus-panel h2, .sect-campus-panel h3 { margin: 0 0 12px; color: #e5c581; }
+.sect-campus-panel article { padding: 13px 0; border-top: 1px solid #5b6248; }
+.sect-campus-panel p { margin: 7px 0; }
+.sect-campus-panel button { color: #efdaaf; margin: 4px 10px 4px 0; padding: 6px 12px; background: #243d32; border: 1px solid #947b4c; cursor: pointer; }
+.sect-campus-panel button:hover, .sect-campus-panel button:focus-visible { background: #345243; }

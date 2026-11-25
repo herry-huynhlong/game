@@ -46,10 +46,11 @@ export class WorldCharacterPreview {
     const direction=f?.heading??(possessed?this.scene.playerFacing:sprite.anims.currentAnim?.key.split('_').at(-1)??'down');
     const running=this.scene.possessedNpcId===npc.id&&this.scene.keys?.SHIFT?.isDown;
     const motion=!f&&sprite.getData('moving')?(running?'run':'walk'):'idle';
-    character.root.setPosition(Math.round(sprite.x),Math.round(sprite.y-flightOffset(f))).setDepth(sprite.depth+.01);
+    character.root.setPosition(Math.round(sprite.x),Math.round(sprite.y-flightOffset(f)-this.scene.ramparts.height(npc))).setDepth(sprite.depth+.01);
     this.mount.render(sprite.x,sprite.y,character.combat.action?.direction??direction,motion,distance);
     const hadFlight=character.flightWeapon;
     character.flightWeapon=Boolean(f);character.flightPose=visualFlightPose(f);
+    character.meditation=this.mount.attached?null:this.scene.cultivation?.poseFor(npc,this.scene.time.now);
     character.advance(delta,motion,direction,Math.min(distance/character.root.scaleX,12));
     if(f||hadFlight)character.apply();
     return true;
@@ -69,7 +70,7 @@ export class WorldCharacterPreview {
 
   toggleMount(){
     const {scene,npc,sprite,mount}=this;
-    if(scene.possessedNpcId!==npc.id||npc.flight)return false;
+    if(scene.possessedNpcId!==npc.id||npc.flight||npc.wallLevel)return false;
     if(mount.state==='absent'){
       const open=[[26,0],[-26,0],[0,26],[0,-26],[36,0],[-36,0],[0,36],[0,-36]].find(([dx,dy])=>this.canMountAt(sprite.x+dx,sprite.y+dy)&&scene.clearFaunaLine(sprite,{x:sprite.x+dx,y:sprite.y+dy}));
       if(!open){scene.worldPopulationToast('Cần khoảng trống để gọi Huyền Hổ.');return false;}
@@ -124,10 +125,10 @@ export class WorldCharacterPreview {
     for(const candidate of targets){
       if(candidate===npc||!candidate.alive||!isInWeaponArc(npc.x,npc.y,candidate.x,candidate.y,dir,mode))continue;
       const distance=Math.hypot(candidate.x-npc.x,candidate.y-npc.y);
-      if(distance<closest&&scene.clearFaunaLine(npc,candidate)){target=candidate;closest=distance;}
+      if(distance<closest&&scene.clearCombatLine(npc,candidate)){target=candidate;closest=distance;}
     }
     scene.sound.play('rig-strike',{volume:.18});
-    scene.spawnWeaponFx(weapon.kind==='dao'?'dao':thrust?'thrust':'jian',dir,npc.x+ux*20,npc.y+uy*20-15);
+    scene.spawnWeaponFx(weapon.kind==='dao'?'dao':thrust?'thrust':'jian',dir,npc.x+ux*20,npc.y+uy*20-15-scene.ramparts.height(npc),scene.ramparts.depth(npc)+15);
     if(!target)return;
     const id='rig-strike:'+createWorldUuid();
     if(scene.npcSprites.has(target.id))scene.reportCombat(npc.id,target.id,Math.max(1,Math.floor(damage-scene.heavenActions.defense(target))),{eventId:id});

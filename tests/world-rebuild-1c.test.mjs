@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { build } from 'esbuild';
+import {baseWorldMap} from './base-world-map.mjs';
 
 const root=process.cwd(),temp=fs.mkdtempSync(path.join(os.tmpdir(),'world-rebuild-1c-'));
 try{
@@ -11,8 +12,8 @@ try{
  const require=createRequire(import.meta.url),{createWorldUuid,loadWorldPopulation,WORLD_POPULATION_SAVE_KEY}=require(path.join(temp,'world-rebuild-population.cjs'));
  const insecureContextCrypto={getRandomValues(bytes){bytes.set(Array.from({length:bytes.length},(_,i)=>i));return bytes}};
  const fallbackUuid=createWorldUuid(insecureContextCrypto);assert.match(fallbackUuid,/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,'UUID v4 fallback works when randomUUID is unavailable on HTTP');
- const mapData=JSON.parse(fs.readFileSync(path.join(root,'maps/world-rebuild-1b.tmj'),'utf8'));
- const map={widthInPixels:mapData.width*mapData.tilewidth,heightInPixels:mapData.height*mapData.tileheight,getObjectLayer(name){return mapData.layers.find(l=>l.name===name)??null}};
+ const mapData=baseWorldMap(JSON.parse(fs.readFileSync(path.join(root,'maps/world-rebuild-1b.tmj'),'utf8')));
+ const map={properties:mapData.properties,widthInPixels:mapData.width*mapData.tilewidth,heightInPixels:mapData.height*mapData.tileheight,getObjectLayer(name){return mapData.layers.find(l=>l.name===name)??null}};
  class Storage{data=new Map();getItem(k){return this.data.get(k)??null}setItem(k,v){this.data.set(k,v)}}
  const storage=new Storage(),created=loadWorldPopulation(storage,map),world=created.world,{reportCityCombat,markCityIncidentAtScene,clearCityResponse}=require(path.join(temp,'dao','CityLawSystem.cjs'));
  assert.equal(created.fresh,true);assert.equal(storage.getItem(WORLD_POPULATION_SAVE_KEY)!==null,true);
@@ -26,6 +27,26 @@ try{
  const collisions=mapData.layers.find(l=>l.name==='Collision').objects;for(const n of world.npcs)assert.ok(!collisions.some(r=>n.x+9>r.x&&n.x-9<r.x+r.width&&n.y+5>r.y&&n.y-5<r.y+r.height),`spawn ${n.id} overlaps collision`);
  assert.equal(world.factions.find(f=>f.id==='qingyun-city').leaderId,master.id);assert.equal(world.factions.find(f=>f.id==='qingyun-sect').leaderId,leader.id);assert.equal(world.settlement.guardCaptainId,world.npcs.find(n=>n.populationRole==='city_guard').id);assert.equal(world.shops.length,5);assert.ok(world.shops.every(s=>world.npcs.some(n=>n.id===s.ownerId&&n.populationRole==='merchant')));
  const before=JSON.stringify(world),reloaded=loadWorldPopulation(storage,map);assert.equal(reloaded.fresh,false);assert.equal(JSON.stringify(reloaded.world),before,'reload does not reseed or reset identity, position, realm, inventory or AI state');
+ const legacy=structuredClone(world);
+ delete legacy.layoutVersion;
+ const oldDisciple=legacy.npcs.find(n=>n.populationRole==='low_disciple');
+ Object.assign(oldDisciple,{x:3530,y:4145,home:{x:4350,y:4355},workPosition:{x:3152,y:4230},
+   actionTarget:{x:2694,y:3849},patrolPoints:[{x:3610,y:3650}],routeIndex:5,pathBlocked:true});
+ legacy.sectCampus={orders:[{id:'active-herb-contract',assignee:oldDisciple.id,progress:1,status:'active',escrow:12}]};
+ legacy.environment={drops:[{id:'forest-loot',x:2174,y:4034,count:1,status:'ground'}]};
+ const migrationStorage=new Storage(),oldSave=JSON.stringify(legacy);
+ migrationStorage.setItem(WORLD_POPULATION_SAVE_KEY,oldSave);
+ const upgraded=loadWorldPopulation(migrationStorage,map).world;
+ const moved=upgraded.npcs.find(n=>n.id===oldDisciple.id);
+ assert.equal(upgraded.layoutVersion,2);
+ assert.deepEqual([moved.y,moved.home.y,moved.workPosition.y,moved.actionTarget.y,moved.patrolPoints[0].y],[5425,5635,5510,5129,3650]);
+ assert.deepEqual([moved.routeIndex,moved.pathBlocked],[undefined,undefined]);
+ assert.deepEqual([moved.inventory,moved.spiritStones,moved.xp,moved.realmIndex],[oldDisciple.inventory,oldDisciple.spiritStones,oldDisciple.xp,oldDisciple.realmIndex]);
+ assert.deepEqual(upgraded.sectCampus.orders,legacy.sectCampus.orders);
+ assert.equal(upgraded.environment.drops[0].y,5314);
+ assert.equal(migrationStorage.getItem(WORLD_POPULATION_SAVE_KEY),oldSave);
+ migrationStorage.setItem(WORLD_POPULATION_SAVE_KEY,JSON.stringify(upgraded));
+ assert.deepEqual(loadWorldPopulation(migrationStorage,map).world,JSON.parse(JSON.stringify(upgraded)));
  const attacker=world.npcs.find(n=>n.populationRole==='independent_cultivator'&&n.authorityRole!=='city_master'),victim=world.npcs.find(n=>n.populationRole==='commoner');attacker.x=victim.x=3568;attacker.y=victim.y=2192;attacker.realmIndex=2;const crime=reportCityCombat(world,{eventId:'crime-test-1',attackerId:attacker.id,victimId:victim.id,damage:30});assert.equal(crime.reason,'crime');assert.equal(crime.responderIds.length,2);assert.equal(crime.cityMasterId,master.id);assert.ok(crime.incident.severity>=2);assert.ok(crime.responderIds.every(id=>world.npcs.find(n=>n.id===id).lawResponse.targetId===attacker.id));
  const beforeDuel=world.cityLaw.incidents.length,duel=reportCityCombat(world,{eventId:'duel-test-1',attackerId:attacker.id,victimId:victim.id,damage:30,authorizedDuel:true});assert.equal(duel.reason,'authorized-duel');assert.equal(world.cityLaw.incidents.length,beforeDuel);
  const selfDefense=reportCityCombat(world,{eventId:'defense-test-1',attackerId:victim.id,victimId:attacker.id,damage:8,retaliation:true});assert.equal(selfDefense.reason,'self-defense');assert.equal(world.cityLaw.incidents.length,beforeDuel);

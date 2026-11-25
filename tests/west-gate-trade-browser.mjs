@@ -76,7 +76,8 @@ try {
       const a={x:gate.x-dx,y:gate.y+dy},b={x:gate.x+dx,y:gate.y+dy};
       if(!s.footprintTerrainOpen(a.x,a.y,8,4)||!s.footprintTerrainOpen(b.x,b.y,8,4)||m.line(a,b))continue;
       const buyer={...actor,...a,flight:undefined,ascended:false};
-      const owner={...venue.owner,...b,flight:undefined,ascended:false,hunger:10,fatigue:10,safety:100,goalAction:'trade',lawResponse:null};
+      const owner={...venue.owner,...b,flight:undefined,ascended:false,hunger:10,fatigue:10,safety:100,
+        action:'trade',goalAction:'trade',decisionSlot:'shop-shift:'+venue.shop.id,lawResponse:null};
       const shop={...venue.shop,openHour:0,closeHour:24};
       const fixture={owner,shop,position:b};
       return {serving:m.serving(fixture),rejected:!m.canTrade(buyer,fixture),distance:2*dx};
