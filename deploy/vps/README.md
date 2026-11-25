@@ -31,6 +31,16 @@ sudo env GITHUB_REPOSITORY=OWNER/REPO SITE_DOMAIN=game.example.com bash deploy.s
 
 For a private repository, provide a short-lived, read-only GitHub token in the invoking environment as `GH_TOKEN`; do not put it in this repository or in the app bundle. The script verifies the release's SHA-256 checksum, unpacks under `/var/www/thanh-van-ky/releases/`, atomically switches `current`, reloads Nginx, and checks `http://127.0.0.1/`. A failed health check restores the prior symlink. Browser save data remains in the player's browser storage under the same site origin; deployment does not clear it. Server-side saves are not part of this frontend deployment.
 
+## Install from an Actions artifact
+
+If publishing the Release fails, download the Actions artifact for the version
+tag and copy its archive and SHA256SUMS to a directory on the VPS. Use the same
+checksum, healthcheck and rollback path with the exact tag:
+
+```bash
+sudo env SITE_DOMAIN=game.example.com LOCAL_RELEASE_DIR="$HOME/tvk-artifact" bash deploy.sh v1.0.0
+```
+
 ## Update and rollback
 
 Run the same deploy command after publishing a new tag, or use `latest` to select the newest GitHub Release:

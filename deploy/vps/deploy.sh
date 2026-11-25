@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Downloads a prebuilt GitHub Release archive. This host never checks out source or runs npm.
+# Installs a prebuilt archive from GitHub Releases or a local Actions artifact.
 REPOSITORY="${GITHUB_REPOSITORY:-}"
 TAG="${1:-latest}"
+LOCAL_RELEASE_DIR="${LOCAL_RELEASE_DIR:-}"
 ROOT="${INSTALL_DIR:-/var/www/thanh-van-ky}"
 SITE_DOMAIN="${SITE_DOMAIN:-_}"
 HEALTHCHECK_URL="${HEALTHCHECK_URL:-http://127.0.0.1/}"
@@ -12,7 +13,7 @@ STAGING=""
 
 fail() { echo "ERROR: $*" >&2; exit 1; }
 [[ $EUID -eq 0 ]] || fail "Run as root (example: sudo env GITHUB_REPOSITORY=owner/repo bash deploy.sh v1.2.0)."
-[[ -n "$REPOSITORY" && "$REPOSITORY" == */* ]] || fail "Set GITHUB_REPOSITORY=owner/repo."
+[[ -n "$LOCAL_RELEASE_DIR" || ( -n "$REPOSITORY" && "$REPOSITORY" == */* ) ]] || fail "Set GITHUB_REPOSITORY=owner/repo."
 [[ "$TAG" == latest || "$TAG" =~ ^[A-Za-z0-9._-]+$ ]] || fail "Release tag contains unsupported characters."
 for cmd in curl tar sha256sum python3 nginx systemctl; do command -v "$cmd" >/dev/null || fail "Missing required command: $cmd"; done
 
@@ -21,6 +22,14 @@ STAGING="$(mktemp -d "$ROOT/.deploy.XXXXXX")"
 cleanup() { [[ -z "$STAGING" ]] || rm -rf -- "$STAGING"; }
 trap cleanup EXIT
 
+if [[ -n "$LOCAL_RELEASE_DIR" ]]; then
+  [[ "$TAG" != latest ]] || fail "Specify the version tag when using LOCAL_RELEASE_DIR."
+  release_tag="$TAG"
+  archive_name="thanh-van-ky-$release_tag.tar.gz"
+  [[ -f "$LOCAL_RELEASE_DIR/$archive_name" && -f "$LOCAL_RELEASE_DIR/SHA256SUMS" ]] ||
+    fail "Local artifact must contain $archive_name and SHA256SUMS."
+  cp -- "$LOCAL_RELEASE_DIR/$archive_name" "$LOCAL_RELEASE_DIR/SHA256SUMS" "$STAGING/"
+else
 api="https://api.github.com/repos/$REPOSITORY/releases"
 if [[ "$TAG" == latest ]]; then endpoint="$api/latest"; else endpoint="$api/tags/$TAG"; fi
 auth=()
@@ -43,6 +52,7 @@ release_tag="${meta[0]}"; archive_name="${meta[1]}"; archive_url="${meta[2]}"; s
 [[ "$release_tag" =~ ^[A-Za-z0-9._-]+$ ]] || fail "Unexpected release tag."
 curl --fail --silent --show-error --location "${auth[@]}" "$archive_url" -o "$STAGING/$archive_name"
 curl --fail --silent --show-error --location "${auth[@]}" "$sums_url" -o "$STAGING/SHA256SUMS"
+fi
 expected_hash="$(awk -v name="$archive_name" '$2 == name || $2 == "release/" name || $2 == "*" name || $2 == "*release/" name { print $1; exit }' "$STAGING/SHA256SUMS")"
 [[ "$expected_hash" =~ ^[A-Fa-f0-9]{64}$ ]] || fail "Release checksum file has no valid entry for $archive_name."
 actual_hash="$(sha256sum "$STAGING/$archive_name" | awk '{ print $1 }')"
