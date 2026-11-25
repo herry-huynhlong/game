@@ -63,10 +63,15 @@ requireFile('public/assets/old-road/ground.png', 'Old Road ground atlas');
 requireFile('public/assets/society/facilities.png', 'city services and production atlas');
 requireFile('public/assets/old-road/props.png', 'Old Road pavilion and scenery atlas');
 const monsterFiles=['wolf-normal','wolf-elite','boar-normal','boar-elite','toad-normal','toad-elite','monster-fx','monster-loot'];
+const undergroundArt=['deposits','farm-plots','mine-entrances','profession','spirit-herbs','wild-herbs'];
+const westernArt=['ancient-grove','habitat-accents','treasures','flower-forms','wood-normal','millennial-normal','millennial-elite','flower-normal','vine-normal',
+  'centipede-normal','eagle-normal','eagle-elite','living-grove','living-floor','spirit-veins','stag-normal','wood-king-normal'];
 requireFile('monster-gallery.html','monster gallery source');
 requireFile('monster-movement.html','monster movement lab source');
 requireFile('public/assets/effects/flying-swords.png','flying sword sprites');
 for(const name of monsterFiles)requireFile('public/assets/fauna/monster-v2/'+name+'.png','monster sprite');
+for(const name of undergroundArt)requireFile('public/assets/di-mach/'+name+'.png','underground asset');
+for(const name of westernArt)requireFile('public/assets/west-wilds/'+name+'.png','Van Linh art');
 
 
 if (process.argv.includes('--dist')) {
@@ -75,6 +80,8 @@ if (process.argv.includes('--dist')) {
   requireFile('dist/monster-movement.html','built monster movement lab');
   requireFile('dist/assets/effects/flying-swords.png','built flying sword sprites');
   for(const name of monsterFiles)requireFile('dist/assets/fauna/monster-v2/'+name+'.png','built monster sprite');
+  for(const name of undergroundArt)requireFile('dist/assets/di-mach/'+name+'.png','built underground asset');
+  for(const name of westernArt)requireFile('dist/assets/west-wilds/'+name+'.png','built Van Linh art');
   requireFile('dist/maps/world-rebuild-1b.tmj', 'copied production world map');
   requireFile('dist/assets/west-wilds/terrain.png', 'copied West Wilds tile atlas');
   requireFile('dist/assets/west-wilds/landmarks.png', 'copied West Wilds landmark atlas');

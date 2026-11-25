@@ -1,3 +1,5 @@
+import { faunaHabitat } from './FaunaHabitat.js';
+
 const CELL=12;
 const AXES=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]];
 const TURN=[0,1,-1,2,-2,3,-3,4];
@@ -8,6 +10,7 @@ export const MONSTER_MOVEMENT=Object.freeze({
 });
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const at=(p,x,y)=>({x:p.x+x,y:p.y+y});
+const habitatGap=(z,x,y,hw,hh)=>Math.max(0,z.x+hw-x,x+hw-z.x-z.width,z.y+hh-y,y+hh-z.y-z.height);
 const unit=(a,b)=>{const d=distance(a,b)||1;return{x:(b.x-a.x)/d,y:(b.y-a.y)/d}};
 const facing=(x,y)=>Math.abs(x)>Math.abs(y)?x<0?'west':'east':y<0?'north':'south';
 const snapshot=p=>p&&{x:p.x,y:p.y};
@@ -47,9 +50,13 @@ export class MonsterMovement {
     }
   }
   terrain(body,x,y,padding=0){
-    const z=this.zones.get(body.actor.zoneId),hw=body.width/2+padding,hh=body.height/2+padding,p={x,y};
-    return !!z&&x-hw>=z.x&&x+hw<=z.x+z.width&&y-hh>=z.y&&y+hh<=z.y+z.height&&
-      !this.safe(p)&&!this.water(x,y,hw,hh)&&this.grid.mapOpen(x,y,hw,hh,body);
+    const z=faunaHabitat(this.zones.get(body.actor.zoneId),body.actor.species),hw=body.width/2+padding,hh=body.height/2+padding,p={x,y};
+    if(!z)return false;
+    const gap=habitatGap(z,x,y,hw,hh);
+    const reentering=gap>0&&body.actor.recovery?.phase==='returning'&&gap<=habitatGap(z,body.actor.x,body.actor.y,hw,hh);
+    if(gap>0&&!reentering||this.safe(p))return false;
+    if(body.floor===2)return this.grid.mapOpen(x,y,hw,hh,body);
+    return !this.water(x,y,hw,hh)&&this.grid.mapOpen(x,y,hw,hh,body);
   }
   line(body,a,b,dynamic=false,padding=0,spacing=3){
     const d=distance(a,b),count=Math.max(1,Math.ceil(d/spacing));
@@ -59,7 +66,7 @@ export class MonsterMovement {
     }
     return true;
   }
-  approach(actor,target,prefer=STANCE[actor.species]){
+  approach(actor,target,prefer=STANCE[actor.species]??37){
     const body=this.grid.bodies.get(actor.id),current=this.slots.get(actor.id);
     if(!body)return undefined;
     if(current?.target===target.id&&distance(current.anchor,target)<MONSTER_MOVEMENT.goalRefresh&&

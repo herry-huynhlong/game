@@ -57,9 +57,10 @@ export function meditationAnchors(look,direction,stage,breath=0){
   return {source,neck,body:[center,top+breath+7],shift:[neck[0]-source[0],neck[1]-source[1]],torsoLift:59-neck[1]};
 }
 
-export function seatedTexture(textures,look,direction,stage,breath){
+export function seatedTexture(textures,look,direction,stage,breath,gesture){
   const side=direction==='left'||direction==='right',back=direction==='up';
-  const key=['seated',look.outfit,look.outfitColor,look.bodyType,direction,stage,breath].join('-');
+  const social=stage===3&&Boolean(gesture), lifted=social&&['lift','sip','eat','talk'].includes(gesture);
+  const key=['seated',look.outfit,look.outfitColor,look.bodyType,direction,stage,breath,social?(lifted?gesture:'chair'):'ground'].join('-');
   if(textures.exists(key))return key;
   const canvas=textures.createCanvas(key,64,96),ctx=canvas.getContext();
   const [shade,cloth,lit,inner,trim]=variants[look.outfitColor]??outfits[look.outfit]??outfits.taoist;
@@ -71,6 +72,13 @@ export function seatedTexture(textures,look,direction,stage,breath){
   const drop=meditationAnchors(look,direction,stage,breath).torsoLift;
   const kneeRise=stage===1?8:stage===2?4:0;
   const p=(color,coords)=>pixels(ctx,color,coords.map(([x,y])=>[x+xShift,y]));
+  if(social){
+    p(outline,[[19,78],[45,78],[45,85],[42,91],[45,92],[45,95],[34,95],[32,85],[29,86],[27,95],[18,95],[17,92],[22,89]]);
+    p(cloth,[[20,78],[31,80],[28,90],[22,91],[23,84]]);
+    p(shade,[[33,79],[43,78],[43,84],[40,91],[35,91],[34,85]]);
+    p(lit,[[21,82],[27,81],[26,87],[23,88]]);
+    p('#a97c56',[[14,85],[20,85],[19,88],[14,88]]);
+  }else{
   p('#1c3030',[[10,90],[18,87],[43,87],[53,90],[49,94],[20,94]]);
   p(outline,[[12-stage,82],[20,76-kneeRise],[29,75],[34,77],[43,76-kneeRise],[52+stage,82],[54+stage,89],[49,93],[17,93],[10-stage,89]]);
   p(shade,[[13-stage,84],[20,77-kneeRise],[31,79],[37,78],[43,78-kneeRise],[52+stage,84],[49,91],[18,91]]);
@@ -79,6 +87,7 @@ export function seatedTexture(textures,look,direction,stage,breath){
   p(cloth,[[30,87],[41,79-kneeRise],[45,79-kneeRise],[51+stage,84],[47,89],[39,91],[25,91]]);
   p(lit,[[34,85],[42,80-kneeRise],[46,82],[40,84],[38,87],[31,88]]);
   if(!back)p(outline,[[23,86],[30,86],[33,88],[30,90],[22,90],[19,89]]);
+  }
   p(outline,[[21-broad,61-drop],[26,59-drop],[37,59-drop],[43+broad,63-drop],[47+broad+loose,77],
     [40,84],[23,84],[17-broad-loose,77]]);
   p(cloth,[[22-broad,62-drop],[27,60-drop],[36,60-drop],[42+broad,64-drop],[44+broad,77],[38,81],[22,82],[19-broad,76]]);
@@ -98,12 +107,21 @@ export function seatedTexture(textures,look,direction,stage,breath){
   const sleeveY=67-drop;
   p(shade,[[20-broad,sleeveY],[24,sleeveY+2],[25,77],[20,82],[15-broad-loose,80],[15-broad-loose,76]]);
   p(lit,[[20-broad,sleeveY],[22,sleeveY+2],[19,76],[15-broad,77],[16-broad,73]]);
-  p(cloth,[[39,sleeveY],[43+broad,sleeveY+1],[47+broad+loose,77],[44,82],[39,82],[36,79],[38,74]]);
-  p(lit,[[41,sleeveY+1],[43+broad,sleeveY+2],[46+broad,77],[44,78],[40,75]]);
+  if(lifted&&!back){
+    const h=gesture==='sip'||gesture==='eat'?57:gesture==='talk'?62:64;
+    p(outline,[[42,62],[47,68],[46,77],[39,81],[35,76],[38,h],[44,h-1],[46,h+4],[42,71]]);
+    p(cloth,[[43,63],[46,69],[44,76],[39,79],[37,75],[40,h+3],[43,h+4],[41,73]]);
+    p(lit,[[39,72],[42,h+3],[43,h+4],[41,74]]);
+    p(skin,[[39,h],[40,h-4],[43,h-5],[46,h-2],[45,h+1],[41,h+2]]);
+    p(skinLit,[[40,h-3],[43,h-4],[44,h-2],[41,h-1]]);
+  }else{
+    p(cloth,[[39,sleeveY],[43+broad,sleeveY+1],[47+broad+loose,77],[44,82],[39,82],[36,79],[38,74]]);
+    p(lit,[[41,sleeveY+1],[43+broad,sleeveY+2],[46+broad,77],[44,78],[40,75]]);
+  }
   if(!back){
     p(skin,[[18,79],[24,77],[27,79],[26,82],[19,83]]);
     p(skinLit,[[19,79],[24,78],[25,79],[21,81],[19,81]]);
-    if(!side||direction==='right'){
+    if(!lifted&&(!side||direction==='right')){
       p(skin,[[37,78],[41,79],[45,82],[43,84],[37,83],[35,81]]);
       p(skinLit,[[37,78],[40,79],[40,81],[36,81]]);
     }

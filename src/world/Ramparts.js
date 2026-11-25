@@ -138,8 +138,8 @@ export class Ramparts {
     const planned=this.role(npc);
     if(planned<0 || !npc.alive || npc.id===this.scene.possessedNpcId || npc.flight || npc.skyStep ||
       npc.lawResponse?.status==='responding' || npc.lawResponse?.status==='at-scene' ||
-      npc.tribulation || npc.marketVisit || npc.goalAction==='eat' ||
-      ['fight','flee'].includes(npc.goalAction) || /^(need:|mandate:|duel:)/.test(npc.decisionSlot??''))return -1;
+      npc.tribulation || npc.marketVisit || npc.convalescence || npc.goalAction==='eat' ||
+      ['fight','flee'].includes(npc.goalAction) || /^(need:|mandate:|duel:|civic:)/.test(npc.decisionSlot??''))return -1;
     const duty=this.reliefDuty(npc,planned);
     return duty===REST_SLOT?-1:duty;
   }
@@ -156,7 +156,7 @@ export class Ramparts {
 
   order(entry) {
     const npc = entry.npc;
-    const status=npc.lawResponse?.status;
+    const status=npc.convalescence?undefined:npc.lawResponse?.status;
     if (!this.guards.has(npc.id) && !npc.wallLevel && !status) return null;
     const response = status==='responding' || status==='at-scene'
       ? this.scene.scheduler.byId.get(npc.lawResponse.targetId)?.npc : null;

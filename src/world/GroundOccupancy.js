@@ -3,11 +3,13 @@ export const GROUND_FAUNA=2;
 const MASK=GROUND_NPC|GROUND_FAUNA;
 const CELL=40;
 const STEP=5;
+const shapes={wolf:[28,14],boar:[37,20],toad:[29,19],wood:[24,17],millennial:[30,20],flower:[22,18],
+  vine:[26,16],centipede:[30,14],eagle:[32,15],stag:[24,13],'wood-king':[44,30]};
+const compactFlower=actor=>actor.species==='flower'&&['rooted','alert','waking'].includes(actor.flower?.phase);
 
 export function groundFootprint(actor,mounted=false,seated=false) {
   const species=actor.species, broad=actor.modularAppearance?.look?.bodyType==='male_strong';
-  const shapes={wolf:[28,14],boar:[37,20],toad:[29,19]};
-  const monster=shapes[species],extra=actor.rank==='elite'?5:0;
+  const monster=compactFlower(actor)?[16,12]:shapes[species],extra=actor.rank==='elite'?5:0;
   const shape=mounted?[24,18]:monster?[monster[0]+extra,monster[1]+extra]:species==='tiger'?[24,18]:species==='deer'?[24,13]:species==='scorpion'?[17,11]:species==='snake'?[14,8]:seated?(broad?[24,14]:[22,12]):broad?[18,10]:[16,8];
   return {width:shape[0],height:shape[1],category:species?GROUND_FAUNA:GROUND_NPC,mask:MASK,
     radius:Math.max(...shape)/2,personalRadius:Math.max(...shape)/2+6};
@@ -40,11 +42,11 @@ export class GroundOccupancy {
         body={id:actor.id,actor};
         this.bodies.set(actor.id,body);
       }
-      if(body.mounted!==mounted||body.seated!==seated){
-        Object.assign(body,{mounted,seated,...groundFootprint(actor,mounted,seated)});
+      if(body.mounted!==mounted||body.seated!==seated||body.compact!==compactFlower(actor)){
+        Object.assign(body,{mounted,seated,compact:compactFlower(actor),...groundFootprint(actor,mounted,seated)});
       }
       body.active=true;
-      body.floor=actor.wallLevel??0;
+      body.floor=actor.species==='eagle'&&actor.altitude>=12?2:actor.wallLevel??0;
       this.place(body,actor.x,actor.y);
       highest=Math.max(highest,body.radius);
     }
@@ -53,6 +55,11 @@ export class GroundOccupancy {
       if(body.active)body.active=false;
       else this.remove(id);
     }
+  }
+
+  refreshFlower(actor){
+    const body=this.bodies.get(actor.id),compact=compactFlower(actor);
+    if(body&&body.compact!==compact)Object.assign(body,{compact,...groundFootprint(actor)});
   }
 
   blockingBody(body,x,y,seatedOnly=false){

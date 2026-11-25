@@ -44,7 +44,7 @@ export class CharacterRenderer {
     const changed=this.timeline.advance(delta,motion,direction,distance);
     const wasActing=Boolean(this.combat.action);
     this.combat.advance(delta,(event,action)=>{this.apply();this.onActionEvent?.(event,action,this.attachments);});
-    if(changed||wasActing||this.riding||this.combat.weapon==='crossbow'||this.meditation||this.seated?.visible)this.apply();
+    if(changed||wasActing||this.workPose||this.riding||this.combat.weapon==='crossbow'||this.meditation||this.seated?.visible)this.apply();
   }
 
   apply() {
@@ -59,7 +59,8 @@ export class CharacterRenderer {
     const flight=this.flightPose,stance=flight?.mount??0;
     const airCloth=flight?.cloth??0;
     const action=combat?.values;
-    const shift=action?.[4]??0;
+    const labor=!action&&!riding&&!flight&&this.workPose;
+    const shift=(action?.[4]??0)+(labor?.bend??0);
     const rise=(riding?0:pose.rise)*(1-stance)+shift+(this.rideBob??0)-Math.round(Math.sin(stance*Math.PI)*5);
     const {swing,cloth}=pose;
     const sway=Math.max(-2,Math.min(2,Math.round((cloth*(1-stance)+airCloth*stance)*sign)));
@@ -94,7 +95,7 @@ export class CharacterRenderer {
       const anchors=meditationAnchors(appearance,direction,stage,breath);
       this.meditationAnchors=anchors;
       const [x,y]=anchors.shift;
-      const texture=seatedTexture(layers.body.scene.textures,appearance,direction,stage,breath);
+      const texture=seatedTexture(layers.body.scene.textures,appearance,direction,stage,breath,meditation.gesture);
       if(!this.seated){
         this.seated=layers.body.scene.add.image(-32,-93,texture).setOrigin(0);
         this.root.add(this.seated);
@@ -105,7 +106,7 @@ export class CharacterRenderer {
       else this.seated.clearTint();
       for(const part of PARTS)layers[part].setVisible(false);
       set('hairBack','hairBack'+hair,x,y);
-      set('face',`face/${appearance.face}/${appearance.expression}`,x,y);
+      set('face',`face/${appearance.face}/${meditation.gesture==='smile'?'warm':appearance.expression}`,x,y);
       set('eyes',`eyes/${appearance.eyes}`,x,y,meditation.name!=='BreakthroughPrepare');
       set('eyebrows',`eyebrows/${appearance.eyebrows}`,x,y);
       set('beard',`beard/${appearance.beard}`,x,y,appearance.beard!=='none'&&(appearance.beard==='silver'||appearance.face==='elder'));
@@ -141,8 +142,8 @@ export class CharacterRenderer {
     const forwardX=side?sign:0,forwardY=side?0:sign;
     const twoHands=combat?.weapon==='crossbow';
     const active=Boolean(action||riding);
-    const handX=flight?Math.round((side?7*sign:5)*stance):active?forwardX*reach:armX;
-    const handY=flight?-Math.round((7+(flight.lean??0))*stance):active?lift+Math.round(forwardY*reach*.42):armY;
+    const handX=flight?Math.round((side?7*sign:5)*stance):active?forwardX*reach:labor?labor.x*sign:armX;
+    const handY=flight?-Math.round((7+(flight.lean??0))*stance):active?lift+Math.round(forwardY*reach*.42):labor?labor.y:armY;
     const holdingBack=direction==='up';
     const mainPart=holdingBack?'leftArm':'rightArm';
     const supportPart=holdingBack?'rightArm':'leftArm';

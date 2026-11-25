@@ -1,0 +1,134 @@
+#world-inspector,
+#world-inspector-tooltip {
+  position: fixed;
+  z-index: 23;
+  color: #ecdfc7;
+  background: #121d1a;
+  border: 1px solid #9d8151;
+  font: 13px/1.4 "Segoe UI", system-ui, sans-serif;
+  box-sizing: border-box;
+}
+
+#world-inspector[hidden],
+#world-inspector [hidden],
+#world-inspector-tooltip[hidden] { display: none; }
+
+#world-inspector {
+  top: 118px;
+  right: 14px;
+  width: min(320px, calc(100vw - 28px));
+  max-height: min(69vh, calc(100dvh - 165px));
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 9px 28px #060b09a0, inset 0 0 0 3px #242b24;
+}
+
+#world-inspector header,
+#world-inspector footer { padding: 8px 12px; }
+
+#world-inspector header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #dcb87c;
+  border-bottom: 1px solid #51432f;
+  font-family: Georgia, serif;
+  font-weight: 700;
+}
+
+#world-inspector button {
+  color: #ebd5a2;
+  background: #25322a;
+  border: 1px solid #776142;
+  border-radius: 2px;
+  padding: 4px 8px;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+#world-inspector button:hover,
+#world-inspector button:focus-visible { background: #394332; outline-color: #f2d59b; }
+#world-inspector [data-close] { padding-block: 0; font-size: 18px; line-height: 1.35; }
+
+#world-inspector .inspection-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 12px 5px;
+}
+
+#world-inspector canvas {
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  image-rendering: pixelated;
+  border: 1px solid #5e4e35;
+  background: #26322b;
+}
+
+#world-inspector h2 {
+  margin: 0;
+  font: 700 18px/1.25 Georgia, serif;
+  color: #f4dca4;
+}
+
+#world-inspector[data-tone="4"] h2 { color: #d8c1f2; }
+#world-inspector[data-tone="5"] h2 { color: #ffd597; }
+#world-inspector p { margin: 2px 0 0; }
+#world-inspector [data-meta] { color: #ccb98d; font-size: 11px; }
+#world-inspector [data-state] { color: #c1d9b8; font-size: 12px; }
+
+#world-inspector .inspection-body {
+  min-height: 0;
+  padding: 5px 12px 10px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: #8b754f #1a2620;
+}
+
+#world-inspector dl { margin: 5px 0; }
+#world-inspector dl > div {
+  display: grid;
+  grid-template-columns: 37% 1fr;
+  gap: 7px;
+  padding: 4px 0;
+  border-bottom: 1px solid #c9ac7120;
+}
+
+#world-inspector dt { color: #bdcaba; }
+#world-inspector dd { margin: 0; overflow-wrap: anywhere; }
+#world-inspector [data-bars] > div { display: grid; grid-template-columns: 1fr auto; gap: 2px 5px; margin-bottom: 5px; }
+#world-inspector [data-bars] b { font-weight: 600; font-variant-numeric: tabular-nums; }
+#world-inspector progress {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 5px;
+  border: 0;
+  background: #35433b;
+  color: #90bc87;
+  accent-color: currentColor;
+}
+
+#world-inspector progress[data-tone="health"] { color: #d79178; }
+#world-inspector progress[data-tone="qi"] { color: #83bec5; }
+#world-inspector progress::-webkit-progress-bar { background: #35433b; }
+#world-inspector progress::-webkit-progress-value { background: currentColor; }
+#world-inspector summary,
+#world-inspector h3 { font-size: 13px; color: #e6ca8f; margin: 8px 0 4px; }
+#world-inspector summary { cursor: pointer; }
+#world-inspector [data-links],
+#world-inspector [data-choices] { display: grid; gap: 4px; }
+#world-inspector footer { border-top: 1px solid #51432f; }
+#world-inspector-tooltip {
+  z-index: 24;
+  pointer-events: none;
+  max-width: 215px;
+  padding: 5px 8px;
+  font-size: 11px;
+  box-shadow: 0 4px 10px #0006;
+}
+
+@media (max-height: 600px) {
+  #world-inspector { top: 82px; max-height: calc(100dvh - 103px); }
+}

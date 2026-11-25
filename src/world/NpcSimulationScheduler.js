@@ -1,6 +1,14 @@
 const MOVE_INTERVAL = [0, 100, 420];
 const THINK_INTERVAL = [1000, 2200, 5500];
 
+export function npcVisibleInView(entry,view,controlled){
+  const {npc}=entry;
+  const horizontalPadding=controlled?92:entry.visible?46:38;
+  const lowerPadding=controlled?92:entry.visible?72:62;
+  return npc.alive&&!npc.underground&&npc.x>=view.x-horizontalPadding&&npc.x<=view.right+horizontalPadding&&
+    npc.y>=view.y-horizontalPadding&&npc.y<=view.bottom+lowerPadding;
+}
+
 export class NpcSimulationScheduler {
   constructor(npcs) {
     this.time = 0;
@@ -21,13 +29,14 @@ export class NpcSimulationScheduler {
       const distance = Math.max(view.x - npc.x, npc.x - view.right, view.y - npc.y, npc.y - view.bottom);
       const previous = entry.level;
       const controlled = npc.id === possessedId;
-      const horizontalPadding=controlled?92:entry.visible?46:38;
-      const lowerPadding=controlled?92:entry.visible?72:62;
-      entry.visible=npc.alive&&npc.x>=view.x-horizontalPadding&&npc.x<=view.right+horizontalPadding&&
-        npc.y>=view.y-horizontalPadding&&npc.y<=view.bottom+lowerPadding;
+      entry.visible=npcVisibleInView(entry,view,controlled);
       entry.level = controlled || urgentIds.has(npc.id) || distance <= (previous === 0 ? 132 : 84)
         ? 0 : distance <= (previous < 2 ? 610 : 490) ? 1 : 2;
-      if (!npc.alive) continue;
+      if (!npc.alive || npc.underground) {
+        entry.lastMove=this.time;
+        entry.minutes=entry.workMinutes=0;
+        continue;
+      }
       this.counts[entry.level]++;
       if (controlled) {
         entry.lastMove = this.time;
@@ -49,7 +58,7 @@ export class NpcSimulationScheduler {
   accrueMinute(possessedId, arrivalTolerance=()=>25) {
     for (const entry of this.byId.values()) {
       const { npc } = entry;
-      if (!npc.alive || npc.id === possessedId) continue;
+      if (!npc.alive || npc.underground || npc.id === possessedId) continue;
       entry.minutes++;
       const target = npc.actionTarget ?? npc.home ?? npc;
       const key = npc.goalAction + ':' + target.x + ':' + target.y;

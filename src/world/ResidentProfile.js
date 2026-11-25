@@ -97,6 +97,8 @@ export function residentCultivation(npc){
   return {view,atLimit,note};
 }
 
+import { recoveryFields } from './WorldInspectionData.js';
+
 export class ResidentProfile {
   constructor(scene){
     this.scene=scene;
@@ -133,7 +135,12 @@ export class ResidentProfile {
         <div class="resident-overview" data-sheet="overview">
           <p class="resident-workplace" data-profile="workplace"></p>
           <p class="resident-activity" data-profile="activity"></p>
+          <p class="resident-note" data-profile="recovery" hidden></p>
           <p class="resident-note" data-profile="note"></p><p class="resident-note" data-profile="sectOrder" hidden></p><p class="resident-note" data-profile="westJourney" hidden></p>
+          <p class="resident-note" data-profile="lifeDetails"></p>
+          <section class="resident-party" data-profile="party" hidden></section>
+          <details data-profile="civic"><summary>Thiện ác và pháp lý</summary><p></p></details>
+          <details data-profile="social"><summary>Sinh hoạt và bằng hữu</summary><div></div></details>
         </div>
         <div class="resident-stats" data-sheet="cultivation" hidden>
           ${[['hp','Sinh lực'],['mp','Linh lực'],['xp','Tu vi']].map(([id,label])=>`
@@ -146,7 +153,7 @@ export class ResidentProfile {
           <p class="resident-flight-detail" data-profile="flightDetail"></p>
         </div>
         <div data-sheet="inventory" hidden><details data-profile="inventory" open><summary></summary><div class="resident-items"></div></details></div>
-        ${active?'<button type="button" class="gold-button" data-profile="meditate"></button><div data-profile="controls"></div>':`<div class="resident-actions">
+        ${active?'<button type="button" class="gold-button" data-profile="meditate"></button><button type="button" class="gold-button" data-profile="vein" hidden>Quản lý linh mạch</button><div data-profile="controls"></div>':`<div class="resident-actions">
           <button id="npc-gift" class="gold-button">Ban tặng</button>
           <button id="possess-start" class="gold-button"></button>
           <button id="npc-life">Sinh hoạt</button>
@@ -217,7 +224,29 @@ export class ResidentProfile {
     const contract=order?order.name+' · '+campus.progress(npc,order)+'/'+order.quantity+' · '+credits+' cống hiến':
       credits?credits+' điểm cống hiến Thanh Vân Tông':'';
     setText(fields.sectOrder,contract);fields.sectOrder.hidden=!contract;
+    const target=npc.actionTarget;
+    const reason=npc.aiDecision?.action===npc.goalAction&&!npc.decisionSlot?.includes(':')?npc.aiDecision.reason:
+      npc.aiDecision?.action===npc.goalAction&&/^\d+:/.test(npc.decisionSlot??'')?npc.aiDecision.reason:'';
+    const needs=[['Đói',npc.hunger],['Mệt',npc.fatigue],['Thiếu giao tiếp',npc.socialNeed??0]].sort((a,b)=>b[1]-a[1]);
+    const coords=point=>point?`${Math.round(point.x)}, ${Math.round(point.y)}`:'';
+    setText(fields.lifeDetails,[npc.shortGoal,target&&'Đích '+coords(target),npc.home&&'Nơi ở '+coords(npc.home),
+      needs[0][1]>=45&&needs[0][0]+' '+Math.round(needs[0][1])+'%',reason].filter(Boolean).join(' · '));
+    this.renderParty(fields.party,npc,coords);
+    this.renderSocial(fields.social,npc);
+    const civic=scene.civic,r=npc.reputation;
+    const cases=civic?.cases.filter(c=>c.actorId===npc.id||c.victimId===npc.id).slice(-4)??[];
+    const holdings=civic?.owned(npc).map(site=>site.name).join(', ');
+    fields.civic.querySelector('p').textContent='Thiện danh '+(r?.good??0)+' · Ác danh '+(r?.bad??0)+' · Uy tín '+(r?.trade??0)+' · Tín nhiệm '+(r?.trust??0)+' · Tài sản '+npc.spiritStones+' linh thạch. '+
+      (holdings?'Sở hữu '+holdings+'. ':'')+
+      (r?Object.entries(r.relations).map(([id,value])=>civic.name(id)+' '+value).join(' · '):'')+
+      (civic?.wanted(npc).length?' · Đang bị truy nã':'')+(cases.length?' · Nhật ký '+cases.map(c=>c.result??c.id).join(' · '):'');
+    if(fields.vein){fields.vein.hidden=!active||!civic?.panel.closest(npc);fields.vein.onclick=()=>civic?.panel.show(npc);}
     const stats=realmPosition(npc)&&npc.techniqueMastery?cultivationStats(npc):null;
+    const health=!active&&stats?[
+      `Sinh lực ${Math.round(npc.hp)}/${stats.hpMax}`,
+      ...recoveryFields(scene,npc).map(([label,value])=>label+' '+value),
+    ].join(' · '):'';
+    setText(fields.recovery,health);fields.recovery.hidden=!health;
     this.meter('hp',npc.hp,stats?.hpMax);
     this.meter('mp',npc.mp,stats?.mpMax);
     const cultivation=residentCultivation(npc);
@@ -244,6 +273,60 @@ export class ResidentProfile {
       this.panel.querySelector('#npc-gift').disabled=!available;
     }
   }
+  renderSocial(panel,npc){
+    const society=this.scene.society;
+    if(!society||!panel)return;
+    const draw=()=>{
+      if(!panel.open)return;
+      const account=society.account(npc), part=panel.querySelector('div');
+      const friends=Object.entries(npc.relationships??{}).filter(([,v])=>v!==0).sort((a,b)=>b[1]-a[1]).slice(0,10);
+      const view=[Math.round(account.needs.social),friends,account.socialJournal,account.places,account.contacts];
+      const signature=JSON.stringify(view);
+      if(panel.dataset.signature===signature)return;
+      panel.dataset.signature=signature;part.replaceChildren();
+      const add=text=>{const p=document.createElement('p');p.textContent=text;part.append(p);};
+      add('Nhu cầu giao tiếp '+view[0]+'%');
+      for(const [id,value] of friends){
+        const n=this.scene.scheduler.byId.get(id)?.npc;
+        if(!n)continue;
+        const type=value>=55?'Tri kỷ':value>=18?'Bằng hữu':value>=0?'Người quen':value<=-35?'Cừu nhân':'Đối thủ';
+        const button=document.createElement('button');button.type='button';button.textContent=n.name+' · '+type;
+        button.onclick=()=>this.scene.selectNPC(id);part.append(button);
+      }
+      for(const [id,visits] of Object.entries(account.places??{}))add((society.places.get(id)?.cfg.name??id)+' · '+visits+' lượt');
+      for(const entry of (account.socialJournal??[]).slice(-6).reverse())add(entry.topic+(entry.fee?' · '+entry.fee+' linh thạch':''));
+    };
+    panel.ontoggle=draw;
+    draw();
+  }
+
+  renderParty(panel,npc,coords){
+    const scene=this.scene,system=scene.expeditions,party=system?.of(npc);
+    panel.hidden=!party;
+    if(!party){if(panel.childElementCount)panel.replaceChildren();return;}
+    const roster=party.members.map(id=>system.npc(id)).filter(Boolean);
+    const fingerprint=JSON.stringify([party.id,party.phase,party.hits,party.amount,npc.actionTarget,
+      ...roster.map(n=>[n.id,n.hp,n.realmIndex,n.realmLevel])]);
+    if(panel.dataset.current===fingerprint&&panel.childElementCount)return;
+    panel.dataset.current=fingerprint;
+    panel.replaceChildren();
+    const detail=document.createElement('p');
+    detail.textContent=[party.name,system.role(party,npc),system.status(party),party.job.label,
+      'Đích '+coords(npc.actionTarget??party.job.field),'Thưởng cả đội '+party.escrow+' linh thạch',
+      party.amount?'Đang giữ '+party.amount+' vật phẩm':party.hits?'Đòn trúng '+party.hits:null].filter(Boolean).join(' · ');
+    panel.append(detail);
+    for(const n of roster){
+      const button=document.createElement('button');
+      button.type='button';
+      button.textContent=n.name+' · '+system.role(party,n)+' · '+formatRealm(n)+' · '+Math.round(n.hp)+' HP';
+      button.onclick=()=>scene.selectNPC(n.id);
+      panel.append(button);
+    }
+    const locate=document.createElement('button');locate.type='button';locate.textContent='Định vị đội trưởng';
+    locate.onclick=()=>{const n=system.npc(party.leader);if(n)scene.navigateCameraTo(n.x,n.y,'party',false,.9);};
+    panel.append(locate);
+  }
+
   meter(id,value,max,status){
     const input=Number.isFinite(value)&&Number.isFinite(max)&&max>0;
     setText(this.fields[id],status??(input?`${integer(value)} / ${integer(max)}`:Number.isFinite(value)?String(integer(value)):'—'));

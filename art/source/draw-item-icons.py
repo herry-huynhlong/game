@@ -13,14 +13,16 @@ JADE = "#68bf98"
 SILVER = "#b2cbd8"
 TERRACOTTA = "#963e4a"
 WOOD = "#7a4d3a"
+CAVE_ITEMS = {"di_tam_linh_nhu", "huyen_tinh_thach", "dia_hoa_linh_chi", "han_ngoc_tuy",
+              "tu_tinh_linh_qua", "van_nien_thach_tuy", "linh_mach_chi_tam"}
 
 
 def draw_item(item):
     canvas = Image.new("RGBA", (32, 32))
     d = ImageDraw.Draw(canvas)
 
-    def poly(points, color):
-        d.polygon(points, fill=color)
+    def poly(points, color, outline=None):
+        d.polygon(points, fill=color, outline=outline)
 
     def line(points, color, width=1):
         d.line(points, fill=color, width=width)
@@ -29,7 +31,65 @@ def draw_item(item):
         line([(x - 2, y), (x + 2, y)], color)
         line([(x, y - 2), (x, y + 2)], color)
 
-    if item in {"iron_sword", "mortal_gift_sword", "qingfeng_sword", "iron_dao"}:
+    if item in CAVE_ITEMS:
+        palette = {
+            "di_tam_linh_nhu": ("#467e7f", "#8ecabd", "#e3f8d9"),
+            "huyen_tinh_thach": ("#3f5873", "#5ca7b2", "#c2f1f1"),
+            "dia_hoa_linh_chi": ("#7a3e45", "#bc6552", "#f6ad76"),
+            "han_ngoc_tuy": ("#425783", "#6598c8", "#d7f7f7"),
+            "tu_tinh_linh_qua": ("#54456d", "#926eb8", "#d9c2f3"),
+            "van_nien_thach_tuy": ("#59544c", "#a4936a", "#e7d4a2"),
+            "linh_mach_chi_tam": ("#73533f", "#d0964d", "#fff2ac"),
+        }
+        dark, mid, light = palette[item]
+        if item == "dia_hoa_linh_chi":
+            poly([(5,15),(9,8),(17,6),(24,8),(28,14),(25,17),(17,18),(9,19)],dark)
+            line([(8,15),(14,10),(21,10),(25,13)],mid,2)
+            line([(15,27),(17,17)],mid,3)
+            detail(15,12,light)
+        elif item == "tu_tinh_linh_qua":
+            poly([(8,17),(9,12),(14,8),(21,10),(25,15),(24,22),(17,27),(11,25)],dark)
+            poly([(10,15),(15,11),(20,12),(22,16),(18,22),(12,21)],mid)
+            line([(15,10),(18,5),(24,5)],"#729c67",2)
+            detail(15,15,light)
+        elif item in {"di_tam_linh_nhu", "han_ngoc_tuy"}:
+            poly([(16,4),(19,12),(25,20),(23,26),(16,29),(10,26),(7,21),(12,14)],dark)
+            poly([(15,9),(17,14),(21,21),(19,25),(13,25),(10,21)],mid)
+            line([(14,15),(12,20),(13,23)],light,2)
+            if item=="han_ngoc_tuy":detail(21,10,light)
+        else:
+            ridge = 3 if item=="linh_mach_chi_tam" else 7 if item=="huyen_tinh_thach" else 11
+            poly([(5,22),(8,14),(13,12),(17,ridge),(23,8),(27,17),(25,25),(17,28),(10,27)],dark)
+            poly([(13,16),(17,ridge+3),(22,10),(24,17),(19,24),(13,25)],mid)
+            line([(12,23),(17,ridge+4),(19,17)],light,2)
+            line([(21,24),(24,21)],light)
+            if item=="linh_mach_chi_tam":detail(25,7,light)
+    elif item.startswith("spirit_stone_"):
+        dark, mid, light = {
+            "low": ("#295e58", "#519c80", "#b8ebbe"),
+            "middle": ("#285777", "#3a9bb0", "#c5f3e7"),
+            "high": ("#593f7c", "#8c65ab", "#ebc5ed"),
+            "supreme": ("#875431", "#d29547", "#fff0af"),
+        }[item.split("_")[-1]]
+        poly([(8,20),(7,13),(15,4),(23,10),(25,19),(18,27),(12,25)], dark, OUTLINE)
+        poly([(10,14),(15,6),(22,11),(19,18),(13,22)], mid)
+        line([(10,15),(15,7),(16,14),(14,20)], light, 2)
+        line([(19,20),(23,17),(21,23)], mid, 2)
+    elif item.startswith("eagle_"):
+        if item == "eagle_fire_core":
+            poly([(8,20),(10,11),(15,5),(16,11),(21,7),(23,15),(25,21),(20,27),(13,27)], "#b34d32", OUTLINE)
+            poly([(11,21),(15,12),(18,17),(21,13),(22,22),(18,24),(14,24)], "#f29a48")
+            line([(14,21),(18,17),(19,21)], "#ffda94", 2)
+        elif item == "eagle_talon":
+            poly([(9,8),(17,6),(22,10),(24,18),(21,24),(15,28),(14,23),(18,18),(15,13),(9,14)], "#d9ab76", OUTLINE)
+            line([(17,8),(21,12),(22,18),(18,24)], "#ffdfae", 2)
+        else:
+            tint = "#d8693a" if item=="eagle_flame_feather" else "#ac7549"
+            poly([(6,26),(11,16),(17,8),(25,5),(24,13),(19,21),(14,24)], tint, OUTLINE)
+            line([(6,27),(16,17),(24,7)], "#f4bf77", 2)
+            for x, y in [(12,22),(16,18),(19,14)]:
+                line([(x,y),(x+5,y-2)], "#fa9960")
+    elif item in {"iron_sword", "mortal_gift_sword", "qingfeng_sword", "iron_dao"}:
         dao = item == "iron_dao"
         wood = item == "iron_sword"
         edge = "#8de4bb" if item == "qingfeng_sword" else "#ddd4ac" if wood else "#e2eef0"
@@ -70,6 +130,36 @@ def draw_item(item):
             line([(14,17),(19,11)], OUTLINE,2)
             if item == "book_qingyun_wave":
                 line([(13,19),(18,18),(20,15)], PARCHMENT)
+    elif item.startswith("beast_core_") or item in {"wood_heart", "ancient_wood_marrow"}:
+        tint={"beast_core_foundation":"#68af88","beast_core_gold":"#e6ae63","beast_core_nascent":"#ad87d9",
+              "wood_heart":"#89bf6e","ancient_wood_marrow":"#66d6c0"}[item]
+        poly([(15,3),(21,6),(26,13),(25,21),(20,27),(12,28),(6,22),(5,13),(10,7)],"#374948",OUTLINE)
+        poly([(15,7),(20,9),(23,15),(21,21),(16,24),(10,21),(8,15),(11,10)],tint)
+        line([(11,17),(12,12),(16,10),(20,13),(19,17),(16,17),(14,20)],PARCHMENT,2)
+        detail(23,7,tint)
+    elif item in {"millennial_wood", "blood_vine", "flower_stamen", "centipede_sac", "python_skin", "stag_antler"}:
+        if item == "stag_antler":
+            line([(8,27),(13,21),(14,13),(21,5),(22,2)],"#658475",4)
+            line([(11,25),(15,19),(17,13),(23,6)],"#d7e4b1",2)
+            for pts in [[(14,16),(8,12),(7,7)],[(17,12),(22,13),(27,8)],[(19,8),(16,4),(14,3)]]:line(pts,"#a3c5a2",3)
+        elif item == "millennial_wood":
+            poly([(5,24),(16,7),(24,3),(27,7),(25,15),(12,29),(7,29)],"#8b6649",OUTLINE)
+            line([(7,24),(14,15),(18,10),(24,7)],"#d2b585",2)
+            line([(10,26),(17,17),(23,13)],"#5d493c",2)
+        elif item == "blood_vine":
+            path=[(5,24),(9,14),(15,11),(20,17),(24,17),(26,9),(22,5)]
+            line(path,"#563645",6);line(path,"#bd6868",3)
+            for x,y in [(9,14),(20,17),(26,9)]:poly([(x,y),(x-5,y-4),(x-5,y-7)],"#de9586")
+        elif item == "flower_stamen":
+            poly([(8,23),(10,14),(7,9),(12,4),(20,4),(25,8),(22,12),(19,13),(17,23),(13,28)],"#8b527c",OUTLINE)
+            line([(14,23),(14,15),(18,10)],"#dfb6d7",3)
+            for x,y in [(11,7),(16,6),(21,8)]:detail(x,y,"#ebba8d")
+        elif item == "centipede_sac":
+            poly([(16,3),(22,6),(22,11),(27,18),(24,25),(18,28),(11,26),(6,21),(10,15),(13,10),(12,6)],"#66587b",OUTLINE)
+            line([(13,12),(9,20),(14,23)],"#c5a9a7",2);detail(19,18,"#d4a99f")
+        else:
+            poly([(6,7),(20,4),(26,7),(23,12),(25,19),(20,28),(11,25),(7,27),(8,19),(5,14)],"#557e61",OUTLINE)
+            for i in range(3):line([(9,10+i*5),(13,7+i*5),(17,10+i*5),(21,8+i*5)],"#aacf88",2)
     elif item in {"qingling_herb", "purple_jade_fungus", "violet_mist_flower", "thunder_fruit", "ancient_blood_lotus"}:
         line([(15,27),(16,19),(15,11)],"#386556",3)
         poly([(16,24),(10,22),(7,17),(13,18),(17,22),(21,17),(27,15),(25,20),(20,24)],"#4c8768")
@@ -201,7 +291,14 @@ def draw_item(item):
 
 def main():
     catalog = (ROOT / "src/dao/ItemCatalog.ts").read_text(encoding="utf-8")
+    treasures = (ROOT / "src/dao/WestTreasureCatalog.ts").read_text(encoding="utf-8")
+    treasure_ids = re.findall(r"^  (\w+):\{name:",treasures,re.MULTILINE)
+    treasure_sheet = Image.open(ROOT / "public/assets/west-wilds/treasures.png").convert("RGBA")
     items = re.findall(r"^  (\w+):\{id:",catalog,re.MULTILINE) + ["unknown"]
+    new_items = [item for item in items if item.startswith(("spirit_stone_", "eagle_")) or item in CAVE_ITEMS]
+    items = [item for item in items if item not in new_items]
+    items.extend(item for item in treasure_ids if item not in items)
+    items.extend(new_items)
     loot = ["wolf_fang","wolf_pelt","boar_tusk","crimson_plate","toad_sac","jade_venom","demon_core","elite_beast_core"]
     legacy = Image.open(ROOT / "public/assets/fauna/monster-v2/monster-loot.png").convert("RGBA")
     frame = legacy.width // len(loot)
@@ -209,7 +306,10 @@ def main():
     frames = {}
     for index,item in enumerate(items):
         x,y = (index%8)*32,(index//8)*32
-        if item in loot:
+        if item in treasure_ids:
+            start = treasure_ids.index(item)*32
+            icon = treasure_sheet.crop((start,0,start+32,32))
+        elif item in loot:
             start = loot.index(item)*frame
             icon = legacy.crop((start,0,start+frame,legacy.height)).resize((32,32),Image.Resampling.NEAREST)
         else:

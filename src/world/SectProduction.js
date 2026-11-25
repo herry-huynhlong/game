@@ -31,7 +31,7 @@ export class SectProduction {
     s.history.push({at:this.campus.now(),type,npcId:n?.id??null,id,item,count});
     if(s.history.length>84)s.history.shift();
     if(n){
-      const labels={mined:'Khai thác quặng',planted:'Gieo giống',watered:'Chăm sóc ruộng',harvested:'Thu hoạch'};
+      const labels={mined:'Khai thác quặng',spiritMined:'Khai thác linh thạch',planted:'Gieo giống',watered:'Chăm sóc ruộng',harvested:'Thu hoạch'};
       const {day,minute}=this.world.clock;
       this.world.events.push({id:'production:'+id+':'+this.campus.now()+':'+type,day,minute,status:'completed',
         type:'society-'+type,actorId:n.id,description:n.name+' · '+labels[type]});
@@ -45,8 +45,19 @@ export class SectProduction {
     for(const vein of Object.values(this.state.veins))if(!vein.amount&&now>=vein.renewAt)vein.amount=vein.max;
     for(const sprite of this.scene.facilitySprites??[]){
       const {ore,crop}=sprite.getData('production');
-      const frame=ore?this.state.veins[ore]?.amount>0?1:2:crop?3+(this.state.fields[crop]?.phase??0):null;
-      if(frame!==null&&Number(sprite.frame.name)!==frame)sprite.setFrame(frame);
+      const vein=this.state.veins[ore],field=this.state.fields[crop];
+      if(vein){
+        const ratio=vein.amount/vein.max,frame=5*(ratio===0?3:ratio<.39?2:ratio<.76?1:0);
+        if(sprite.texture.key!=='di-mach-deposits')sprite.setTexture('di-mach-deposits',frame);
+        else if(Number(sprite.frame.name)!==frame)sprite.setFrame(frame);
+      }else if(field){
+        const phase=field.phase===3?5:field.phase===2?(field.readyAt-now<(field.output==='ration'?59:85)?4:3):
+          field.phase===1?(field.careAt-now<=18?2:1):0;
+        const variant=field.output==='ration'?0:1+([...crop].reduce((sum,c)=>sum+c.charCodeAt(0),0)%3);
+        const frame=variant*6+phase;
+        if(sprite.texture.key!=='di-mach-plots')sprite.setTexture('di-mach-plots',frame);
+        else if(Number(sprite.frame.name)!==frame)sprite.setFrame(frame);
+      }
     }
   }
   select(n,q,valid) {
@@ -64,12 +75,19 @@ export class SectProduction {
     if(!target){this.campus.move(n,n.home??n,'production-wait','rest');return;}
     this.campus.move(n,target.site,kind,'work');
     if(distance(n,target.site)>14){q.workUntil=null;return;}
+    if(kind==='farm')n.farmPose=['sow','water','water','harvest'][this.state.fields[target.id].phase];
     q.workUntil??=this.campus.now()+minutes(target.id);
     if(this.campus.now()<q.workUntil)return;
     apply(target.id);
     q.workUntil=null;q.workSite=null;
   }
   mine(n,q){
+    if(this.scene.underground){
+      const target=this.select(n,q,id=>this.state.veins[id]?.amount>0);
+      if(target)this.scene.underground.workOrder(n,target.id,q);
+      else this.campus.move(n,n.home??n,'production-wait','rest');
+      return;
+    }
     this.work(n,q,'mine',id=>this.state.veins[id]?.amount>0,id=>this.state.veins[id].grade===2?29:19,id=>{
       const vein=this.state.veins[id],amount=Math.min(vein.grade,q.quantity-this.campus.progress(n,q),vein.amount);
       if(amount<=0)return;

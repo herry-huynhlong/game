@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { FAUNA_IDS, FAUNA_SPECIES, MONSTER_SKILL_IDS, monsterSkill } from './dao/MonsterRegistry.ts';
 import { MonsterCombat, monsterFacing, startMonsterSkill } from './dao/MonsterCombat.ts';
 import { damageFauna } from './dao/FaunaSystem.ts';
-import { loadMonsterArt, MonsterVisuals, monsterFrame, MONSTER_POSES } from './world/MonsterVisuals.js';
+import { loadMonsterArt, MonsterVisuals, monsterFrame, MONSTER_POSES, monsterArtKey } from './world/MonsterVisuals.js';
 import { GroundOccupancy, groundFootprint } from './world/GroundOccupancy.js';
 
 import { MonsterMovement } from './world/MonsterMovement.js';
@@ -79,7 +79,7 @@ class MonsterGallery extends Phaser.Scene {
     this.movement=new MonsterMovement(this.grid,[zone]);
     this.mode='pose';this.elapsed=0;this.accum=0;this.hunterReady=900;
     const old=this.faunaSprites.get(this.beast.id);old?.destroy();
-    this.faunaSprites.set(this.beast.id,this.add.sprite(227,130,'monster-'+this.id+'-'+this.rank).setOrigin(.5,.82).setScale(this.rank==='elite'?1.15:1));
+    this.faunaSprites.set(this.beast.id,this.add.sprite(227,130,monsterArtKey(this.beast)).setOrigin(.5,.82).setScale(this.rank==='elite'?1.15:1));
     this.hunterArt.setPosition(this.hunter.x,this.hunter.y).setVisible(false);
     this.combat=new MonsterCombat(this.environment,[zone],{
       movement:this.movement,

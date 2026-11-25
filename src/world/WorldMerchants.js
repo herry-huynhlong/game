@@ -2,18 +2,21 @@ import { EconomySystem } from '../dao/EconomySystem.ts';
 import { advancesQiMinor, cultivationStats } from '../systems/CultivationSystem.ts';
 import { cultivationRequired } from '../systems/RealmConfig.ts';
 import { ITEM_CATALOG } from '../dao/ItemCatalog.ts';
+import { WEST_FAUNA_LOOT } from '../dao/MonsterRegistry.ts';
+import { WEST_TREASURE_IDS, treasureDefinition } from '../dao/WestTreasureCatalog.ts';
+import { itemPrices } from '../dao/SettlementSystem.ts';
 import { equipBestWeapon } from '../dao/GiftItemSystem.ts';
 import { livelihoodNeed } from '../dao/AutonomousNPCSystem.ts';
 
 const RANGE=64;
 const FACILITIES={'sect-dining-hall':'sect-food','sect-treasure-pavilion':'sect-market','city-food':'tavern-entrance','city-apothecary':'apothecary-entrance','city-forge':'forge-entrance','city-inn':'inn-entrance'};
 const shopAction=id=>id==='city-food'||id==='city-apothecary'||id==='city-forge'?'work':'trade';
-const TROPHIES=['wolf_fang','wolf_pelt','demon_core','boar_tusk','crimson_plate','toad_sac','jade_venom','elite_beast_core'];
+const TROPHIES=['wolf_fang','wolf_pelt','demon_core','boar_tusk','crimson_plate','toad_sac','jade_venom','elite_beast_core',...WEST_FAUNA_LOOT];
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const point=(x,y)=>({x,y});
 const rings=[24,40,54,74,96,120];
 const offsets=[[1,0],[-1,0],[0,1],[0,-1],[.71,.71],[-.71,.71],[.71,-.71],[-.71,-.71]];
-const urgent=n=>n.goalAction==='fight'||n.goalAction==='flee'||n.skyStep||n.tribulation||n.manualMeditation||n.faunaHuntTargetId||n.lawResponse?.status==='responding'||n.decisionSlot?.startsWith('mandate:');
+const urgent=n=>n.goalAction==='fight'||n.goalAction==='flee'||n.skyStep||n.tribulation||n.manualMeditation||n.faunaHuntTargetId||n.lawResponse?.status==='responding'||n.decisionSlot?.startsWith('mandate:')||n.decisionSlot==='west:treasure'||n.convalescence;
 
 export class WorldMerchants {
   constructor(scene){
@@ -40,6 +43,9 @@ export class WorldMerchants {
       if(shop.id==='city-apothecary'){
         shop.sellPrices.healing_pill??=16;
         shop.buyPrices.healing_pill??=10;
+      }
+      if(shop.id==='city-apothecary'||shop.id==='sect-treasure-pavilion')for(const id of WEST_TREASURE_IDS){
+        shop.buyPrices[id]??=itemPrices[id].buy;shop.sellPrices[id]??=itemPrices[id].sell;
       }
       this.shops.set(shop.id,venue);this.byOwner.set(owner.id,venue);
     }
@@ -75,7 +81,8 @@ export class WorldMerchants {
   }
   serving(venue){return venue&&this.onDuty(venue)&&venue.owner.action===venue.owner.goalAction&&distance(venue.owner,venue.position)<=12.01;}
   canTrade(npc,venue){
-    return Boolean(npc?.alive&&!npc.ascended&&!npc.flight&&!npc.wallLevel&&this.serving(venue)&&
+    const banned=this.scene.civic?.restricted(npc)&&!['city-food','city-apothecary'].includes(venue?.shop.id);
+    return Boolean(npc?.alive&&!banned&&!npc.underground&&!npc.ascended&&!npc.flight&&!npc.wallLevel&&this.serving(venue)&&
       venue.owner.id!==npc.id&&distance(venue.owner,npc)<=RANGE&&this.line(npc,venue.owner));
   }
   nearest(npc,preferredId,facing){
@@ -126,7 +133,7 @@ export class WorldMerchants {
     if(this.world.events.length>400)this.world.events.splice(0,this.world.events.length-400);
   }
   propose(n){
-    if(this.byOwner.has(n.id)||urgent(n)||n.decisionSlot?.startsWith('sect-campus:')||
+    if(this.scene.expeditions?.has(n)||this.byOwner.has(n.id)||urgent(n)||n.decisionSlot?.startsWith('sect-campus:')||
       n.decisionSlot?.startsWith('society:')||n.marketRetryAt>this.now())return null;
     const count=id=>EconomySystem.count(n.inventory,id);
     const need=livelihoodNeed(n,this.world);
@@ -146,6 +153,8 @@ export class WorldMerchants {
     }
     if(need==='rest'||n.goalAction==='rest')return null;
     const sell=(items,reserve=0)=>items.map(id=>[id,EconomySystem.sellable(this.world,n,id)-reserve]).find(([,amount])=>amount>0);
+    const surplus=n.x>=0?sell(WEST_TREASURE_IDS,1):null;
+    if(surplus)return {side:'sell',itemId:surplus[0],count:surplus[1],preferred:'city-apothecary',onlyPreferred:true};
     const sale=n.populationRole==='hunter'?sell(TROPHIES):
       n.populationRole==='herb_gatherer'?sell(['spirit_herb'],1):
       n.profession==='nong_dan'?sell(['ration'],2):n.goalAction==='trade'?sell(['wood','iron_sword','qi_pill','spirit_herb']):null;
@@ -247,6 +256,7 @@ export class WorldMerchants {
   tick(time){
     if(time<(this.next??0))return;
     this.next=time+450;
+    this.refreshPrices();
     const npcs=this.world.npcs,possessed=this.scene.possessedNpcId;
     for(const [id,claim] of this.slots){
       const npc=npcs.find(n=>n.id===id);
@@ -255,6 +265,16 @@ export class WorldMerchants {
     for(const venue of this.byOwner.values()){
       if(!this.serving(venue))continue;
       const {shop}=venue,day=this.world.clock.day;
+      if((shop.id==='city-apothecary'||shop.id==='sect-treasure-pavilion')&&this.now()>=(shop.nextTreasureBrewAt??0)){
+        const ingredient=WEST_TREASURE_IDS.find(id=>EconomySystem.count(shop.stock,id)&&
+          shop.sellPrices[treasureDefinition(id).medicine]>0&&EconomySystem.count(shop.stock,treasureDefinition(id).medicine)<2);
+        if(ingredient&&EconomySystem.remove(shop.stock,ingredient,1)){
+          const def=treasureDefinition(ingredient);
+          EconomySystem.add(shop.stock,def.medicine,Math.ceil(def.grade/2));
+          shop.nextTreasureBrewAt=this.now()+100;
+          this.scene.requestBackgroundSave();
+        }
+      }
       if(shop.id==='city-apothecary'&&this.serving(venue)&&shop.healingBrewDay!==day&&
         EconomySystem.count(shop.stock,'healing_pill')<4&&EconomySystem.remove(shop.stock,'spirit_herb',2)){
         EconomySystem.add(shop.stock,'healing_pill',1);shop.healingBrewDay=day;
@@ -268,7 +288,7 @@ export class WorldMerchants {
       }
     }
     for(const n of npcs){
-      if(!n.alive||n.ascended||n.id===possessed||n.flight)continue;
+      if(!n.alive||n.underground||n.decisionSlot?.startsWith('civic:')||n.ascended||n.id===possessed||n.flight)continue;
       if(!n.marketVisit&&time>=(this.nextDecision?.get(n.id)??0)){
         (this.nextDecision??=new Map()).set(n.id,time+2500+(n.id.charCodeAt(n.id.length-1)%11)*120);
         this.start(n,this.propose(n));
@@ -313,5 +333,40 @@ export class WorldMerchants {
     return {shops:[...this.shops.values()].map(v=>({id:v.shop.id,owner:v.owner.id,position:v.position,
       open:this.serving(v),cash:v.shop.cash,stock:v.shop.stock,counter:v.counter,queue:v.queue})),
       visits:this.world.npcs.filter(n=>n.marketVisit).map(n=>({id:n.id,visit:n.marketVisit,slot:this.slots.get(n.id)?.point}))};
+  }
+
+  refreshPrices(){
+    const hour=Math.floor(this.now()/60);
+    if(this.priceHour===hour)return;
+    this.priceHour=hour;
+    const groups={
+      'city-market':['wood','spirit_herb',...TROPHIES],
+      'city-apothecary':['spirit_herb','qi_pill','healing_pill'],
+      'city-food':['ration'],
+      'city-forge':['iron_ore','wood','iron_sword'],
+    };
+    for(const [id,items] of Object.entries(groups)){
+      const venue=this.shops.get(id),shop=venue?.shop;
+      if(!shop)continue;
+      let change;
+      for(const item of items){
+        const base=item==='healing_pill'?{buy:10,sell:16}:itemPrices[item];
+        if(!base?.buy||!shop.buyPrices[item]||!shop.sellPrices[item])continue;
+        const stock=EconomySystem.count(shop.stock,item);
+        const multiple=stock<2?1.2:stock>=8?.82:1;
+        // Use one rate for the city and enough spread to cover handling.
+        shop.buyPrices[item]=Math.max(1,Math.round(base.buy*multiple));
+        const price=Math.max(Math.ceil(base.buy*1.2)+1,Math.round(base.sell*multiple),shop.buyPrices[item]+1);
+        if(price!==shop.sellPrices[item]&&!change&&['spirit_herb','healing_pill','ration','iron_ore'].includes(item))
+          change={item,price,previous:shop.sellPrices[item]};
+        shop.sellPrices[item]=price;
+      }
+      if(change){
+        const {day,minute}=this.world.clock;
+        this.world.events.push({id:'market-price:'+id+':'+hour,type:'market-price',day,minute,actorId:venue.owner.id,status:'completed',
+          description:shop.name+' đổi giá '+ITEM_CATALOG[change.item].name+' từ '+change.previous+' thành '+change.price+' linh thạch.'});
+        if(this.world.events.length>400)this.world.events.shift();
+      }
+    }
   }
 }

@@ -144,7 +144,7 @@ export class LivingWorldPanel {
         (venue.stock===null?'':' · Tồn kho '+venue.stock));
     }
     const state=campus.production.state;
-    add(body,'h4','Mỏ Linh Khoáng và Linh Điền');
+    add(body,'h4','Mỏ Quặng Sắt và Linh Điền');
     const stored=Object.values(state.veins).reduce((a,v)=>a+v.amount,0);
     add(body,'p',stored+' quặng còn lại · '+(state.totals.mined??0)+' đã khai thác · '+(state.totals.harvested??0)+' sản phẩm đã thu hoạch');
     const budget=campus.state.budget;

@@ -140,7 +140,7 @@ export class WorldHeavenActions {
                 !scene.clearCombatLine(shot,target) || !this.shotOpen(shot,target.x,target.y)) continue;
             const eventId = 'heaven-strike:' + shot.id + ':' + target.id;
             const result = fauna
-              ? scene.applyFaunaDamage(target, shot.npc, shot.damage, eventId)
+              ? scene.applyFaunaDamage(target, shot.npc, shot.damage, eventId,true)
               : scene.reportCombat(shot.npc.id, target.id, Math.max(1, Math.floor(shot.damage - this.defense(target))), { eventId });
             if (result.ok === false) continue;
             if (shot.ai && shot.npc.populationRole === 'hunter' && fauna && !target.alive) {

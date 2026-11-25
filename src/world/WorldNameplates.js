@@ -68,6 +68,8 @@ export class WorldNameplates {
       const x=actor.x,y=actor.y-elevation;
       if(x<view.x||x>view.right||y<view.y||y>view.bottom)return;
       const selected=actor.id===(fauna?s.selectedFaunaId:s.selectedNpcId);
+      if(fauna&&actor.growth&&['normal','spirit','dormant'].includes(actor.growth.phase)&&!selected)return;
+      if(fauna&&actor.species==='flower'&&(!actor.flower||actor.flower.phase==='rooted')&&!selected)return;
       const pointer=s.input.activePointer;
       const hover=pointer&&Math.abs(pointer.worldX-x)<15/z&&pointer.worldY<=y+4&&pointer.worldY>y-37;
       const fighting=fauna?Boolean(actor.targetNpcId||actor.cast):actor.action==='fight';
@@ -76,7 +78,7 @@ export class WorldNameplates {
         this.health.fillStyle(0x202323,.9).fillRect(x-15/z,y-36,30/z,4/z);
         this.health.fillStyle(0xcd735a).fillRect(x-14/z,y-36+1/z,28/z*Math.min(1,Math.max(0,hp)),2/z);
       }
-      if(this.enabled&&(z>=.59||selected||hover))rows.push({actor,x,y:y-(fauna?52:45),fauna,selected,hover});
+      if(this.enabled&&(z>=.59||selected||hover))rows.push({actor,x,y:y-(fauna?Math.max(52,sprite.displayHeight*.72):45),fauna,selected,hover});
     };
     for(const n of s.populationWorld.npcs)inspect(n,s.npcSprites.get(n.id),false);
     for(const f of s.populationWorld.environment.fauna)inspect(f,s.faunaSprites.get(f.id),true);
@@ -85,7 +87,7 @@ export class WorldNameplates {
     for(const {actor,x,y,fauna} of rows){
       const info=fauna?faunaRealm(actor):actor;
       const realm=realmPosition(info);
-      const name=(fauna?faunaName(actor):residentName(actor)).normalize('NFC');
+      const name=(fauna?faunaName(actor)+(actor.rank==='elite'?' · Tinh Anh':''):residentName(actor)).normalize('NFC');
       const label=realm?formatRealm(info):'Phàm nhân';
       const width=Math.max(name.length,label.length)*3.55*scale;
       const positions=[[0,0],[0,-23],[0,-46],[-36,-22],[36,-22],[-75,-44],[75,-44],[0,-68]];

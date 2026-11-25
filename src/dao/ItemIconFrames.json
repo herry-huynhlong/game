@@ -1,158 +1,314 @@
 {
-  "qingling_herb": [
+  "wood_heart": [
     0,
     0
+  ],
+  "millennial_wood": [
+    32,
+    0
+  ],
+  "flower_stamen": [
+    64,
+    0
+  ],
+  "blood_vine": [
+    96,
+    0
+  ],
+  "centipede_sac": [
+    128,
+    0
+  ],
+  "python_skin": [
+    160,
+    0
+  ],
+  "stag_antler": [
+    192,
+    0
+  ],
+  "ancient_wood_marrow": [
+    224,
+    0
+  ],
+  "beast_core_foundation": [
+    0,
+    32
+  ],
+  "beast_core_gold": [
+    32,
+    32
+  ],
+  "beast_core_nascent": [
+    64,
+    32
+  ],
+  "qingling_herb": [
+    96,
+    32
   ],
   "purple_jade_fungus": [
-    32,
-    0
+    128,
+    32
   ],
   "violet_mist_flower": [
-    64,
-    0
+    160,
+    32
   ],
   "thunder_fruit": [
-    96,
-    0
+    192,
+    32
   ],
   "ancient_blood_lotus": [
-    128,
-    0
+    224,
+    32
   ],
   "detox_pill": [
-    160,
-    0
+    0,
+    64
   ],
   "fishing_rod_basic": [
-    192,
-    0
+    32,
+    64
   ],
   "book_qingyun_wave": [
-    224,
-    0
+    64,
+    64
   ],
   "book_crescent_wave": [
-    0,
-    32
+    96,
+    64
   ],
   "book_spirit_thrust": [
-    32,
-    32
+    128,
+    64
   ],
   "book_spirit_guard": [
-    64,
-    32
+    160,
+    64
   ],
   "river_fish_common": [
-    96,
-    32
+    192,
+    64
   ],
   "river_fish_spirit": [
-    128,
-    32
+    224,
+    64
   ],
   "training_crossbow": [
-    160,
-    32
+    0,
+    96
   ],
   "mortal_gift_sword": [
-    192,
-    32
+    32,
+    96
   ],
   "qingfeng_sword": [
-    224,
-    32
+    64,
+    96
   ],
   "iron_sword": [
-    0,
-    64
+    96,
+    96
   ],
   "iron_dao": [
-    32,
-    64
+    128,
+    96
   ],
   "qi_pill": [
-    64,
-    64
+    160,
+    96
   ],
   "healing_pill": [
-    96,
-    64
+    192,
+    96
   ],
   "spirit_herb": [
-    128,
-    64
+    224,
+    96
   ],
   "protective_talisman": [
-    160,
-    64
+    0,
+    128
   ],
   "jade_token": [
-    192,
-    64
+    32,
+    128
   ],
   "ration": [
-    224,
-    64
+    64,
+    128
   ],
   "rice_seed": [
-    0,
-    96
+    96,
+    128
   ],
   "wood": [
-    32,
-    96
+    128,
+    128
   ],
   "iron_ore": [
-    64,
-    96
+    160,
+    128
   ],
   "wolf_pelt": [
-    96,
-    96
+    192,
+    128
   ],
   "wolf_fang": [
-    128,
-    96
+    224,
+    128
   ],
   "demon_core": [
-    160,
-    96
+    0,
+    160
   ],
   "deer_meat": [
-    192,
-    96
+    32,
+    160
   ],
   "scorpion_venom": [
-    224,
-    96
+    64,
+    160
   ],
   "snake_skin": [
-    0,
-    128
+    96,
+    160
   ],
   "boar_tusk": [
-    32,
-    128
+    128,
+    160
   ],
   "crimson_plate": [
-    64,
-    128
+    160,
+    160
   ],
   "toad_sac": [
-    96,
-    128
+    192,
+    160
   ],
   "jade_venom": [
-    128,
-    128
+    224,
+    160
   ],
   "elite_beast_core": [
-    160,
-    128
+    0,
+    192
   ],
   "unknown": [
+    32,
+    192
+  ],
+  "fire_spirit_fruit": [
+    64,
+    192
+  ],
+  "wood_spirit_fruit": [
+    96,
+    192
+  ],
+  "frost_snow_lotus": [
+    128,
+    192
+  ],
+  "purple_venom_flower": [
+    160,
+    192
+  ],
+  "soul_nourishing_grass": [
     192,
-    128
+    192
+  ],
+  "century_spirit_ginseng": [
+    224,
+    192
+  ],
+  "millennial_spirit_ginseng": [
+    0,
+    224
+  ],
+  "myriad_spirit_reishi": [
+    32,
+    224
+  ],
+  "dragon_blood_fruit": [
+    64,
+    224
+  ],
+  "divine_wood_fruit": [
+    96,
+    224
+  ],
+  "qi_condensing_flower": [
+    128,
+    224
+  ],
+  "metal_spirit_fruit": [
+    160,
+    224
+  ],
+  "dark_yin_grass": [
+    192,
+    224
+  ],
+  "di_tam_linh_nhu": [
+    224,
+    224
+  ],
+  "huyen_tinh_thach": [
+    0,
+    256
+  ],
+  "dia_hoa_linh_chi": [
+    32,
+    256
+  ],
+  "han_ngoc_tuy": [
+    64,
+    256
+  ],
+  "tu_tinh_linh_qua": [
+    96,
+    256
+  ],
+  "van_nien_thach_tuy": [
+    128,
+    256
+  ],
+  "linh_mach_chi_tam": [
+    160,
+    256
+  ],
+  "spirit_stone_low": [
+    192,
+    256
+  ],
+  "spirit_stone_middle": [
+    224,
+    256
+  ],
+  "spirit_stone_high": [
+    0,
+    288
+  ],
+  "spirit_stone_supreme": [
+    32,
+    288
+  ],
+  "eagle_feather": [
+    64,
+    288
+  ],
+  "eagle_flame_feather": [
+    96,
+    288
+  ],
+  "eagle_talon": [
+    128,
+    288
+  ],
+  "eagle_fire_core": [
+    160,
+    288
   ]
 }

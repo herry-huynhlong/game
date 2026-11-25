@@ -1,5 +1,6 @@
 import { EconomySystem as Economy } from '../dao/EconomySystem.ts';
 import { cultivationStats } from '../systems/CultivationSystem.ts';
+import { SocialConversations } from './SocialConversations.js';
 
 const places={
   inn:{name:'Khách Điếm Vân Lai',activity:'sleeping',start:480,end:1440,fee:5,minutes:140,shop:'city-inn'},
@@ -27,21 +28,23 @@ export class WorldSociety {
     const layout=scene.map.getObjectLayer('SocietyStations')?.objects??[];
     for(const [i,[id,cfg]] of Object.entries(places).entries()){
       const slots=layout.filter(o=>scene.prop(o,'venue')===id).map(o=>({x:o.x,y:o.y,id:scene.prop(o,'id'),
-        use:scene.prop(o,'use'),table:scene.prop(o,'table')}));
+        use:scene.prop(o,'use'),table:scene.prop(o,'table'),facing:scene.prop(o,'facing')??'down'}));
       const staff=workers[i];
       const staffSlot=slots.find(p=>p.use==='staff'),counter=slots.find(p=>p.use==='counter');
       if(!staff||!staffSlot||!counter)continue;
       const venue={id,cfg,staff,staffSlot,counter,seats:slots.filter(p=>p.use==='seat'),queue:slots.filter(p=>p.use==='queue'),
+        landmark:(scene.map.getObjectLayer('SocietyStations')?.objects??[]).find(o=>scene.prop(o,'id')===id),
         shop:this.world.shops.find(s=>s.id===cfg.shop),ledger:this.state.venues[id]??={cash:0,stock:0,revenue:0,costs:0,served:0,produced:0}};
       this.places.set(id,venue);this.staffIds.add(staff.id);
     }
     for(const [id,visit] of Object.entries(this.visits))if(!scene.scheduler.byId.has(id)||!this.places.has(visit.venue))delete this.visits[id];
     for(const n of this.world.npcs)this.account(n);
+    this.social=new SocialConversations(this);
   }
   now(){const {day,minute}=this.world.clock;return day*1440+minute;}
   open(v){const at=this.world.clock.minute;return at>=v.cfg.start&&at<v.cfg.end;}
   available(n){
-    return n.alive&&!n.ascended&&n.id!==this.scene.possessedNpcId&&!n.flight&&!n.skyStep&&!n.wallLevel&&!n.tribulation&&
+    return !this.scene.civic?.restricted(n)&&!n.decisionSlot?.startsWith('civic:')&&!this.scene.expeditions?.has(n)&&n.alive&&!n.underground&&!n.ascended&&n.id!==this.scene.possessedNpcId&&!n.flight&&!n.skyStep&&!n.wallLevel&&!n.tribulation&&
       !n.marketVisit&&!n.lawResponse&&!n.manualMeditation&&!n.faunaHuntTargetId&&n.goalAction!=='fight'&&n.goalAction!=='flee';
   }
   onDuty(v){
@@ -92,9 +95,26 @@ export class WorldSociety {
   }
   isSeated(n) {
     const visit=this.visits[n.id];
-    if(visit?.phase!=='using')return false;
+    if(!['using','waiting-care'].includes(visit?.phase))return false;
     const v=this.places.get(visit.venue),seat=v?.seats.find(p=>p.id===visit.seat);
     return Boolean(seat&&distance(n,seat)<=12);
+  }
+  seatFor(n){
+    const visit=this.visits[n.id],v=this.places.get(visit?.venue);
+    return v?.seats.find(p=>p.id===visit.seat);
+  }
+  gesture(n){
+    const visit=this.visits[n.id];
+    if(!visit||!this.isSeated(n))return undefined;
+    const c=this.social.state.active[visit.venue+':'+visit.table];
+    const line=c?.lines.at(-1),age=line?this.now()-line.at:Infinity;
+    if(age<4&&line.speaker===n.id)return 'talk';
+    if(age===3&&c.people.includes(n.id))return this.account(n).needs.leisure>64?'smile':'nod';
+    if(visit.phase==='waiting-care')return 'wait';
+    const phase=(this.now()+(n.aiProfile?.seed??0))%13;
+    if(['tea','tavern'].includes(visit.venue)&&phase<6)
+      return phase<3?'lift':visit.venue==='tavern'&&phase===5?'eat':'sip';
+    return 'sit';
   }
   record(kind,n,v,fee=0){
     const state=this.state,{day,minute}=this.world.clock;
@@ -134,7 +154,10 @@ export class WorldSociety {
     }
   }
   stock(v){
-    if(v.id==='clinic')return Economy.count(v.shop?.stock??[],'healing_pill');
+    if(v.id==='clinic'){
+      const stock=v.shop?.stock??[];
+      return Economy.count(stock,'healing_pill')+Math.max(0,Economy.count(stock,'spirit_herb')-3);
+    }
     return v.cfg.batch?v.ledger.stock:Infinity;
   }
   duty(v) {
@@ -156,10 +179,17 @@ export class WorldSociety {
   paid(n,v,visit){
     if(visit.paid||n.spiritStones<v.cfg.fee||this.stock(v)<=0)return false;
     if(v.id==='clinic'){
-      if(!Economy.remove(v.shop.stock,'healing_pill',1))return false;
+      let cost;
+      if(Economy.remove(v.shop.stock,'healing_pill',1)){visit.remedy='pill';cost=5;}
+      else if(Economy.count(v.shop.stock,'spirit_herb')>3&&Economy.remove(v.shop.stock,'spirit_herb',1)){visit.remedy='herb';cost=3;}
+      else return false;
+      v.shop.cash+=cost;v.ledger.cash-=cost;v.ledger.costs+=cost;
     }else if(v.cfg.batch)v.ledger.stock--;
     n.spiritStones-=v.cfg.fee;v.ledger.cash+=v.cfg.fee;v.ledger.revenue+=v.cfg.fee;v.ledger.served++;
     this.account(n).spending+=v.cfg.fee;
+    const visits=this.account(n).places??={};
+    visits[v.id]=(visits[v.id]??0)+1;
+    this.social.diary(n,{kind:'service',venue:v.id,topic:v.cfg.name,fee:v.cfg.fee});
     visit.paid=true;
     this.record('paid',n,v,v.cfg.fee);
     return true;
@@ -170,22 +200,16 @@ export class WorldSociety {
       n.fatigue=limit(n.fatigue-66);
       n.hp=Math.min(cultivationStats(n).hpMax,n.hp+8);
     }else if(v.id==='clinic'){
-      n.hp=Math.min(cultivationStats(n).hpMax,n.hp+Math.ceil(cultivationStats(n).hpMax*.38));
+      const factor=this.visits[n.id]?.remedy==='herb'?.22:.38;
+      n.hp=Math.min(cultivationStats(n).hpMax,n.hp+Math.ceil(cultivationStats(n).hpMax*factor));
       if(n.westPoison)n.westPoison=Math.max(0,n.westPoison-60);
     }else{
+      if(v.id==='tavern')n.hunger=limit(n.hunger-28);
       needs.thirst=limit(needs.thirst-(v.id==='tea'?55:29));
       needs.leisure=limit(needs.leisure-(v.id==='music'?59:43));
       needs.social=limit(needs.social-28);
       n.mood=limit(n.mood+(v.id==='music'?20:13));
       n.fatigue=limit(n.fatigue-12);
-      const party=Object.entries(this.visits).find(([id,other])=>id!==n.id&&other.venue===v.id&&other.phase==='using'&&other.table===this.visits[n.id]?.table);
-      const friend=party&&this.scene.scheduler.byId.get(party[0])?.npc;
-      if(friend?.alive&&distance(n,friend)<145){
-        n.relationships[friend.id]=Math.min(100,(n.relationships[friend.id]??0)+3);
-        friend.relationships[n.id]=Math.min(100,(friend.relationships[n.id]??0)+2);
-        needs.social=limit(needs.social-15);
-        this.record('shared',n,v);
-      }
     }
   }
   pursue(n,visit) {
@@ -215,11 +239,18 @@ export class WorldSociety {
       return;
     }
     if(!seat){this.end(n,visit);return;}
-    const reason=v.id==='inn'?'Nghỉ ở phòng đã thuê':v.id==='clinic'?'Nghỉ dưỡng tại Y Quán':
+    const reason=v.id==='inn'?'Nghỉ ở phòng đã thuê':v.id==='clinic'?(visit.paid?'Nghỉ dưỡng tại Y Quán':'Ngồi chờ y sư khám'):
       v.id==='tavern'?'Uống rượu và trò chuyện':v.id==='tea'?'Thưởng trà':'Nghe đàn tại Nhã Nhạc Lâu';
     this.move(n,seat,v.cfg.activity,'work',reason);
-    if(distance(n,seat)>12)return;
+    if(distance(n,seat)>8)return;
+    if(v.id==='clinic'&&!visit.paid){
+      if(visit.phase!=='waiting-care'){visit.phase='waiting-care';visit.careAt=at+13;this.record('waiting-care',n,v);}
+      if(at<visit.careAt||!this.onDuty(v)||at<(v.ledger.nextCareAt??0))return;
+      if(!this.paid(n,v,visit)){this.end(n,visit,85);return;}
+      v.ledger.nextCareAt=at+18;visit.phase='seat';
+    }
     if(visit.phase==='seat'){
+      if(!visit.paid&&(!this.onDuty(v)||!this.paid(n,v,visit))){this.end(n,visit,120);return;}
       visit.phase='using';visit.until=at+v.cfg.minutes;visit.expires=visit.until+60;
     }
     if(at>=visit.until){
@@ -229,43 +260,57 @@ export class WorldSociety {
     }
   }
   start(n,v){
-    if(this.visits[n.id]||!this.onDuty(v)||this.stock(v)<=0||n.spiritStones<v.cfg.fee+7||
-       !this.scene.canReachPoint(n,v.counter))return false;
+    if(this.visits[n.id]||!this.onDuty(v)||this.stock(v)<=0||n.spiritStones<v.cfg.fee+7)return false;
     const live=Object.values(this.visits).filter(p=>p.venue===v.id);
-    const seat=v.seats.find(p=>!live.some(q=>q.seat===p.id)&&this.scene.groundPositionOpen(n,p.x,p.y));
-    const queue=v.queue.find(p=>!live.some(q=>q.queue===p.id&&(q.phase==='queued'||q.phase==='counter'))&&
-      this.scene.groundPositionOpen(n,p.x,p.y));
-    if(!seat||!queue)return false;
-    this.visits[n.id]={venue:v.id,seat:seat.id,table:seat.table,queue:queue.id,phase:'queued',
-      expires:this.now()+Math.max(145,Math.ceil(distance(n,queue)/15)+100)};
-    this.move(n,queue,'queue','travel','Đến '+v.cfg.name);
+    const crowd=v.seats.map(p=>({p,neighbors:live.filter(q=>q.table===p.table).length}));
+    const preferCompany=(n.aiProfile?.axes?.sociability??45)>=36;
+    crowd.sort((a,b)=>preferCompany?b.neighbors-a.neighbors:a.neighbors-b.neighbors);
+    const seat=crowd.map(x=>x.p).find(p=>!live.some(q=>q.seat===p.id)&&this.scene.groundPositionOpen(n,p.x,p.y)&&this.scene.canReachPoint(n,p));
+    if(!seat)return false;
+    this.visits[n.id]={venue:v.id,seat:seat.id,table:seat.table,phase:'seat',
+      expires:this.now()+Math.max(100,Math.ceil(distance(n,seat)/15)+60)};
+    this.move(n,seat,'seat','travel','Đến '+v.cfg.name);
     return true;
   }
   choose(n,i) {
+    const h=n.hp/cultivationStats(n).hpMax;
+    const clinic=this.places.get('clinic');
+    const needsCare=h<.88||(n.westPoison??0)>25;
+    const nearClinic=needsCare&&clinic&&distance(n,clinic.counter)<1600&&this.scene.monsterSafe(n);
     if(!this.available(n)||this.staffIds.has(n.id)||this.scene.westWilds?.directs(n)||this.scene.sectCampus.orderFor(n)||n.assignedCommissionId||
-      n.decisionSlot?.startsWith('sect-campus:')||this.scene.ramparts.wantsDuty(n)>=0||n.x<2030||n.x>4900||n.y>3270||
+      n.decisionSlot?.startsWith('sect-campus:')||this.scene.ramparts.wantsDuty(n)>=0||!nearClinic&&(n.x<2030||n.x>4900||n.y>3270)||
       this.now()<(this.state.accounts[n.id]?.retryAt??0))return;
-    const need=this.refreshNeeds(n),h=n.hp/cultivationStats(n).hpMax;
+    const need=this.refreshNeeds(n);
     const traits=n.aiProfile?.axes;
     const sociability=traits?.sociability??45,spending=traits?.generosity??45,caution=traits?.caution??45;
     const travelHome=n.home?distance(n,n.home):600,dusk=this.world.clock.minute>=900;
     const taste=(n.aiProfile?.seed??i)%31;
+    const looksForCompany=['hunter','independent_cultivator','herb_gatherer'].includes(n.populationRole)&&
+      n.spiritStones>=7&&n.spiritStones<75;
+    const adventurers=looksForCompany&&Object.entries(this.visits).some(([id,p])=>p.venue==='tea'&&
+      ['hunter','independent_cultivator','herb_gatherer'].includes(this.scene.scheduler.byId.get(id)?.npc.populationRole));
     const ranks={
-      clinic:h<.68||(n.westPoison??0)>30?125+(1-h)*35:-1,
-      inn:(travelHome>480&&dusk&&n.fatigue>=26||n.fatigue>=55)?80+n.fatigue*.5:-1,
-      tea:need.thirst*.58+need.social*.30+caution*.17,
-      tavern:need.leisure*.55+need.social*.30+sociability*.22+taste*.5,
-      music:need.leisure*.58+need.social*.38+sociability*.18+spending*.18+(30-taste)*.56,
+      clinic:needsCare?125+(1-h)*35:-1,
+      inn:(travelHome>430&&dusk&&n.fatigue>=19||n.fatigue>=44)?80+n.fatigue*.5:-1,
+      tea:need.thirst*.62+need.social*.32+caution*.17+(this.world.clock.minute<800?15:4)+(adventurers?18:looksForCompany?6:0),
+      tavern:need.leisure*.44+need.social*.24+sociability*.20+taste*.46+n.hunger*.24,
+      music:need.leisure*.52+need.social*.35+sociability*.18+spending*.18+(30-taste)*.53+(dusk?10:0),
     };
-    if(n.hunger>64&&h>=.68||n.fatigue>84&&travelHome<350)return;
+    if(!nearClinic&&(n.hunger>81&&h>=.68||n.fatigue>84&&travelHome<350))return;
     const reserve=5+Math.floor((100-spending)/18);
     const adult=!Number.isFinite(n.age)||n.age>=18;
     const choices=[...this.places.values()].filter(v=>this.open(v)&&n.spiritStones>=reserve+v.cfg.fee&&
+      (n.hunger<=64||v.id==='tavern'||v.id==='clinic')&&
       (adult||!['tavern','music'].includes(v.id))).map(v=>{
       const acquaintance=Object.keys(this.visits).some(id=>this.visits[id].venue===v.id&&(n.relationships[id]??0)>12);
       return {v,score:ranks[v.id]+(acquaintance?9:0)-distance(n,v.counter)/165};
     }).filter(o=>o.score>=36).sort((a,b)=>b.score-a.score);
     for(const {v} of choices)if(this.start(n,v))break;
+  }
+  seekClinic(n){
+    const v=this.places.get('clinic');
+    return Boolean(v&&this.available(n)&&!this.staffIds.has(n.id)&&
+      this.now()>=this.account(n).retryAt&&distance(n,v.counter)<1600&&this.start(n,v));
   }
   tick(){
     if(!this.places.size)return;
@@ -283,14 +328,15 @@ export class WorldSociety {
       this.refreshNeeds(n);
       if(!this.visits[n.id])this.choose(n,i);
     }
+    this.social.tick();
   }
   report(){
     return [...this.places.values()].map(v=>{
       const guests=Object.entries(this.visits).filter(([,p])=>p.venue===v.id);
-      const queued=guests.filter(([id,p])=>p.phase==='queued'&&this.arrivedToQueue(id,p));
+      const queued=guests.filter(([id,p])=>p.phase==='waiting-care'||p.phase==='queued'&&this.arrivedToQueue(id,p));
       return {id:v.id,name:v.cfg.name,onDuty:this.onDuty(v),staff:v.staff.id,
         using:guests.filter(([,p])=>p.phase==='using').length,waiting:queued.length,
-        approaching:guests.filter(([,p])=>p.phase==='queued').length-queued.length,
+        approaching:guests.filter(([id,p])=>p.phase==='seat'||p.phase==='queued'&&!this.arrivedToQueue(id,p)).length,
         free:Math.max(0,v.seats.length-guests.length),capacity:v.seats.length,
         ...v.ledger,stock:Number.isFinite(this.stock(v))?this.stock(v):null};
     });
@@ -317,6 +363,7 @@ export class WorldSociety {
     if(visit?.phase==='using'){
       return {inn:'Ngủ nghỉ',clinic:'Điều trị',tavern:'Uống rượu',tea:'Giao lưu',music:'Thưởng nhạc'}[visit.venue];
     }
+    if(visit?.phase==='waiting-care')return 'Chờ y sư';
     if(visit?.phase==='queued'&&this.arrivedToQueue(n.id,visit)||e?.waitingForSlot||
       slot==='sect-campus:queue'&&n.actionTarget&&distance(n,n.actionTarget)<18)return 'Chờ đến lượt';
     if(n.action==='travel'||n.goalAction==='flee')return n.actionTarget?'Di chuyển':'Thiếu mục tiêu';

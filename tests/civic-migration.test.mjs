@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import {migrateVeins,normalizeTitles} from '../src/world/VeinMigration.js';
+const site={x:144,y:224};
+const active={id:'order-12',veinId:'sect-vein-2',type:'spirit-vein:sect-vein-2',status:'active',escrow:7,collected:3};
+const npc={id:'miner',inventory:[{itemId:'spirit_stone_low',count:5}],spiritStones:37,underground:{siteId:'sect-vein-2',job:{type:'order',id:active.id}}};
+const world={sectCampus:{spiritVeins:{'sect-jade':{amount:11,mined:1,owner:'sect'},'sect-vein-2':{initial:10,amount:7,mined:3}},orders:[active]},
+  npcs:[npc],underground:{instances:{'sect-vein-2':{drops:[{id:'test-drop',x:11,y:5,level:0,claimed:false}]} }},
+  expeditions:{parties:[{job:{siteId:'sect-vein-2',field:{x:0,y:0}}}],retry:{'mine:sect-vein-2':123}}};
+migrateVeins(world,site);
+assert.equal(world.sectCampus.spiritVeins['sect-jade'].amount,88);
+assert.equal(world.sectCampus.spiritVeins['sect-jade'].mined,4);
+assert.equal(world.sectCampus.spiritVeins['sect-jade'].initial,92);
+assert.equal(world.sectCampus.mergedVeins['sect-vein-2'].ledger.amount,7);
+assert.equal(world.underground.instances['sect-jade'].drops.length,1);
+assert.equal(world.underground.instances['sect-vein-2'],undefined);
+assert.deepEqual([npc.x,npc.y],[144,224]);
+assert.equal(npc.underground.siteId,'sect-jade');
+assert.equal(npc.inventory[0].count,5);
+assert.equal(npc.spiritStones,37);
+assert.equal(active.escrow,7);
+assert.equal(active.collected,3);
+assert.equal(active.veinId,'sect-jade');
+assert.equal(world.expeditions.parties[0].job.siteId,'sect-jade');
+assert.equal(world.expeditions.retry['mine:sect-jade'],123);
+const snapshot=JSON.stringify(world);
+migrateVeins(world,site);
+assert.equal(snapshot,JSON.stringify(world));
+const titles=[{grade:1,state:{owner:'sect'}},{grade:1,state:{owner:'sect'}},{grade:2,state:{owner:'sect'}}];
+normalizeTitles(titles,[{type:'sect',id:'sect'}]);
+assert.deepEqual(titles.map(t=>t.state.owner),['sect',null,'sect']);
+assert.equal(titles[1].state.controller,'sect');
+console.log('Thiện Ác · migration idempotent, real inventory, in-flight contract and claims preserved');

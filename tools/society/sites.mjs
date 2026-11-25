@@ -31,7 +31,7 @@ const paintRoad=(from,to,width=1)=>{
 paintRoad([2600,5510],[2740,5600],2);
 paintRoad([4560,5550],[4850,5504],2);
 paintRoad([4850,5504],[4944,5744]);
-graphic('Mỏ Linh Khoáng',0,2419,5457,{label:'Mỏ Linh Khoáng'});
+graphic('Mỏ Quặng Sắt',0,2419,5457,{label:'Mỏ Quặng Sắt'});
 block('Vách mỏ',2338,5381,160,69);
 graphic('Kho tập kết linh khoáng',9,2410,5670,{label:'Kho linh khoáng'});
 block('Kho linh khoáng',2347,5610,126,49);
@@ -42,7 +42,7 @@ for(const [index,[x,y]] of [[2278,5492],[2402,5518],[2532,5433],[2646,5455],[222
   block('Chân mạch linh khoáng',x-26,y-13,52,20);
   point('Khai thác '+(index+1),id,x,y+24,{site:'mine',grade:index%3===0?2:1,capacity:4+index%3});
 }
-point('Mỏ Linh Khoáng','mine',2477,5502,{site:'landmark'});
+point('Mỏ Quặng Sắt','mine',2477,5502,{site:'landmark'});
 graphic('Kho dụng cụ Linh Điền',9,4680,5460,{label:'Kho nông cụ'});
 block('Kho nông cụ',4625,5401,110,51);
 graphic('Hồ tưới',7,5056,5535,{depth:8,label:'Hồ dẫn nước'});

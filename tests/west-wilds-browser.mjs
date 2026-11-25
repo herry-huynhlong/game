@@ -73,7 +73,7 @@ try {
       sites:a.map(m=>[m.id,s.canOccupy(m.x,m.y),s.canReachPoint(city,m)]),
       pathNodes:w.nodes.map(n=>[n.id,s.canReachPoint(city,n)]),court:s.markerRegion('city')};
   `);
-  assert.deepEqual([map.width,map.height,map.minX,map.population,map.fauna],[352,184,-4096,108,50]);
+  assert.deepEqual([map.width,map.height,map.minX,map.population,map.fauna],[352,184,-4096,108,77]);
   assert.ok(map.sites.every(([,open,reachable])=>open&&reachable));
   assert.ok(map.pathNodes.every(([,reachable])=>reachable));
   assert.ok(map.fish?.water&&map.fish.x>5000);

@@ -1,10 +1,37 @@
 import ITEM_ICON_FRAMES from './ItemIconFrames.json';
+import { treasureDefinition, WEST_TREASURE_IDS, WEST_TREASURE_MEDICINE, WEST_TREASURE_RARITY } from './WestTreasureCatalog';
 
 export type ItemKind='weapon'|'treasure'|'pill'|'talisman'|'herb'|'material'|'special';
 export type ItemTier='mortal'|'artifact'|'spirit'|'treasure'|'spiritual-treasure'|'immortal'|'divine';
 export type ItemQuality='low'|'middle'|'high';
 export interface ItemDefinition { id:string; name:string; kind:ItemKind; tier:ItemTier; quality:ItemQuality; description:string; value:number; icon?:readonly number[]; }
 export const ITEM_CATALOG:Record<string,ItemDefinition>={
+  di_tam_linh_nhu:{id:'di_tam_linh_nhu',name:'Địa Tâm Linh Nhũ',kind:'material',tier:'spirit',quality:'high',description:'Thiên tài địa bảo từ một tầng sâu của địa mạch.',value:38},
+  huyen_tinh_thach:{id:'huyen_tinh_thach',name:'Huyền Tinh Thạch',kind:'material',tier:'spirit',quality:'high',description:'Thiên tài địa bảo từ một tầng sâu của địa mạch.',value:54},
+  dia_hoa_linh_chi:{id:'dia_hoa_linh_chi',name:'Địa Hỏa Linh Chi',kind:'herb',tier:'spirit',quality:'high',description:'Thiên tài địa bảo từ một tầng sâu của địa mạch.',value:75},
+  han_ngoc_tuy:{id:'han_ngoc_tuy',name:'Hàn Ngọc Tủy',kind:'material',tier:'spirit',quality:'high',description:'Thiên tài địa bảo từ một tầng sâu của địa mạch.',value:90},
+  tu_tinh_linh_qua:{id:'tu_tinh_linh_qua',name:'Tử Tinh Linh Quả',kind:'herb',tier:'spirit',quality:'high',description:'Thiên tài địa bảo từ một tầng sâu của địa mạch.',value:108},
+  van_nien_thach_tuy:{id:'van_nien_thach_tuy',name:'Vạn Niên Thạch Tủy',kind:'material',tier:'spirit',quality:'high',description:'Thiên tài địa bảo từ một tầng sâu của địa mạch.',value:136},
+  linh_mach_chi_tam:{id:'linh_mach_chi_tam',name:'Linh Mạch Chi Tâm',kind:'treasure',tier:'spirit',quality:'high',description:'Thiên tài địa bảo từ một tầng sâu của địa mạch.',value:210},
+  spirit_stone_low:{id:'spirit_stone_low',name:'Linh Thạch Hạ Phẩm',kind:'material',tier:'spirit',quality:'middle',description:'Linh thạch khai thác từ linh mạch. Nộp về bảo khố để quy đổi.',value:1},
+  spirit_stone_middle:{id:'spirit_stone_middle',name:'Linh Thạch Trung Phẩm',kind:'material',tier:'spirit',quality:'middle',description:'Linh thạch khai thác từ linh mạch. Nộp về bảo khố để quy đổi.',value:3},
+  spirit_stone_high:{id:'spirit_stone_high',name:'Linh Thạch Thượng Phẩm',kind:'material',tier:'spirit',quality:'middle',description:'Linh thạch khai thác từ linh mạch. Nộp về bảo khố để quy đổi.',value:6},
+  spirit_stone_supreme:{id:'spirit_stone_supreme',name:'Linh Thạch Cực Phẩm',kind:'material',tier:'spirit',quality:'middle',description:'Linh thạch khai thác từ linh mạch. Nộp về bảo khố để quy đổi.',value:10},
+  eagle_feather:{id:'eagle_feather',name:'Kim Điêu Chi Vũ',kind:'material',tier:'spirit',quality:'middle',description:'Nguyên liệu thu được từ Kim Điêu Tây Hoang.',value:28},
+  eagle_flame_feather:{id:'eagle_flame_feather',name:'Xích Diễm Linh Vũ',kind:'material',tier:'spirit',quality:'middle',description:'Nguyên liệu thu được từ Kim Điêu Tây Hoang.',value:52},
+  eagle_talon:{id:'eagle_talon',name:'Kim Điêu Lợi Trảo',kind:'material',tier:'spirit',quality:'middle',description:'Nguyên liệu thu được từ Kim Điêu Tây Hoang.',value:42},
+  eagle_fire_core:{id:'eagle_fire_core',name:'Hỏa Hệ Nội Đan',kind:'material',tier:'spirit',quality:'middle',description:'Nguyên liệu thu được từ Kim Điêu Tây Hoang.',value:95},
+  wood_heart:{id:'wood_heart',name:'Mộc Yêu Chi Tâm',kind:'material',tier:'artifact',quality:'middle',description:'Nguyên liệu thu được từ yêu thú Tây Hoang.',value:15},
+  millennial_wood:{id:'millennial_wood',name:'Thiên Niên Linh Mộc',kind:'material',tier:'artifact',quality:'middle',description:'Nguyên liệu thu được từ yêu thú Tây Hoang.',value:65},
+  flower_stamen:{id:'flower_stamen',name:'Yêu Hoa Độc Nhụy',kind:'material',tier:'artifact',quality:'middle',description:'Nguyên liệu thu được từ yêu thú Tây Hoang.',value:31},
+  blood_vine:{id:'blood_vine',name:'Huyết Đằng',kind:'material',tier:'artifact',quality:'middle',description:'Nguyên liệu thu được từ yêu thú Tây Hoang.',value:29},
+  centipede_sac:{id:'centipede_sac',name:'Ngô Công Độc Nang',kind:'material',tier:'artifact',quality:'middle',description:'Nguyên liệu thu được từ yêu thú Tây Hoang.',value:28},
+  python_skin:{id:'python_skin',name:'Thanh Mãng Bì',kind:'material',tier:'artifact',quality:'middle',description:'Nguyên liệu thu được từ yêu thú Tây Hoang.',value:27},
+  stag_antler:{id:'stag_antler',name:'Linh Lộc Giác',kind:'material',tier:'artifact',quality:'middle',description:'Nguyên liệu thu được từ yêu thú Tây Hoang.',value:18},
+  ancient_wood_marrow:{id:'ancient_wood_marrow',name:'Vạn Niên Mộc Tủy',kind:'material',tier:'spirit',quality:'high',description:'Nguyên liệu thu được từ yêu thú Tây Hoang.',value:135},
+  beast_core_foundation:{id:'beast_core_foundation',name:'Nội Đan Trúc Cơ',kind:'material',tier:'spirit',quality:'high',description:'Nội đan ngưng tụ từ yêu thú Tây Hoang.',value:42},
+  beast_core_gold:{id:'beast_core_gold',name:'Nội Đan Kim Đan',kind:'material',tier:'spirit',quality:'high',description:'Nội đan ngưng tụ từ yêu thú Tây Hoang.',value:76},
+  beast_core_nascent:{id:'beast_core_nascent',name:'Nội Đan Nguyên Anh',kind:'material',tier:'spirit',quality:'high',description:'Nội đan ngưng tụ từ yêu thú Tây Hoang.',value:155},
   qingling_herb:{id:'qingling_herb',name:'Thanh Linh Thảo',kind:'herb',tier:'mortal',quality:'low',description:'Linh thảo Thanh Mộc dùng luyện Tụ Khí Đan.',value:8},
   purple_jade_fungus:{id:'purple_jade_fungus',name:'Tử Ngọc Linh Chi',kind:'herb',tier:'artifact',quality:'middle',description:'Linh chi Nội Lâm dùng luyện Tụ Khí Đan.',value:24},
   violet_mist_flower:{id:'violet_mist_flower',name:'Tử Vụ Linh Hoa',kind:'herb',tier:'artifact',quality:'high',description:'Linh hoa Độc Lâm dùng luyện Giải Độc Đan.',value:42},
@@ -34,7 +61,7 @@ export const ITEM_CATALOG:Record<string,ItemDefinition>={
   iron_ore:{id:'iron_ore',name:'Quặng sắt',kind:'material',tier:'mortal',quality:'middle',description:'Quặng dùng rèn phàm kiếm.',value:8},
   wolf_pelt:{id:'wolf_pelt',name:'Da Thanh Lang',kind:'material',tier:'mortal',quality:'middle',description:'Tấm da yêu lang đã được xử lý sơ bộ.',value:9},
   wolf_fang:{id:'wolf_fang',name:'Nanh Thanh Lang',kind:'material',tier:'mortal',quality:'high',description:'Nanh yêu thú cứng, dùng làm nguyên liệu chế tạo.',value:12},
-  demon_core:{id:'demon_core',name:'Yêu Đan Thanh Lang',kind:'material',tier:'spirit',quality:'high',description:'Yêu đan hiếm còn sót lại trong Thanh Lang.',value:35},
+  demon_core:{id:'demon_core',name:'Nội Đan Luyện Khí',kind:'material',tier:'spirit',quality:'high',description:'Nội đan hiếm ngưng tụ từ yêu thú Luyện Khí.',value:35},
   deer_meat:{id:'deer_meat',name:'Thịt hươu',kind:'material',tier:'mortal',quality:'middle',description:'Thịt thú rừng thu được sau khi săn hươu hợp lệ.',value:0},
   scorpion_venom:{id:'scorpion_venom',name:'Nọc bọ cạp',kind:'material',tier:'mortal',quality:'middle',description:'Túi nọc của bọ cạp yêu cấp thấp.',value:0},
   snake_skin:{id:'snake_skin',name:'Da rắn',kind:'material',tier:'mortal',quality:'middle',description:'Lớp da của rắn yêu cấp thấp.',value:0},
@@ -44,5 +71,11 @@ export const ITEM_CATALOG:Record<string,ItemDefinition>={
   jade_venom:{id:'jade_venom',name:'Bích độc dịch',kind:'material',tier:'mortal',quality:'middle',description:'Linh độc đã được thu gom.',value:16},
   elite_beast_core:{id:'elite_beast_core',name:'Nội đan Tinh Anh',kind:'material',tier:'mortal',quality:'middle',description:'Tinh hoa của yêu thú Tinh Anh.',value:66},
 };
+for(const id of WEST_TREASURE_IDS){
+  const t=treasureDefinition(id);
+  ITEM_CATALOG[id]={id,name:t.name,kind:'herb',tier:t.grade===5?'spiritual-treasure':t.grade===4?'treasure':t.grade>=2?'spirit':'artifact',
+    quality:t.grade>=4?'high':t.grade>=2?'middle':'low',value:t.value,
+    description:`${WEST_TREASURE_RARITY[t.grade]} · hệ ${t.element}${t.age?` · ${t.age} năm`:''} · Dược liệu luyện ${WEST_TREASURE_MEDICINE[t.medicine]}.`};
+}
 export const itemIcon=(id:string)=>(ITEM_ICON_FRAMES as Record<string,readonly number[]>)[id]??ITEM_ICON_FRAMES.unknown;
 for(const item of Object.values(ITEM_CATALOG))item.icon=itemIcon(item.id);

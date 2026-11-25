@@ -1,3 +1,5 @@
+import type { CombatHealthSave } from './CombatRecovery';
+import type { WestTreasureId } from './WestTreasureCatalog';
 import type { CultivationSave, SpiritualRootId, TechniqueId } from '../systems/CultivationTypes';
 import type { TribulationSave } from './TribulationSystem';
 
@@ -33,6 +35,8 @@ export interface MarketVisitSave {
   repaths?:number; avoidSlot?:{x:number;y:number};
 }
 export interface SimNPC {
+  meditationBreakUntil?:number;
+  monsterAfflictions?:{rootUntil?:number;rootGuardUntil?:number;poison?:{until:number;next:number;sourceId:string}};
   westPoison?:number;
   wallLevel?:1;
   tribulation?:TribulationSave; tribulationAttempts?:number; manualMeditation?:boolean; meditationBlockedUntil?:number;
@@ -54,6 +58,7 @@ export interface SimNPC {
   aiProfile?:NPCAIProfile; aiDecision?:NPCAIDecision; populationRole?:PopulationRole; populationDuty?:string; authorityRole?:NPCAuthorityRole; authorityScope?:'city'|'sect';
   spawnRegionId?:string;workplaceId?:string;stallId?:string;guardPostId?:string;workPosition?:{x:number;y:number};patrolPoints?:{x:number;y:number}[];patrolIndex?:number;pathBlocked?:boolean;lawResponse?:{incidentId:string;status:'responding'|'at-scene';targetId:string;returnTarget?:{x:number;y:number}};
   activeHeavenSkill?:string|null; heavenSkillReadyAt?:number; heavenGuardUntil?:number;
+  combatHealth?:CombatHealthSave;convalescence?:{phase:'escaping'|'resting';shelter?:MonsterPoint;nextSearchAt?:number};
   assignedResourceNodeId?:string;resourceRouteCooldown?:{nodeId:string;until:number};faunaHuntTargetId?:string;faunaHuntLimitDay?:number;faunaHuntsToday?:number;professionTask?:{kind:'repair'|'herb-gather';targetId:string;state:'seeking'|'travelling'|'working'|'blocked';lastReason?:string;inventoryBefore?:number};
 }
 export type NPCCultivation = Pick<CultivationSave,'realmIndex'|'realmLevel'|'xp'|'spiritualRoot'|'technique'|'techniqueMastery'|'techniqueProgress'>;
@@ -66,7 +71,8 @@ export interface WorldEvent { id:string; minute:number; day:number; type:string;
 export interface WorldAccess { playerId:string; role:'owner'|'observer'|'controller'; }
 export interface AscendedCultivatorRecord { id:string; npc:SimNPC; originWorldId:string; playerId:string; ascendedAtDay:number; status:'ascended'|'dead'; }
 export interface BeastSiegeSave { id:string; day:number; remaining:number; remainingMinutes:number; status:'occurred'|'completed'|'failed'|'rewarded'; }
-export type TradeItemId='ration'|'rice_seed'|'wood'|'iron_ore'|'spirit_herb'|'wolf_pelt'|'wolf_fang'|'demon_core'|'deer_meat'|'scorpion_venom'|'snake_skin'|'boar_tusk'|'crimson_plate'|'toad_sac'|'jade_venom'|'elite_beast_core'|'qi_pill'|'healing_pill'|'iron_sword'|'iron_dao'|'mortal_gift_sword'|'qingfeng_sword';
+export type WestFaunaLoot='wood_heart'|'millennial_wood'|'flower_stamen'|'blood_vine'|'centipede_sac'|'python_skin'|'eagle_feather'|'eagle_flame_feather'|'eagle_talon'|'eagle_fire_core'|'stag_antler'|'ancient_wood_marrow'|'beast_core_foundation'|'beast_core_gold'|'beast_core_nascent';
+export type TradeItemId='spirit_stone_low'|'spirit_stone_middle'|'spirit_stone_high'|'spirit_stone_supreme'|WestTreasureId|WestFaunaLoot|'ration'|'rice_seed'|'wood'|'iron_ore'|'spirit_herb'|'wolf_pelt'|'wolf_fang'|'demon_core'|'deer_meat'|'scorpion_venom'|'snake_skin'|'boar_tusk'|'crimson_plate'|'toad_sac'|'jade_venom'|'elite_beast_core'|'qi_pill'|'healing_pill'|'iron_sword'|'iron_dao'|'mortal_gift_sword'|'qingfeng_sword';
 export interface MarketStock { itemId:TradeItemId; count:number; }
 export interface ShopSave { id:string; name:string; ownerId:string; areaId:string; openHour:number; closeHour:number; cash:number; stock:MarketStock[]; buyPrices:Partial<Record<TradeItemId,number>>; sellPrices:Partial<Record<TradeItemId,number>>; healingBrewDay?:number; nextQiBrewAt?:number; }
 export interface TradeRecord { id:string; day:number; minute:number; buyerId:string; sellerId:string; shopId?:string; itemId:TradeItemId; count:number; unitPrice:number; }
@@ -76,20 +82,27 @@ export type EnvironmentStatus='intact'|'damaged'|'destroyed'|'repairing';
 export interface EnvironmentObjectSave {id:string;kind:'house'|'tree';x:number;y:number;maxHp:number;hp:number;defense:number;status:EnvironmentStatus;ownerFactionId?:string;collision:{x:number;y:number;width:number;height:number}|null;restoreCollision?:{x:number;y:number;width:number;height:number};hitbox:{x:number;y:number;width:number;height:number};repairable:boolean;destroyedAtDay?:number;regrowAfterDay?:number;repairProgress:number;repairWorkerId?:string;repairGeneration?:number;mapObjectId?:number;repairSite?:{x:number;y:number};}
 export interface GroundDropSave {id:string;itemId:TradeItemId;count:number;x:number;y:number;sourceId:string;createdDay:number;createdMinute:number;status:'ground'|'claimed';claimedBy?:string;claimedEventId?:string;}
 export interface ResourceNodeSave {id:string;kind:'herb';itemId:'spirit_herb';x:number;y:number;amount:number;maxAmount:number;danger:number;reservedBy?:string;depletedAt?:number;harvestCount?:number;nextGrowthAt?:number;}
-export type FaunaSpecies='wolf'|'boar'|'toad';
+export type WestFaunaSpecies='wood'|'millennial'|'flower'|'vine'|'centipede'|'eagle'|'stag'|'wood-king';
+export type FaunaSpecies='wolf'|'boar'|'toad'|WestFaunaSpecies;
 export type MonsterRank='normal'|'elite';
-export type MonsterState='idle'|'patrol'|'detect'|'alert'|'chase'|'attack'|'recover'|'retreat'|'return'|'hit'|'dead';
+export type MonsterState='idle'|'patrol'|'detect'|'alert'|'chase'|'attack'|'recover'|'retreat'|'return'|'hit'|'dead'|'sleep'|'awakening';
 export type MonsterPoint={x:number;y:number};
-export interface MonsterCast {skillId:string;sequence:number;started:number;origin:MonsterPoint;aim:MonsterPoint;activated:boolean;hitIds:string[];stopped?:boolean;}
-export interface MonsterHazard {id:string;sourceId:string;position:MonsterPoint;radius:number;expires:number;nextPulse:number;damage:number;}
-export interface MonsterProjectile {id:string;sourceId:string;position:MonsterPoint;direction:MonsterPoint;range:number;damage:number;}
+export interface MonsterCast {skillId:string;targetId?:string;sequence:number;started:number;origin:MonsterPoint;aim:MonsterPoint;activated:boolean;hitIds:string[];stopped?:boolean;}
+export type MonsterEffect='poison'|'root'|'drain'|'lifesteal';
+export type MonsterElement='wood'|'poison'|'blood'|'earth'|'wind'|'fire';
+export interface MonsterHazard {id:string;sourceId:string;position:MonsterPoint;radius:number;expires:number;nextPulse:number;damage:number;effect?:MonsterEffect;element?:MonsterElement;group?:string;}
+export interface MonsterProjectile {id:string;sourceId:string;position:MonsterPoint;direction:MonsterPoint;range:number;damage:number;effect?:MonsterEffect;element?:MonsterElement;}
 
-export interface FaunaSave {realmIndex?:number;realmLevel?:number;id:string;species:FaunaSpecies;rank:MonsterRank;x:number;y:number;hp:number;maxHp:number;zoneId:string;home:MonsterPoint;alive:boolean;state:MonsterState;targetNpcId?:string;roamTarget?:MonsterPoint;direction?:'south'|'north'|'west'|'east';attackReadyAt:number;nextThinkAt:number;lootCreated:boolean;deathAt?:number;respawnStatus?:'pending'|'fulfilled';hurtUntil?:number;buffUntil?:number;armorUntil?:number;sequence?:number;cooldowns?:Record<string,number>;cast?:MonsterCast;alertUntil?:number;rageUntil?:number;lastSkill?:string;}
+export interface SpiritTreeSave {age:number;qi:number;species:FaunaSpecies;nextQiAt?:number;phase:'normal'|'spirit'|'dormant'|'waking'|'active';wakeAt?:number;}
+export interface FlowerFormSave {phase:'rooted'|'alert'|'waking'|'mobile'|'returning'|'rooting';at:number;}
+export interface FaunaRecoverySave {phase:'returning'|'waiting'|'restoring'|'resting';at:number;goal:MonsterPoint;retryAt?:number;}
+export interface FaunaSave {altitude?:number;combatHealth?:CombatHealthSave;recovery?:FaunaRecoverySave;targetSeenAt?:number;habitatRevision?:number;patrolRadius?:number;leashRadius?:number;qi?:number;qiAt?:number;flower?:FlowerFormSave;healSpent?:number;injuredUntil?:number;hasteUntil?:number;growth?:SpiritTreeSave;realmIndex?:number;realmLevel?:number;id:string;species:FaunaSpecies;rank:MonsterRank;x:number;y:number;hp:number;maxHp:number;zoneId:string;home:MonsterPoint;alive:boolean;state:MonsterState;targetNpcId?:string;roamTarget?:MonsterPoint;direction?:'south'|'north'|'west'|'east';attackReadyAt:number;nextThinkAt:number;lootCreated:boolean;deathAt?:number;respawnStatus?:'pending'|'fulfilled';hurtUntil?:number;buffUntil?:number;armorUntil?:number;sequence?:number;cooldowns?:Record<string,number>;cast?:MonsterCast;alertUntil?:number;rageUntil?:number;lastSkill?:string;}
 
 export interface FaunaRespawnSave {id:string;zoneId:string;sourceDeathId:string;requestedAtMs:number;dueAtMs:number;attempts:number;lastFailure?:string;}
 export interface FaunaRespawnZoneStats {totalSpawned:number;failedAttempts:number;lastFailure?:string;lastSpawnAtMs?:number;}
 export interface RiverFishSave {id:string;species:'common'|'spirit';x:number;y:number;seed:number;component:number;depthState:'surface-near'|'diving'|'deep-swim'|'rising';phaseMs:number;targetX?:number;targetY?:number;invalidReason?:string;caughtBy?:string;}
-export interface EnvironmentSave {objects:EnvironmentObjectSave[];drops:GroundDropSave[];processedEventIds:string[];defeatedBeastIds:string[];timberSources?:{id:string;x:number;y:number;renewAt?:number;cuts?:number}[];resourceNodes?:ResourceNodeSave[];fauna?:FaunaSave[];faunaRespawns?:FaunaRespawnSave[];faunaSpawnSerial?:number;faunaClockMs?:number;faunaRespawnStats?:Record<string,FaunaRespawnZoneStats>;fish?:RiverFishSave[];monsterVersion?:number;eliteReadyAt?:Record<string,number>;monsterHazards?:MonsterHazard[];monsterProjectiles?:MonsterProjectile[];mapId?:string;}
+export interface WestTreasureSave {id:string;itemId:WestTreasureId;zoneId:string;cycle:number;x:number;y:number;plantedAt:number;harvestedAt?:number;claimedBy?:string;guardSpecies?:FaunaSpecies;guardRank?:MonsterRank;}
+export interface EnvironmentSave {westTreasures?:WestTreasureSave[];objects:EnvironmentObjectSave[];drops:GroundDropSave[];processedEventIds:string[];defeatedBeastIds:string[];timberSources?:{id:string;x:number;y:number;renewAt?:number;cuts?:number}[];resourceNodes?:ResourceNodeSave[];fauna?:FaunaSave[];faunaRespawns?:FaunaRespawnSave[];faunaSpawnSerial?:number;faunaClockMs?:number;faunaRespawnStats?:Record<string,FaunaRespawnZoneStats>;fish?:RiverFishSave[];monsterVersion?:number;westernEcologyVersion?:number;faunaTerritoryVersion?:number;eliteReadyAt?:Record<string,number>;monsterHazards?:MonsterHazard[];monsterProjectiles?:MonsterProjectile[];mapId?:string;}
 export type CommissionType='repair'|'escort'|'hunt';
 export type CommissionStatus='posted'|'accepted'|'in_progress'|'paused'|'completed'|'claimed'|'failed'|'expired'|'cancelled';
 export interface CommissionSave {

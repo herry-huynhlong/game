@@ -6,7 +6,6 @@ const itemDefinition=id=>ITEM_CATALOG[id];
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const herbIds=['qingling_herb','purple_jade_fungus','violet_mist_flower','thunder_fruit','ancient_blood_lotus'];
 const actors=new Set(['herb_gatherer','hunter','low_disciple','elder','independent_cultivator']);
-const colors=[0x9ec864,0xc58dde,0xb8da71,0x91e9ed,0xf4a77f];
 const night=minute=>minute<300||minute>=1140;
 const count=(n,id)=>Economy.count(n.inventory,id);
 
@@ -25,20 +24,7 @@ export class WestWilds {
       x:o.x,y:o.y,nightOnly:prop(o,'nightOnly'),regen:prop(o,'regen'),itemId:herbIds[prop(o,'grade')]}));
     this.nodesById=new Map(this.nodes.map(n=>[n.id,n]));
     this.fog=scene.add.graphics().setDepth(9);
-    const foliage=[['..C.....','.bC...a.','..Ca.ab.','abCaba..','.abCb...','..aCa...','...C....','..dd....'],
-      ['..CCC...','.CabCb..','CCbbbCa.','.CCCbba.','..aa....','...a....','...ad...','..dd....'],
-      ['...C....','..CCC...','.CbCbC..','..CCC...','...b....','.aab.a..','..aba...','..dd....'],
-      ['..C.....','.CCC....','.CbCC...','..bbbC..','abbbCC..','.aab....','...a....','..dd....'],
-      ['C..b..C.','.C.C.C..','bC.C.Cb.','.CCbCC..','..CCC...','.abbba..','...a....','..dd....']];
-    const texture=scene.textures.createCanvas('west-herbs',40,8);
-    for(const [i,rows] of foliage.entries())for(const [y,row] of rows.entries())for(const [x,pixel] of [...row].entries()){
-      if(pixel==='.')continue;
-      texture.context.fillStyle=pixel==='d'?'#354738':pixel==='a'?'#537768':pixel==='b'?'#bdd3ac':'#'+colors[i].toString(16);
-      texture.context.fillRect(i*8+x,y,1,1);
-    }
-    texture.refresh();
-    for(let i=0;i<5;i++)texture.add(String(i),0,i*8,0,8,8);
-    for(const n of this.nodes)n.sprite=scene.add.image(n.x,n.y,'west-herbs',String(n.grade)).setScale(3).setOrigin(.5,.9).setDepth(n.y+1);
+    for(const n of this.nodes)n.sprite=scene.add.image(n.x,n.y,'di-mach-wild-herbs',n.grade+20).setOrigin(.5,.9).setDepth(n.y+1);
     for(const shop of this.world.shops.filter(s=>s.id==='sect-treasure-pavilion'||s.id==='city-apothecary')){
       for(const id of [...herbIds,'detox_pill']){
         shop.buyPrices[id]??=ITEM_CATALOG[id].value;
@@ -122,9 +108,10 @@ export class WestWilds {
     const claimed=new Set(npcs.filter(n=>n.alive&&n.westJourney?.status==='outbound').map(n=>n.westJourney.nodeId));
     let active=npcs.filter(n=>n.alive&&n.westJourney&&n.westJourney.status!=='finished').length;
     for(const n of npcs){
-      if(!n.alive)continue;
+      if(!n.alive||n.underground||n.decisionSlot?.startsWith('civic:'))continue;
       this.poison(n);
-      if(n.id===this.scene.possessedNpcId||n.flight||n.skyStep||n.wallLevel||n.tribulation||n.lawResponse?.status==='responding'||n.marketVisit||n.manualMeditation)continue;
+      if(this.scene.recovery?.drives(n)||this.scene.westTreasures?.directs(n))continue;
+      if(this.scene.expeditions?.has(n)||n.id===this.scene.possessedNpcId||n.flight||n.skyStep||n.wallLevel||n.tribulation||n.lawResponse?.status==='responding'||n.marketVisit||n.manualMeditation)continue;
       const e=n.westJourney;
       if(e&&e.status!=='finished'){
         this.advance(n,e);
@@ -211,7 +198,16 @@ export class WestWilds {
     if(time<(this.nextUpdate??0))return;
     this.nextUpdate=time+150;
     const view=this.scene.cameras.main.worldView;
-    for(const n of this.nodes)n.sprite.setVisible(this.ready(n)&&n.x>view.x-40&&n.x<view.right+40&&n.y>view.y-40&&n.y<view.bottom+40);
+    for(const n of this.nodes){
+      const inside=n.x>view.x-40&&n.x<view.right+40&&n.y>view.y-40&&n.y<view.bottom+40;
+      n.sprite.setVisible(inside);
+      if(!inside)continue;
+      const left=Math.max(0,(this.state.harvest[n.id]??0)-this.now);
+      const growth=left/n.regen;
+      const phase=left?(growth>.94?5:growth>.74?0:growth>.53?1:growth>.28?2:3):n.nightOnly&&!night(this.world.clock.minute)?3:4;
+      const frame=n.grade+5*phase;
+      if(Number(n.sprite.frame.name)!==frame)n.sprite.setFrame(frame);
+    }
     this.fog.clear();
     if(view.x>=0)return;
     const dark=night(this.world.clock.minute);

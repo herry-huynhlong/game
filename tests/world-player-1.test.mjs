@@ -42,7 +42,7 @@ assert.equal(reportCityCombat(world,{eventId:'possessed-hit-1',attackerId:attack
 
 const scene=fs.readFileSync(new URL('../src/world-rebuild-scene.js',import.meta.url),'utf8');
 assert.match(scene,/this\.scheduler\.advance\(simDelta,this\.cameras\.main\.worldView,this\.possessedNpcId/,'the controlled NPC is excluded by the scheduler');
-assert.match(scene,/const professionWorld=this\.possessedNpcId\?\{\.\.\.world,npcs:world\.npcs\.filter\(n=>n\.id!==this\.possessedNpcId\)\}:world/,'profession work pauses only for the possessed NPC');
+assert.match(scene,/const professionWorld=\{\.\.\.world,npcs:world\.npcs\.filter\(n=>n\.id!==this\.possessedNpcId&&!n\.underground[^\n]*\)\}/,'surface profession work skips controlled and underground NPCs');
 assert.match(scene,/damageFauna\(this\.populationWorld,id,attacker\.id,damage,eventId\)/,'fauna damage uses the existing damage reducer');
 assert.match(scene,/claimFaunaDrop\(this\.populationWorld,dropId,npcId,eventId\)/,'loot pickup uses the existing one-time inventory transfer');
 const ranged=fs.readFileSync(new URL('../src/world/WorldHeavenActions.js',import.meta.url),'utf8');

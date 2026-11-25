@@ -81,6 +81,7 @@ export class WorldCultivation {
     for(const n of this.world.npcs){
       const t=n.tribulation;
       if(n.id!==scene.possessedNpcId)n.manualMeditation=false;
+      if(n.underground){this.spots.release(n);continue;}
       if(!n.alive||n.goalAction!=='cultivate'||n.flight||t)this.spots.release(n);
       if(n.manualMeditation&&!t&&n.alive&&now>=(n.meditationBlockedUntil??0)){
         // Possession suspends autonomous decisions, while meditation uses the same gain and breakthrough logic.
@@ -161,7 +162,7 @@ export class WorldCultivation {
   }
 
   isSeated(npc){
-    if(!npc.alive||npc.wallLevel||npc.flight||npc.skyStep)return false;
+    if(!npc.alive||npc.underground||npc.wallLevel||npc.flight||npc.skyStep)return false;
     if(npc.tribulation&&npc.tribulation.phase!=='travel'||this.guardResting(npc)||this.scene.society?.isSeated(npc))return true;
     return Boolean(npc.meditationSpot&&npc.action==='cultivate'&&npc.goalAction==='cultivate'&&
       worldMinute(this.world)>=(npc.meditationBlockedUntil??0)&&distance(npc,npc.meditationSpot)<=7&&
@@ -183,7 +184,9 @@ export class WorldCultivation {
     const name=(t&&phases[t.phase])||(seated?elapsed<100?'PrepareMeditation':elapsed<360?'SitDown':
       rest?'RestIdle':Math.floor(elapsed/1100)%3===2?'CultivationAbsorb':'MeditationIdle':'StandUp');
     const amount=t&&t.phase!=='travel'?1:seated?Math.max(0,Math.min(1,(elapsed-100)/260)):Math.max(0,1-elapsed/360);
-    return {name,amount,rest,breath:Math.floor(time/420)%3===1?1:0,shocked:time-(this.flashes.get(npc.id)?.at??-10000)<125};
+    const gesture=seated?this.scene.society?.gesture(npc):undefined;
+    return {name,amount,rest,gesture,breath:gesture?Number(gesture==='nod'):Math.floor(time/420)%3===1?1:0,
+      shocked:time-(this.flashes.get(npc.id)?.at??-10000)<125};
   }
 
   draw(time){

@@ -10,13 +10,11 @@ export class MeditationSpots {
     this.blockedApproaches=new Map();
     this.spots=[];
     this.protected=scene.markers.filter(m=>/gate-|bridge|entrance|stall|quest-office/.test(m.id));
-    for(const id of ['sect-yard','south-outskirts','forest-outer']){
+    for(const id of ['sect-yard','south-outskirts','forest-outer','east-grassland','mountain-pass','inn-entrance','old-road-rest','sect-library']){
       const origin=scene.markers.find(m=>m.id===id);
       if(!origin)continue;
-      for(let y=-168;y<=168;y+=29)for(let x=-192;x<=192;x+=32){
-        // Leave regularly spaced aisles through each group.
-        if(Math.abs(x)<64||Math.abs(y)<=28)continue;
-        const point={x:origin.x+x,y:origin.y+y};
+      for(const [x,y] of [[-122,-85],[-75,-104],[84,-97],[137,-58],[-123,78],[-69,111],[81,105],[138,63]]){
+        const point={x:origin.x+x,y:origin.y+y,area:id};
         if(this.safe(point))this.spots.push(point);
       }
     }
@@ -32,8 +30,9 @@ export class MeditationSpots {
     const scene=this.scene;
     if(this.protected.some(m=>distance(m,p)<(m.id.includes('bridge')||m.id.startsWith('gate-')?88:39)))return false;
     return clearance.every(([x,y])=>{
-      const px=p.x+x,py=p.y+y,tile=scene.roadLayer?.data[Math.floor(py/32)]?.[Math.floor(px/32)];
-      return !(tile?.index>=0)&&!scene.monsterWater(px,py)&&scene.footprintTerrainOpen(px,py,12,7);
+      const px=p.x+x,py=p.y+y,col=Math.floor((px+scene.westOffsetX)/32),row=Math.floor(py/32);
+      const road=scene.roadLayer?.data?.[row]?.[col],oldRoad=scene.oldRoadLayer?.layer?.data?.[row]?.[col];
+      return !(road?.index>=0)&&!(oldRoad?.index>=0)&&!scene.monsterWater(px,py)&&scene.footprintTerrainOpen(px,py,12,7);
     });
   }
 
@@ -54,11 +53,14 @@ export class MeditationSpots {
     const old=this.reserved.get(npc.id);
     if(!manual&&old&&this.open(npc,old))return old;
     const formation=npc.decisionSlot==='sect-campus:array'&&this.campus;
-    const choices=formation?Array.from({length:8},(_,i)=>formation.site('seat-'+i)).filter(Boolean):this.spots;
+    const seats=formation?Array.from({length:8},(_,i)=>formation.site('seat-'+i)).filter(Boolean):[];
+    const home=npc.home??npc;
+    const privateSpots=[[0,0],[30,23],[-30,23],[27,-28],[-27,-28]].map(([x,y])=>({x:home.x+x,y:home.y+y,area:'home'})).filter(p=>this.safe(p));
+    const choices=[...seats,...privateSpots,...this.spots];
+    const score=p=>distance(npc,p)+(seats.includes(p)?-400:p.area==='home'?-130:0);
     const selected=manual?(this.safe(npc)&&!this.taken(npc,npc)&&this.open(npc,npc)?{x:npc.x,y:npc.y}:null):
-      choices.filter(p=>!this.taken(npc,p)&&this.open(npc,p)&&this.scene.canReachPoint(npc,p)&&
-        (!avoiding||avoiding.spots.every(q=>distance(p,q)>28)&&this.segmentTo(npc,p)))
-        .sort((a,b)=>distance(npc,a)-distance(npc,b))[0];
+      choices.sort((a,b)=>score(a)-score(b)).find(p=>!this.taken(npc,p)&&this.open(npc,p)&&this.scene.canReachPoint(npc,p)&&
+        (!avoiding||avoiding.spots.every(q=>distance(p,q)>28)&&this.segmentTo(npc,p)));
     if(!selected)return null;
     npc.meditationSpot=selected;
     this.reserved.set(npc.id,selected);

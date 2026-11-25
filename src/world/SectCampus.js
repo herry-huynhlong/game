@@ -5,6 +5,7 @@ import { livelihoodNeed } from '../dao/AutonomousNPCSystem.ts';
 import { TECHNIQUES, addTechniquePractice } from '../systems/TechniqueSystem.ts';
 import { addCultivationXp, cultivationStats } from '../systems/CultivationSystem.ts';
 import { SectProduction } from './SectProduction.js';
+import { SpiritVeins } from './SpiritVeins.js';
 
 export const SECT_SHOP='sect-treasure-pavilion';
 export const SECT_FOOD='sect-dining-hall';
@@ -45,6 +46,7 @@ export class SectCampus {
     this.clerk=residents('quest_clerk')[0];
     this.state.ore??=Array.from({length:3},(_,i)=>({id:'ore-'+i,amount:5,renewAt:0}));
     this.production=new SectProduction(this);
+    this.spiritVeins=new SpiritVeins(this);
     const elders=residents('elder');
     this.staff.set(this.clerk.id,'quests');
     for(const [i,role] of ['elders','alchemy','market','library','forge'].entries())if(elders[i])this.staff.set(elders[i].id,role);
@@ -77,14 +79,14 @@ export class SectCampus {
     }
     this.disciples.forEach((n,i)=>{
       const home=this.points.get('home-'+i);
-      if(home&&scene.footprintTerrainOpen(home.x,home.y,9,5))n.home={x:home.x,y:home.y};
+      if(home&&!n.homeId?.startsWith('sect-lodging-')&&scene.footprintTerrainOpen(home.x,home.y,9,5))n.home={x:home.x,y:home.y};
     });
   }
 
   now(){return this.world.clock.day*1440+this.world.clock.minute;}
   site(key){return this.points.get(key);}
   orderFor(n){return this.state?.orders.find(q=>q.assignee===n.id&&q.status==='active');}
-  civilian(n){return n?.alive&&!n.ascended&&!n.wallLevel&&!n.flight&&!n.skyStep&&!n.tribulation;}
+  civilian(n){return n?.alive&&!n.underground&&!n.ascended&&!n.wallLevel&&!n.flight&&!n.skyStep&&!n.tribulation;}
   availableClerk(){
     const clerk=this.clerk,desk=this.site('counter');
     return this.civilian(clerk)&&clerk.id!==this.scene.possessedNpcId&&openHours(this.world.clock.minute)&&
@@ -95,6 +97,7 @@ export class SectCampus {
       this.scene.merchants.line(n,this.clerk);
   }
   suitable(n,q){
+    if(q.veinId)return this.civilian(n)&&this.spiritVeins.authorized(n,this.spiritVeins.sites.get(q.veinId));
     return this.civilian(n)&&n.realmIndex>=q.realm&&
       (member(n)||['independent_cultivator','hunter','herb_gatherer','repair_worker'].includes(n.populationRole)||
         ((['city-courier','ore'].includes(q.type)||q.type.startsWith('farm'))&&n.populationRole==='commoner'||
@@ -128,7 +131,7 @@ export class SectCampus {
       rules.push({type:'farm-food',name:'Canh tác lương thực',item:'ration',quantity:4,demand:6,
         reward:11,merit:3,realm:0,difficulty:'Thấp',zone:'Linh Điền'});
     }
-    rules.unshift(...(this.scene.westWilds?.missionRules()??[]));
+    rules.unshift(...this.spiritVeins.rules(),...(this.scene.westWilds?.missionRules()??[]));
     const budget=this.state.budget;
     if(budget)rules.sort((a,b)=>Number(b.item===budget.priority)-Number(a.item===budget.priority));
     for(const rule of rules){
@@ -136,7 +139,7 @@ export class SectCampus {
         rule.type==='city-courier'&&(!this.cityVault||count(this.cityVault.treasury,rule.item)<rule.quantity)||
         (this.state.nextOffer[rule.type]??0)>at||orders.some(q=>(q.type===rule.type||q.westRegion&&rule.westRegion)&&(q.status==='open'||q.status==='active')))continue;
       const mining=rule.type==='ore'&&Object.keys(this.production.state.veins).length>0;
-      orders.push({...rule,...(mining?{name:'Khai thác tại Mỏ Linh Khoáng',zone:'Mỏ Linh Khoáng',mining:true}:{}),
+      orders.push({...rule,...(mining?{name:'Khai thác tại Mỏ Quặng Sắt',zone:'Mỏ Quặng Sắt',mining:true}:{}),
         id:'tv-sect-'+(++this.state.serial),issuer:FACTION,description:'Nộp '+[rule.item,...(rule.alternates??[])].map(id=>ITEMS[id].name).join(' hoặc ')+' ×'+rule.quantity+' về bảo khố.',
         capacity:1,status:'open',created:at,expires:at+(rule.outside||rule.type==='city-courier'||rule.type.startsWith('farm')?3600:1920),assignee:null,progress:0});
       this.state.nextOffer[rule.type]=at+210;reserved+=rule.reward;
@@ -189,7 +192,7 @@ export class SectCampus {
     }
     const items=Economy.sellable(this.world,n,q.item);
     if(q.type==='city-courier')return q.dispatched?Math.min(q.quantity,Math.max(0,items-q.dispatchBaseline)):0;
-    return Math.min(q.quantity,q.type==='herbs'||q.mining||q.type.startsWith('farm')||q.outside&&q.type==='supply'?Math.min(items,q.collected??0):items);
+    return Math.min(q.quantity,q.veinId||q.type==='herbs'||q.mining||q.type.startsWith('farm')||q.outside&&q.type==='supply'?Math.min(items,q.collected??0):items);
   }
   deliver(n,id){
     const q=this.orderFor(n);
@@ -197,6 +200,7 @@ export class SectCampus {
     const item=q.type==='hunt'?[q.item,...(q.alternates??[])].find(id=>
       Economy.sellable(this.world,n,id)-(q.startCounts?.[id]??(id===q.item?q.startCount??0:0))>=q.quantity):q.item;
     if(!item||!Economy.depositFaction(this.world,n,FACTION,item,q.quantity))return false;
+    if(q.veinId)this.spiritVeins.settle(q);
     q.turnedIn=item;
     if(q.escrow){n.spiritStones+=q.escrow;q.escrow=0;}
     else Economy.payWage(this.world,n,FACTION,q.reward);
@@ -412,7 +416,9 @@ export class SectCampus {
     const minute=(this.world.clock.minute+index*13+(n.aiProfile?.axes?.discipline??50)%29)%1440;
     const active=minute>=380&&minute<1280;
     if(!active){this.move(n,n.home,'home','rest');return;}
-    const key=minute<570?'training':minute<850?'training':minute<1120?'array':'library';
+    const cycle=(index+(n.aiProfile?.seed??0)%3)%3;
+    let key=minute<570?'training':minute<850?(cycle===0?'array':'training'):minute<1120?(cycle===1?'array':'library'):(cycle===2?'array':'library');
+    if(key==='array'&&n.meditationBreakUntil>this.now())key='library';
     const spot=key==='training'?this.site('dummy-'+(index%6)):key==='array'?this.site('seat-'+(index%8)):this.site('reading-'+(index%10));
     if(!spot)return;
     if(key==='training'&&this.reservations.has(spot.id)){
@@ -519,12 +525,14 @@ export class SectCampus {
     }
     if(at%12===0||!this.state.orders.length){this.demand();this.produce();}
     this.production.update();
+    this.spiritVeins.update();
     for(const [id,key] of this.staff){const n=this.scene.scheduler.byId.get(id)?.npc;if(n)this.service(n,key);}
     this.reviewBudget();
     const selectedHunter=openHours(minute)&&this.state.orders.some(q=>q.type==='hunt'&&q.status==='open')?
       this.hunters.find(n=>this.queue.has(n.id))??this.huntCandidate():null;
     for(const [index,n] of this.participants.entries()){
-      if(n.decisionSlot?.startsWith('society:')||this.scene.westWilds?.directs(n))continue;
+      if(n.underground||n.decisionSlot?.startsWith('civic:'))continue;
+      if(this.scene.expeditions?.has(n)||this.scene.recovery?.drives(n)||n.decisionSlot?.startsWith('society:')||this.scene.westWilds?.directs(n)||this.scene.westTreasures?.directs(n))continue;
       if(this.routeBackoff.get(n.id)>at)continue;
       if(this.scene.scheduler.byId.get(n.id)?.routeFailure==='outside-world'){
         this.retire(n);continue;
@@ -547,6 +555,7 @@ export class SectCampus {
           else if(q.type==='herbs')this.herb(n,q);
           else if(q.type==='hunt')this.hunt(n,q);
           else if(q.type==='supply')this.timber(n,q);
+          else if(q.veinId)this.spiritVeins.mine(n,q);
           else if(q.type==='ore')q.mining?this.production.mine(n,q):this.mine(n,q);
           else if(q.type.startsWith('farm'))this.production.farm(n,q);
           else if(q.type==='city-courier')this.cityCourier(n,q);

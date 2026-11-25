@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import {canonicalVein,MERGED_CAPACITY} from '../../src/world/VeinMigration.js';
+const path='maps/world-rebuild-1b.tmj',raw=fs.readFileSync(path,'utf8');
+const layer=JSON.parse(raw).layers.find(l=>l.name==='SpiritVeins');
+const key=o=>o.properties.find(p=>p.name==='veinId').value;
+const retained=layer.objects.filter(o=>canonicalVein(key(o))===key(o));
+retained.find(o=>key(o)==='sect-jade').properties.find(p=>p.name==='capacity').value=MERGED_CAPACITY;
+const start=raw.indexOf('      "objects":',raw.indexOf('"name": "SpiritVeins"'));
+const end=raw.indexOf('\n    }',start);
+if(start<0||end<0)throw Error('SpiritVeins map layer unavailable');
+const content=raw.slice(0,start)+'      "objects": '+JSON.stringify(retained,null,2).replaceAll('\n','\n      ')+raw.slice(end);
+if(JSON.parse(content).layers.find(l=>l.name==='SpiritVeins').objects.length!==10)throw Error('unexpected number of veins');
+fs.writeFileSync(path,content);
