@@ -1,5 +1,5 @@
 const TILE_COLUMNS = 32;
-const MAX_VARIANTS = 1024;
+const MAX_VARIANTS = 2048;
 const TEXTURE_KEY = 'world-terrain-atlas';
 
 // This map exists only to render. The authored map continues to supply
@@ -7,10 +7,14 @@ const TEXTURE_KEY = 'world-terrain-atlas';
 export class WorldTerrainAtlas {
   static create(scene, layers, tilesets) {
     const gl=scene.game.renderer.gl;
-    if(!gl||layers.length===0||gl.getParameter(gl.MAX_TEXTURE_SIZE)<1024)return null;
+    if(!gl||layers.length===0)return null;
+    const textureSize=gl.getParameter(gl.MAX_TEXTURE_SIZE);
+    if(textureSize<1024)return null;
+    const capacity=Math.min(MAX_VARIANTS,TILE_COLUMNS*Math.floor(textureSize/scene.map.tileHeight));
     const {map}=scene, groupIds=new Map(), groups=[];
-    const cityGround=tilesets.find(tileset=>tileset.name==='QingyunCourtyardGround');
-    const opaqueCityMaterial=tile=>cityGround&&tile.index>=cityGround.firstgid&&tile.index<cityGround.firstgid+96;
+    const opaqueGround=tilesets.filter(set=>set.name==='QingyunCourtyardGround'||set.name==='DongHoangTerrain'||set.name==='DongHoangSeams'||set.name==='ShanheTerrain'||set.name==='GFX5B5WaterTiles')
+      .map(set=>({first:set.firstgid,last:set.firstgid+(set.name==='GFX5B5WaterTiles'?24:set.name==='ShanheTerrain'?192:set.name==='DongHoangSeams'?256:set.name==='DongHoangTerrain'?64:96)}));
+    const opaqueMaterial=tile=>opaqueGround.some(range=>tile.index>=range.first&&tile.index<range.last);
     const data=[];
     for(let y=0;y<map.height;y++){
       const row=[];
@@ -20,13 +24,13 @@ export class WorldTerrainAtlas {
           const tile=layer.layer.data[y][x];
           if(tile?.index>=0&&tile.visible&&tile.alpha){
             const alpha=tile.alpha*layer.alpha;
-            if(alpha===1&&opaqueCityMaterial(tile))tiles.length=0;
+            if(alpha===1&&opaqueMaterial(tile))tiles.length=0;
             tiles.push({tile,alpha});
           }
         }
         const signature=tiles.map(({tile,alpha})=>[tile.index,tile.rotation,Number(tile.flipX),Number(tile.flipY),alpha].join(':')).join('|');
         if(!groupIds.has(signature)){
-          if(groups.length>=MAX_VARIANTS)return null;
+          if(groups.length>=capacity)return null;
           groupIds.set(signature,groups.length);groups.push(tiles);
         }
         row.push(groupIds.get(signature));

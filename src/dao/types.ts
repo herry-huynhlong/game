@@ -83,7 +83,8 @@ export interface EnvironmentObjectSave {id:string;kind:'house'|'tree';x:number;y
 export interface GroundDropSave {id:string;itemId:TradeItemId;count:number;x:number;y:number;sourceId:string;createdDay:number;createdMinute:number;status:'ground'|'claimed';claimedBy?:string;claimedEventId?:string;}
 export interface ResourceNodeSave {id:string;kind:'herb';itemId:'spirit_herb';x:number;y:number;amount:number;maxAmount:number;danger:number;reservedBy?:string;depletedAt?:number;harvestCount?:number;nextGrowthAt?:number;}
 export type WestFaunaSpecies='wood'|'millennial'|'flower'|'vine'|'centipede'|'eagle'|'stag'|'wood-king';
-export type FaunaSpecies='wolf'|'boar'|'toad'|WestFaunaSpecies;
+export type EastFaunaSpecies='bone-skeleton'|'bone-general'|'sand-scorpion'|'sand-worm'|'sand-golem'|'bone-wolf'|'flame-lizard'|'bone-king';
+export type FaunaSpecies='wolf'|'boar'|'toad'|WestFaunaSpecies|EastFaunaSpecies;
 export type MonsterRank='normal'|'elite';
 export type MonsterState='idle'|'patrol'|'detect'|'alert'|'chase'|'attack'|'recover'|'retreat'|'return'|'hit'|'dead'|'sleep'|'awakening';
 export type MonsterPoint={x:number;y:number};

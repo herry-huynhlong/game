@@ -20,6 +20,9 @@ export class WorldDaylight {
     this.scene=scene;
     this.tone=scene.add.rectangle(scene.worldMinX??0,0,scene.worldWidth,scene.worldHeight,0,0).setOrigin(0).setDepth(9200);
     this.lights=scene.add.graphics().setDepth(9202);
+    this.sand=scene.add.graphics().setDepth(9201);
+    const eastern=(scene.map.getObjectLayer('RegionMarkers')?.objects??[]).find(o=>scene.prop(o,'regionId')==='east-pasture');
+    this.desert=eastern&&{left:eastern.x,right:eastern.x+eastern.width,top:eastern.y,bottom:eastern.y+eastern.height};
     this.sources=[];
     for(const [layer,kind] of [['RampartArt','torch'],['SectCampusStations','jade'],['SocietyStations','window'],['WestLights','wild']]){
       for(const o of scene.map.getObjectLayer(layer)?.objects??[]){
@@ -72,13 +75,36 @@ export class WorldDaylight {
         this.lights.fillStyle(0xd7eff3,lighting.lamps*.26).fillRect(p.x+step-6,p.y-2,13-step,1);
       }
     }
+    const storm=this.updateSand(view,day,minute+(scene.populationTick??0)/1000);
     const timeText=`${lighting.icon} Ngày ${day} · ${String(Math.floor(minute/60)).padStart(2,'0')}:${String(minute%60).padStart(2,'0')}`;
-    if(this.clock&&this.clock.dataset.minute!==timeText){
+    const forecast=lighting.name+(storm?' · Bão cát':'');
+    if(this.clock&&(this.clock.dataset.minute!==timeText||this.clock.dataset.forecast!==forecast)){
       this.clock.dataset.minute=timeText;
       this.clock.querySelector('b').textContent=timeText;
-      this.clock.querySelector('small').textContent=lighting.name;
+      this.clock.dataset.forecast=forecast;
+      this.clock.querySelector('small').textContent=forecast;
     }
     if(this.rate&&this.rate.value!==String(paused?0:speed??1))this.rate.value=String(paused?0:speed??1);
     return lighting;
+  }
+
+  updateSand(view,day,minute){
+    const g=this.sand,d=this.desert;
+    g.clear();
+    if(!d||view.centerX<d.left||view.centerX>d.right||view.centerY<d.top||view.centerY>d.bottom)return false;
+    const left=Math.max(view.x,d.left),top=Math.max(view.y,d.top),right=Math.min(view.right,d.right),bottom=Math.min(view.bottom,d.bottom);
+    const at=755+(day%4)*41,storm=minute>at&&minute<at+48;
+    const nocturnal=minute>=1140||minute<300;
+    g.fillStyle(nocturnal?0x737baa:0xf6bb71,storm?.10:nocturnal?.035:.026).fillRect(left,top,right-left,bottom-top);
+    if(this.scene.cameras.main.zoom<.4)return storm;
+    const time=(day*1440+minute)*1000,count=storm?32:9,stride=storm?520:370;
+    g.fillStyle(0xffdc9b,storm?.36:.18);
+    for(let i=0;i<count;i++){
+      const x=d.left+(i*719+time/stride*(5+i%4))%(d.right-d.left);
+      const y=d.top+(i*1379+time/1920)%(d.bottom-d.top);
+      if(x<left||x>right||y<top||y>bottom)continue;
+      g.fillRect(x,y,2+i%5,1);
+    }
+    return storm;
   }
 }

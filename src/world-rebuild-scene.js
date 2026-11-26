@@ -1,3 +1,4 @@
+import { EAST_TREASURE_IDS } from './dao/WestTreasureCatalog.ts';
 import { WorldRecovery } from './world/WorldRecovery.js';
 import { recordCombatDamage } from './dao/CombatRecovery.ts';
 import { WestTreasures, loadWestTreasureArt } from './world/WestTreasures.js';
@@ -44,7 +45,7 @@ import { PossessionSystem } from './dao/PossessionSystem.ts';
 import {CivicSystem} from './world/CivicSystem.js';
 import { reportCityCombat, markCityIncidentAtScene, clearCityResponse } from './dao/CityLawSystem.ts';
 import { ensureWorldRebuildEnvironment, tickWorldRebuildProfessionWork, damageWorldRebuildBuilding } from './dao/WorldRebuildProfessionSystem.ts';
-import { ensureFauna, hunterTolerance, damageFauna, faunaCombatPower, claimFaunaDrop, queueFaunaRespawn, processFaunaRespawns, summonWesternTree, refillWesternFauna, faunaRoster, faunaEvent } from './dao/FaunaSystem.ts';
+import { ensureFauna, hunterTolerance, damageFauna, faunaCombatPower, claimFaunaDrop, queueFaunaRespawn, processFaunaRespawns, spawnFaunaInZone, summonWesternTree, refillWesternFauna, faunaRoster, faunaEvent } from './dao/FaunaSystem.ts';
 import { applyMonsterCondition, monsterRooted, tickMonsterConditions } from './dao/MonsterConditions.ts';
 import { faunaHabitat } from './world/FaunaHabitat.js';
 import { itemIcon } from './dao/ItemCatalog.ts';
@@ -57,6 +58,9 @@ import { SocialVisuals } from './world/SocialVisuals.js';
 import { Expeditions } from './world/Expeditions.js';
 import { SpiritVeinOverlay } from './world/SpiritVeinOverlay.js';
 import { distributeResidentHomes, reviewMeditation } from './world/ResidentHomes.js';
+import { EAST_CREATURE_ANCHOR, EAST_CREATURE_SCALE, eastCreatureKey } from './world/EastCreatureArt.js';
+import { relocateShanheResidents } from './world/ShanheMigration.js';
+import { waterFlowFrame } from './world/WaterFlowFrame.js';
 import { MonsterVisuals, loadMonsterArt, LOOT_ICON, WEST_LOOT, monsterArtKey } from './world/MonsterVisuals.js';
 import { WorldRiverFishSystem } from './dao/WorldRiverFishSystem.ts';
 import { MinimapCamera } from './world/MinimapCamera.js';
@@ -97,6 +101,8 @@ export class RebuildWorldScene extends Phaser.Scene {
     preloadTribulationVisuals(this);
     preloadSkyStep(this);
     this.load.image('sect-atlas','/assets/sect-campus/campus.png');
+    this.load.image('sect-south-bridge','/assets/sect-campus/south-bridge.png');
+    this.load.spritesheet('sect-court-fixtures','/assets/sect-campus/court-fixtures.png',{frameWidth:128,frameHeight:72});
     this.load.json('sect-atlas-bounds','/assets/sect-campus/bounds.json');
     this.load.image('old-road-paths','/assets/old-road/path.png');
     this.load.image('old-road-ground','/assets/old-road/ground.png');
@@ -114,6 +120,12 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.load.on('loaderror',file=>window.__worldBoot?.setPhase('assets','failed',`${file.key}: ${file.src}`));
     this.load.once('complete',()=>window.__worldBoot?.setPhase('assets','complete'));
     this.load.spritesheet('west-landmarks','/assets/west-wilds/landmarks.png',{frameWidth:144,frameHeight:120});
+    this.load.image('shanhe-terrain','/assets/shanhe/terrain.png');
+    this.load.image('east-seams','/assets/east-wilds/overhaul/seams.png');
+    this.load.image('east-shore','/assets/east-wilds/overhaul/shore.png');
+    this.load.image('east-terrain','/assets/east-wilds/overhaul/terrain.png');
+    this.load.spritesheet('east-props','/assets/east-wilds/overhaul/props.png',{frameWidth:96,frameHeight:96});
+    this.load.spritesheet('east-landforms','/assets/east-wilds/overhaul/landforms.png',{frameWidth:160,frameHeight:96});
     this.load.image('west-terrain','/assets/west-wilds/terrain.png');
     loadWestTreasureArt(this);
     this.load.spritesheet('world-loot-icons','/assets/items/inventory-icons.png',{frameWidth:32,frameHeight:32});
@@ -160,6 +172,10 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.worldMinX=-this.westOffsetX;
     for(const layer of this.map.objects)for(const object of layer.objects)object.x-=this.westOffsetX;
     const sets=[
+      this.map.addTilesetImage('ShanheTerrain','shanhe-terrain',32,32,0,0),
+      this.map.addTilesetImage('DongHoangSeams','east-seams',32,32,0,0),
+      this.map.addTilesetImage('DongHoangShore','east-shore',32,32,0,0),
+      this.map.addTilesetImage('DongHoangTerrain','east-terrain',32,32,0,0),
       this.map.addTilesetImage('TayHoangTerrain','west-terrain',32,32,0,0),
       this.map.addTilesetImage('GFX5B5AreaTerrain','rebuild-terrain',32,32,0,0),
       this.map.addTilesetImage('SettlementBuildings','rebuild-buildings',192,192,0,0),
@@ -179,7 +195,7 @@ export class RebuildWorldScene extends Phaser.Scene {
       this.map.addTilesetImage('QingyunCourtyardObjects','courtyard-objects',192,176,0,0),
       this.map.addTilesetImage('QingyunOldRoadGround','old-road-ground',32,32,0,0),
     ].filter(Boolean);
-    if(sets.length!==25)throw new Error(`Map tileset load mismatch (${sets.length}/25)`);
+    if(sets.length!==29)throw new Error(`Map tileset load mismatch (${sets.length}/29)`);
     const terrainLayers=['GroundBase','Water','Shore','GroundDetails','TerrainTransitions','Roads','CityEdges','Cliffs']
       .map((name,depth)=>this.map.createLayer(name,sets,this.worldMinX,0)?.setDepth(depth)).filter(Boolean);
     this.terrainCache=WorldTerrainAtlas.create(this,terrainLayers,sets);
@@ -194,7 +210,7 @@ export class RebuildWorldScene extends Phaser.Scene {
     });
     const scenery=['StaticDecor','Buildings','MarketDecor','Roofs'].flatMap(name=>this.map.getObjectLayer(name)?.objects??[]);
     this.objectSprites=scenery.map(obj=>{
-      const gid=obj.gid,entry=gid>=257&&gid<297?['rebuild-buildings',gid-257]:gid>=297&&gid<312?['rebuild-ancient-tree',gid-297]:gid>=312&&gid<320?['rebuild-bamboo',gid-312]:gid>=320&&gid<330?['rebuild-rocks',gid-320]:gid===330?['rebuild-farmhouse',0]:gid>=400&&gid<408?['rebuild-400',gid-400]:gid>=408&&gid<416?['rebuild-408',gid-408]:gid>=416&&gid<424?['rebuild-416',gid-416]:gid>=424&&gid<432?['rebuild-424',gid-424]:gid>=432&&gid<=435?[`rebuild-${gid}`,0]:gid>=436&&gid<444?['rebuild-wall-kit',gid-436]:gid>=508&&gid<516?['rebuild-water-props',gid-508]:gid>=516&&gid<520?['rebuild-directional-gates',gid-516]:gid>=520&&gid<524?['city-structures',gid-520]:gid>=524&&gid<531?['market-stalls',gid-524]:gid>=640&&gid<672?['courtyard-objects',gid-640]:gid===676?['city-palace',undefined]:gid>=1760&&gid<1765?['west-landmarks',gid-1760]:gid>=1770&&gid<1776?['west-grove',gid-1770]:gid>=1780&&gid<1791?['habitat-accents',gid-1780]:gid>=1795&&gid<1804?['living-grove',gid-1795]:gid>=1810&&gid<1815?['living-floor',gid-1810]:null;
+      const gid=obj.gid,entry=gid>=257&&gid<297?['rebuild-buildings',gid-257]:gid>=297&&gid<312?['rebuild-ancient-tree',gid-297]:gid>=312&&gid<320?['rebuild-bamboo',gid-312]:gid>=320&&gid<330?['rebuild-rocks',gid-320]:gid===330?['rebuild-farmhouse',0]:gid>=400&&gid<408?['rebuild-400',gid-400]:gid>=408&&gid<416?['rebuild-408',gid-408]:gid>=416&&gid<424?['rebuild-416',gid-416]:gid>=424&&gid<432?['rebuild-424',gid-424]:gid>=432&&gid<=435?[`rebuild-${gid}`,0]:gid>=436&&gid<444?['rebuild-wall-kit',gid-436]:gid>=508&&gid<516?['rebuild-water-props',gid-508]:gid>=516&&gid<520?['rebuild-directional-gates',gid-516]:gid>=520&&gid<524?['city-structures',gid-520]:gid>=524&&gid<531?['market-stalls',gid-524]:gid>=640&&gid<672?['courtyard-objects',gid-640]:gid===676?['city-palace',undefined]:gid>=1760&&gid<1765?['west-landmarks',gid-1760]:gid>=1770&&gid<1776?['west-grove',gid-1770]:gid>=1780&&gid<1791?['habitat-accents',gid-1780]:gid>=1795&&gid<1804?['living-grove',gid-1795]:gid>=1810&&gid<1815?['living-floor',gid-1810]:gid===1830?['sect-south-bridge',undefined]:gid>=1831&&gid<=1833?['sect-court-fixtures',gid-1831]:gid>=1920&&gid<1952?['east-props',gid-1920]:gid>=2000&&gid<2008?['east-landforms',gid-2000]:null;
       if(!entry)throw new Error(`Unknown Tiled art GID ${gid} (${obj.name})`);
       let x=obj.x+obj.width/2,y=obj.y-obj.height/2,width=obj.width,height=obj.height,frame=entry[1];
       if(entry[0]==='courtyard-objects'){
@@ -238,7 +254,7 @@ export class RebuildWorldScene extends Phaser.Scene {
       return sprite;
     });
     const sectSigns=(this.map.getObjectLayer('SectCampusStations')?.objects??[]).filter(o=>
-      !/^(home|dummy|plot|queue|seat|counter|reading)/.test(this.prop(o,'station'))).map(o=>
+      !this.prop(o,'hiddenLabel')&&!/^(home|dummy|plot|queue|seat|counter|reading)/.test(this.prop(o,'station'))).map(o=>
       this.add.text(o.x,o.y-12,o.name,{fontFamily:'serif',fontSize:'10px',color:'#e9cf94',
         backgroundColor:'#23362d',padding:{x:3,y:2}}).setOrigin(.5,1).setDepth(o.y+8));
     const roadDecor=(this.map.getObjectLayer('OldRoadArt')?.objects??[]).map(o=>
@@ -257,7 +273,15 @@ export class RebuildWorldScene extends Phaser.Scene {
     });
     this.canopySprites=this.objectSprites.filter(sprite=>this.prop(sprite.getData('tiledObject'),'canopy'));
     this.cityScenery=new CityScenery(this,this.objectSprites);
-    this.flowSprites=(this.map.getObjectLayer('FlowEffects')?.objects??[]).map(obj=>{const phase=Number(this.prop(obj,'phase')??0),period=Number(this.prop(obj,'period')??150);const sprite=this.add.sprite(obj.x??0,obj.y??0,'rebuild-water-motion',8+phase).setDepth((obj.y??0)+12).setAlpha(.68);sprite.setData('flowPhase',phase);sprite.setData('flowPeriod',period);sprite.setData('flowFrame',-1);return sprite});
+    this.flowSprites=(this.map.getObjectLayer('FlowEffects')?.objects??[]).map(obj=>{
+      const phase=Number(this.prop(obj,'phase')??0),period=Number(this.prop(obj,'period')??150);
+      const kind=this.prop(obj,'kind'),fall=kind==='shanhe-waterfall';
+      const oasis=kind==='east-oasis-ripple'||kind==='shanhe-ripple',first=fall?0:8;
+      const sprite=this.add.sprite(obj.x??0,obj.y??0,'rebuild-water-motion',waterFlowFrame(0,period,phase,first))
+        .setDepth(oasis||fall?10:(obj.y??0)+12).setAlpha(oasis?.78:.68).setScale(this.prop(obj,'scale')??1);
+      sprite.setData({flowPhase:phase,flowPeriod:period,flowFrame:-1,flowFirst:first,waterKind:kind});
+      return sprite;
+    });
     this.sceneryBounds=[...this.objectSprites.filter(sprite=>!this.prop(sprite.getData('tiledObject'),'legacyRampart')&&!this.prop(sprite.getData('tiledObject'),'retiredSect')),
       ...this.flowSprites,...rampartImages,...sectImages,...sectSigns,...roadDecor,...roadSigns,...this.facilitySprites,...facilitySigns].map(sprite=>{
       const radius=Math.hypot(sprite.displayWidth,sprite.displayHeight)/2;
@@ -379,7 +403,9 @@ export class RebuildWorldScene extends Phaser.Scene {
       });
     }
     this.bindCameraControls();
-    const initial=new URLSearchParams(location.search).get('region');this.gotoRegion(initial&&this.markerRegion(initial)?initial:'city',false);
+    const params=new URLSearchParams(location.search),initial=params.get('region');
+    if(params.has('sectDebug'))this.drawSectCourtyards();
+    this.gotoRegion(initial&&(this.markerRegion(initial)||this.markers.some(m=>m.id===initial))?initial:'city',false);
     this.initPossessionHud();this.merchants=new WorldMerchants(this);this.society=new WorldSociety(this);this.westWilds=new WestWilds(this);this.daylight=new WorldDaylight(this);
     this.merchantPanel=new MerchantPanel(this);this.sectCampus.mount();this.bindAppearanceSync();this.restorePossession();
     this.recovery=new WorldRecovery(this);
@@ -476,6 +502,7 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.cityMigratedResidents=placeCityResidents(this.populationWorld.npcs,this.collisionRects.filter(r=>r.kind==='city-redesign-solid'||r.kind==='society'),
       (x,y,w,h)=>this.footprintTerrainOpen(x,y,w,h),(point)=>this.canReachPoint(center,point),this.markers,loaded.fresh);
     const provisioning=provisionWorldWeapons(this.populationWorld),partsChanged=ensureNPCModularAppearances(this.populationWorld.npcs);if(provisioning.changed||partsChanged)this.persistPopulation();
+    relocateShanheResidents(this,this.populationWorld);
     this.ramparts.register(this.populationWorld.npcs);
     this.initLivingTimber();
     this.populationSimulation=new AutonomousNPCSystem(this.populationWorld.npcs,event=>{const id=`population-event:${this.populationWorld.clock.day}:${this.populationWorld.clock.minute}:${event.type}:${event.actorId??''}:${this.populationWorld.events.length}`;this.populationWorld.events.push({id,...event});if(this.populationWorld.events.length>400)this.populationWorld.events.shift()},this.populationWorld,(a,b)=>!blocksGroundCombat(a)&&!aboveGroundCombat(b)&&this.clearCombatLine(a,b),
@@ -620,7 +647,7 @@ export class RebuildWorldScene extends Phaser.Scene {
   npcActivityReason(npc,distance){if(npc.pathBlocked)return'Pathfinding blocked; mục tiêu chưa tới được';if(distance>24)return`Đang di chuyển tới ${npc.shortGoal??npc.goalAction}`;if(npc.populationRole==='merchant')return`Trực sạp ${npc.stallId??''}; giao dịch chỉ dùng hàng tồn kho thật`;if(npc.populationRole==='city_guard'&&npc.goalAction==='patrol')return`Đứng gác/tuần tra điểm ${((npc.patrolIndex??0)+1)}/${npc.patrolPoints?.length??1}`;if(npc.goalAction==='cultivate')return`Tu luyện thật · tiến độ ${Math.floor(npc.actionProgress??0)}/60 phút`;if(npc.goalAction==='rest')return`Nghỉ phục hồi · mệt ${Math.round(npc.fatigue)} · AI xét lại ở phút tiếp theo`;if(npc.professionTask)return`${npc.professionTask.kind} · ${npc.professionTask.state} · ${npc.professionTask.lastReason??npc.professionTask.targetId}`;return npc.aiDecision?.reason??npc.populationDuty??`Hành động ${npc.action??'idle'} · mục tiêu ${npc.shortGoal??npc.goalAction??'chưa có'}`}
   trackNpcMotion(npc,sprite){
     const entry=this.scheduler?.byId.get(npc.id),target=entry?.navigationGoal;
-    const active=Boolean(target&&npc.alive&&!entry.waitingForSlot&&!entry.passageWait&&!npc.flight&&!npc.skyStep);
+    const active=Boolean(target&&npc.alive&&!npc.underground&&!entry.waitingForSlot&&!entry.passageWait&&!npc.flight&&!npc.skyStep);
     return {targetDistance:active?Math.hypot(npc.x-target.x,npc.y-target.y):0,
       noProgressMs:active&&entry.travelWatch?Math.max(0,this.scheduler.time-entry.travelWatch.since):0,
       moving:Boolean(active&&sprite?.getData('moving')||npc.flight||npc.skyStep)};
@@ -643,7 +670,7 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.faunaZones=(this.map.getObjectLayer('FaunaZones')?.objects??[]).map(o=>({
       zoneId:this.prop(o,'zoneId'),species:this.prop(o,'species'),cap:this.prop(o,'cap'),respawnMs:this.prop(o,'respawnMs'),
       activityRadius:this.prop(o,'activityRadius'),leash:this.prop(o,'leash'),safeBuffer:this.prop(o,'safeBuffer'),normalOnly:this.prop(o,'normalOnly'),realmIndex:this.prop(o,'realmIndex'),realmLevel:this.prop(o,'realmLevel'),roster:this.prop(o,'roster'),nocturnal:this.prop(o,'nocturnal'),
-      spread:this.prop(o,'spread'),name:o.name,x:o.x,y:o.y,width:o.width,height:o.height
+      spread:this.prop(o,'spread'),extraShanhe:this.prop(o,'extraShanhe'),name:o.name,x:o.x,y:o.y,width:o.width,height:o.height
     })).filter(z=>FAUNA_IDS.includes(z.species)&&Number.isInteger(z.cap)&&z.cap>0);
     this.faunaTerritories=(this.map.getObjectLayer('FaunaTerritories')?.objects??[]).map(o=>({
       x:o.x,y:o.y,width:o.width,height:o.height,name:o.name,...Object.fromEntries((o.properties??[]).map(p=>[p.name,p.value]))
@@ -653,7 +680,7 @@ export class RebuildWorldScene extends Phaser.Scene {
       if(zone)(zone.territories??={})[habitat.species]=habitat;
     }
     this.monsterSafeBuffer=Math.max(0,...this.faunaZones.map(z=>z.safeBuffer??35));
-    this.monsterSafeRegions=(this.map.getObjectLayer('RegionMarkers')?.objects??[]).filter(o=>['city','south-suburb','sect'].includes(this.prop(o,'regionId')));
+    this.monsterSafeRegions=(this.map.getObjectLayer('RegionMarkers')?.objects??[]).filter(o=>['city','south-suburb','sect','east-oasis-safe'].includes(this.prop(o,'regionId')));
     this.monsterVisuals=new MonsterVisuals(this);
     for(const shop of this.populationWorld.shops)for(const id of [...Object.keys(LOOT_ICON),...WEST_LOOT]){
       shop.buyPrices[id]??=itemPrices[id].buy;shop.sellPrices[id]??=itemPrices[id].sell;
@@ -673,14 +700,26 @@ export class RebuildWorldScene extends Phaser.Scene {
         const zone=this.faunaZones.find(z=>z.zoneId===king.zoneId);
         if(!zone)return false;
         const living=world.environment.fauna.filter(f=>f.zoneId===king.zoneId&&f.alive);
+        if(king.species==='bone-king')return living.some(f=>f.species==='bone-skeleton'&&f.growth?.phase==='dormant')||living.length<zone.cap;
         return living.length<zone.cap&&living.filter(f=>f.species==='millennial'&&f.rank==='elite').length<
           faunaRoster(zone).filter(f=>f.species==='millennial'&&f.rank==='elite').length;
       },
       summon:(king,zone)=>{
-        const beast=summonWesternTree(world,zone,king,(x,y,species,rank)=>this.faunaSpawnOpen(zone,x,y,species,rank));
+        const open=(x,y,species,rank)=>this.faunaSpawnOpen(zone,x,y,species,rank);
+        let beast;
+        if(king.species==='bone-king'){
+          const sleeping=world.environment.fauna.find(f=>f.alive&&f.zoneId===king.zoneId&&f.species==='bone-skeleton'&&f.growth?.phase==='dormant');
+          if(sleeping){
+            sleeping.growth.phase='active';sleeping.state='idle';sleeping.targetNpcId=king.targetNpcId;
+            return;
+          }
+          const result=spawnFaunaInZone(world,zone,open,{required:{species:'bone-skeleton',rank:'normal'},origin:king,attempts:40});
+          if(result.ok)beast=result.beast;
+          if(beast?.growth){beast.growth.phase='active';beast.state='idle';beast.targetNpcId=king.targetNpcId;}
+        }else beast=summonWesternTree(world,zone,king,open);
         if(beast){this.createFaunaSprite(beast);this.pruneFaunaSprites();this.syncGroundOccupancy();this.requestBackgroundSave();}
       },
-      cadence:beast=>beast.x>=0||this.faunaSprites.get(beast.id)?.visible||
+      cadence:beast=>beast.x>=0&&beast.x<5700&&!/^(south-|se-)/.test(beast.zoneId)||this.faunaSprites.get(beast.id)?.visible||
         this.westFaunaObservers?.some(n=>Math.abs(n.x-beast.x)<300&&Math.abs(n.y-beast.y)<300)?50:250,
       targets:(point,radius)=>[...this.groundOccupancy.near(point.x,point.y,radius)]
         .filter(body=>body.category===1&&body.actor.alive&&!aboveGroundCombat(body.actor)&&Math.hypot(body.x-point.x,body.y-point.y)<=radius).map(body=>body.actor),
@@ -709,8 +748,9 @@ export class RebuildWorldScene extends Phaser.Scene {
   }
   createFaunaSprite(beast){
     if(this.faunaSprites.has(beast.id))return this.faunaSprites.get(beast.id);
+    const east=eastCreatureKey(beast);
     const sprite=this.add.sprite(beast.x,beast.y,monsterArtKey(beast),0)
-      .setOrigin(.5,.82).setScale(beast.rank==='elite'?1.15:1).setDepth(beast.y).setName(beast.id).setVisible(false);
+      .setOrigin(.5,east?EAST_CREATURE_ANCHOR:.82).setScale(EAST_CREATURE_SCALE[east]??(beast.rank==='elite'?1.15:1)).setDepth(beast.y).setName(beast.id).setVisible(false);
     sprite.setData('faunaId',beast.id).setInteractive({useHandCursor:true});
     sprite.on('pointerdown',pointer=>{if(!this.possessedNpcId)return;this.pendingFaunaClick={id:beast.id,x:pointer.x,y:pointer.y}});
     sprite.on('pointerup',pointer=>{
@@ -725,7 +765,11 @@ export class RebuildWorldScene extends Phaser.Scene {
   }
   monsterSafe(point){
     const gap=this.monsterSafeBuffer;
-    return this.monsterSafeRegions.some(r=>point.x>=r.x-gap&&point.x<=r.x+r.width+gap&&point.y>=r.y-gap&&point.y<=r.y+r.height+gap);
+    return this.monsterSafeRegions.some(r=>{
+      const setback=this.prop(r,'northWestSetbackX');
+      if(setback!==undefined&&point.x<setback-this.westOffsetX&&point.y<this.prop(r,'northWestSetbackY'))return false;
+      return point.x>=r.x-gap&&point.x<=r.x+r.width+gap&&point.y>=r.y-gap&&point.y<=r.y+r.height+gap;
+    });
   }
   faunaSpawnOpen(zone,x,y,species=zone.species,rank='normal'){
     const footprint=groundFootprint({species,rank});
@@ -858,7 +902,7 @@ export class RebuildWorldScene extends Phaser.Scene {
   syncFaunaDrops(){
     for(const d of this.populationWorld.environment.drops){
       if(!d.sourceId.startsWith('fauna:')||d.status!=='ground'||this.dropSprites.has(d.id))continue;
-      const west=WEST_LOOT.includes(d.itemId),[x,y]=itemIcon(d.itemId);
+      const west=WEST_LOOT.includes(d.itemId)||EAST_TREASURE_IDS.includes(d.itemId),[x,y]=itemIcon(d.itemId);
       const marker=this.add.image(d.x,d.y-3,west?'world-loot-icons':'monster-loot',west?(y/32)*8+x/32:LOOT_ICON[d.itemId]??6).setScale(west?.62:1).setDepth(d.y+2).setName(d.id);
       marker.setData('dropId',d.id);this.dropSprites.set(d.id,marker);
     }
@@ -867,7 +911,7 @@ export class RebuildWorldScene extends Phaser.Scene {
   tickFauna(delta){
     const env=this.populationWorld.environment;
     if((this.nextWestFaunaObservers??0)<=env.faunaClockMs){
-      this.westFaunaObservers=this.populationWorld.npcs.filter(n=>n.alive&&!n.underground&&n.x<300);
+      this.westFaunaObservers=this.populationWorld.npcs.filter(n=>n.alive&&!n.underground&&(n.x<300||n.x>5500||n.y>8400));
       this.nextWestFaunaObservers=env.faunaClockMs+400;
     }
     this.faunaTick+=delta;
@@ -1292,7 +1336,7 @@ export class RebuildWorldScene extends Phaser.Scene {
     for(const entry of thinking){
       if(decisions>=10*workSlices||(decisions>0&&performance.now()-aiStart>=2*workSlices))break;
       const npc=entry.npc,target=npc.actionTarget??npc.home??npc;
-      if(npc.decisionSlot?.startsWith('civic:')||this.expeditions?.has(npc)||npc.flight||npc.skyStep||npc.marketVisit||npc.tribulation||this.recovery?.drives(npc)||this.westTreasures?.directs(npc)||this.westWilds?.directs(npc)||this.cultivation?.fleeing(npc)||this.flightArena?.targets.has(npc.id)){
+      if(npc.underground||npc.decisionSlot?.startsWith('civic:')||this.expeditions?.has(npc)||npc.flight||npc.skyStep||npc.marketVisit||npc.tribulation||this.recovery?.drives(npc)||this.westTreasures?.directs(npc)||this.westWilds?.directs(npc)||this.cultivation?.fleeing(npc)||this.flightArena?.targets.has(npc.id)){
         if(npc.flight){npc.hunger=Math.min(100,npc.hunger+entry.minutes*.027);npc.fatigue=Math.min(100,npc.fatigue+entry.minutes*.008);}
         this.scheduler.finishDecision(entry);decisions++;continue;
       }
@@ -1909,7 +1953,11 @@ export class RebuildWorldScene extends Phaser.Scene {
     const pop=()=>{const node=heapNodes[0],lastNode=heapNodes.pop(),lastScore=heapF.pop();if(heapNodes.length){let i=0;while(true){let child=i*2+1;if(child>=heapNodes.length)break;if(child+1<heapNodes.length&&heapF[child+1]<heapF[child])child++;if(heapF[child]>=lastScore)break;heapNodes[i]=heapNodes[child];heapF[i]=heapF[child];i=child}heapNodes[i]=lastNode;heapF[i]=lastScore}return node};
     const prefersRoad=Math.abs(target.y-sprite.y)>650&&Math.max(target.y,sprite.y)>3904&&
       Math.min(target.y,sprite.y)<5184&&Math.min(target.x,sprite.x)>2100&&Math.max(target.x,sprite.x)<4900;
+    const sect=this.sectTrafficRegion??=(this.prop(this.map,'sectLayoutVersion')>=3&&this.markerRegion('sect'));
+    const inSect=p=>sect&&Math.abs(p.x-sect.x)<sect.width/2&&Math.abs(p.y-sect.y)<sect.height/2;
+    const campusRoad=inSect(sprite)&&inSect(target)&&Math.hypot(target.x-sprite.x,target.y-sprite.y)>300;
     const cost=(x,y)=>{
+      if(campusRoad)return this.roadLayer?.data[Math.floor(y/2)]?.[Math.floor(x/2)]?.index>=0?10:13;
       if(!prefersRoad||y<230||y>327)return 10;
       const row=Math.floor(y/2),col=Math.floor(x/2);
       return this.oldRoadLayer?.layer.data[row]?.[col]?.index>=0||this.roadLayer?.data[row]?.[col]?.index>=0?10:30;
@@ -2060,7 +2108,7 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.skyStepVisuals.update(this.skyStep.active,time);
     this.nameplates?.update(time);this.sectCampus.update();this.syncNPCModularVisuals();this.syncWeaponVisuals();this.flightVisuals.update(this.flyingSword);
     this.animationMs=performance.now()-animationStarted;
-    for(let i=0;i<this.flowSprites.length;i++){const sprite=this.flowSprites[i];if(!this.inSceneryView(sprite,80))continue;const frame=8+((Math.floor(time/sprite.getData('flowPeriod'))+sprite.getData('flowPhase'))%8);if(frame!==sprite.getData('flowFrame')){sprite.setFrame(frame);sprite.setData('flowFrame',frame)}}
+    for(let i=0;i<this.flowSprites.length;i++){const sprite=this.flowSprites[i];if(!this.inSceneryView(sprite,80))continue;const frame=waterFlowFrame(time,sprite.getData('flowPeriod'),sprite.getData('flowPhase'),sprite.getData('flowFirst'));if(frame!==sprite.getData('flowFrame')){sprite.setFrame(frame);sprite.setData('flowFrame',frame)}}
     const speed=680*delta/1000/this.cameras.main.zoom;
     if(!this.possessedNpcId&&(this.keys?.A?.isDown||this.keys?.LEFT?.isDown))this.cameras.main.scrollX-=speed;
     if(!this.possessedNpcId&&(this.keys?.D?.isDown||this.keys?.RIGHT?.isDown))this.cameras.main.scrollX+=speed;
@@ -2115,16 +2163,42 @@ export class RebuildWorldScene extends Phaser.Scene {
   }
   updateWindFrames(){for(const sprite of this.windSprites){if(sprite.getData('livingStump')||!this.inSceneryView(sprite,160))continue;const durations=sprite.getData('windDurations'),frames=sprite.getData('windFrames'),period=sprite.getData('windPeriod');let t=(this.windClock+sprite.getData('windPhase'))%period,index=0;while(index<durations.length-1&&t>=durations[index]){t-=durations[index];index++}const frame=frames[index];if(sprite.getData('windFrame')!==frame){sprite.setFrame(frame);sprite.setData('windFrame',frame)}}}
   markerRegion(id){const aliases={city:'city',north:'north-mountain',east:'east-pasture',south:'south-suburb',forest:'forest-outer','forest-outer':'forest-outer','forest-middle':'forest-middle','forest-deep':'forest-deep'},regionId=aliases[id]??id;const object=(this.map.getObjectLayer('RegionMarkers')?.objects??[]).find(o=>this.prop(o,'regionId')===regionId);return object?{x:object.x+object.width/2,y:object.y+object.height/2,width:object.width,height:object.height}:null}
+  drawSectCourtyards(){
+    const g=this.add.graphics().setDepth(this.worldHeight+50);
+    g.lineStyle(3,0x9ac3ad,.8);
+    for(const route of this.map.getObjectLayer('SectPlanRoutes')?.objects??[]){
+      const points=route.polyline??[];
+      for(let i=1;i<points.length;i++){
+        const a=points[i-1],b=points[i];
+        g.lineBetween(route.x+a.x,route.y+a.y,route.x+b.x,route.y+b.y);
+      }
+    }
+    for(const o of this.map.getObjectLayer('SectCourtyards')?.objects??[]){
+      g.lineStyle(3,0xe5c47f,.9).strokeRect(o.x,o.y,o.width,o.height);
+      const x=this.prop(o,'roofX')-this.westOffsetX,y=this.prop(o,'roofY');
+      const w=this.prop(o,'roofW'),h=this.prop(o,'roofH');
+      g.lineStyle(2,0x72d0c2,.95).strokeRect(x,y,w,h);
+      this.add.text(o.x,o.y-16,o.name+' · mái '+w+' px',{
+        fontSize:'13px',color:'#ffe1a1',backgroundColor:'#1b2b24',
+      }).setDepth(this.worldHeight+51);
+    }
+    for(const o of this.map.getObjectLayer('SectCampusStations')?.objects??[]){
+      if(!this.prop(o,'court')&&!/^(lesson|reading|training|queue|law-patrol)-\d+$/.test(this.prop(o,'station')))continue;
+      g.fillStyle(0xedb677,1).fillCircle(o.x,o.y,3.5);
+    }
+  }
   gotoRegion(id,refresh=true){
     const marker=this.markers.find(m=>m.id===id),region=this.markerRegion(id);
     const point=(id==='old-road'||id.startsWith('west-')?marker:region)??marker??REGION_CENTERS[id];
     if(!point)return false;
-    const zoom=id==='city'?.55:id==='east'?.72:id==='north'?.78:.78;
+    const zoom=id==='sect'&&region?Math.max(.18,Math.min(.78,this.scale.width/region.width*.92,this.scale.height/region.height*.87)):
+      id==='east'&&region?Math.max(.13,Math.min(.65,this.scale.height/region.height*.92)):
+      id==='city'?.55:.78;
     this.navigateCameraTo(point.x,point.y,'region',false,zoom);
     if(refresh)this.refreshHud();
     return true;
   }
-  navigateCameraTo(x,y,source='minimap',dragging=false,requestedZoom=null){const camera=this.cameras.main;if(this.cameraTween){this.cameraTween.stop();this.cameraTween=null}if(this.possessedNpcId){this.cameraFollowSuspended=source!=='return';camera.stopFollow()}let zoom=requestedZoom??camera.zoom;if(zoom<.31){zoom=this.lastExploreZoom??.78}if(zoom>.32)this.lastExploreZoom=zoom;if(Math.abs(camera.zoom-zoom)>.001)this.setZoom(zoom);const scrollX=x-camera.width/2,scrollY=y-camera.height/2;if(dragging){camera.setScroll(scrollX,scrollY);this.clampCamera()}else this.cameraTween=this.tweens.add({targets:camera,scrollX,scrollY,duration:360,ease:'Cubic.easeOut',onUpdate:()=>this.clampCamera(),onComplete:()=>{this.cameraTween=null;this.clampCamera()}});this.refreshFaunaVisibility();this.minimap?.update(true);this.refreshHud();return{x:scrollX,y:scrollY,zoom}}
+  navigateCameraTo(x,y,source='minimap',dragging=false,requestedZoom=null){const camera=this.cameras.main;if(this.cameraTween){this.cameraTween.stop();this.cameraTween=null}if(this.possessedNpcId){this.cameraFollowSuspended=source!=='return';camera.stopFollow()}let zoom=requestedZoom??camera.zoom;if(requestedZoom===null&&zoom<.31){zoom=this.lastExploreZoom??.78}if(zoom>.32)this.lastExploreZoom=zoom;if(Math.abs(camera.zoom-zoom)>.001){if(requestedZoom!==null&&zoom<.18)camera.setZoom(zoom);else this.setZoom(zoom);}const scrollX=x-camera.width/2,scrollY=y-camera.height/2;if(dragging){camera.setScroll(scrollX,scrollY);this.clampCamera()}else this.cameraTween=this.tweens.add({targets:camera,scrollX,scrollY,duration:360,ease:'Cubic.easeOut',onUpdate:()=>this.clampCamera(),onComplete:()=>{this.cameraTween=null;this.clampCamera()}});this.refreshFaunaVisibility();this.minimap?.update(true);this.refreshHud();return{x:scrollX,y:scrollY,zoom}}
   showWorldOverview(){const width=this.worldWidth??this.map.widthInPixels,height=this.worldHeight??this.map.heightInPixels,fit=Math.min(this.scale.width/width,this.scale.height/height)*.98;if(this.possessedNpcId)this.cameraFollowSuspended=true;this.cameras.main.setZoom(fit).centerOn(this.worldMinX+width/2,height/2);this.clampCamera();this.minimap?.update(true);this.refreshHud();return fit}
   setZoom(zoom,x=this.scale.width/2,y=this.scale.height/2){const camera=this.cameras.main,target=Phaser.Math.Clamp(zoom,.18,1.8),before=camera.getWorldPoint(x,y);camera.setZoom(target);const after=camera.getWorldPoint(x,y);camera.scrollX+=before.x-after.x;camera.scrollY+=before.y-after.y;this.clampCamera();if(target>.32)this.lastExploreZoom=target;this.refreshFaunaVisibility();this.minimap?.update(true);this.refreshHud();return target}
   clampCamera(){
@@ -2196,6 +2270,7 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.regionsByArea??=[...(this.map.getObjectLayer('RegionMarkers')?.objects??[])].sort((a,b)=>a.width*a.height-b.width*b.height);
     const box=this.regionsByArea.find(o=>x>=o.x&&x<=o.x+o.width&&y>=o.y&&y<=o.y+o.height);
     const id=this.prop(box??{},'regionId');
+    if(/^(sect-|east-|sw-|se-|south-)/.test(id??''))return box.name;
     const key=({'north-mountain':'north','east-pasture':'east','south-suburb':'south'})[id]??id;
     const worldX=npc?.x??view.centerX,worldY=npc?.y??view.centerY;
     const habitat=this.faunaTerritories?.find(r=>worldX>=r.x&&worldX<r.x+r.width&&worldY>=r.y&&worldY<r.y+r.height);

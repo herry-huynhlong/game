@@ -31,7 +31,8 @@ export class SpiritVeins {
     const fauna=this.campus.world.environment.fauna;
     if(!site.guard)return null;
     if(site.state.guardId)return fauna.find(f=>f.id===site.state.guardId&&f.alive)??null;
-    const territory=this.scene.faunaZones.find(z=>z.zoneId===site.region)?.territories?.[site.guard];
+    const zone=this.scene.faunaZones.find(z=>z.zoneId===site.region);
+    const territory=zone?.territories?.[site.guard]??(zone?.extraShanhe?zone:undefined);
     if(!territory||site.point.x<territory.x||site.point.x>territory.x+territory.width||
       site.point.y<territory.y||site.point.y>territory.y+territory.height)return null;
     return fauna.filter(f=>f.alive&&f.species===site.guard&&f.zoneId===site.region)

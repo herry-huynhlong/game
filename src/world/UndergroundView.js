@@ -5,6 +5,7 @@ import {weaponForNpc} from './WeaponCombat.js';
 import {applyProfession} from './ProfessionAppearance.js';
 import {CAVE_BEASTS,CAVE_TREASURES,CAVE_BIOMES,CAVE_FLORA,caveBiomeAt,caveDistance} from './UndergroundMaps.js';
 import {UG_TILE as tile,UG_CHUNK as chunk,rect,polygon,crystal,mineral,propArt,portalArt,plantArt,makeCaveChunk,makeOverview} from './UndergroundArt.js';
+import {waterFlowFrame} from './WaterFlowFrame.js';
 import './underground-world.css';
 
 function beastVisual(g,beast,centerX,centerY,now){
@@ -265,7 +266,8 @@ export class UndergroundView {
       const x=(p.x+.5)*tile,y=(p.y+.5)*tile;
       if(x!==this.center.x||y!==this.center.y){this.center={x,y};this.dirty=true;}
     }
-    const status=[clock.day,clock.minute,clock.paused,clock.speed,site.state.amount,residents.map(n=>[n.id,n.underground.x,n.underground.y,n.action,n.hp]).join('/'),state?.beasts[this.level]?.hp,tools?Math.floor(at/105):0].join('|');
+    const rippleBeat=this.zoom>=.56?Math.floor(at/170):0;
+    const status=[rippleBeat,clock.day,clock.minute,clock.paused,clock.speed,site.state.amount,residents.map(n=>[n.id,n.underground.x,n.underground.y,n.action,n.hp]).join('/'),state?.beasts[this.level]?.hp,tools?Math.floor(at/105):0].join('|');
     if(!this.dirty&&!isAnimating&&status===this.signature&&!this.wasAnimating)return;
     this.wasAnimating=isAnimating;
     this.signature=status;this.dirty=false;
@@ -284,6 +286,19 @@ export class UndergroundView {
       for(let cy=Math.max(0,Math.floor(top/size));cy<=Math.min(Math.ceil(floor.height/chunk)-1,Math.floor(bottom/size));cy++)
         for(let cx=Math.max(0,Math.floor(left/size));cx<=Math.min(Math.ceil(floor.width/chunk)-1,Math.floor(right/size));cx++){
           g.drawImage(this.findChunk(cx,cy),cx*size,cy*size);
+        }
+    }
+    if(z>=.56){
+      const texture=system.scene.textures.get('rebuild-water-motion');
+      let drawn=0;
+      for(let y=Math.max(0,Math.floor(top/tile));y<floor.height&&y<bottom/tile&&drawn<90;y++)
+        for(let x=Math.max(0,Math.floor(left/tile));x<floor.width&&x<right/tile&&drawn<90;x++){
+          if(floor.rows[y]?.[x]!=='~'||(x+y*2)%3)continue;
+          const f=texture.get(waterFlowFrame(at,170,(x*3+y)%8));
+          if(!f)continue;
+          g.globalAlpha=.66;
+          g.drawImage(f.source.image,f.cutX,f.cutY,f.cutWidth,f.cutHeight,x*tile+2,y*tile+2,tile-4,tile-4);
+          g.globalAlpha=1;drawn++;
         }
     }
     const draw=[];

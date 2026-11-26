@@ -121,7 +121,7 @@ export class UndergroundSystem {
       n.actionTarget=null;
       n.action='travel';
       n.shortGoal='Đi vào '+site.name;
-      this.scene.npcRoutes.delete(n.id);
+      this.scene.resetNpcRoute(n);
       this.scene.npcSprites.get(n.id)?.setVisible(false);
     }
     this.scene.syncGroundOccupancy();

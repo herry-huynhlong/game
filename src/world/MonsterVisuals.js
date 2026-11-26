@@ -1,4 +1,6 @@
 import { BASE_FAUNA_IDS, FAUNA_IDS, monsterSkill } from '../dao/MonsterRegistry.ts';
+import { EAST_CREATURE_SIZE, EAST_CREATURE_ANCHOR, EAST_POSE_ROWS, eastCreatureKey, eastSkillPose } from './EastCreatureArt.js';
+import { eastDisguise, isEastSpecies } from '../dao/EastFauna.ts';
 export { WEST_FAUNA_LOOT as WEST_LOOT } from '../dao/MonsterRegistry.ts';
 import { monsterMouth, skillPhase } from '../dao/MonsterCombat.ts';
 import { faunaStationaryForm, FLOWER_WAKE_MS, FLOWER_RESTORE_MS } from '../dao/FaunaRecovery.ts';
@@ -9,14 +11,22 @@ export const LOOT_ICON={wolf_fang:0,wolf_pelt:1,boar_tusk:2,crimson_plate:3,toad
 const GLOW={wolf:0xa7e8ca,boar:0xef9968,toad:0xbb9bda,wood:0xb4d288,millennial:0xa1e1a2,flower:0xe4a1dc,
   vine:0xdc8889,centipede:0xca9c8b,eagle:0x9fda9e,stag:0xc6edd5,'wood-king':0x8de4cc};
 const ELEMENT={wood:0x8cc78e,poison:0xb2b96a,blood:0xc36b80,earth:0xc69a73,wind:0xa8d9de,fire:0xf49745};
-export const monsterArtKey=({species,rank})=>'monster-'+species+'-'+(BASE_FAUNA_IDS.includes(species)||['millennial','eagle'].includes(species)?rank:'normal');
+export function monsterArtKey(beast){
+  const east=eastCreatureKey(beast),{species,rank}=beast;
+  return east?'monster-east-'+east:'monster-'+species+'-'+(BASE_FAUNA_IDS.includes(species)||['millennial','eagle'].includes(species)?rank:'normal');
+}
 const clockFrame=(now,ms)=>Math.floor(now/ms)%4;
 export function loadMonsterArt(scene){
   for(const id of FAUNA_IDS)for(const rank of BASE_FAUNA_IDS.includes(id)||['millennial','eagle'].includes(id)?['normal','elite']:['normal']){
     const key=id+'-'+rank;
     const old=BASE_FAUNA_IDS.includes(id);
-    scene.load.spritesheet('monster-'+key,(old?'/assets/fauna/monster-v2/':'/assets/west-wilds/')+key+'.png',{frameWidth:old?80:112,frameHeight:old?72:112});
+    if(isEastSpecies(id))continue;
+    scene.load.spritesheet('monster-'+key,(old?'/assets/fauna/monster-v2/':'/assets/west-wilds/')+key+'.png',
+      {frameWidth:old?80:112,frameHeight:old?72:112});
   }
+  for(const id of [...FAUNA_IDS.filter(isEastSpecies),'wetland-toad'])
+    scene.load.spritesheet('monster-east-'+id,'/assets/east-wilds/overhaul/'+id+'.png',
+      {frameWidth:EAST_CREATURE_SIZE,frameHeight:EAST_CREATURE_SIZE});
   scene.load.spritesheet('west-grove','/assets/west-wilds/ancient-grove.png',{frameWidth:176,frameHeight:176});
   scene.load.spritesheet('living-grove','/assets/west-wilds/living-grove.png',{frameWidth:176,frameHeight:176});
   scene.load.spritesheet('living-floor','/assets/west-wilds/living-floor.png',{frameWidth:48,frameHeight:48});
@@ -67,6 +77,37 @@ export class MonsterVisuals{
     for(const f of environment.fauna??[]){
       const sprite=s.faunaSprites.get(f.id);
       if(!sprite?.visible)continue;
+      const east=eastCreatureKey(f);
+      if(f.alive&&f.species==='sand-golem'){
+        const moving=s.faunaMotionStats?.get(f.id)?.moving;
+        const calm=!moving&&!f.cast&&!f.targetNpcId&&(f.state==='idle'||f.state==='sleep');
+        const wanted=calm?0:1;
+        let previous=sprite.getData('golemPose');
+        if(!previous){
+          previous={target:wanted,from:wanted,at:now};
+          sprite.setData('golemPose',previous);
+        }
+        const progress=Math.min(1,(now-previous.at)/520);
+        const amount=previous.from+(previous.target-previous.from)*progress;
+        if(previous.target!==wanted)sprite.setData('golemPose',{target:wanted,from:amount,at:now});
+        if(!f.cast&&f.state!=='hit'&&amount<1){
+          const frame=EAST_POSE_ROWS.disguise*16+Math.max(0,MONSTER_DIRECTIONS.indexOf(f.direction))*4+Math.floor(amount*4);
+          if(Number(sprite.frame.name)!==frame)sprite.setFrame(frame);
+          sprite.setPosition(f.x,f.y).setDepth(f.y).setAlpha(1).setTint(0xffffff);
+          continue;
+        }
+      }
+      if(f.alive&&eastDisguise(f.species)&&(faunaStationaryForm(f)||f.growth?.phase==='waking'||f.recovery?.phase==='restoring')){
+        const art=monsterArtKey(f),reforming=f.growth?.phase==='waking',sinking=f.recovery?.phase==='restoring';
+        const part=reforming?Math.min(3,Math.max(0,4-Math.ceil(((f.growth.wakeAt??now)-now)/280))):
+          sinking?Math.max(0,3-Math.floor((now-f.recovery.at)/225)):0;
+        const index=128+Math.max(0,MONSTER_DIRECTIONS.indexOf(f.direction))*4+part;
+        if(sprite.texture.key!==art)sprite.setTexture(art,index);
+        else if(Number(sprite.frame.name)!==index)sprite.setFrame(index);
+        sprite.setPosition(f.x,f.y).setDepth(f.y).setAlpha(1).setTint(0xffffff);
+        if(part&&now%210<100)spark(f.x+(part%2?12:-12),f.y-6,7,.65);
+        continue;
+      }
       const form=f.flower,flowerRow={rooted:0,alert:1,waking:2,rooting:3}[form?.phase??'rooted'];
       if(f.alive&&f.species==='flower'&&flowerRow!==undefined&&!f.cast){
         const span=form?.phase==='waking'?FLOWER_WAKE_MS:FLOWER_RESTORE_MS;
@@ -91,7 +132,7 @@ export class MonsterVisuals{
         continue;
       }
       const art=monsterArtKey(f);
-      if(sprite.texture.key!==art)sprite.setTexture(art).setOrigin(.5,.82);
+      if(sprite.texture.key!==art)sprite.setTexture(art).setOrigin(.5,east?EAST_CREATURE_ANCHOR:.82);
       const cast=f.cast,skill=cast&&monsterSkill(cast.skillId),phase=skill&&skillPhase(cast.started,now,skill);
       const opacity=skill?.mode==='burrow'&&phase==='active'?.16:1;
       if(sprite.alpha!==opacity)sprite.setAlpha(opacity);
@@ -99,7 +140,7 @@ export class MonsterVisuals{
       if(!f.alive)frame=Math.min(3,Math.floor(Math.max(0,now-(f.deathAt??now))/135));
       else if(skill){
         const age=now-cast.started;
-        pose=phase==='windup'?'windup':phase==='recover'?'recover':skill.elite?'skill':'active';
+        pose=phase==='windup'?'windup':phase==='recover'?'recover':east?eastSkillPose(cast.skillId):skill.elite?'skill':'active';
         const start=phase==='windup'?0:phase==='recover'?skill.windup+skill.active:skill.windup;
         const length=phase==='windup'?skill.windup:phase==='recover'?skill.recover:skill.active;
         frame=Math.max(0,Math.min(3,Math.floor((age-start)/length*4)));
@@ -114,7 +155,7 @@ export class MonsterVisuals{
               .setDepth(f.y-1).setAlpha(t*.56).setTint(0x69bda4).setScale(sprite.scaleX).setVisible(true);
           }
         }
-      }else if(f.state==='hit'){pose='hurt';frame=2;}
+      }else if(f.state==='hit'){pose='hurt';frame=east?Math.max(0,Math.min(3,4-Math.ceil(((f.hurtUntil??now)-now)/60))):2;}
       else if(f.recovery?.phase==='restoring'){
         const progress=Math.min(1,(now-f.recovery.at)/900);
         pose='recover';frame=Math.floor(progress*3);lift=-Math.round(progress*8);
@@ -127,8 +168,9 @@ export class MonsterVisuals{
       }
       else if(f.state==='sleep'){frame=0;if(f.species==='boar'){pose='recover';frame=3;lift=-3;}}
       else if(['patrol','chase','retreat','return'].includes(f.state)&&s.faunaMotionStats?.get(f.id)?.moving){
-        pose='move';frame=clockFrame(now,f.species==='boar'?135:105);
-        if(f.species==='toad')lift=[0,5,8,3][frame];
+        pose=east&&f.state==='chase'?'run':'move';
+        frame=clockFrame(now,f.species==='sand-golem'?150:f.species==='boar'?135:east&&pose==='run'?82:105);
+        if(f.species==='toad'&&!east)lift=[0,5,8,3][frame];
       }
       else if(f.state==='alert'||f.state==='detect'){pose='windup';frame=0;}
       if(f.alive&&f.species==='eagle'){
@@ -138,7 +180,8 @@ export class MonsterVisuals{
       }
       if(sprite.x!==f.x||sprite.y!==f.y-lift)sprite.setPosition(f.x,f.y-lift);
       if(sprite.depth!==f.y)sprite.setDepth(f.y);
-      const frameIndex=monsterFrame(f.direction??'south',pose,frame);
+      const frameIndex=east?EAST_POSE_ROWS[pose]*16+Math.max(0,MONSTER_DIRECTIONS.indexOf(f.direction))*4+frame:
+        monsterFrame(f.direction??'south',pose,frame);
       if(Number(sprite.frame.name)!==frameIndex)sprite.setFrame(frameIndex);
       if(!f.alive)continue;
       const buff=now<(f.armorUntil??0)||now<(f.buffUntil??0);

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Đông Hoang · Xưởng mỹ thuật</title>
+  <script type="module" src="/src/east-art-gallery.js"></script>
+</head>
+<body>
+  <header>
+    <a href="/?region=east">Thanh Vân Ký</a>
+    <h1>Đông Hoang</h1>
+    <p>So sánh yêu thú trong cùng một hướng và tư thế.</p>
+  </header>
+  <main>
+    <section class="controls" aria-label="Điều khiển hoạt ảnh">
+      <label>Góc nhìn<select id="direction"></select></label>
+      <label>Tư thế<select id="pose"></select></label>
+      <label>Tỷ lệ<select id="scale"></select></label>
+      <label>Khung hình<input type="range" id="frame" min="0" max="3" value="0"></label>
+      <button id="play" type="button" aria-pressed="true">Tạm dừng</button>
+    </section>
+    <div id="creatures" aria-label="So sánh yêu thú"></div>
+    <h2>Địa hình và mặt nước</h2>
+    <div id="terrain" class="samples"></div>
+    <h2>Thực vật, đá và di tích</h2>
+    <div id="props" class="samples"></div>
+  </main>
+</body>
+</html>

@@ -2,6 +2,7 @@ import type { DivineWorldSave, EnvironmentSave, FaunaRespawnSave, FaunaSave, Fau
 import { BASE_FAUNA_IDS, FAUNA_SPECIES, MONSTER_SPAWN, faunaCoreLoot, faunaName, hashMonster } from './MonsterRegistry';
 import { faunaHabitat } from '../world/FaunaHabitat.js';
 import { recordCombatDamage } from './CombatRecovery';
+import { eastDisguise } from './EastFauna';
 export { FAUNA_SPECIES } from './MonsterRegistry';
 
 type FaunaSlot={species:FaunaSpecies;rank:MonsterRank};
@@ -18,6 +19,7 @@ function fillSlots(zone:FaunaZone,live:FaunaSlot[]){
   return slots;
 }
 function growthFor(species:FaunaSpecies,seed:number):FaunaSave['growth']{
+  if(eastDisguise(species))return {age:80+seed%480,qi:75,species,phase:'dormant'};
   if(species==='wood')return {age:110+seed%170,qi:15+seed%36,species,phase:'normal'};
   if(species==='millennial')return {age:1100+seed%2100,qi:100,species,phase:'dormant'};
   if(species==='wood-king')return {age:11000+seed%2000,qi:100,species,phase:'dormant'};

@@ -1,11 +1,11 @@
 import type { FaunaSpecies } from './types';
 
-type Element='lôi'|'hỏa'|'mộc'|'băng'|'độc'|'hồn'|'huyết'|'kim'|'âm';
+type Element='thủy'|'lôi'|'hỏa'|'mộc'|'băng'|'độc'|'hồn'|'huyết'|'kim'|'âm';
 type Medicine='qi_pill'|'healing_pill'|'detox_pill';
 type TreasureDefinition={
   name:string;element:Element;grade:1|2|3|4|5;value:number;age?:number;
   growMs:number;renewMs:number;medicine:Medicine;guardian:FaunaSpecies;elite?:boolean;
-  biomes:string[];
+  biomes:string[];material?:boolean;
 };
 
 const outer='west-outer',inner='west-inner',poison='west-poison',ancient='west-ancient',forbidden='west-forbidden';
@@ -26,9 +26,25 @@ export const WEST_TREASURE={
   metal_spirit_fruit:{name:'Kim Linh Quả',element:'kim',grade:3,value:46,growMs:74000,renewMs:140000,medicine:'qi_pill',guardian:'boar',biomes:[inner]},
   dark_yin_grass:{name:'Huyền Âm Thảo',element:'âm',grade:3,value:47,growMs:76000,renewMs:165000,medicine:'detox_pill',guardian:'flower',biomes:[poison]},
 } satisfies Record<string,TreasureDefinition>;
-export type WestTreasureId=keyof typeof WEST_TREASURE;
+export const EAST_TREASURE={
+ solar_fruit:{name:'Thái Dương Linh Quả',element:'hỏa',grade:4,value:104,growMs:116000,renewMs:241000,medicine:'qi_pill',guardian:'flame-lizard',biomes:['east-canyon','east-dunes']},
+ scorch_flower:{name:'Liệt Dương Hoa',element:'hỏa',grade:2,value:22,growMs:37000,renewMs:82000,medicine:'qi_pill',guardian:'sand-scorpion',biomes:['east-rim']},
+ amber_dune_grass:{name:'Hoàng Sa Linh Thảo',element:'mộc',grade:1,value:9,growMs:22000,renewMs:49000,medicine:'healing_pill',guardian:'sand-scorpion',biomes:['east-rim']},
+ ember_reishi:{name:'Địa Hỏa Linh Chi',element:'hỏa',grade:3,value:56,growMs:68000,renewMs:155000,medicine:'detox_pill',guardian:'flame-lizard',biomes:['east-canyon']},
+ moon_lotus:{name:'Thanh Nguyệt Linh Liên',element:'thủy',grade:3,value:50,growMs:62000,renewMs:153000,medicine:'healing_pill',guardian:'sand-worm',biomes:['east-oasis']},
+ poplar_heartwood:{name:'Thiên Niên Hồ Dương Mộc',element:'mộc',grade:3,value:69,age:1000,growMs:95000,renewMs:193000,medicine:'healing_pill',guardian:'sand-golem',biomes:['east-oasis'],material:true},
+ phantom_sand_crystal:{name:'Huyền Sa Tinh',element:'kim',grade:4,value:91,growMs:92000,renewMs:216000,medicine:'qi_pill',guardian:'sand-worm',biomes:['east-dunes'],material:true},
+ red_fire_crystal:{name:'Xích Hỏa Linh Thạch',element:'hỏa',grade:3,value:57,growMs:80000,renewMs:192000,medicine:'qi_pill',guardian:'flame-lizard',biomes:['east-canyon'],material:true},
+ bone_jade:{name:'Bạch Cốt Linh Ngọc',element:'âm',grade:4,value:90,growMs:104000,renewMs:219000,medicine:'detox_pill',guardian:'bone-skeleton',biomes:['east-bones','east-ruins'],material:true},
+ yin_soul_herb:{name:'Âm Hồn Thảo',element:'hồn',grade:4,value:110,growMs:114000,renewMs:227000,medicine:'detox_pill',guardian:'bone-general',biomes:['east-ruins','east-bones']},
+} satisfies Record<string,TreasureDefinition>;
+export type EastTreasureId=keyof typeof EAST_TREASURE;
+export const EAST_TREASURE_IDS=Object.keys(EAST_TREASURE) as EastTreasureId[];
+export type WestTreasureId=keyof typeof WEST_TREASURE|EastTreasureId;
 export const WEST_TREASURE_IDS=Object.keys(WEST_TREASURE) as WestTreasureId[];
-export const treasureDefinition=(id:WestTreasureId):TreasureDefinition=>WEST_TREASURE[id];
+export const ALL_TREASURE_IDS=[...WEST_TREASURE_IDS,...EAST_TREASURE_IDS];
+const treasures={...WEST_TREASURE,...EAST_TREASURE};
+export const treasureDefinition=(id:WestTreasureId):TreasureDefinition=>treasures[id];
 export const WEST_TREASURE_GUARD_CHANCE=[0,.35,.55,.65,.80,.90] as const;
 export const WEST_TREASURE_RARITY=['','Phổ thông','Ít gặp','Hiếm','Cực hiếm','Thiên phẩm'] as const;
 export const WEST_TREASURE_MEDICINE={qi_pill:'Tụ Khí Đan',healing_pill:'Hồi Xuân Đan',detox_pill:'Giải Độc Đan'} as const;

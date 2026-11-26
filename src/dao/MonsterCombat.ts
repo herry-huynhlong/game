@@ -4,6 +4,7 @@ import type { EnvironmentSave, FaunaSave, MonsterEffect, MonsterPoint, SimNPC } 
 import { faunaHabitat } from '../world/FaunaHabitat.js';
 import { RECOVERY } from './CombatRecovery';
 import { beginFaunaReturn, canDisguise, updateFaunaReturn, FLOWER_WAKE_MS, FLOWER_RESTORE_MS } from './FaunaRecovery';
+import { eastUndead } from './EastFauna';
 
 const dist=(a:MonsterPoint,b:MonsterPoint)=>Math.hypot(a.x-b.x,a.y-b.y);
 const toward=(a:MonsterPoint,b:MonsterPoint,n:number)=>({x:a.x+(b.x-a.x)*n,y:a.y+(b.y-a.y)*n});
@@ -175,6 +176,7 @@ export class MonsterCombat {
     const sleepingAtDay=Boolean(z.nocturnal&&this.port.daylight?.()&&f.species!=='flower'&&!hadTarget);
     const restingWeak=f.recovery?.phase==='resting'&&!canDisguise(f)&&f.hp<f.maxHp*RECOVERY.resumeBeast;
     const notice=z.notice??cfg.notice;
+    const nightWake=eastUndead(f.species)&&this.port.daylight?.()===false;
     if(!target&&!outOfBounds&&!sleepingAtDay&&!restingWeak&&f.species==='wolf'){
       const peer=all.find(other=>other.id!==f.id&&other.alive&&other.species==='wolf'&&other.zoneId===f.zoneId&&other.targetNpcId&&dist(f,other)<140);
       if(peer)target=local.find(n=>n.id===peer.targetNpcId&&dist(f.home,n)<leash&&this.port.line(f,n));
@@ -184,11 +186,12 @@ export class MonsterCombat {
     if(!target){
       const awakeFlower=f.species==='flower'&&f.flower&&
         (['mobile','returning','rooting'].includes(f.flower.phase)||f.flower.phase==='waking'&&now-f.flower.at>FLOWER_WAKE_MS*.55);
-      const awakePlant=f.growth?.phase==='active'||f.growth?.phase==='waking'||f.species==='vine'&&f.state!=='sleep';
+      const awakePlant=!nightWake&&(f.growth?.phase==='active'||f.growth?.phase==='waking')||f.species==='vine'&&f.state!=='sleep';
       const dormantFlower=f.species==='flower'&&(!f.flower||['rooted','alert','waking'].includes(f.flower.phase));
       if(sleepingAtDay&&f.state==='sleep'&&!f.recovery&&f.hp>=f.maxHp*RECOVERY.resumeBeast)return;
       if(outOfBounds||awakeFlower||awakePlant||!dormantFlower&&(hadTarget||sleepingAtDay||f.hp<f.maxHp*RECOVERY.restBeast))
         beginFaunaReturn(f,z,now);
+      if(nightWake&&f.recovery?.phase==='resting'&&f.hp>=f.maxHp*RECOVERY.resumeBeast)f.recovery=undefined;
       if(updateFaunaReturn(f,z,now,this.port.open))return;
     }else if(f.recovery){
       f.recovery=undefined;
@@ -209,10 +212,10 @@ export class MonsterCombat {
         growth.phase=growth.qi>=75?'dormant':growth.qi>=45?'spirit':'normal';
       }
       if(growth.phase==='waking'){
-        if(!target){beginFaunaReturn(f,z,now);return;}
+        if(!target&&!nightWake){beginFaunaReturn(f,z,now);return;}
         if(now<(growth.wakeAt??0)){f.state='awakening';return;}
         growth.phase='active';delete growth.wakeAt;
-      }else if(target&&(target.id===f.targetNpcId||growth.phase==='dormant'&&
+      }else if(nightWake||target&&(target.id===f.targetNpcId||growth.phase==='dormant'&&
         (f.species!=='wood-king'||target.realmIndex>=2||dist(f,target)<68))){
         growth.phase='waking';growth.wakeAt=now+(f.species==='wood-king'?1950:950);f.state='awakening';return;
       }else{f.state='sleep';return;}

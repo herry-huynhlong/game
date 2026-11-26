@@ -3,7 +3,7 @@ import { advancesQiMinor, cultivationStats } from '../systems/CultivationSystem.
 import { cultivationRequired } from '../systems/RealmConfig.ts';
 import { ITEM_CATALOG } from '../dao/ItemCatalog.ts';
 import { WEST_FAUNA_LOOT } from '../dao/MonsterRegistry.ts';
-import { WEST_TREASURE_IDS, treasureDefinition } from '../dao/WestTreasureCatalog.ts';
+import { ALL_TREASURE_IDS, treasureDefinition } from '../dao/WestTreasureCatalog.ts';
 import { itemPrices } from '../dao/SettlementSystem.ts';
 import { equipBestWeapon } from '../dao/GiftItemSystem.ts';
 import { livelihoodNeed } from '../dao/AutonomousNPCSystem.ts';
@@ -44,7 +44,7 @@ export class WorldMerchants {
         shop.sellPrices.healing_pill??=16;
         shop.buyPrices.healing_pill??=10;
       }
-      if(shop.id==='city-apothecary'||shop.id==='sect-treasure-pavilion')for(const id of WEST_TREASURE_IDS){
+      if(shop.id==='city-apothecary'||shop.id==='sect-treasure-pavilion')for(const id of ALL_TREASURE_IDS){
         shop.buyPrices[id]??=itemPrices[id].buy;shop.sellPrices[id]??=itemPrices[id].sell;
       }
       this.shops.set(shop.id,venue);this.byOwner.set(owner.id,venue);
@@ -153,7 +153,7 @@ export class WorldMerchants {
     }
     if(need==='rest'||n.goalAction==='rest')return null;
     const sell=(items,reserve=0)=>items.map(id=>[id,EconomySystem.sellable(this.world,n,id)-reserve]).find(([,amount])=>amount>0);
-    const surplus=n.x>=0?sell(WEST_TREASURE_IDS,1):null;
+    const surplus=n.x>=0?sell(ALL_TREASURE_IDS,1):null;
     if(surplus)return {side:'sell',itemId:surplus[0],count:surplus[1],preferred:'city-apothecary',onlyPreferred:true};
     const sale=n.populationRole==='hunter'?sell(TROPHIES):
       n.populationRole==='herb_gatherer'?sell(['spirit_herb'],1):
@@ -266,7 +266,7 @@ export class WorldMerchants {
       if(!this.serving(venue))continue;
       const {shop}=venue,day=this.world.clock.day;
       if((shop.id==='city-apothecary'||shop.id==='sect-treasure-pavilion')&&this.now()>=(shop.nextTreasureBrewAt??0)){
-        const ingredient=WEST_TREASURE_IDS.find(id=>EconomySystem.count(shop.stock,id)&&
+        const ingredient=ALL_TREASURE_IDS.find(id=>EconomySystem.count(shop.stock,id)&&
           shop.sellPrices[treasureDefinition(id).medicine]>0&&EconomySystem.count(shop.stock,treasureDefinition(id).medicine)<2);
         if(ingredient&&EconomySystem.remove(shop.stock,ingredient,1)){
           const def=treasureDefinition(ingredient);

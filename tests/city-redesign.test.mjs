@@ -9,13 +9,21 @@ const previous=read('world-rebuild-1b-before-city-redesign.tmj');
 const city=baseWorldMap(read('world-rebuild-1b.tmj'));
 const layer=(map,name)=>map.layers.find(item=>item.name===name);
 const prop=(obj,key)=>obj.properties?.find(p=>p.name===key)?.value;
-assert.deepEqual([city.width,city.height,city.tilewidth,city.tileheight],[224,184,32,32]);
+assert.deepEqual([city.width,city.height,city.tilewidth,city.tileheight],[224,314,32,32]);
 for(const name of ['GroundBase','Roads','Water','Shore','Cliffs','GroundDetails','TerrainTransitions']){
   const original=layer(previous,name).data, revised=layer(city,name).data;
   for(let i=0;i<original.length;i++){
     const x=i%city.width,y=Math.floor(i/city.width);
     if(x>=65&&x<=150&&y>=40&&y<=94)continue;
-    if((name==='GroundBase'||name==='Roads')&&x>=86&&x<143&&y>=123&&y<143)continue;
+    const px=(x+128)*32+16,py=(y>=122?y+40:y)*32+16;
+    const expandedSect=px>=5264&&px<9168&&py>=5312&&py<8544&&!(px<6144&&py<5632);
+    const eastWilds=px>=9824&&py>=512&&py<6784;
+    const shanhe=px<6080&&py<5970||py>=5870&&px<5376||px>=5230&&px<9312&&py>=8490||
+      px>=9216&&px<9370&&py>5450||px>=9664&&py>=6190;
+    if(shanhe&&['GroundBase','Roads','Water','Shore','GroundDetails','Cliffs'].includes(name))continue;
+    if(eastWilds&&['GroundBase','Roads','Water','Shore','GroundDetails'].includes(name))continue;
+    if(expandedSect&&['GroundBase','Roads','Water','GroundDetails'].includes(name))continue;
+    if(['GroundBase','Roads','Water','Shore','GroundDetails'].includes(name)&&x>=85&&x<143&&y>=123&&y<144)continue;
     if(name==='Roads'&&x>=105&&x<=115&&y>=113&&y<123)continue;
     if(name==='Roads'&&y>=132&&y<=139&&(x>=81&&x<=86||x>=142&&x<=154))continue;
     const newY=y>=122?y+40:y;
@@ -25,13 +33,17 @@ for(const name of ['GroundBase','Roads','Water','Shore','Cliffs','GroundDetails'
 const markers=layer(city,'NavigationMarkers').objects;
 const previousNav=layer(previous,'NavigationMarkers').objects;
 const legacyIds=new Map(markers.map(m=>[m.id,m]));
-assert.ok(previousNav.every(m=>JSON.stringify({...m,y:m.y>=3904?m.y+1280:m.y})===JSON.stringify(legacyIds.get(m.id))));
+assert.ok(previousNav.every(m=>{
+  const now=legacyIds.get(m.id),y=m.y>=3904?m.y+1280:m.y;
+  if(prop(m,'markerId')==='sect-yard')return prop(now,'priorX')===m.x+4096&&prop(now,'priorY')===y;
+  return JSON.stringify({...m,y})===JSON.stringify(now);
+}));
 const decorations=layer(city,'StaticDecor').objects.filter(o=>prop(o,'district')==='city-redesign');
 assert.ok(decorations.filter(o=>prop(o,'kind')==='city-house').length>=35);
 assert.equal(decorations.filter(o=>prop(o,'kind')==='city-workshop').length,4);
 assert.ok(decorations.some(o=>prop(o,'cityEffect')==='bloom'));
 assert.deepEqual(layer(city,'MarketDecor'),layer(previous,'MarketDecor'));
-assert.deepEqual([...new Set(layer(city,'FaunaZones').objects.map(o=>prop(o,'species')))].sort(),['boar','toad','wolf']);
+assert.deepEqual([...new Set(layer(city,'FaunaZones').objects.filter(o=>!prop(o,'eastWilds')&&!prop(o,'shanhe')).map(o=>prop(o,'species')))].sort(),['boar','toad','wolf']);
 assert.ok(layer(city,'CityEdges').data.some(Boolean));
 const collision=layer(city,'Collision').objects;
 const newSolids=collision.filter(o=>prop(o,'kind')==='city-redesign-solid');

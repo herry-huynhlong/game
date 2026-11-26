@@ -4,12 +4,16 @@ export const worldLayout = map => Object.fromEntries(
 
 /** One-time split of world coordinates. IDs, inventories, timers and quest state stay intact. */
 export function migrateWorldLayout(world, map) {
-  const {worldLayoutVersion,oldRoadInsertionY,oldRoadOffsetY}=worldLayout(map);
+  const {worldLayoutVersion,oldRoadInsertionY,oldRoadOffsetY,preSectHeightPx,westOffsetX=0}=worldLayout(map);
   if(!worldLayoutVersion||(world.layoutVersion??1)>=worldLayoutVersion)return false;
-  const oldHeight=map.heightInPixels-oldRoadOffsetY;
+  const oldHeight=(preSectHeightPx??map.heightInPixels)-oldRoadOffsetY;
   const movedStation=map.getObjectLayer('SectCampusStations')?.objects
     .filter(o=>o.properties?.some(p=>p.name==='station'&&p.value.startsWith('ore-')))
-    .map(o=>({x:o.x,y:o.y-oldRoadOffsetY}))??[];
+    .map(o=>{
+      const priorX=o.properties.find(p=>p.name==='priorX')?.value;
+      const priorY=o.properties.find(p=>p.name==='priorY')?.value;
+      return {x:priorX===undefined?o.x:priorX-westOffsetX,y:(priorY??o.y)-oldRoadOffsetY};
+    })??[];
   const migrateY=y=>Number.isFinite(y)&&y>=oldRoadInsertionY&&y<=oldHeight?y+oldRoadOffsetY:y;
   const visited=new WeakSet();
   function move(value){

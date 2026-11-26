@@ -1,5 +1,5 @@
 import ITEM_ICON_FRAMES from './ItemIconFrames.json';
-import { treasureDefinition, WEST_TREASURE_IDS, WEST_TREASURE_MEDICINE, WEST_TREASURE_RARITY } from './WestTreasureCatalog';
+import { treasureDefinition, ALL_TREASURE_IDS, WEST_TREASURE_MEDICINE, WEST_TREASURE_RARITY } from './WestTreasureCatalog';
 
 export type ItemKind='weapon'|'treasure'|'pill'|'talisman'|'herb'|'material'|'special';
 export type ItemTier='mortal'|'artifact'|'spirit'|'treasure'|'spiritual-treasure'|'immortal'|'divine';
@@ -71,11 +71,11 @@ export const ITEM_CATALOG:Record<string,ItemDefinition>={
   jade_venom:{id:'jade_venom',name:'Bích độc dịch',kind:'material',tier:'mortal',quality:'middle',description:'Linh độc đã được thu gom.',value:16},
   elite_beast_core:{id:'elite_beast_core',name:'Nội đan Tinh Anh',kind:'material',tier:'mortal',quality:'middle',description:'Tinh hoa của yêu thú Tinh Anh.',value:66},
 };
-for(const id of WEST_TREASURE_IDS){
+for(const id of ALL_TREASURE_IDS){
   const t=treasureDefinition(id);
-  ITEM_CATALOG[id]={id,name:t.name,kind:'herb',tier:t.grade===5?'spiritual-treasure':t.grade===4?'treasure':t.grade>=2?'spirit':'artifact',
+  ITEM_CATALOG[id]={id,name:t.name,kind:t.material?'material':'herb',tier:t.grade===5?'spiritual-treasure':t.grade===4?'treasure':t.grade>=2?'spirit':'artifact',
     quality:t.grade>=4?'high':t.grade>=2?'middle':'low',value:t.value,
-    description:`${WEST_TREASURE_RARITY[t.grade]} · hệ ${t.element}${t.age?` · ${t.age} năm`:''} · Dược liệu luyện ${WEST_TREASURE_MEDICINE[t.medicine]}.`};
+    description:`${WEST_TREASURE_RARITY[t.grade]} · hệ ${t.element}${t.age?` · ${t.age} năm`:''}${t.material?' · Nguyên liệu Đông Hoang':' · Dược liệu luyện '+WEST_TREASURE_MEDICINE[t.medicine]}.`};
 }
 export const itemIcon=(id:string)=>(ITEM_ICON_FRAMES as Record<string,readonly number[]>)[id]??ITEM_ICON_FRAMES.unknown;
 for(const item of Object.values(ITEM_CATALOG))item.icon=itemIcon(item.id);

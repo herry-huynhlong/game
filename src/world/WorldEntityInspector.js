@@ -2,7 +2,7 @@ import { inspectionBrief, inspectionSnapshot } from './WorldInspectionData.js';
 import './world-inspector.css';
 
 const CELL=192;
-const priority={palace:3,tree:0,building:1,shop:2,ore:2,npc:3,venue:4,fauna:4,herb:5,westHerb:5,treasure:6,drop:6,spiritVein:7};
+const priority={"east-site":2,palace:3,tree:0,building:1,shop:2,ore:2,npc:3,venue:4,fauna:4,herb:5,westHerb:5,treasure:6,drop:6,spiritVein:7};
 const keyOf=({kind,id})=>kind+':'+id;
 const visible=sprite=>sprite?.visible&&sprite.active&&(sprite.alpha>.03||sprite.showingModularPose);
 
@@ -87,6 +87,8 @@ export class WorldEntityInspector {
       const obj=sprite.getData('tiledObject');
       if(!obj||this.scene.prop(obj,'legacyRampart')||this.scene.prop(obj,'retiredSect'))continue;
       if(obj.gid===676||/Phủ Thành Chủ/i.test(obj.name))register({kind:'palace',id:'qingyun-city',sprite,data:this.scene.civic});
+      if(this.scene.prop(obj,'shanhe')&&this.scene.prop(obj,'kind')==='landmark')register({kind:'east-site',id:String(obj.id),sprite,data:obj});
+      else if(obj.gid>=1920&&obj.gid<1952&&this.scene.prop(obj,'venue')!=='east-rest')register({kind:'east-site',id:String(obj.id),sprite,data:obj});
       if(this.scene.prop(obj,'kind')==='tree'||obj.gid>=297&&obj.gid<320)register({kind:'tree',id:String(obj.id),sprite,data:obj});
     }
     for(const [id,sprite] of this.scene.buildingSprites){
@@ -95,7 +97,8 @@ export class WorldEntityInspector {
     for(const venue of this.scene.society.places.values()){
       const sprite=this.scene.facilitySprites.find(s=>s.name===venue.cfg.name)??
         this.scene.facilitySprites.find(s=>s.name===venue.cfg.name+' · quầy');
-      if(sprite)register({kind:'venue',id:venue.id,sprite,data:venue});
+      const east=venue.id==='east-rest'&&this.scene.objectSprites.find(s=>this.scene.prop(s.getData('tiledObject'),'venue')==='east-rest');
+      if(sprite||east)register({kind:'venue',id:venue.id,sprite:sprite||east,data:venue});
     }
     for(const sprite of this.scene.facilitySprites){
       const id=sprite.getData('production')?.ore;
@@ -243,7 +246,9 @@ export class WorldEntityInspector {
     this.panel.dataset.tone=String(info.tone||0);
     this.undergroundButton.hidden=!['ore','spiritVein'].includes(entry.kind)||!this.scene.underground?.sites.has(entry.id)||Boolean(this.scene.possessedNpcId);
     this.panel.querySelector('canvas').hidden=!entry.sprite;
-    if(entry.sprite)this.paintPortrait(entry.sprite);
+    const large=entry.kind==='fauna'&&entry.sprite?.texture.key.startsWith('monster-east-');
+    this.panel.toggleAttribute('data-large-portrait',Boolean(large));
+    if(entry.sprite)this.paintPortrait(entry.sprite,large);
     for(const key of ['meta','state','description'])this.replace(key,info[key]??'',(el,value)=>{el.textContent=value;el.hidden=!value;});
     this.replace('bars',info.bars,drawBars);
     this.replace('fields',info.fields,(el,rows)=>el.replaceChildren(...makeRows(rows)));
@@ -275,16 +280,18 @@ export class WorldEntityInspector {
     }
   }
 
-  paintPortrait(sprite){
-    const frame=sprite.frame,key=keyOf(this.selected)+':'+sprite.texture.key;
+  paintPortrait(sprite,large){
+    const frame=sprite.frame,key=keyOf(this.selected)+':'+sprite.texture.key+(large?':'+frame.name:'');
     if(this.portrait===key)return;
     this.portrait=key;
-    const canvas=this.panel.querySelector('canvas'),ctx=canvas.getContext('2d');
-    ctx.clearRect(0,0,64,64);ctx.imageSmoothingEnabled=false;
+    const canvas=this.panel.querySelector('canvas'),edge=large?112:64;
+    if(canvas.width!==edge){canvas.width=edge;canvas.height=edge;}
+    const ctx=canvas.getContext('2d');
+    ctx.clearRect(0,0,edge,edge);ctx.imageSmoothingEnabled=false;
     const {cutX,cutY,cutWidth,cutHeight}=frame;
-    const scale=Math.min(2,56/Math.max(cutWidth,cutHeight));
+    const scale=Math.min(2,(edge-5)/Math.max(cutWidth,cutHeight));
     const w=Math.max(1,Math.round(cutWidth*scale)),h=Math.max(1,Math.round(cutHeight*scale));
-    ctx.drawImage(frame.source.image,cutX,cutY,cutWidth,cutHeight,Math.floor((64-w)/2),Math.floor((64-h)/2),w,h);
+    ctx.drawImage(frame.source.image,cutX,cutY,cutWidth,cutHeight,Math.floor((edge-w)/2),Math.floor((edge-h)/2),w,h);
   }
 }
 

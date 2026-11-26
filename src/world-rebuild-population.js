@@ -6,6 +6,7 @@ import { ensureNPCPopulation, NPC_POPULATION_QUOTAS } from './dao/NPCPopulationR
 import { ensureAuthorityAndRealmProfiles } from './dao/NPCAuthoritySystem.ts';
 import { createFactions, createSettlement, createShops } from './dao/SettlementSystem.ts';
 import { migrateWorldLayout, worldLayout } from './world/WorldLayout.js';
+import { migrateSectCampus } from './world/SectCampusMigration.js';
 
 export const WORLD_POPULATION_SAVE_KEY = 'world-rebuild-1c-v1';
 
@@ -54,6 +55,8 @@ function makeFreshWorld(seed, map, solids) {
   ensureNPCPopulation(world);
   ensureAuthorityAndRealmProfiles(world, { preservePopulation: true });
   const markers = new Map((map.getObjectLayer('NavigationMarkers')?.objects ?? []).map(o => [o.properties?.find(p => p.name === 'markerId')?.value, { x: o.x, y: o.y }]));
+  const campus = worldLayout(map).sectLayoutVersion ? new Map((map.getObjectLayer('SectCampusStations')?.objects ?? [])
+    .map(o => [o.properties?.find(p => p.name === 'station')?.value, o])) : new Map();
   const occupied = [];
   const roleIndex = new Map();
   for (const npc of world.npcs) {
@@ -67,9 +70,14 @@ function makeFreshWorld(seed, map, solids) {
       const caution = npc.aiProfile?.axes?.caution ?? 50;
       siteId = caution < 40 ? 'forest-outer' : sites[index % sites.length];
     }
-    const base = markers.get(siteId);
+    const site = role === 'low_disciple' ? campus.get('home-'+index) :
+      role === 'sect_leader' ? campus.get('leader') :
+      role === 'elder' ? campus.get(['elders','alchemy','market','library','forge'][index]) : null;
+    const base = site ?? markers.get(siteId);
     if (!base) throw new Error(`Missing spawn marker ${siteId} for ${npc.id}`);
-    const spawn = findOpen(base.x + ((hash(npc.id) % 5) - 2) * 12, base.y + ((hash(npc.id + ':y') % 5) - 2) * 12, solids, occupied, map.widthInPixels, map.heightInPixels);
+    const dx = site ? 0 : ((hash(npc.id) % 5) - 2) * 12;
+    const dy = site ? 0 : ((hash(npc.id + ':y') % 5) - 2) * 12;
+    const spawn = findOpen(base.x + dx, base.y + dy, solids, occupied, map.widthInPixels, map.heightInPixels);
     npc.x = spawn.x; npc.y = spawn.y; npc.home = { ...spawn }; npc.homeId = `population-home:${npc.id}`;
     npc.actionTarget = { ...spawn }; npc.spawnRegionId = siteId === 'sect-yard' ? 'sect' : siteId.startsWith('gate-') || siteId.includes('stall') || ['city-center', 'city-hall-entrance', 'quest-office', 'inn-entrance', 'tavern-entrance'].includes(siteId) ? 'city' : siteId === 'forest-outer' ? 'forest-outer' : 'south-suburb';
     if (role === 'city_guard') npc.guardPostId = siteId;
@@ -111,18 +119,21 @@ export function loadWorldPopulation(storage, map) {
     .filter(o=>!o.properties?.some(p=>p.name==='retiredSect'&&p.value));
   const raw = storage.getItem(WORLD_POPULATION_SAVE_KEY);
   if (raw) {
+    let world;
     try {
-      const world = JSON.parse(raw);
-      if (world?.population?.initialized && world.population.spawnVersion === 1 && world.npcs?.length >= 108) {
-        migrateWorldLayout(world,map);
-        ensureWorldNpcAppearances(world);
-        return { world, fresh: false };
-      }
+      world = JSON.parse(raw);
     } catch { /* A corrupt new-world save is preserved; do not import or overwrite legacy keys. */ }
+    if (world?.population?.initialized && world.population.spawnVersion === 1 && world.npcs?.length >= 108) {
+      migrateWorldLayout(world,map);
+      migrateSectCampus(world,map,worldLayout(map).westOffsetX);
+      ensureWorldNpcAppearances(world);
+      return { world, fresh: false };
+    }
     throw new Error('Bản lưu WORLD.REBUILD.1-C không hợp lệ. Đã giữ nguyên dữ liệu để tránh ghi đè.');
   }
   const seed = `qingyun-${createWorldUuid()}`;
   const world = makeFreshWorld(seed, map, solids);
+  world.population.sectLayoutVersion = worldLayout(map).sectLayoutVersion;
   ensureWorldNpcAppearances(world);
   storage.setItem(WORLD_POPULATION_SAVE_KEY, JSON.stringify(world));
   return { world, fresh: true };

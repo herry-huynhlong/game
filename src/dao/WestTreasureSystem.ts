@@ -1,13 +1,14 @@
 import { EconomySystem } from './EconomySystem';
 import { faunaEvent } from './FaunaSystem';
 import { hashMonster } from './MonsterRegistry';
-import { treasureDefinition, WEST_TREASURE_GUARD_CHANCE, WEST_TREASURE_IDS } from './WestTreasureCatalog';
+import { treasureDefinition, WEST_TREASURE_GUARD_CHANCE, ALL_TREASURE_IDS } from './WestTreasureCatalog';
 import type { DivineWorldSave, FaunaSave, MonsterPoint, SimNPC, WestTreasureSave } from './types';
 
-export type TreasureSite=MonsterPoint & {zoneId:string;preferred?:WestTreasureSave['itemId']};
+export type TreasureSite=MonsterPoint & {zoneId:string;preferred?:WestTreasureSave['itemId'];resourceId?:string};
 type OpenSite=(point:MonsterPoint)=>boolean;
 export const treasureDistance=(a:MonsterPoint,b:MonsterPoint)=>Math.hypot(a.x-b.x,a.y-b.y);
 const unit=(seed:string)=>hashMonster(seed)/4294967296;
+export const treasureBloomOpen=(node:WestTreasureSave,minute:number)=>node.itemId!=='moon_lotus'||minute<300||minute>=1140;
 export function treasureStage(node:WestTreasureSave,now:number){
   if(node.harvestedAt!==undefined)return 'harvested';
   const age=(now-node.plantedAt)/treasureDefinition(node.itemId).growMs;
@@ -27,7 +28,17 @@ export class WestTreasureSystem {
   }
 
   initialize(now:number){
-    for(const itemId of WEST_TREASURE_IDS)for(let i=0;i<2;i++){
+    for(const sites of this.sitesByZone.values())for(const site of sites){
+      if(!site.resourceId||!site.preferred||this.nodes.some(n=>n.id===site.resourceId))continue;
+      if(this.nodes.some(n=>treasureDistance(n,site)<22))continue;
+      const definition=treasureDefinition(site.preferred);
+      if(!definition)continue;
+      const hunt=(this.world.environment!.fauna??[]).find(beast=>beast.alive&&beast.zoneId===site.zoneId&&
+        treasureDistance(beast.home,site)<150&&this.inTerritory(beast,site));
+      this.nodes.push({id:site.resourceId,itemId:site.preferred,zoneId:site.zoneId,cycle:0,x:site.x,y:site.y,
+        plantedAt:now-definition.growMs,guardSpecies:hunt?.species,guardRank:hunt?.rank});
+    }
+    for(const itemId of ALL_TREASURE_IDS)for(let i=0;i<2;i++){
       const id=`west-treasure:${itemId}:${i}`;
       if(this.nodes.some(n=>n.id===id))continue;
       const definition=treasureDefinition(itemId);
@@ -73,6 +84,10 @@ export class WestTreasureSystem {
     const matching=suitable.filter(p=>p.preferred===node.itemId);
     if(!point&&matching.length&&hashMonster(seed+':tree')%2===0)point=matching.find(clear);
     const sites=suitable;
+    if(node.id.startsWith('shanhe:')&&!point){
+      const site=sites.find(p=>p.resourceId===node.id);
+      if(site&&this.open(site)&&!this.nodes.some(n=>n!==node&&n.harvestedAt===undefined&&treasureDistance(n,site)<34))point=site;
+    }
     const start=hashMonster(seed+':site')%Math.max(1,sites.length);
     for(let i=0;i<sites.length&&!point;i++){
       const p=sites[(start+i)%sites.length];if(clear(p))point=p;
@@ -97,7 +112,7 @@ export class WestTreasureSystem {
   }
 
   harvest(npc:SimNPC,node:WestTreasureSave,now:number,line:(a:MonsterPoint,b:MonsterPoint)=>boolean,commit=()=>true){
-    if(!this.nodes.includes(node)||!npc.alive||npc.flight||npc.skyStep||npc.wallLevel||
+    if(!treasureBloomOpen(node,this.world.clock.minute)||!this.nodes.includes(node)||!npc.alive||npc.flight||npc.skyStep||npc.wallLevel||
       treasureDistance(npc,node)>32||treasureStage(node,now)!=='ready'||!line(npc,node))return false;
     const events=this.world.events.slice();
     const stack=npc.inventory.find(i=>i.itemId===node.itemId),previous=stack?.count;

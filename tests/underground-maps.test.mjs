@@ -33,7 +33,7 @@ assert.equal(iron.nodes.reduce((n,p)=>n+p.capacity,0),5);
 const world=JSON.parse(readFileSync('maps/world-rebuild-1b.tmj'));
 const veins=world.layers.find(layer=>layer.name==='SpiritVeins').objects;
 const prop=(o,key)=>o.properties.find(p=>p.name===key)?.value;
-assert.equal(veins.length,10);
+assert.equal(veins.length,11);
 const sites=veins.map(o=>createCave({id:prop(o,'veinId'),grade:prop(o,'grade'),max:prop(o,'capacity'),kind:'spirit'}));
 const floors=sites.flatMap(site=>site.floors);
 assert.equal(new Set(floors.flatMap(floor=>floor.lair?[floor.lair.species]:[])).size,6);

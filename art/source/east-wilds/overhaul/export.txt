@@ -1,0 +1,1 @@
+Aseprite source export: 9 creatures, 192 frames, 2 layers, 48 directional tags per file.

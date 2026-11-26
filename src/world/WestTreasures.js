@@ -1,5 +1,6 @@
-import { WestTreasureSystem, treasureStage, treasureDistance as distance } from '../dao/WestTreasureSystem.ts';
-import { WEST_TREASURE_IDS, WEST_TREASURE_RARITY, treasureDefinition } from '../dao/WestTreasureCatalog.ts';
+import { WestTreasureSystem, treasureBloomOpen, treasureStage, treasureDistance as distance } from '../dao/WestTreasureSystem.ts';
+import { WEST_TREASURE_IDS, EAST_TREASURE_IDS, WEST_TREASURE_RARITY, treasureDefinition } from '../dao/WestTreasureCatalog.ts';
+import { EconomySystem } from '../dao/EconomySystem.ts';
 import { cultivationStats } from '../systems/CultivationSystem.ts';
 import { faunaCombatPower, insideHabitat } from '../dao/FaunaSystem.ts';
 import { weaponAttackMode, weaponForNpc } from './WeaponCombat.js';
@@ -9,16 +10,19 @@ const COLORS={lôi:0xc6b2ff,hỏa:0xf9aa6d,mộc:0xb4eaa7,băng:0xc4f0f5,độc:
 const allowedRoles=new Set(['hunter','herb_gatherer','independent_cultivator','low_disciple','elder']);
 const descriptions={sprout:'Mới mọc',growing:'Đang sinh trưởng',mature:'Sắp thu hoạch',ready:'Có thể thu hái',harvested:'Đã thu hái'};
 const ecologist=n=>n.decisionSlot==='west:treasure';
-export const loadWestTreasureArt=scene=>scene.load.spritesheet('west-treasure','/assets/di-mach/spirit-herbs.png',{frameWidth:32,frameHeight:32});
+export function loadWestTreasureArt(scene){
+  scene.load.spritesheet('west-treasure','/assets/di-mach/spirit-herbs.png',{frameWidth:32,frameHeight:32});
+  scene.load.spritesheet('east-treasure','/assets/east-wilds/overhaul/treasures.png',{frameWidth:32,frameHeight:32});
+}
 
 export class WestTreasures {
   constructor(scene){
     this.scene=scene;
     this.world=scene.populationWorld;
-    const sites=(scene.map.getObjectLayer('WestTreasureSites')?.objects??[]).map(o=>({x:o.x,y:o.y,zoneId:scene.prop(o,'zoneId'),preferred:scene.prop(o,'preferred')}));
-    this.system=new WestTreasureSystem(this.world,sites,p=>p.x<0&&!scene.monsterSafe(p)&&
+    const sites=(scene.map.getObjectLayer('WestTreasureSites')?.objects??[]).map(o=>({x:o.x,y:o.y,zoneId:scene.prop(o,'zoneId'),preferred:scene.prop(o,'preferred'),resourceId:scene.prop(o,'resourceId')}));
+    this.system=new WestTreasureSystem(this.world,sites,p=>(p.x<0&&!scene.monsterSafe(p)||p.x>5700||p.resourceId&&p.x>5500||p.y>8600&&!scene.monsterSafe(p))&&
       !scene.monsterWater(p.x,p.y,5,5)&&scene.footprintTerrainOpen(p.x,p.y,6,5)&&scene.canOccupy(p.x,p.y),(beast,point)=>{
-        const h=scene.faunaTerritories.find(t=>t.zoneId===beast.zoneId&&t.species===beast.species);
+        const h=scene.faunaTerritories.find(t=>t.zoneId===beast.zoneId&&t.species===beast.species)??scene.faunaZones.find(z=>z.zoneId===beast.zoneId&&z.extraShanhe);
         return h&&insideHabitat(point,h,9);
       });
     this.system.initialize(this.now);
@@ -75,10 +79,50 @@ export class WestTreasures {
       .sort((a,b)=>distance(n,a)-distance(n,b))[0];
   }
 
+  claimAncientChest(n){
+    const sprite=this.scene.objectSprites.find(s=>this.scene.prop(s.getData('tiledObject'),'eastChest')===true);
+    if(!sprite||distance(n,sprite)>46||!this.scene.monsterLine(n,sprite))return false;
+    const id='east-ruins-chest',events=this.world.environment.processedEventIds;
+    if(events.includes(id)){this.scene.worldPopulationToast('Rương cổ đã được mở.');return true;}
+    const king=this.world.environment.fauna.find(f=>f.alive&&f.species==='bone-king');
+    if(king){
+      this.scene.worldPopulationToast('Rương cổ còn bị Vạn Cốt Quỷ Vương trấn giữ.');return true;
+    }
+    EconomySystem.add(n.inventory,'bone_jade',1);events.push(id);
+    if(!this.scene.persistPopulation()){
+      events.pop();EconomySystem.remove(n.inventory,'bone_jade',1);
+      this.scene.worldPopulationToast('Chưa lưu được lần mở rương.');return true;
+    }
+    this.scene.worldPopulationToast('Đã mở rương cổ và nhận Bạch Cốt Linh Ngọc.');
+    return true;
+  }
+
+  claimShanheChest(n){
+    const sprite=this.scene.objectSprites.find(s=>s.name==='Rương Nam Sa');
+    if(!sprite||distance(n,sprite)>44||!this.scene.monsterLine(n,sprite))return false;
+    const id='shanhe:nam-sa-chest',events=this.world.environment.processedEventIds;
+    if(events.includes(id)){this.scene.worldPopulationToast('Rương Nam Sa đã được mở.');return true;}
+    if(this.world.environment.fauna.some(f=>f.alive&&f.zoneId==='se-antiquities'&&distance(f,sprite)<94)){
+      this.scene.worldPopulationToast('Yêu thú vẫn đang canh giữ Rương Nam Sa.');return true;
+    }
+    EconomySystem.add(n.inventory,'bone_jade',1);events.push(id);
+    if(!this.scene.persistPopulation()){
+      events.pop();EconomySystem.remove(n.inventory,'bone_jade',1);
+      this.scene.worldPopulationToast('Chưa lưu được lần mở Rương Nam Sa.');return true;
+    }
+    this.scene.worldPopulationToast('Đã tìm thấy Bạch Cốt Linh Ngọc trong Rương Nam Sa.');
+    return true;
+  }
+
   interact(n){
+    if(this.claimShanheChest(n)||this.claimAncientChest(n))return true;
     const node=this.nearby(n);
     if(!node)return false;
     const def=treasureDefinition(node.itemId);
+    if(!treasureBloomOpen(node,this.world.clock.minute)){
+      this.scene.worldPopulationToast('Thanh Nguyệt Linh Liên chỉ nở ban đêm.');
+      return true;
+    }
     const ok=this.harvest(n,node);
     this.scene.worldPopulationToast(ok?`Đã thu hái ${def.name} ×1.`:
       `${def.name} · ${WEST_TREASURE_RARITY[def.grade]} · ${treasureStage(node,this.now)==='ready'?'Chưa lưu được lần thu hái':descriptions[treasureStage(node,this.now)]}.`);
@@ -204,17 +248,19 @@ export class WestTreasures {
       const def=treasureDefinition(node.itemId),stage=treasureStage(node,this.now);
       let sprite=this.sprites.get(node.id);
       if(!sprite){
-        const plant=scene.add.image(node.x,node.y,'west-treasure',WEST_TREASURE_IDS.indexOf(node.itemId)).setOrigin(.5,.93);
+        const east=EAST_TREASURE_IDS.indexOf(node.itemId);
+        const plant=scene.add.image(node.x,node.y,east>=0?'east-treasure':'west-treasure',east>=0?east:WEST_TREASURE_IDS.indexOf(node.itemId)).setOrigin(.5,.93);
         const spark=scene.add.rectangle(node.x+6,node.y-21,2,2,COLORS[def.element],.55);
         this.sprites.set(node.id,sprite={plant,spark});
       }
       const visible=view.x-40<node.x&&view.right+40>node.x&&view.y-40<node.y&&view.bottom+40>node.y;
-      sprite.plant.setVisible(visible);
+      sprite.plant.setVisible(visible&&(!EAST_TREASURE_IDS.includes(node.itemId)||stage!=='harvested'));
       sprite.spark.setVisible(visible&&stage==='ready'&&def.grade>=3);
       if(!visible)continue;
       const age=(this.now-node.plantedAt)/def.growMs;
       const phase=stage==='harvested'?5:stage==='ready'?4:stage==='mature'?3:age<.17?0:age<.44?1:2;
-      const frame=WEST_TREASURE_IDS.indexOf(node.itemId)+15*phase;
+      const east=EAST_TREASURE_IDS.indexOf(node.itemId);
+      const frame=east>=0?east+10*Math.min(treasureBloomOpen(node,this.world.clock.minute)?3:1,phase):WEST_TREASURE_IDS.indexOf(node.itemId)+15*phase;
       if(Number(sprite.plant.frame.name)!==frame)sprite.plant.setFrame(frame);
       sprite.plant.setPosition(node.x,node.y).setDepth(node.y);
       const step=Math.floor(this.now/200)%5;
@@ -223,7 +269,7 @@ export class WestTreasures {
     const actor=this.scene.scheduler?.byId.get(scene.possessedNpcId)?.npc, node=actor&&this.nearby(actor,55);
     this.hint.setVisible(Boolean(node));
     if(node){
-      const label=treasureStage(node,this.now)==='ready'?'E · Thu hái':descriptions[treasureStage(node,this.now)];
+      const label=!treasureBloomOpen(node,this.world.clock.minute)?'Chờ sen nở ban đêm':treasureStage(node,this.now)==='ready'?'E · Thu hái':descriptions[treasureStage(node,this.now)];
       this.hint.setText(`${treasureDefinition(node.itemId).name} · ${label}`).setPosition(node.x,node.y-29).setScale(1/Math.max(.65,scene.cameras.main.zoom));
     }
   }

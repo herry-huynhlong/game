@@ -16,6 +16,7 @@ const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const count=(items,key)=>Economy.count(items,key);
 const openHours=minute=>minute>=420&&minute<1170;
 const member=n=>['low_disciple','elder','sect_leader'].includes(n.populationRole);
+const rankSeat=n=>n.sectRank==='chân_truyền'?'true-seat-':n.sectRank==='nội_môn'?'inner-seat-':'seat-';
 const catalog=[
   {type:'herbs',name:'Linh thảo cho Đan Dược Đường',item:'spirit_herb',quantity:2,demand:9,reward:12,merit:3,realm:0,difficulty:'Thấp',zone:'Linh Dược Viên và ngoại thành'},
   {type:'hunt',name:'Săn Thanh Lang, nộp chiến lợi phẩm',item:'wolf_pelt',species:'wolf',alternates:['wolf_fang'],quantity:1,demand:4,reward:22,merit:5,realm:0,difficulty:'Vừa',zone:'Rừng yêu thú'},
@@ -32,7 +33,13 @@ export class SectCampus {
       if(['farm','mine','landmark'].includes(scene.prop(o,'site')))this.points.set(scene.prop(o,'id'),o);
     }
     this.staff=new Map();this.reservations=new Map();this.intents=new Map();this.queue=new Map();
+    this.activityClaims=new Map();
+    this.queuePlaces=[...this.points.keys()].filter(id=>/^queue-\d+$/.test(id)).length;
+    this.activities=Object.fromEntries(['lesson','reading','training'].map(kind=>[
+      kind,[...this.points].filter(([id])=>id.startsWith(kind+'-')&&/\d$/.test(id)).map(([,p])=>p),
+    ]));
     this.routeBackoff=new Map();
+    this.gateDuty=new Map();
     this.vault=this.world.factions.find(f=>f.id===FACTION);
     if(!this.vault||!this.points.size)return;
     this.state=this.world.sectCampus??={version:1,serial:0,orders:[],logs:[],credits:{},nextOffer:{},inbound:{},outbound:{}};
@@ -78,8 +85,12 @@ export class SectCampus {
       });
     }
     this.disciples.forEach((n,i)=>{
-      const home=this.points.get('home-'+i);
-      if(home&&!n.homeId?.startsWith('sect-lodging-')&&scene.footprintTerrainOpen(home.x,home.y,9,5))n.home={x:home.x,y:home.y};
+      const prefix=rankSeat(n);
+      const home=this.site((prefix==='true-seat-'?'true-home-':prefix==='inner-seat-'?'inner-home-':'home-')+i)??this.site('home-'+i);
+      if(home&&scene.footprintTerrainOpen(home.x,home.y,9,5)){
+        n.home={x:home.x,y:home.y};
+        n.homeId??='sect-home-'+n.id;
+      }
     });
   }
 
@@ -163,7 +174,7 @@ export class SectCampus {
     if(n?.decisionSlot===PREFIX+'timber')delete n.timberSourceId;
     if(n?.decisionSlot===PREFIX+'hunt'||n?.decisionSlot===PREFIX+'loot')delete n.faunaHuntTargetId;
     if(n?.decisionSlot?.startsWith(PREFIX)){npcReset(n);this.scene.resetNpcRoute(n);}
-    if(n){this.intents.delete(n.id);this.queue.delete(n.id);}
+    if(n){this.intents.delete(n.id);this.queue.delete(n.id);this.releaseActivity(n);}
   }
   deferStation(n){
     if(!n.decisionSlot?.startsWith(PREFIX))return false;
@@ -234,17 +245,20 @@ export class SectCampus {
       if(n.decisionSlot!==next){
         this.scene.resetNpcRoute(n);
         this.scene.workstations.release(n.id);
+        if(n.meditationSpot&&goal==='cultivate')this.scene.cultivation?.spots.release(n);
         this.scene.scheduler.byId.get(n.id).waitingForSlot=false;
       }
     }
     n.goalAction=goal;n.decisionSlot=next;
   }
   waitAtDesk(n,q,service){
-    if(!this.queue.has(n.id)&&this.queue.size<6){
+    if(!this.queue.has(n.id)&&this.queue.size<this.queuePlaces){
       const used=new Set(this.queue.values());
-      for(let i=0;i<6;i++){
-        const p=this.site('queue-'+i);
-        if(p&&!used.has(i)&&this.scene.groundPositionOpen(n,p.x,p.y)){this.queue.set(n.id,i);break;}
+      const choices=Array.from({length:this.queuePlaces},(_,i)=>[i,this.site('queue-'+i)])
+        .filter(([i,p])=>p&&!used.has(i)&&this.scene.groundPositionOpen(n,p.x,p.y))
+        .sort((a,b)=>distance(n,a[1])-distance(n,b[1]));
+      if(choices.length){
+        this.queue.set(n.id,choices[0][0]);
       }
     }
     if(!this.queue.has(n.id))return;
@@ -409,38 +423,128 @@ export class SectCampus {
       return;
     }
     if(key==='market'||key==='food')return;
+    if(key==='leader'&&hour>=740&&hour<820&&this.site('council')){
+      this.move(n,this.site('council'),'council','work');
+      return;
+    }
+    if((key==='elders'||key==='library')&&hour>=890&&hour<1050&&this.site('elder-cave')){
+      const seat=this.site('retreat-seat-'+(key==='elders'?0:5));
+      this.move(n,seat,'retreat','cultivate');
+      return;
+    }
+    if((key==='alchemy'||key==='forge')&&hour>=430&&hour<520&&this.site('materials')){
+      const offset=key==='alchemy'?-28:28;
+      this.move(n,{x:this.site('materials').x+offset,y:this.site('materials').y},key+'-supplies','work');
+      return;
+    }
+    if(key==='elders'&&hour>=550&&hour<748&&this.site('teaching')){
+      this.move(n,this.site('teaching'),'teaching','work');
+      return;
+    }
     const spot=key==='quests'?this.site('counter'):this.site(key);
     this.move(n,spot,key,'work');
+  }
+  releaseActivity(n){
+    const claim=this.activityClaims.get(n.id);
+    if(!claim)return;
+    this.activityClaims.delete(n.id);
+    this.reservations.delete(claim.point.id);
+  }
+  reserveActivity(n,key,points,index){
+    const current=this.activityClaims.get(n.id);
+    const retry=current?.key===key;
+    if(retry){
+      const scheduler=this.scene.scheduler,entry=scheduler.byId.get(n.id),watch=entry?.travelWatch;
+      const stale=n.pathBlocked&&watch&&scheduler.time-watch.since>=5000&&
+        distance(watch.goal,current.point)<24&&distance(n,current.point)>18;
+      if(!stale||scheduler.time<(current.retryAfter??0))return current.point;
+      current.retryAfter=scheduler.time+7500;
+    }
+    this.releaseActivity(n);
+    const capacity=points.length;
+    for(let i=0;i<capacity;i++){
+      const p=points[(index+i)%capacity];
+      if(!p||retry&&p.id===current.point.id||this.reservations.has(p.id)||
+        !this.scene.groundPositionOpen(n,p.x,p.y)||!this.scene.canReachPoint(n,p))continue;
+      this.reservations.set(p.id,n.id);
+      this.activityClaims.set(n.id,{key,point:p,retryAfter:retry?current.retryAfter:0});
+      if(retry)this.scene.resetNpcRoute(n);
+      return p;
+    }
+    if(retry){
+      this.activityClaims.set(n.id,current);
+      this.reservations.set(current.point.id,n.id);
+      return current.point;
+    }
+    return null;
+  }
+  guardGate(n,index){
+    const hour=this.world.clock.minute,shift=Math.floor((hour-390)/160);
+    if(!this.site('guard-post')||shift<0||shift>=5||index>=this.disciples.length)return false;
+    const first=(this.world.clock.day*3+shift*2)%this.disciples.length;
+    const duty=(index-first+this.disciples.length)%this.disciples.length;
+    if(duty>1)return false;
+    const prior=this.gateDuty.get(n.id);
+    const patrol=prior?.shift===shift&&prior.day===this.world.clock.day?prior:
+      {shift,day:this.world.clock.day,waypoint:duty,until:null};
+    this.gateDuty.set(n.id,patrol);
+    let point=this.site('circuit-'+patrol.waypoint);
+    if(distance(n,point)<14){
+      patrol.until??=this.now()+9+(n.aiProfile?.seed??0)%12;
+      if(this.now()>=patrol.until){
+        patrol.waypoint=(patrol.waypoint+2)%4;
+        patrol.until=null;
+        point=this.site('circuit-'+patrol.waypoint);
+      }
+    }
+    this.move(n,point,'gate-duty','work');
+    n.shortGoal=patrol.until?'Đứng gác Sơn Môn':'Tuần tra Sơn Môn';
+    return true;
+  }
+  guardCourts(n,index){
+    const hour=this.world.clock.minute;
+    if(!this.site('vault-watch')||hour<780||hour>=1050||index>=this.disciples.length)return false;
+    const first=(this.world.clock.day*3+11)%this.disciples.length;
+    const duty=(index-first+this.disciples.length)%this.disciples.length;
+    if(duty>1)return false;
+    if(duty===0){
+      this.move(n,this.site('vault-watch'),'vault-duty','work');
+      return true;
+    }
+    const patrol=this.gateDuty.get(n.id);
+    const route=patrol?.courtDay===this.world.clock.day?patrol:{courtDay:this.world.clock.day,waypoint:0,until:null};
+    this.gateDuty.set(n.id,route);
+    let p=this.site('law-patrol-'+route.waypoint);
+    if(distance(n,p)<14){
+      route.until??=this.now()+12+index%7;
+      if(this.now()>=route.until){
+        route.waypoint=(route.waypoint+1)%4;route.until=null;
+        p=this.site('law-patrol-'+route.waypoint);
+      }
+    }
+    this.move(n,p,'law-duty','work');
+    return true;
   }
   activity(n,index){
     const minute=(this.world.clock.minute+index*13+(n.aiProfile?.axes?.discipline??50)%29)%1440;
     const active=minute>=380&&minute<1280;
-    if(!active){this.move(n,n.home,'home','rest');return;}
+    if(!active){this.releaseActivity(n);this.move(n,n.home,'home','rest');return;}
     const cycle=(index+(n.aiProfile?.seed??0)%3)%3;
-    let key=minute<570?'training':minute<850?(cycle===0?'array':'training'):minute<1120?(cycle===1?'array':'library'):(cycle===2?'array':'library');
+    const hour=this.world.clock.minute;
+    const lessonStart=550+Math.floor(index%3)*62;
+    let key=hour>=lessonStart&&hour<lessonStart+59?'lesson':
+      minute<570?'training':minute<850?(cycle===0?'array':'training'):
+      minute<1120?(cycle===1?'array':'library'):(cycle===2?'array':'social');
     if(key==='array'&&n.meditationBreakUntil>this.now())key='library';
-    const spot=key==='training'?this.site('dummy-'+(index%6)):key==='array'?this.site('seat-'+(index%8)):this.site('reading-'+(index%10));
-    if(!spot)return;
-    if(key==='training'&&this.reservations.has(spot.id)){
-      const site=this.site('elders');
-      const lesson=Array.from({length:10},(_,i)=>{
-        const slot=(index+i)%10;
-        return {id:'lesson-'+slot,x:site.x-80+slot%5*31,y:site.y+40+Math.floor(slot/5)*22};
-      }).find(p=>!this.reservations.has(p.id)&&this.scene.groundPositionOpen(n,p.x,p.y));
-      if(!lesson){this.move(n,n.home,'home','rest');return;}
-      this.reservations.set(lesson.id,n.id);
-      this.move(n,lesson,'lesson','work');
-      if(distance(n,lesson)<12&&(this.now()+index)%17===0&&n.technique&&
-        [...this.staff].some(([id,place])=>place==='elders'&&distance(this.scene.scheduler.byId.get(id).npc,site)<15)){
-        addTechniquePractice(n,n.technique,1);
-      }
-      return;
-    }
-    if(key==='library'&&this.reservations.has(spot.id)){
-      this.move(n,n.home,'home','rest');return;
-    }
-    if(key==='training'||key==='library')this.reservations.set(spot.id,n.id);
-    this.move(n,spot,key,key==='array'?'cultivate':'work');
+    const rows=(prefix,count)=>Array.from({length:count},(_,i)=>this.site(prefix+i));
+    const points={
+      training:this.activities.training.length?this.activities.training:[...rows('dummy-',6),this.site('sword-court')],
+      array:rows(rankSeat(n),8),library:this.activities.reading,
+      lesson:this.activities.lesson,social:rows('social-',4),
+    }[key];
+    const spot=this.reserveActivity(n,key,points,index);
+    if(!spot){this.move(n,n.home,'home','rest');return;}
+    this.move(n,spot,key,key==='array'?'cultivate':key==='social'?'rest':'work');
     if(distance(n,spot)<13&&(this.now()+index)%13===0){
       if(key==='training'&&n.realmIndex<2){
         addCultivationXp(n,1);
@@ -450,7 +554,9 @@ export class SectCampus {
         }
       }
       if(key==='array'&&n.realmIndex<2&&this.scene.cultivation.isSeated(n))addCultivationXp(n,1);
-      if((key==='library'||key==='lesson')&&n.technique&&n.techniqueProgress){
+      const teacher=this.site('teaching');
+      const taught=key==='lesson'&&teacher&&this.world.npcs.some(t=>t.decisionSlot===PREFIX+'teaching'&&distance(t,teacher)<15);
+      if((key==='library'||taught)&&n.technique&&n.techniqueProgress){
         const known=this.world.sects.find(s=>s.factionId===FACTION)?.ownedTechniques??[];
         if(known.includes(n.technique))addTechniquePractice(n,n.technique,1);
       }
@@ -466,6 +572,7 @@ export class SectCampus {
     }
     if(canBrew&&!this.state.batch){
       const recipe=[['violet_mist_flower',1,'detox_pill',2],['ancient_blood_lotus',1,'qi_pill',7],
+        ['moon_lotus',1,'healing_pill',2],['ember_reishi',1,'qi_pill',3],['scorch_flower',2,'qi_pill',1],
         ['thunder_fruit',1,'qi_pill',4],['purple_jade_fungus',1,'qi_pill',2],
         ['qingling_herb',2,'qi_pill',1],['spirit_herb',3,'qi_pill',1]]
         .find(([ingredient,quantity,pill])=>count(this.vault.treasury,ingredient)>=quantity&&
@@ -486,14 +593,17 @@ export class SectCampus {
       this.transfer('outbound','detox_pill',1);
     }
     const forge=this.world.npcs.find(n=>this.staff.get(n.id)==='forge');
+    const flux=count(this.vault.treasury,'phantom_sand_crystal')?'phantom_sand_crystal':'iron_ore';
+    const timber=count(this.vault.treasury,'poplar_heartwood')?'poplar_heartwood':'wood';
     if(forge?.decisionSlot===PREFIX+'forge'&&distance(forge,this.site('forge'))<=15){
       if(this.state.forge&&this.state.forge.finish<=at){
         Economy.add(this.vault.treasury,'iron_sword',1);this.transfer('inbound','iron_sword',1);
         delete this.state.forge;
         this.note('forge',forge,null,'Luyện Khí Đường hoàn thành một Thiết Mộc Kiếm.');
-      }else if(!this.state.forge&&count(this.vault.treasury,'iron_ore')>=2&&count(this.vault.treasury,'wood')>=1&&count(this.vault.treasury,'iron_sword')<3){
-        Economy.remove(this.vault.treasury,'iron_ore',2);Economy.remove(this.vault.treasury,'wood',1);
-        this.transfer('outbound','iron_ore',2);this.transfer('outbound','wood',1);
+      }else if(!this.state.forge&&count(this.vault.treasury,'iron_ore')>=(flux==='iron_ore'?2:1)&&count(this.vault.treasury,timber)>=1&&count(this.vault.treasury,'iron_sword')<3){
+        for(const ingredient of ['iron_ore',flux,timber]){
+          Economy.remove(this.vault.treasury,ingredient,1);this.transfer('outbound',ingredient,1);
+        }
         this.state.forge={finish:at+55,actorId:forge.id};
       }
     }
@@ -514,7 +624,11 @@ export class SectCampus {
   tick(){
     if(!this.state)return;
     const at=this.now(),minute=this.world.clock.minute;
-    this.reservations.clear();
+    for(const [id,claim] of this.activityClaims){
+      const n=this.scene.scheduler.byId.get(id)?.npc;
+      if(!this.civilian(n)||n.decisionSlot!==PREFIX+claim.key||n.id===this.scene.possessedNpcId||
+        n.marketVisit||livelihoodNeed(n,this.world))this.releaseActivity({id});
+    }
     if(!openHours(minute)){this.queue.clear();this.serviceTicket=null;}
     for(const q of this.state.orders){
       const assignee=q.assignee&&this.scene.scheduler.byId.get(q.assignee)?.npc;
@@ -563,6 +677,7 @@ export class SectCampus {
         }
         continue;
       }
+      if(this.guardCourts(n,index)||this.guardGate(n,index)){this.queue.delete(n.id);this.releaseActivity(n);continue;}
       const offers=this.offers(n).filter(q=>q.type==='hunt'?n===selectedHunter||this.queue.has(n.id)&&n.populationRole==='hunter':
         n.populationRole!=='hunter'&&(q.type==='city-courier'||this.couriers.includes(n)&&(q.type==='ore'||q.type.startsWith('farm'))||
           !this.couriers.includes(n)&&!this.traders.includes(n)));
@@ -630,6 +745,8 @@ export class SectCampus {
   }
   interact(n){
     if(this.canMeet(n)){this.show(n);return true;}
+    const board=this.site('quest-board');
+    if(board&&this.civilian(n)&&distance(n,board)<26){this.show(n);return true;}
     if(this.atLibrary(n)){this.show(n,'library');return true;}
     const q=this.orderFor(n);
     if(!q||!this.civilian(n)||this.progress(n,q)>=q.quantity)return false;

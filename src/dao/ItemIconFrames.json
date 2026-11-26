@@ -310,5 +310,45 @@
   "eagle_fire_core": [
     160,
     288
+  ],
+  "solar_fruit": [
+    0,
+    320
+  ],
+  "scorch_flower": [
+    32,
+    320
+  ],
+  "amber_dune_grass": [
+    64,
+    320
+  ],
+  "ember_reishi": [
+    96,
+    320
+  ],
+  "moon_lotus": [
+    128,
+    320
+  ],
+  "poplar_heartwood": [
+    160,
+    320
+  ],
+  "phantom_sand_crystal": [
+    192,
+    320
+  ],
+  "red_fire_crystal": [
+    224,
+    320
+  ],
+  "bone_jade": [
+    0,
+    352
+  ],
+  "yin_soul_herb": [
+    32,
+    352
   ]
 }

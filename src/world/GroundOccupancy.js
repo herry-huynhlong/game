@@ -4,7 +4,9 @@ const MASK=GROUND_NPC|GROUND_FAUNA;
 const CELL=40;
 const STEP=5;
 const shapes={wolf:[28,14],boar:[37,20],toad:[29,19],wood:[24,17],millennial:[30,20],flower:[22,18],
-  vine:[26,16],centipede:[30,14],eagle:[32,15],stag:[24,13],'wood-king':[44,30]};
+  vine:[26,16],centipede:[30,14],eagle:[32,15],stag:[24,13],'wood-king':[44,30],
+  'bone-skeleton':[16,10],'bone-general':[24,14],'sand-scorpion':[24,15],'sand-worm':[28,18],
+  'sand-golem':[30,23],'bone-wolf':[24,14],'flame-lizard':[26,13],'bone-king':[32,24]};
 const compactFlower=actor=>actor.species==='flower'&&['rooted','alert','waking'].includes(actor.flower?.phase);
 
 export function groundFootprint(actor,mounted=false,seated=false) {

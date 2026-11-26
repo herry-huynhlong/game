@@ -8,6 +8,7 @@ const places={
   tea:{name:'Trà Quán Bích Trúc',activity:'socializing',start:510,end:1240,fee:2,minutes:45,batch:'spirit_herb'},
   music:{name:'Nhã Nhạc Lâu',activity:'socializing',start:870,end:1390,fee:7,minutes:65,batch:'spirit_herb'},
   clinic:{name:'Y Quán An Tâm',activity:'healing',start:460,end:1290,fee:11,minutes:55,shop:'city-apothecary'},
+  'east-rest':{name:'Trại nghỉ Thanh Nguyệt',activity:'sleeping',start:390,end:1365,fee:3,minutes:55,batch:'spirit_herb'},
 };
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const prefix='society:';
@@ -24,7 +25,7 @@ export class WorldSociety {
     this.staffIds=new Set();
     this.city=this.world.factions.find(f=>f.id==='qingyun-city');
     const workers=this.world.npcs.filter(n=>n.populationRole==='tavern_staff').slice(0,2).concat(
-      this.world.npcs.filter(n=>n.populationRole==='commoner'&&n.profession==='dan_thuong').slice(0,3));
+      this.world.npcs.filter(n=>n.populationRole==='commoner'&&n.profession==='dan_thuong').slice(0,4));
     const layout=scene.map.getObjectLayer('SocietyStations')?.objects??[];
     for(const [i,[id,cfg]] of Object.entries(places).entries()){
       const slots=layout.filter(o=>scene.prop(o,'venue')===id).map(o=>({x:o.x,y:o.y,id:scene.prop(o,'id'),
@@ -196,7 +197,11 @@ export class WorldSociety {
   }
   benefit(n,v) {
     const needs=this.account(n).needs;
-    if(v.id==='inn'){
+    if(v.id==='east-rest'){
+      n.fatigue=limit(n.fatigue-45);
+      needs.thirst=limit(needs.thirst-52);
+      n.hp=Math.min(cultivationStats(n).hpMax,n.hp+10);
+    }else if(v.id==='inn'){
       n.fatigue=limit(n.fatigue-66);
       n.hp=Math.min(cultivationStats(n).hpMax,n.hp+8);
     }else if(v.id==='clinic'){
@@ -211,6 +216,17 @@ export class WorldSociety {
       n.mood=limit(n.mood+(v.id==='music'?20:13));
       n.fatigue=limit(n.fatigue-12);
     }
+  }
+  restExpedition(team){
+    const camp=this.places.get('east-rest');
+    if(!camp||!this.onDuty(camp))return 0;
+    let rested=0;
+    for(const n of team){
+      if(distance(n,camp.counter)>92||n.spiritStones<camp.cfg.fee||n.fatigue<15&&n.hp>=cultivationStats(n).hpMax)continue;
+      if(this.paid(n,camp,{})){this.benefit(n,camp);rested++;}
+    }
+    if(rested)this.scene.requestBackgroundSave();
+    return rested;
   }
   pursue(n,visit) {
     const v=this.places.get(visit.venue),at=this.now();
@@ -275,10 +291,12 @@ export class WorldSociety {
   choose(n,i) {
     const h=n.hp/cultivationStats(n).hpMax;
     const clinic=this.places.get('clinic');
+    const camp=this.places.get('east-rest');
+    const nearCamp=camp&&distance(n,camp.counter)<1000;
     const needsCare=h<.88||(n.westPoison??0)>25;
     const nearClinic=needsCare&&clinic&&distance(n,clinic.counter)<1600&&this.scene.monsterSafe(n);
     if(!this.available(n)||this.staffIds.has(n.id)||this.scene.westWilds?.directs(n)||this.scene.sectCampus.orderFor(n)||n.assignedCommissionId||
-      n.decisionSlot?.startsWith('sect-campus:')||this.scene.ramparts.wantsDuty(n)>=0||!nearClinic&&(n.x<2030||n.x>4900||n.y>3270)||
+      n.decisionSlot?.startsWith('sect-campus:')||this.scene.ramparts.wantsDuty(n)>=0||!nearClinic&&!nearCamp&&(n.x<2030||n.x>4900||n.y>3270)||
       this.now()<(this.state.accounts[n.id]?.retryAt??0))return;
     const need=this.refreshNeeds(n);
     const traits=n.aiProfile?.axes;
@@ -290,6 +308,7 @@ export class WorldSociety {
     const adventurers=looksForCompany&&Object.entries(this.visits).some(([id,p])=>p.venue==='tea'&&
       ['hunter','independent_cultivator','herb_gatherer'].includes(this.scene.scheduler.byId.get(id)?.npc.populationRole));
     const ranks={
+      'east-rest':nearCamp?45+n.fatigue*.6+need.thirst*.45+(1-h)*35:-1,
       clinic:needsCare?125+(1-h)*35:-1,
       inn:(travelHome>430&&dusk&&n.fatigue>=19||n.fatigue>=44)?80+n.fatigue*.5:-1,
       tea:need.thirst*.62+need.social*.32+caution*.17+(this.world.clock.minute<800?15:4)+(adventurers?18:looksForCompany?6:0),
@@ -361,7 +380,7 @@ export class WorldSociety {
     if(n.flight||n.skyStep)return 'Di chuyển';
     if(n.goalAction==='fight'||n.faunaHuntTargetId)return 'Săn hoặc chiến đấu';
     if(visit?.phase==='using'){
-      return {inn:'Ngủ nghỉ',clinic:'Điều trị',tavern:'Uống rượu',tea:'Giao lưu',music:'Thưởng nhạc'}[visit.venue];
+      return {inn:'Ngủ nghỉ',clinic:'Điều trị','east-rest':'Hồi sức',tavern:'Uống rượu',tea:'Giao lưu',music:'Thưởng nhạc'}[visit.venue];
     }
     if(visit?.phase==='waiting-care')return 'Chờ y sư';
     if(visit?.phase==='queued'&&this.arrivedToQueue(n.id,visit)||e?.waitingForSlot||

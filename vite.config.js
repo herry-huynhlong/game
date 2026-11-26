@@ -12,6 +12,8 @@ export default defineConfig({
     npcXianxiaEditor:fileURLToPath(new URL('./npc-xianxia-editor.html',import.meta.url)),
     npcXianxiaGallery:fileURLToPath(new URL('./npc-xianxia-gallery.html',import.meta.url)),
     monsterMovement:fileURLToPath(new URL('./monster-movement.html',import.meta.url)),
+    shanhePreview:fileURLToPath(new URL('./shanhe-preview.html',import.meta.url)),
+    eastArtGallery:fileURLToPath(new URL('./east-art-gallery.html',import.meta.url)),
     monsterGallery:fileURLToPath(new URL('./monster-gallery.html',import.meta.url)),
     main:fileURLToPath(new URL('./index.html',import.meta.url)),
     characterShowcase:fileURLToPath(new URL('./gfx5b4b-showcase.html',import.meta.url)),

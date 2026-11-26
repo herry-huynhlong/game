@@ -1,9 +1,11 @@
+import { EAST_SKILLS, EAST_SPECIES, isEastSpecies } from './EastFauna';
 import type { FaunaSpecies, TradeItemId } from './types';
 
 export type FaunaBehavior='aggressive'|'neutral'|'timid'|'ambush'|'territorial'|'dormant';
 export const BASE_FAUNA_IDS=['wolf','boar','toad'] as const;
 export const FAUNA_QI_MAX=100;
 export const FAUNA_SPECIES = {
+  ...EAST_SPECIES,
   wolf: {name:'Thanh Ảnh Lang',hp:68,defense:2,speed:86,notice:116,leash:250,retreat:.23,power:24,loot:['wolf_fang','wolf_pelt']},
   boar: {name:'Xích Giáp Sơn Trư',hp:100,defense:5,speed:55,notice:96,leash:225,retreat:.18,power:35,loot:['boar_tusk','crimson_plate']},
   toad: {name:'Bích Độc Thiềm',hp:72,defense:3,speed:63,notice:115,leash:220,retreat:.28,power:28,loot:['toad_sac','jade_venom']},
@@ -19,6 +21,7 @@ export const FAUNA_SPECIES = {
 
 export const MONSTER_SPAWN={eliteChance:.05,eliteCap:1,eliteCooldownMs:135000} as const;
 export const MONSTER_SKILLS={
+ ...EAST_SKILLS,
  'fang':{name:'Liệt Nha',species:'wolf',mode:'contact',min:0,max:43,reach:46,radius:18,damage:10,windup:350,active:100,recover:370,cooldown:2200,element:'wind'},
  'shadow-step':{name:'Thanh Ảnh Bộ',species:'wolf',mode:'dash',min:48,max:102,reach:102,radius:17,damage:8,windup:420,active:330,recover:500,cooldown:5500},
  'pack-roar':{name:'Lang Khiếu',species:'wolf',mode:'roar',min:0,max:126,reach:130,radius:130,damage:0,windup:770,active:150,recover:430,cooldown:12000},
@@ -73,7 +76,7 @@ export type MonsterSkill=(typeof MONSTER_SKILLS)[MonsterSkillId];
 export const monsterSkill=(id:string)=>MONSTER_SKILLS[id as MonsterSkillId] as (MonsterSkill & {elite?:boolean;element?:'wood'|'poison'|'blood'|'earth'|'wind'|'fire';effect?:'poison'|'root'|'drain'|'lifesteal'})|undefined;
 export const FAUNA_IDS=Object.keys(FAUNA_SPECIES) as FaunaSpecies[];
 export const WEST_FAUNA_LOOT:readonly TradeItemId[]=[
-  ...FAUNA_IDS.filter(id=>!BASE_FAUNA_IDS.some(base=>base===id)).flatMap(id=>[...FAUNA_SPECIES[id].loot]),
+  ...FAUNA_IDS.filter(id=>!isEastSpecies(id)&&!BASE_FAUNA_IDS.some(base=>base===id)).flatMap(id=>[...FAUNA_SPECIES[id].loot]),
   'beast_core_foundation','beast_core_gold','beast_core_nascent','eagle_fire_core','python_skin',
 ];
 export const faunaName=(beast:{species:FaunaSpecies;rank?:string})=>beast.species==='eagle'&&beast.rank==='elite'?'Liệt Dương Kim Điêu':FAUNA_SPECIES[beast.species].name;

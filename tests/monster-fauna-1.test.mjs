@@ -22,6 +22,10 @@ try{
     const z=zones.find(z=>z.zoneId===h.zoneId);
     (z.territories??={})[h.species]=h;
   }
+  const eastSlots=zones.filter(z=>z.eastWilds).reduce((sum,z)=>sum+z.cap,0);
+  assert.equal(eastSlots,41);
+  const shanheSlots=zones.filter(z=>z.extraShanhe).reduce((sum,z)=>sum+z.cap,0);
+  assert.equal(shanheSlots,42);
   const water=layer('Water').data,solids=layer('Collision').objects,city=layer('RegionMarkers').objects.find(o=>o.properties[0].value==='city');
   const open=(z,x,y,species,rank)=>{
     const {width,height}=groundFootprint({species,rank});
@@ -33,7 +37,7 @@ try{
   world.environment.drops=[{id:'already-owned',sourceId:'fauna:old:deer',itemId:'deer_meat',status:'claimed'}];
   world.npcs[0].inventory.push({itemId:'deer_meat',count:2});
   const beasts=m.ensureFauna(world,zones,open);
-  assert.equal(beasts.length,77);
+  assert.equal(beasts.length,77+eastSlots+shanheSlots);
   const western=beasts.filter(b=>b.zoneId.startsWith('west-'));
   assert.equal(western.length,45);
   assert.deepEqual([...new Set(western.map(b=>b.realmIndex))].sort(),[0,1,2,3]);
@@ -45,10 +49,10 @@ try{
   assert.equal(western.filter(f=>f.zoneId==='west-poison'&&f.species==='flower').length,3);
   for(let seed=0;seed<8;seed++){
     const alternative=m.ensureFauna(makeWorld('west-spread:'+seed),zones,open);
-    assert.equal(alternative.length,77);
+    assert.equal(alternative.filter(b=>!zones.some(z=>z.zoneId===b.zoneId&&(z.eastWilds||z.extraShanhe))).length,77);
     assert.equal(alternative.filter(f=>f.zoneId==='west-poison'&&f.species==='flower').length,3);
   }
-  for(const z of zones.filter(z=>z.roster)){
+  for(const z of zones.filter(z=>z.roster&&!z.eastWilds&&!z.extraShanhe)){
     const original=western.filter(f=>f.zoneId===z.zoneId);
     assert.deepEqual(original.map(slotKey).sort(),m.faunaRoster(z).map(slotKey).sort());
     assert.ok(original.every(f=>m.insideHabitat(f,z.territories[f.species],24)));
@@ -70,7 +74,7 @@ try{
   const sacrifice=m.damageFauna(summoning,eliteTree.id,'hunter',2000,'fallen-tree');
   m.queueFaunaRespawn(summoning,sacrifice.fauna,forbidden.respawnMs);
   assert.equal(m.summonWesternTree(summoning,forbidden,king,()=>true).species,'millennial');
-  assert.equal(summoning.environment.fauna.filter(f=>f.alive).length,77);
+  assert.equal(summoning.environment.fauna.filter(f=>f.alive).length,77+eastSlots+shanheSlots);
   assert.equal(summoning.environment.faunaRespawns.length,0);
   assert.equal(m.processFaunaRespawns(summoning,zones,forbidden.respawnMs,open).spawned.length,0);
   const oldWest=makeWorld('v0.1.13-fixture');
@@ -80,7 +84,7 @@ try{
   m.ensureFauna(oldWest,zones,open);
   assert.ok(idsBefore.every(id=>oldWest.environment.fauna.some(f=>f.id===id)));
   assert.deepEqual(oldWest.npcs,npcBefore);
-  for(const z of zones.filter(z=>z.roster))assert.deepEqual(oldWest.environment.fauna.filter(f=>f.zoneId===z.zoneId).map(slotKey).sort(),m.faunaRoster(z).map(slotKey).sort());
+  for(const z of zones.filter(z=>z.roster&&!z.eastWilds&&!z.extraShanhe))assert.deepEqual(oldWest.environment.fauna.filter(f=>f.zoneId===z.zoneId).map(slotKey).sort(),m.faunaRoster(z).map(slotKey).sort());
   assert.equal(world.npcs[0].inventory[0].count,2);
   assert.equal(world.environment.drops[0].id,'already-owned');
   const copy=structuredClone(world);
@@ -104,13 +108,13 @@ try{
   const originals=m.ensureFauna(legacy,zones.filter(z=>!z.normalOnly),open).map(b=>b.id);
   m.ensureFauna(legacy,zones,open);
   assert.deepEqual(legacy.environment.fauna.slice(0,24).map(b=>b.id),originals);
-  assert.equal(legacy.environment.fauna.length,77);
+  assert.equal(legacy.environment.fauna.length,77+eastSlots+shanheSlots);
   const outer=m.damageFauna(legacy,legacy.environment.fauna[24].id,'hunter',200,'old-road-hunt');
   const outerZone=zones.find(z=>z.zoneId===outer.fauna.zoneId);
   m.queueFaunaRespawn(legacy,outer.fauna,outerZone.respawnMs);
   const pending=structuredClone(legacy);
   m.ensureFauna(pending,zones,open);
-  assert.equal(pending.environment.fauna.length,77,'reloading a slain beast does not fill the slot early');
+  assert.equal(pending.environment.fauna.length,77+eastSlots+shanheSlots,'reloading a slain beast does not fill the slot early');
   assert.equal(m.processFaunaRespawns(pending,zones,outerZone.respawnMs-1,open).spawned.length,0);
   const blocked=m.processFaunaRespawns(pending,zones,outerZone.respawnMs,()=>false);
   assert.equal(blocked.failed.length,1);
@@ -269,9 +273,10 @@ try{
     m.tickMonsterConditions(visitor,3800,true,()=>pulses++);assert.equal(pulses,1);
   }
   for(const species of m.FAUNA_IDS)for(const rank of m.BASE_FAUNA_IDS.includes(species)||species==='millennial'?['normal','elite']:['normal']){
-    const base=m.BASE_FAUNA_IDS.includes(species);
-    const png=PNG.sync.read(fs.readFileSync(`public/assets/${base?'fauna/monster-v2':'west-wilds'}/${species}-${rank}.png`));
-    assert.deepEqual([png.width,png.height],base?[1280,576]:[1792,896]);
+    const base=m.BASE_FAUNA_IDS.includes(species),east=zones.some(z=>z.eastWilds&&z.species===species);
+    const folder=base?'fauna/monster-v2':east?'east-wilds':'west-wilds';
+    const png=PNG.sync.read(fs.readFileSync(`public/assets/${folder}/${species}-${rank}.png`));
+    assert.deepEqual([png.width,png.height],base?[1280,576]:east?[1024,576]:[1792,896]);
     assert.ok(png.data.some((v,i)=>i%4===3&&v>0));
   }
   {

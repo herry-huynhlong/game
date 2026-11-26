@@ -1,16 +1,25 @@
 import { EconomySystem as Economy } from '../dao/EconomySystem.ts';
 import { faunaCombatPower } from '../dao/FaunaSystem.ts';
 import { FAUNA_SPECIES, faunaName, faunaRealm } from '../dao/MonsterRegistry.ts';
+import { treasureBloomOpen, treasureStage } from '../dao/WestTreasureSystem.ts';
 import { cultivationStats } from '../systems/CultivationSystem.ts';
 import { weaponAttackMode, weaponForNpc } from './WeaponCombat.js';
 
-const names={warrant:'Chấp Pháp Đội',hunt:'Liệp Yêu Đội',raid:'Thảo Phạt Đội',mine:'Khai Khoáng Đội',scout:'Thám Hiểm Đội',escort:'Hộ Tống Đội',patrol:'Tuần Tra Đội'};
+const names={gather:'Hái Dược Đội',warrant:'Chấp Pháp Đội',hunt:'Liệp Yêu Đội',raid:'Thảo Phạt Đội',mine:'Khai Khoáng Đội',scout:'Thám Hiểm Đội',escort:'Hộ Tống Đội',patrol:'Tuần Tra Đội'};
 const phases={assemble:'Tập hợp',outbound:'Xuất hành',field:'Đang thực hiện',loot:'Thu chiến lợi phẩm',returning:'Đang về giao nhiệm vụ',retreat:'Đang rút lui'};
 const hunters=[
   ['forest-rim','wolf','wolf_pelt',0,9],['west-outer','wolf','wolf_pelt',0,11],['west-inner','boar','crimson_plate',1,15],
   ['west-poison','toad','toad_sac',2,15],['west-poison','centipede','centipede_sac',2,17],
   ['west-poison','flower','flower_stamen',2,17],['west-ancient','eagle','eagle_feather',2,19],
   ['west-ancient','millennial','millennial_wood',2,24,'elite'],
+  ['east-rim','sand-scorpion','scorpion_venom',0,12],
+  ['east-bones','bone-skeleton','bone_jade',1,17],
+  ['east-canyon','flame-lizard','red_fire_crystal',1,19],
+  ['east-ruins','bone-general','yin_soul_herb',2,24],
+  ['sw-valley','wolf','wolf_pelt',1,17],['sw-umbral','flower','flower_stamen',2,23],
+  ['south-lake','toad','toad_sac',1,16],['se-red-ridge','flame-lizard','red_fire_crystal',2,23],
+  ['se-bones','bone-wolf','bone_jade',2,24],
+
 ];
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const point=p=>({x:p.x,y:p.y});
@@ -61,7 +70,7 @@ export class Expeditions {
       !scene.westWilds?.directs(n)&&!scene.westTreasures?.directs(n)&&!scene.recovery?.drives(n)&&
       !scene.sectCampus.orderFor(n)&&!n.lawResponse&&!factionJob&&!['fight','flee'].includes(n.goalAction)&&
       health(n)>=.73&&n.mp>=cultivationStats(n).mpMax*.36&&n.fatigue<78&&n.hunger<68&&
-      this.allowed(n,q)&&distanceToMeet<3400&&scene.canReachPoint(n,q.meet)&&
+      this.allowed(n,q)&&distanceToMeet<(q.region?.startsWith('east-')?4800:3400)&&scene.canReachPoint(n,q.meet)&&
       (n.relationships?.[leader?.id]??0)>-36&&
       (n.spiritStones<78||n.populationRole==='hunter'||(axes.courage??40)>=47||q.kind==='mine');
   }
@@ -75,12 +84,39 @@ export class Expeditions {
       const zone=scene.faunaZones.find(z=>z.zoneId===region);
       const territory=zone?.territories?.[species]??(zone?.species===species?zone:null);
       if(!territory||Economy.count(shop.shop.stock,item)>=2)continue;
-      const field=region==='forest-rim'?meet:{x:territory.x+(territory.anchorDx??territory.width*.5),y:territory.y+(territory.anchorDy??territory.height*.5)};
+      const field=zone?.extraShanhe?marker(region):region==='forest-rim'?meet:{x:territory.x+(territory.anchorDx??territory.width*.5),y:territory.y+(territory.anchorDy??territory.height*.5)};
+      const camp=region.startsWith('east-')?marker('east-camp'):null;
+      const rally=camp?marker('city-center'):zone?.extraShanhe?marker('gate-south-outside'):meet;
+      if(!rally||!field)continue;
       proposals.push({key:'hunt:'+region+':'+species,kind:rank?'raid':'hunt',species,rank,item,realm,reward,region,
-        meet,desk,field,shopId:shop.shop.id,label:'Tìm '+faunaName({species,rank})+' · '+(territory.name??region)});
+        meet:rally,desk,field,via:camp?point(camp):undefined,shopId:shop.shop.id,label:'Tìm '+faunaName({species,rank})+' · '+(territory.name??region)});
+    }
+    const apothecary=scene.merchants.shops.get('city-apothecary'),camp=marker('east-camp');
+    if(apothecary&&camp&&apothecary.shop.cash>23){
+      const treasure=scene.westTreasures;
+      const node=treasure?.system.nodes.find(n=>n.x>5700&&distance(n,camp)<1100&&
+        treasureStage(n,treasure.now)==='ready'&&treasureBloomOpen(n,this.world.clock.minute)&&!treasure.system.guardian(n)&&
+        Economy.count(apothecary.shop.stock,n.itemId)<2&&scene.canReachPoint(camp,n));
+      if(node)proposals.push({headcount:4,key:'gather:'+node.id,kind:'gather',region:'east-gather',realm:0,reward:14,
+        meet:marker('city-center')??camp,via:point(camp),desk:apothecary.position,field:point(node),item:node.itemId,nodeId:node.id,
+        shopId:apothecary.shop.id,label:'Thu thập thiên tài địa bảo gần Thanh Nguyệt'});
+    }
+    if(apothecary&&apothecary.shop.cash>=16){
+      const treasure=scene.westTreasures, rally=marker('gate-south-outside');
+      // Local suppliers announce the roadside herb patch at Bách Hoa Cốc.
+      const notice=marker('south-flowers');
+      if(treasure&&rally&&notice)for(const node of treasure.system.nodes){
+        if(node.zoneId!=='south-flowers'||distance(node,notice)>180||treasure.system.guardian(node)||
+          treasureStage(node,treasure.now)!=='ready'||Economy.count(apothecary.shop.stock,node.itemId)>=2||
+          !scene.canReachPoint(notice,node))continue;
+        proposals.push({headcount:4,key:'gather:'+node.id,kind:'gather',region:node.zoneId,realm:0,reward:15,
+          meet:rally,desk:apothecary.position,field:point(node),item:node.itemId,nodeId:node.id,
+          shopId:apothecary.shop.id,label:'Thu hái dược liệu Bách Hoa Cốc'});
+      }
     }
     const vault=scene.sectCampus.vault;
-    const mineMeet=scene.sectCampus.site('counter')??meet;
+    const mineDesk=scene.sectCampus.site('counter')??meet;
+    const mineMeet=scene.sectCampus.site('expedition-meet')??mineDesk;
     if(vault.wealth<165&&vault.wealth>=10&&mineMeet){
       const sites=[...this.veins.sites.values()].filter(s=>s.grade>=2&&s.state.amount>=2&&(!s.state.owner||s.state.owner===vault.id));
       for(const site of sites){
@@ -90,7 +126,7 @@ export class Expeditions {
         const reward=kind==='mine'?site.worth*2-1:kind==='raid'?site.grade*4:2;
         const field=guard?.home??site.point;
         proposals.push({key:kind+':'+site.id,kind,siteId:site.id,region:site.region,realm:site.grade-1,reward,
-          species:guard?.species,rank:guard?.rank,guardId:guard?.id,meet:mineMeet,desk:mineMeet,field,
+          species:guard?.species,rank:guard?.rank,guardId:guard?.id,meet:mineMeet,desk:mineDesk,field,
           label:(kind==='mine'?'Khai thác ':kind==='scout'?'Thăm dò ':'Dẹp yêu thú giữ ')+site.name});
       }
     }
@@ -116,7 +152,15 @@ export class Expeditions {
   recruit(){
     const active=this.state.parties.filter(p=>phases[p.phase]);
     if(active.length>=MAX_ACTIVE||this.world.clock.minute<380||this.world.clock.minute>950)return;
-    for(const q of this.options()){
+    const added=q=>/^(sw-|se-|south-)/.test(q.region??'');
+    const needsShanhe=!active.some(p=>added(p.job));
+    const needsEast=!active.some(p=>p.job.region?.startsWith('east-'));
+    const options=this.options();
+    if(needsEast||needsShanhe){
+      const priority=q=>needsShanhe&&added(q)?(q.kind==='gather'?4:3):needsEast&&q.region?.startsWith('east-')?(q.kind==='gather'?2:1):0;
+      options.sort((a,b)=>priority(b)-priority(a));
+    }
+    for(const q of options){
       const candidates=this.world.npcs.filter(n=>this.willing(n,q)).sort((a,b)=>
         distance(a,q.meet)-distance(b,q.meet)-(a.realmIndex-b.realmIndex)*100||
         a.id.localeCompare(b.id));
@@ -136,7 +180,7 @@ export class Expeditions {
     if(!spots||!this.fund(q,-q.reward))return null;
     const id='expedition-'+(++this.state.serial);
     const party={id,name:names[q.kind]+' '+this.state.serial,job:{...q,meet:point(q.meet),field:point(q.field),desk:point(q.desk)},
-      leader:team[0].id,members:team.map(n=>n.id),created:this.now,phase:'assemble',started:this.now,escrow:q.reward,spots,hits:0};
+      leader:team[0].id,members:team.map(n=>n.id),initialCount:team.length,created:this.now,phase:'assemble',started:this.now,escrow:q.reward,spots,hits:0};
     if(conversation){party.conversationId=conversation.id;party.source='tea';}
     this.state.parties.push(party);
     for(const n of team){
@@ -262,6 +306,17 @@ export class Expeditions {
       if(!p.lastKnown)p.lastKnown=point(c.point);
       if(team.some(n=>distance(n,suspect)<160&&this.scene.monsterLine(n,suspect))&&distance(p.lastKnown,suspect)>36){p.lastKnown=point(suspect);delete p.spots;}
       this.travel(p,team,p.lastKnown);
+      return;
+    }
+    if(q.kind==='gather'){
+      const treasure=this.scene.westTreasures, node=treasure.system.nodes.find(n=>n.id===q.nodeId);
+      if(!node||treasureStage(node,treasure.now)!=='ready'||!treasureBloomOpen(node,this.world.clock.minute)||treasure.system.guardian(node)){this.change(p,'retreat');return;}
+      if(distance(leader,node)>29){this.travel(p,team,node);return;}
+      const before=Economy.count(leader.inventory,node.itemId);
+      if(treasure.harvest(leader,node)){
+        p.holderId=leader.id;p.item=node.itemId;p.amount=Economy.count(leader.inventory,node.itemId)-before;
+        this.change(p,'returning');
+      }
       return;
     }
     if(q.kind==='patrol'){
@@ -390,7 +445,13 @@ export class Expeditions {
   deliver(p,team){
     if(p.phase!=='returning'||p.escrow<=0)return;
     const q=p.job,owner=q.kind==='warrant'?this.scene.civic.city:this.treasury(q);
-    if(!owner||!this.travel(p,team,q.desk))return;
+    if(!owner)return;
+    if(q.via&&!p.restedOnReturn&&distance(team[0],q.via)<900){
+      if(!this.travel(p,team,q.via))return;
+      p.campServices=(p.campServices??0)+(this.scene.society?.restExpedition(team)??0);
+      p.restedOnReturn=true;delete p.spots;
+    }
+    if(!this.travel(p,team,q.desk))return;
     if(p.item){
       const carrier=this.npc(p.holderId);
       if(!carrier||!team.includes(carrier)||!Economy.remove(carrier.inventory,p.item,p.amount)){this.finish(p,'failed');return;}
@@ -419,7 +480,7 @@ export class Expeditions {
       if(n.hunger>=64&&Economy.remove(n.inventory,'ration',1))n.hunger-=42;
     }
     const deepWarrant=p.job.kind==='warrant'&&this.scene.civic.caveSite(this.scene.civic.state.cases[p.job.caseId]);
-    const limit=deepWarrant||p.exploreEntered?2400:p.phase==='returning'&&(p.item||p.job.kind==='warrant')?960:680;
+    const limit=deepWarrant||p.exploreEntered?2400:/^(east-|sw-|se-|south-)/.test(p.job.region??'')?1680:p.phase==='returning'&&(p.item||p.job.kind==='warrant')?960:680;
     if(p.phase!=='retreat'&&(team.length<3||team.some(n=>health(n)<.48||n.fatigue>=94||n.hunger>=90)||this.now-p.created>limit)){
       p.failureReason=team.length<3?'Không đủ thành viên':this.now-p.created>limit?'Hết thời gian nhiệm vụ':'Sinh lực hoặc nhu cầu không bảo đảm';
       this.change(p,'retreat');
@@ -440,6 +501,13 @@ export class Expeditions {
       }
       else if(this.now-p.started>135){p.failureReason='Quá giờ tập hợp';this.finish(p,'failed');}
     }else if(p.phase==='outbound'){
+      if(p.job.via&&!p.stoppedAtCamp){
+        if(this.travel(p,team,p.job.via)){
+          p.campServices=this.scene.society?.restExpedition(team)??0;
+          p.stoppedAtCamp=true;delete p.spots;
+        }
+        return;
+      }
       if(p.job.kind==='escort'){
         const carrier=this.npc(p.job.carrierId),order=this.scene.sectCampus.state.orders.find(q=>q.id===p.job.courierId);
         if(carrier?.alive&&team.filter(n=>distance(n,carrier)<145).length>=2){
@@ -458,7 +526,7 @@ export class Expeditions {
         if(threat){this.fight(p,team,threat);return;}
         this.travel(p,team,p.escortPoint);
       }else if(this.travel(p,team,p.job.field)){this.change(p,'field');}
-      else if(this.now-p.started>255){p.failureReason='Không tới được thực địa đúng hạn';this.change(p,'retreat');}
+      else if(this.now-p.started>(/^(sw-|se-|south-)/.test(p.job.region??'')?750:255)){p.failureReason='Không tới được thực địa đúng hạn';this.change(p,'retreat');}
     }else if(p.phase==='field')this.field(p,team);
     else if(p.phase==='loot')this.collect(p,team);
     else if(p.phase==='returning')this.deliver(p,team);

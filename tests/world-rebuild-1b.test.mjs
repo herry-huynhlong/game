@@ -4,7 +4,7 @@ import path from 'node:path';
 import {PNG} from 'pngjs';
 import {baseWorldMap} from './base-world-map.mjs';
 const root=process.cwd(),map=baseWorldMap(JSON.parse(fs.readFileSync(path.join(root,'maps/world-rebuild-1b.tmj'),'utf8')));
-assert.equal(map.width,224);assert.equal(map.height,184);assert.equal(map.tilewidth,32);assert.equal(map.tileheight,32);assert.equal(map.class,'WORLD.CITY.1');
+assert.equal(map.width,224);assert.equal(map.height,314);assert.equal(map.tilewidth,32);assert.equal(map.tileheight,32);assert.equal(map.class,'WORLD.CITY.1');
 assert.equal(map.properties.find(p=>p.name==='activeNPCs')?.value,0);assert.equal(map.properties.find(p=>p.name==='futurePopulation')?.value,109);assert.equal(map.properties.find(p=>p.name==='activeMonsterSpawns')?.value,0);
 const byName=Object.fromEntries(map.layers.map(l=>[l.name,l]));
 for(const name of ['GroundBase','Water','Shore','GroundDetails','TerrainTransitions','Roads','Cliffs','StaticDecor','Buildings','MarketDecor','ObjectFootprints','Collision','Occlusion','FlowEffects','NavigationMarkers','InteractionMarkers','RegionMarkers','EncounterZones','PopulationAnchors'])assert.ok(byName[name],`missing Tiled layer ${name}`);

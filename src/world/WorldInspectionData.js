@@ -4,7 +4,7 @@ import { FAUNA_QI_MAX, FAUNA_SPECIES, faunaName, MONSTER_SKILL_IDS, faunaBehavio
 import { skillPhase } from '../dao/MonsterCombat.ts';
 import { formatRealm, REALMS } from '../systems/RealmConfig.ts';
 import { treasureDefinition, WEST_TREASURE_RARITY, WEST_TREASURE_MEDICINE } from '../dao/WestTreasureCatalog.ts';
-import { treasureStage } from '../dao/WestTreasureSystem.ts';
+import { treasureBloomOpen, treasureStage } from '../dao/WestTreasureSystem.ts';
 import { faunaHabitat } from './FaunaHabitat.js';
 import { faunaStationaryForm } from '../dao/FaunaRecovery.ts';
 
@@ -77,6 +77,11 @@ export function inspectionBrief(scene,entry){
   if(kind==='fauna')return {title:faunaName(data),meta:`${beastRealm(data)} · ${rankName(data)}`,state:faunaActivity(data,now)};
   if(kind==='treasure')return {title:itemName(data.itemId),meta:WEST_TREASURE_RARITY[treasureDefinition(data.itemId).grade],state:plantStates[treasureStage(data,now)]};
   if(kind==='npc')return {title:data.name,meta:formatRealm(data)};
+  if(kind==='east-site'){
+    const frame=data.gid-1920;
+    const meta=scene.prop(data,'shanhe')?'Di tích Vạn Lý':frame<=12?'Thực vật Đông Hoang':frame<=14?'Đá phong hóa':frame===15?'Xương cốt':'Di tích Đông Hoang';
+    return {title:sprite.name,meta};
+  }
   if(kind==='tree')return {title:sprite.name,meta:treeKind(data)};
   if(kind==='ore')return {title:sprite.name,meta:'Khoáng sản',state:data.amount?'Có thể khai thác':'Đã cạn'};
   if(kind==='spiritVein')return {title:data.name,meta:'Mạch linh thạch · '+data.quality,state:data.state.amount?'Có thể khai thác':'Đã cạn'};
@@ -100,7 +105,13 @@ export function inspectionSnapshot(scene,entry){
   const brief=inspectionBrief(scene,entry),region=inspectionRegion(scene,data.x!==undefined?data:sprite);
   const shape={...brief,fields:[],bars:[],links:[],skills:[],description:'',tone:''};
   let rows=[];
-  if(kind==='fauna'){
+  if(kind==='east-site'){
+    const namSa=data.name==='Rương Nam Sa',chest=namSa||scene.prop(data,'eastChest');
+    const opened=world.environment.processedEventIds.includes(namSa?'shanhe:nam-sa-chest':'east-ruins-chest');
+    rows=[['Sinh cảnh',region],['Phân loại',brief.meta],['Trạng thái',chest?(opened?'Đã mở':'Còn niêm phong'):undefined]];
+    if(namSa)shape.description='Tiến sát và nhấn E khi nhập thân. Yêu thú ở di tích có thể canh giữ rương.';
+    else if(chest)shape.description='Tiến sát và nhấn E khi nhập thân. Rương nằm sau khu vực Vạn Cốt Quỷ Vương trấn giữ.';
+  }else if(kind==='fauna'){
     const f=data,cfg=FAUNA_SPECIES[f.species],zone=scene.faunaZones.find(z=>z.zoneId===f.zoneId),habitat=faunaHabitat(zone,f.species);
     const effects=[['armorUntil','Tăng phòng ngự'],['buffUntil','Được cường hóa'],['hasteUntil','Tăng tốc'],['rageUntil','Kích động'],['injuredUntil','Bị thương']]
       .filter(([key])=>(f[key]??0)>now).map(([key,name])=>name+' · '+seconds(f[key]-now));
@@ -114,7 +125,8 @@ export function inspectionSnapshot(scene,entry){
       ['Độ cao',f.species==='eagle'?`${Math.round(f.altitude??0)} px`:undefined],
       ['Phòng ngự cơ bản',cfg.defense+(f.rank==='elite'?3:0)],['Tốc độ cơ bản',n(cfg.speed)+' px/giây'],
       ['Linh khí tích lũy',f.growth?.qi],['Mục tiêu',npcName(scene,f.targetNpcId)],['Hiệu ứng',effects.join(' · ')],
-      ['Hình thái',f.species==='flower'?faunaStationaryForm(f)?'Bông hoa ngụy trang':f.flower?.phase==='rooting'?'Đang thu chân rễ':'Yêu hoa chân rễ':
+      ['Hình thái',f.species==='sand-golem'?(Number(sprite?.frame.name)>=128&&Number(sprite?.frame.name)<144?'Ngụy trang thành cụm đá':'Thạch yêu đã hiện hình'):f.species==='flower'?faunaStationaryForm(f)?'Bông hoa ngụy trang':f.flower?.phase==='rooting'?'Đang thu chân rễ':'Yêu hoa chân rễ':
+        ['bone-skeleton','bone-general','sand-worm'].includes(f.species)?faunaStationaryForm(f)?(f.species==='sand-worm'?'Ẩn dưới cát':'Hài cốt bất động'):'Đã hiện hình':
         f.growth||f.species==='vine'?faunaStationaryForm(f)?f.species==='vine'?'Dây leo ngụy trang':'Hình cây ngụy trang':'Hình thái yêu thú':undefined],
       ...recoveryFields(scene,f),
       ['Có thể rơi',loot.join(', ')]];
@@ -128,7 +140,7 @@ export function inspectionSnapshot(scene,entry){
     const d=treasureDefinition(data.itemId),stage=treasureStage(data,now),guard=scene.westTreasures.system.guardian(data);
     rows=[['Phân loại','Thiên tài địa bảo'],['Phẩm cấp',gradeOf(data.itemId)],['Độ hiếm',WEST_TREASURE_RARITY[d.grade]],
       ['Thuộc tính',titleCase(d.element)],['Tuổi dược tính',d.age!==undefined?n(d.age)+' năm':undefined],['Sinh cảnh',region],
-      ['Có thể thu hái',stage==='ready'?1:0],['Công dụng','Dược liệu luyện '+WEST_TREASURE_MEDICINE[d.medicine]],
+      ['Có thể thu hái',treasureBloomOpen(data,world.clock.minute)?(stage==='ready'?1:0):'Chờ nở ban đêm'],['Công dụng',d.material?'Nguyên liệu luyện khí hoặc giao thương':'Dược liệu luyện '+WEST_TREASURE_MEDICINE[d.medicine]],
       ['Bảo hộ',guard?beastRealm(guard)+' · '+rankName(guard):data.guardSpecies?
         `${FAUNA_SPECIES[data.guardSpecies].name} · hiện vắng mặt`:'Mọc tự nhiên – Không có yêu thú bảo hộ'],
       ['Trạng thái bảo hộ',guard?faunaActivity(guard,now):undefined],
@@ -188,7 +200,7 @@ export function inspectionSnapshot(scene,entry){
     const society=scene.society,guests=Object.entries(society.visits).filter(([,visit])=>visit.venue===data.id);
     const seated=guests.filter(([id])=>{const n=scene.scheduler.byId.get(id)?.npc;return n&&society.isSeated(n);});
     const groups=[...new Set(data.seats.map(s=>s.table))];
-    const services={tea:'Trà, nghỉ chân, trò chuyện',music:'Thưởng nhạc và giao lưu',clinic:'Khám và dùng thuốc chữa thương',tavern:'Rượu và bữa nhẹ',inn:'Thuê chỗ nghỉ'};
+    const services={'east-rest':'Nghỉ chân, uống trà và hồi sức',tea:'Trà, nghỉ chân, trò chuyện',music:'Thưởng nhạc và giao lưu',clinic:'Khám và dùng thuốc chữa thương',tavern:'Rượu và bữa nhẹ',inn:'Thuê chỗ nghỉ'};
     const hour=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
     rows=[['Đơn vị quản lý',society.city?.name],['Nhân viên',data.staff.name],
       ['Giờ hoạt động',hour(data.cfg.start)+'–'+hour(data.cfg.end)],['Dịch vụ',services[data.id]],['Giá',data.cfg.fee+' linh thạch'],

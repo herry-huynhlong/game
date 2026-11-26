@@ -67,6 +67,12 @@
   background: #26322b;
 }
 
+#world-inspector[data-large-portrait] canvas {
+  flex-basis: min(112px, 36vw);
+  width: min(112px, 36vw);
+  height: min(112px, 36vw);
+}
+
 #world-inspector h2 {
   margin: 0;
   font: 700 18px/1.25 Georgia, serif;

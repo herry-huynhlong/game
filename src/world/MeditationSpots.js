@@ -52,12 +52,15 @@ export class MeditationSpots {
     const avoiding=this.blockedApproaches.get(npc.id);
     const old=this.reserved.get(npc.id);
     if(!manual&&old&&this.open(npc,old))return old;
-    const formation=npc.decisionSlot==='sect-campus:array'&&this.campus;
-    const seats=formation?Array.from({length:8},(_,i)=>formation.site('seat-'+i)).filter(Boolean):[];
+    const formation=['sect-campus:array','sect-campus:retreat'].includes(npc.decisionSlot)&&this.campus;
+    const prefix=npc.decisionSlot==='sect-campus:retreat'?'retreat-seat-':
+      npc.sectRank==='chân_truyền'?'true-seat-':npc.sectRank==='nội_môn'?'inner-seat-':'seat-';
+    const seats=formation?Array.from({length:8},(_,i)=>formation.site(prefix+i)).filter(Boolean):[];
     const home=npc.home??npc;
     const privateSpots=[[0,0],[30,23],[-30,23],[27,-28],[-27,-28]].map(([x,y])=>({x:home.x+x,y:home.y+y,area:'home'})).filter(p=>this.safe(p));
     const choices=[...seats,...privateSpots,...this.spots];
-    const score=p=>distance(npc,p)+(seats.includes(p)?-400:p.area==='home'?-130:0);
+    const score=p=>seats.includes(p)?-10000+distance(npc.actionTarget??npc,p):
+      distance(npc,p)+(p.area==='home'?-130:0);
     const selected=manual?(this.safe(npc)&&!this.taken(npc,npc)&&this.open(npc,npc)?{x:npc.x,y:npc.y}:null):
       choices.sort((a,b)=>score(a)-score(b)).find(p=>!this.taken(npc,p)&&this.open(npc,p)&&this.scene.canReachPoint(npc,p)&&
         (!avoiding||avoiding.spots.every(q=>distance(p,q)>28)&&this.segmentTo(npc,p)));
