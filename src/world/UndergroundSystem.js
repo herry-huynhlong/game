@@ -1,3 +1,4 @@
+import { creditDeath } from '../dao/DivinePowerLedger.ts';
 import {cultivationStats} from '../systems/CultivationSystem.ts';
 import {weaponForNpc} from './WeaponCombat.js';
 import {EconomySystem as Economy} from '../dao/EconomySystem.ts';
@@ -323,7 +324,7 @@ export class UndergroundSystem {
     if(!d||this.now>(d.venomUntil??0)||this.now<(d.venomTick??Infinity))return;
     d.venomTick=this.now+2;
     npc.hp=Math.max(0,npc.hp-2);
-    if(!npc.hp){npc.alive=false;npc.deathCause='Trúng độc dưới lòng đất';delete npc.underground;}
+    if(!npc.hp){npc.alive=false;npc.deathCause='Trúng độc dưới lòng đất';creditDeath(this.world,npc,'npc-death',npc.deathCause);delete npc.underground;}
     this.save();
   }
 
@@ -410,7 +411,7 @@ export class UndergroundSystem {
             if(beast.species===1){rival.underground.venomUntil=this.now+8;rival.underground.venomTick=this.now+2;}
             if(beast.species===2)rival.underground.staggerUntil=this.now+2;
             if(beast.species===3)rival.mp=Math.max(0,rival.mp-4);
-            if(!rival.hp){rival.alive=false;rival.deathCause='Yêu thú dưới lòng đất';delete rival.underground;}
+            if(!rival.hp){rival.alive=false;rival.deathCause='Yêu thú dưới lòng đất';creditDeath(this.world,rival,'npc-death',rival.deathCause);delete rival.underground;}
           }
           this.save();
         }
@@ -437,7 +438,12 @@ export class UndergroundSystem {
     if(beast.hp<=0||!['ACTIVE','COMBAT','RETURN_HOME'].includes(beast.phase))return;
     const weapon=weaponForNpc(npc);
     beast.hp=Math.max(0,beast.hp-(9+npc.realmIndex*8+npc.realmLevel*2+(weapon?5:0)));
-    if(!beast.hp)state.drops.push({id:beast.id+':'+(beast.life??0),x:beast.x,y:beast.y,level,item:beastDrops[beast.species],claimed:false});
+    if(!beast.hp){
+      const life=beast.id+':'+(beast.life??0),spec=CAVE_BEASTS[beast.species];
+      const underground={siteId:npc.underground.siteId,floor:level,x:beast.x,y:beast.y};
+      creditDeath(this.world,{...beast,...spec,underground},'fauna-death','Bị đánh bại dưới lòng đất',life);
+      state.drops.push({id:life,x:beast.x,y:beast.y,level,item:beastDrops[beast.species],claimed:false});
+    }
     this.save();
   }
 

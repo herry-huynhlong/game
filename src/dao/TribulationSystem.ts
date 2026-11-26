@@ -1,3 +1,4 @@
+import { creditBreakthrough, creditDeath } from './DivinePowerLedger';
 import { breakthrough, cultivationStats, cultivationView } from '../systems/CultivationSystem';
 import { REALMS } from '../systems/RealmConfig';
 import { EconomySystem } from './EconomySystem';
@@ -107,15 +108,17 @@ export function stepTribulation(world:DivineWorldSave,npc:SimNPC){
   t.phase='strike';t.strikes++;t.nextAt=now+config.interval;
   npc.hp=Math.max(0,npc.hp-harm);npc.mp=Math.max(0,npc.mp-5-t.realm);
   npc.shortGoal='Chịu Thiên Lôi · '+t.strikes+'/'+config.waves;
-  if(npc.hp===0){npc.alive=false;npc.deathCause='Tử vong khi chịu Thiên Kiếp';}
+  if(npc.hp===0){npc.alive=false;npc.deathCause='Tử vong khi chịu Thiên Kiếp';creditDeath(world,npc,'npc-death',npc.deathCause);}
   if(!npc.alive)finish(world,npc,t,false);
   return true;
 }
 
 function finish(world:DivineWorldSave,npc:SimNPC,t:TribulationSave,passed:boolean){
   const old=cultivationStats(npc);
+  const prior={realmIndex:npc.realmIndex,realmLevel:npc.realmLevel};
   if(passed)passed=npc.realmIndex===t.realm&&needsTribulation(npc)&&breakthrough(npc).success;
   if(passed){
+    creditBreakthrough(world,npc,prior,'Vượt Thiên Kiếp thành công');
     equipBestWeapon(npc);
     const next=cultivationStats(npc);
     npc.hp=Math.min(next.hpMax,npc.hp+next.hpMax-old.hpMax);

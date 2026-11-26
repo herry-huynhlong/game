@@ -12,9 +12,6 @@ export function mountHeavenShop(scene) {
   scene.openNpcGift = id => { if (scene.possessedNpcId) return; recipientId = id; lockedRecipient = true; tab = 'gift'; panel.hidden = false; panel.querySelector('[role=status]').textContent = ''; render(); };
   scene.closeNpcGift = () => { if (lockedRecipient) panel.hidden = true; };
   scene.refreshHeavenWallet = () => {
-    const power = Math.floor(world.heaven.divinePower);
-    const hud = document.getElementById('heaven-wallet');
-    if (hud && hud.textContent !== power + ' Thần lực') hud.textContent = power + ' Thần lực';
     if (!panel.hidden && panel.dataset.power !== String(world.heaven.divinePower)) render();
   };
   const render = () => {

@@ -1,3 +1,4 @@
+import { creditDeath } from '../dao/DivinePowerLedger.ts';
 import {caveDistance,caveLine,caveOpen,caveCell} from './UndergroundMaps.js';
 import {CivicVeinPanel} from './CivicVeinPanel.js';
 import {EconomySystem as Economy} from '../dao/EconomySystem.ts';
@@ -315,7 +316,7 @@ export class CivicSystem {
     const damage=Math.max(1,Math.round(stats.attack*.24-defense*.1));
     victim.hp=Math.max(0,victim.hp-damage);
     if(!lawful)this.violence({eventId:'mine-assault:'+actor.id+':'+victim.id+':'+this.now,attackerId:actor.id,victimId:victim.id,damage});
-    if(!victim.hp){victim.alive=false;victim.deathCause='Giao tranh dưới lòng đất';delete victim.underground;}
+    if(!victim.hp){victim.alive=false;victim.deathCause='Giao tranh dưới lòng đất';creditDeath(this.world,victim,'npc-death',victim.deathCause);delete victim.underground;}
     this.save();
     return true;
   }

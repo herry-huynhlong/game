@@ -1,3 +1,4 @@
+import { syncDivinePower } from '../dao/DivinePowerLedger.ts';
 import { EconomySystem } from '../dao/EconomySystem.ts';
 import { DivineResourceSystem } from '../dao/DivineResourceSystem.ts';
 import { ITEM_CATALOG } from '../dao/ItemCatalog.ts';
@@ -27,7 +28,7 @@ const done = message => ({ ok: true, message });
 
 export function commitHeavenChange(scene, npc, change) {
   const world = scene.populationWorld, heaven = world.heaven;
-  const power = heaven.divinePower, ledger = structuredClone(shopLedger(world));
+  const power = heaven.divinePower, divineLedger = heaven.divineLedger, ledger = structuredClone(shopLedger(world));
   const inventory = npc && structuredClone(npc.inventory), skills = npc?.skills?.slice();
   const active = npc?.activeHeavenSkill;
   const events = world.events?.slice(), memories = npc?.memories?.slice();
@@ -45,11 +46,15 @@ export function commitHeavenChange(scene, npc, change) {
         if(world.events.length>400)world.events.splice(0,world.events.length-400);
       }
     }
-    if (result.ok && scene.persistPopulation()) return result;
+    if (result.ok) {
+      if (world.clock) syncDivinePower(world, result.message);
+      if (scene.persistPopulation()) return result;
+    }
   } catch { result = failed("Giao dịch không thể hoàn tất."); }
   if(events)world.events.splice(0,world.events.length,...events);
   if(npc&&memories)npc.memories=memories;
   heaven.divinePower = power;
+  heaven.divineLedger = divineLedger;
   heaven.shopLedger = ledger;
   if (npc) {
     npc.inventory = inventory;

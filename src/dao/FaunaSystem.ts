@@ -1,5 +1,6 @@
+import { creditDeath } from './DivinePowerLedger';
 import type { DivineWorldSave, EnvironmentSave, FaunaRespawnSave, FaunaSave, FaunaSpecies, GroundDropSave, MonsterRank, SimNPC, TradeItemId } from './types';
-import { BASE_FAUNA_IDS, FAUNA_SPECIES, MONSTER_SPAWN, faunaCoreLoot, faunaName, hashMonster } from './MonsterRegistry';
+import { BASE_FAUNA_IDS, FAUNA_SPECIES, MONSTER_SPAWN, faunaCoreLoot, faunaName, faunaRealm, hashMonster } from './MonsterRegistry';
 import { faunaHabitat } from '../world/FaunaHabitat.js';
 import { recordCombatDamage } from './CombatRecovery';
 import { eastDisguise } from './EastFauna';
@@ -261,6 +262,7 @@ export function damageFauna(world:DivineWorldSave,id:string,attackerId:string,ra
   const drops:GroundDropSave[]=[];
   if(beast.hp===0){
     beast.alive=false;beast.state='dead';beast.cast=undefined;beast.deathAt=now;
+    creditDeath(world,{...beast,...faunaRealm(beast),name:faunaName(beast)},'fauna-death','Bị đánh bại trong chiến đấu');
     if(!beast.lootCreated&&!env.defeatedBeastIds.includes(id)){
       beast.lootCreated=true;env.defeatedBeastIds.push(id);
       const roll=hashMonster(world.worldId+':'+id)%1000;

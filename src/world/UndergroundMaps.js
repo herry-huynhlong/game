@@ -2,12 +2,12 @@ export const CAVE_SIZE={tile:24};
 export const CAVE_ENTRY={x:2,y:8};
 export const CAVE_LAYOUT_VERSION=3;
 export const CAVE_BEASTS=[
-  {name:'Địa Sa Yêu Trùng',color:'#cfaa74',hp:54,range:1,damage:8,interval:4,skill:'Cắn cát'},
-  {name:'Kim Giáp Độc Hạt',color:'#d6a24b',hp:88,range:2,damage:13,interval:5,skill:'Chích độc'},
-  {name:'Linh Nham Thạch Yêu',color:'#88769d',hp:124,range:1,damage:23,interval:7,skill:'Dậm nham'},
-  {name:'U Minh Huyết Bức',color:'#9b637b',hp:91,range:3,damage:15,interval:4,skill:'Sóng huyết âm'},
-  {name:'Huyền Giáp Địa Thử',color:'#91969e',hp:139,range:1,damage:18,interval:3,skill:'Cắn phá giáp'},
-  {name:'Thái Cổ Địa Long',color:'#d5b077',hp:240,range:2,damage:35,interval:6,skill:'Địa Long Chấn'},
+  {name:'Địa Sa Yêu Trùng',realmIndex:0,realmLevel:2,color:'#cfaa74',hp:54,range:1,damage:8,interval:4,skill:'Cắn cát'},
+  {name:'Kim Giáp Độc Hạt',realmIndex:0,realmLevel:6,color:'#d6a24b',hp:88,range:2,damage:13,interval:5,skill:'Chích độc'},
+  {name:'Linh Nham Thạch Yêu',realmIndex:1,realmLevel:3,color:'#88769d',hp:124,range:1,damage:23,interval:7,skill:'Dậm nham'},
+  {name:'U Minh Huyết Bức',realmIndex:0,realmLevel:8,color:'#9b637b',hp:91,range:3,damage:15,interval:4,skill:'Sóng huyết âm'},
+  {name:'Huyền Giáp Địa Thử',realmIndex:1,realmLevel:4,color:'#91969e',hp:139,range:1,damage:18,interval:3,skill:'Cắn phá giáp'},
+  {name:'Thái Cổ Địa Long',realmIndex:2,realmLevel:3,color:'#d5b077',hp:240,range:2,damage:35,interval:6,skill:'Địa Long Chấn'},
 ];
 export const CAVE_TREASURES=['Địa Tâm Linh Nhũ','Huyền Tinh Thạch','Địa Hỏa Linh Chi','Hàn Ngọc Tủy','Tử Tinh Linh Quả','Vạn Niên Thạch Tủy','Linh Mạch Chi Tâm'];
 

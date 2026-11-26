@@ -1,3 +1,4 @@
+import { creditDeath } from './DivinePowerLedger';
 import type { BeastSiegeSave, DivineWorldSave, SimNPC } from './types';
 import { DivineResourceSystem } from './DivineResourceSystem';
 import { WorldEventSystem } from './WorldEventSystem';
@@ -5,8 +6,8 @@ import { WorldEventSystem } from './WorldEventSystem';
 export class WorldRewardSystem {
   static claimAscendantDeath(world:DivineWorldSave,events:WorldEventSystem,eventId:string,npc:SimNPC){
     const event=world.events.find(e=>e.id===eventId);
-    if(npc.alive||npc.realmIndex<4||event?.type!=='npc-death'||event.actorId!==npc.id||event.status!=='completed'||!events.claimReward(eventId))return false;
-    DivineResourceSystem.awardPower(world.heaven,5);return true;
+    if(npc.alive||event?.type!=='npc-death'||event.actorId!==npc.id||event.status!=='completed'||!events.claimReward(eventId))return false;
+    return creditDeath(world,npc,'npc-death',npc.deathCause??'Tử vong');
   }
   static claimBeastSiege(world:DivineWorldSave,events:WorldEventSystem,siege:BeastSiegeSave){
     const event=world.events.find(e=>e.id===siege.id);

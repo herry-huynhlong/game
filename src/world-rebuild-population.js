@@ -1,3 +1,4 @@
+import { initDivinePower } from './dao/DivinePowerLedger.ts';
 import { ensureWorldNpcAppearances } from './world/NpcAppearanceProfiles.js';
 import { createWorldUuid } from './world/WorldId.ts';
 import { HEAVEN_DEFAULTS } from './dao/HeavenlyDaoSystem.ts';
@@ -127,6 +128,7 @@ export function loadWorldPopulation(storage, map) {
       migrateWorldLayout(world,map);
       migrateSectCampus(world,map,worldLayout(map).westOffsetX);
       ensureWorldNpcAppearances(world);
+      initDivinePower(world.heaven,world.clock.day);
       return { world, fresh: false };
     }
     throw new Error('Bản lưu WORLD.REBUILD.1-C không hợp lệ. Đã giữ nguyên dữ liệu để tránh ghi đè.');
@@ -135,6 +137,7 @@ export function loadWorldPopulation(storage, map) {
   const world = makeFreshWorld(seed, map, solids);
   world.population.sectLayoutVersion = worldLayout(map).sectLayoutVersion;
   ensureWorldNpcAppearances(world);
+  initDivinePower(world.heaven,world.clock.day);
   storage.setItem(WORLD_POPULATION_SAVE_KEY, JSON.stringify(world));
   return { world, fresh: true };
 }

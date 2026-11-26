@@ -1,3 +1,4 @@
+import { creditBreakthrough, creditDeath } from './DivinePowerLedger';
 import type { TradeItemId } from './types';
 import { PROFESSION_BEHAVIORS, SPECIAL_DUTIES } from './ProfessionBehaviorRegistry';
 import { advanceQiMinor, advancesQiMinor, breakthrough, cultivationStats, cultivationView } from '../systems/CultivationSystem';
@@ -206,6 +207,29 @@ function pickGoal(npc:SimNPC,minute:number,day:number,force=false,world?:DivineW
   if(npc.populationRole&&action==='eat'&&(EconomySystem.count(npc.inventory,'ration')>0||EconomySystem.count(npc.inventory,'deer_meat')>0))npc.actionTarget={x:npc.x,y:npc.y};
 }
 
+const daysPerYear = 365;
+
+/** Advance the existing age and lifespan fields only when simulation time runs. */
+export function advanceNpcLifespans(world: DivineWorldSave) {
+  const day = world.clock.day, year = Math.floor((day - 1) / daysPerYear);
+  const elapsedYears = Math.max(0, year - (world.lifespanYear ?? year));
+  world.lifespanYear = year;
+  if (!elapsedYears) return false;
+  for (const npc of world.npcs) {
+    if (!npc.alive || npc.ascended || !Number.isFinite(npc.age) || !(npc.lifespan > 0)) continue;
+    npc.age += elapsedYears;
+    if (npc.age < npc.lifespan) continue;
+    npc.alive = false;
+    npc.hp = 0;
+    npc.deathCause = 'Hết thọ nguyên';
+    creditDeath(world, npc, 'npc-death', npc.deathCause);
+    world.events.push({id:'npc-death:lifespan:'+npc.id,type:'npc-death',day,minute:world.clock.minute,
+      actorId:npc.id,description:npc.name+' hết thọ nguyên.',status:'completed'});
+    if(world.events.length>400)world.events.shift();
+  }
+  return true;
+}
+
 export class AutonomousNPCSystem {
   constructor(readonly npcs:SimNPC[],private readonly emit:(event:Omit<WorldEvent,'id'>)=>void,private readonly world?:DivineWorldSave,private readonly clearStrike?:(a:SimNPC,b:SimNPC)=>boolean,
     private readonly market?:(n:SimNPC,side:'buy'|'sell',shopId:string,itemId:TradeItemId,count:number)=>ReturnType<typeof EconomySystem.buyFromShop>,
@@ -348,7 +372,9 @@ export class AutonomousNPCSystem {
   private advanceMinor(n:SimNPC,day:number,minute:number){
     if(!n.populationRole||!advancesQiMinor(n)||n.xp<cultivationRequired(0,n.realmLevel))return;
     const old=cultivationStats(n);
+    const prior={realmIndex:n.realmIndex,realmLevel:n.realmLevel};
     const attained=advanceQiMinor(n);
+    creditBreakthrough(this.world,n,prior);
     const next=cultivationStats(n);
     n.hp=Math.min(next.hpMax,n.hp+next.hpMax-old.hpMax);
     n.mp=Math.min(next.mpMax,n.mp+next.mpMax-old.mpMax);
@@ -374,7 +400,8 @@ export class AutonomousNPCSystem {
         return;
       }
     }
-    n.realmIndex=c.realmIndex;n.realmLevel=c.realmLevel;n.xp=c.xp;equipBestWeapon(n);const next=cultivationStats(n);n.hp=Math.min(next.hpMax,n.hp+next.hpMax-old.hpMax);n.mp=Math.min(next.mpMax,n.mp+next.mpMax-old.mpMax);this.remember(n,day,`Đột phá thành công: ${result.to}.`,'cultivation');this.emit({day,minute,type:'npc-breakthrough',actorId:n.id,description:`${n.name} đột phá ${result.to}, tiêu hao 1 Tụ Khí Đan.`})
+    const prior={realmIndex:n.realmIndex,realmLevel:n.realmLevel};
+    n.realmIndex=c.realmIndex;n.realmLevel=c.realmLevel;n.xp=c.xp;creditBreakthrough(this.world,n,prior);equipBestWeapon(n);const next=cultivationStats(n);n.hp=Math.min(next.hpMax,n.hp+next.hpMax-old.hpMax);n.mp=Math.min(next.mpMax,n.mp+next.mpMax-old.mpMax);this.remember(n,day,`Đột phá thành công: ${result.to}.`,'cultivation');this.emit({day,minute,type:'npc-breakthrough',actorId:n.id,description:`${n.name} đột phá ${result.to}, tiêu hao 1 Tụ Khí Đan.`})
   }
   private remember(n:SimNPC,day:number,text:string,kind:string){n.memories.push({day,text,kind});if(n.memories.length>12)n.memories.shift()}
   setPositions(positions:Record<string,{x:number;y:number}>){for(const n of this.npcs){const p=positions[n.id];if(p){n.x=p.x;n.y=p.y}}}
