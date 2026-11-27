@@ -270,7 +270,7 @@ export class WorldCultivation {
       const site=this.sites.find(p=>choice&&scene.groundPositionOpen(choice,p.x,p.y)&&
         this.world.npcs.every(n=>!n.tribulation||distance(n.tribulation.site,p)>(TRIBULATIONS[rank].radius+40)));
       if(!site){status.textContent='Chưa có điểm trống. Chờ lượt đang diễn ra kết thúc.';return;}
-      Object.assign(choice,{x:site.x,y:site.y,realmIndex:rank,realmLevel:9,xp:cultivationRequired(rank,9),fatigue:0,hunger:10,talent:85,
+      Object.assign(choice,{x:site.x,y:site.y,realmIndex:rank,realmLevel:10,xp:cultivationRequired(rank,10),fatigue:0,hunger:10,talent:85,
         action:'cultivate',goalAction:'cultivate',actionCooldown:0,marketVisit:undefined});
       const stats=cultivationStats(choice),low=button.hasAttribute('data-injured');
       choice.hp=Math.ceil(stats.hpMax*(low?.51:1));choice.mp=stats.mpMax;

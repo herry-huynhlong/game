@@ -1,4 +1,7 @@
+import {MARTIAL_WEAPONS} from '../dao/MartialRegistry.ts';
+import {equippedInstance,ensureWeaponStack} from '../dao/WeaponInstances.ts';
 export const WORLD_WEAPONS = Object.freeze({
+  ...MARTIAL_WEAPONS,
   training_crossbow: Object.freeze({id:'training_crossbow',name:'Nỏ Thiết Mộc',kind:'crossbow',attack:3,minRealm:0,range:300,width:9,skillRange:0,skillWidth:0}),
   iron_dao: Object.freeze({ id: 'iron_dao', name: 'Thiết Diệp Đao', kind: 'dao', attack: 4, minRealm: 0, range: 58, width: 34, skillRange: 66, skillWidth: 38 }),
   iron_sword: Object.freeze({ id: 'iron_sword', name: 'Thiết Mộc Kiếm', kind: 'jian', attack: 3, minRealm: 0, range: 70, width: 16, skillRange: 78, skillWidth: 12 }),
@@ -10,7 +13,8 @@ const FORWARD = Object.freeze({ down: [0, 1], up: [0, -1], left: [-1, 0], right:
 
 export function weaponForNpc(npc) {
   const spec = WORLD_WEAPONS[npc?.equippedWeapon];
-  return spec && npc.realmIndex >= spec.minRealm && npc.inventory?.some((item) => item.itemId === spec.id && item.count > 0) ? spec : null;
+  return spec && (spec.grade!==undefined||npc.realmIndex>=spec.minRealm) && npc.inventory?.some((item) => item.itemId === spec.id && item.count > 0)
+    && (equippedInstance(npc)?.durability??1)>0 ? spec : null;
 }
 
 export function weaponChoices(npc) {
@@ -19,16 +23,28 @@ export function weaponChoices(npc) {
   );
 }
 
-export function setNpcWeapon(npc, itemId = null) {
-  if (itemId === null) { npc.equippedWeapon = null; return true; }
+export function setNpcWeapon(npc, itemId = null, instanceId=null) {
+  if (itemId === null) { npc.equippedWeapon = null; npc.equippedWeaponInstance=null; return true; }
   const weapon = WORLD_WEAPONS[itemId];
-  if (!weapon || !npc.alive || npc.realmIndex < weapon.minRealm || !((npc.inventory ?? []).find((item) => item.itemId === itemId)?.count > 0)) return false;
+  const stack=npc.inventory?.find(item=>item.itemId===itemId&&item.count>0);
+  if (!weapon || !npc.alive || weapon.grade===undefined&&npc.realmIndex<weapon.minRealm || !stack) return false;
+  const instances=ensureWeaponStack(stack,npc.id,npc.martialDurability?.[itemId]);
+  const instance=instanceId?instances.find(item=>item.id===instanceId):instances.find(item=>item.id===npc.equippedWeaponInstance&&item.durability>0)??instances.find(item=>item.durability>0);
+  if((instanceId||instances.length)&&!(instance?.durability>0))return false;
   npc.equippedWeapon = itemId;
+  npc.equippedWeaponInstance=instance?.id??null;
   return true;
 }
 
 export function weaponAttackMode(weapon, combo = 1, skill = false) {
   if (!weapon) return { animation: `unarmed_${combo}`, hit: skill ? 'unarmed_skill' : 'unarmed' };
+  if(weapon.grade!==undefined){
+    const sweep=weapon.kind==='dao'||weapon.kind==='scythe'||weapon.kind==='hammer';
+    const slash=sweep||weapon.kind==='jian'&&combo===2;
+    return {animation:sweep?'dao_slash_'+Math.min(combo,3):slash?'jian_slash':'jian_thrust',
+      hit:slash?'slash':'thrust',range:skill?weapon.skillRange:weapon.range,width:skill?weapon.skillWidth:weapon.width,
+      multiplier:1+(combo-1)*.055};
+  }
   if (weapon.kind === 'crossbow') return {animation:'crossbowShoot',hit:'thrust',range:weapon.range,width:weapon.width,multiplier:1};
   if (weapon.kind === 'dao') return { animation: `dao_slash_${Math.min(3, combo)}`, hit: 'slash', range: skill ? weapon.skillRange : weapon.range, width: skill ? weapon.skillWidth : weapon.width, multiplier: skill ? 1.12 : [1, 1.06, 1.14][Math.min(2, combo - 1)] };
   if (skill) return { animation: 'jian_thrust', hit: 'thrust', range: weapon.skillRange, width: weapon.skillWidth, multiplier: 1.12 };

@@ -11,6 +11,7 @@ const HANDS = {down:[43,62],up:[20,62],left:[27,61],right:[36,61]};
 
 export class CharacterRenderer {
   constructor(scene, x, y, appearance) {
+    this.scene=scene;
     this.appearance = validateAppearance(appearance);
     this.resolvedParts = new Map();
     this.grips = scene.cache.json.get('rig-grips');
@@ -60,10 +61,12 @@ export class CharacterRenderer {
     const airCloth=flight?.cloth??0;
     const action=combat?.values;
     const labor=!action&&!riding&&!flight&&this.workPose;
+    const cinematic=this.martialPose?.cinema;
+    const fabric=cinematic?Math.round((cinematic.fabric*6+cinematic.tuck*2)*sign):0;
     const shift=(action?.[4]??0)+(labor?.bend??0);
     const rise=(riding?0:pose.rise)*(1-stance)+shift+(this.rideBob??0)-Math.round(Math.sin(stance*Math.PI)*5);
     const {swing,cloth}=pose;
-    const sway=Math.max(-2,Math.min(2,Math.round((cloth*(1-stance)+airCloth*stance)*sign)));
+    const sway=Math.max(-2,Math.min(2,Math.round((cloth*(1-stance)+airCloth*stance)*sign+fabric)));
     const armX=side?swing*sign:0;
     const armY=side?0:Math.round(swing*.6)*sign;
     const suffix=appearance.outfitColor==='jade'?'':'/'+appearance.outfitColor;
@@ -89,7 +92,7 @@ export class CharacterRenderer {
       if(sprite.visible!==visible)sprite.setVisible(visible);
     };
     const meditation=this.meditation;
-    if(meditation?.amount>.20&&!riding&&!flight&&!action){
+    if(meditation?.amount>.20&&!riding&&!flight&&!action&&!cinematic){
       const stage=meditation.amount<.56?1:meditation.amount<.90?2:3;
       const breath=stage===3&&Boolean(meditation.breath||meditation.shocked)?1:0;
       const anchors=meditationAnchors(appearance,direction,stage,breath);
@@ -118,7 +121,7 @@ export class CharacterRenderer {
     }
     this.meditationAnchors=null;
     this.seated?.setVisible(false);
-    set('hairBack','hairBack'+hair,sway);
+    set('hairBack','hairBack'+hair,sway+Math.round(fabric*.82),rise-Math.round((cinematic?.breath??0)*2));
     set('body');
     const pants = appearance.pants === 'charcoal' ? '/charcoal' : '';
     const shoes = appearance.shoes === 'charcoal' ? '/charcoal' : '';
@@ -126,6 +129,11 @@ export class CharacterRenderer {
     const feet=['leftShoe','rightShoe'];
     for(const [i,part] of feet.entries()) {
       const travel=pose.feet[i]*sign;
+      if(cinematic){
+        const tuck=cinematic.tuck;
+        set(part,part+shoes,Math.round((i===0?-5:5)*tuck),Math.round(tuck*(i===0?-7:-14))+rise);
+        continue;
+      }
       if(flight){
         const x=side?(i===0?-9:10):(i===0?-3:3),y=side?(i===0?-1:1):(i===0?-7:6);
         set(part,part+shoes,Math.round(x*stance),Math.round(y*stance-(i===1?Math.sin(stance*Math.PI)*9:0)));
@@ -133,8 +141,8 @@ export class CharacterRenderer {
       }
       set(part,part+shoes,riding?(side?-5+7*i:(i?8:-8)):side?travel:0,riding?-21+(side?2*i:0):(side?0:travel)-pose.lift[i],!riding||!side||i===1);
     }
-    set('outerCloth','outerCloth'+suffix);
-    set('hem',`hem/${direction==='left'?-sway:sway}${suffix}`,0,rise,rig!=='original');
+    set('outerCloth','outerCloth'+suffix,Math.round(fabric*.42));
+    set('hem',`hem/${direction==='left'?-sway:sway}${suffix}`,Math.round(fabric*.64),rise-(cinematic?Math.round(cinematic.tuck*3):0),rig!=='original');
     set('innerCloth');
     const hands=this.registry?.[rig]?.hands??HANDS;
     const [x,y]=hands[direction];
@@ -142,16 +150,24 @@ export class CharacterRenderer {
     const forwardX=side?sign:0,forwardY=side?0:sign;
     const twoHands=combat?.weapon==='crossbow';
     const active=Boolean(action||riding);
-    const handX=flight?Math.round((side?7*sign:5)*stance):active?forwardX*reach:labor?labor.x*sign:armX;
-    const handY=flight?-Math.round((7+(flight.lean??0))*stance):active?lift+Math.round(forwardY*reach*.42):labor?labor.y:armY;
+    const martial=this.martialPose;
+    const channel=martial&&['prepare','chant','charge','manifestation'].includes(martial.phase);
+    const ritual=channel&&['summon','field','ground','support','self','area'].includes(martial.pose);
+    const handX=cinematic?Math.round(forwardX*(cinematic.call*6+cinematic.command*17)-cinematic.seal*5):
+      flight?Math.round((side?7*sign:5)*stance):active?forwardX*reach:channel?forwardX*(ritual?4:-7):labor?labor.x*sign:armX;
+    const handY=cinematic?Math.round(-cinematic.call*21-cinematic.seal*13-cinematic.channel*8-5+forwardY*cinematic.command*6+cinematic.breath*2):
+      flight?-Math.round((7+(flight.lean??0))*stance):active?lift+Math.round(forwardY*reach*.42):
+      channel?(ritual?-11:-5)+Math.round(Math.sin(martial.age/135)*2):labor?labor.y:armY;
     const holdingBack=direction==='up';
     const mainPart=holdingBack?'leftArm':'rightArm';
     const supportPart=holdingBack?'rightArm':'leftArm';
     const anchors=this.registry?.[rig]?.arms?.[direction];
     const supportBaseX=anchors?.support[1][0]??(side?x+3:63-x);
     const supportBaseY=anchors?.support[1][1]??y;
-    const supportX=flight?Math.round((side?-6*sign:-5)*stance):twoHands?x+handX+(side?forwardX*8:4)-supportBaseX:active?forwardX*off:-armX;
-    const supportY=flight?-Math.round(4*stance):twoHands?y+handY+forwardY*6-supportBaseY:active?Math.round(forwardY*off*.36)-2:-armY;
+    const supportX=cinematic?Math.round(cinematic.seal*8-forwardX*(cinematic.channel*10+cinematic.command*8)):
+      flight?Math.round((side?-6*sign:-5)*stance):twoHands?x+handX+(side?forwardX*8:4)-supportBaseX:active?forwardX*off:-armX;
+    const supportY=cinematic?Math.round(-cinematic.seal*12-cinematic.call*5+cinematic.command*4-cinematic.channel*14):
+      flight?-Math.round(4*stance):twoHands?y+handY+forwardY*6-supportBaseY:active?Math.round(forwardY*off*.36)-2:ritual?-9:-armY;
     const hand=(part,startX,startY,dx,dy,shoulder)=>{
       const layer=layers[part];
       set(part,part+suffix,0,rise);
@@ -178,7 +194,16 @@ export class CharacterRenderer {
     set('accessory','accessory',side?sway:0,rise,appearance.accessory!=='none');
     this.attachments={hand:{x:x+handX-32,y:y+handY+rise-93}};
     const weapon=layers.weapon;
+    if(!this.martialWeapon&&weapon.texture.key.startsWith('martial-arms'))weapon.setOrigin(0,0).setRotation(0).setScale(1);
     if(this.flightWeapon)weapon.setVisible(false);
+    else if(this.martialWeapon&&this.scene.textures.exists('martial-arms')){
+      const gripAngle={up:-.12,right:.92,down:2.7,left:-.94}[direction];
+      const swing=combat?Math.sin((combat.elapsed??0)/110)*.62:channel?Math.sin(martial.age/48)*.11:Math.sign(armX)*.075;
+      const sheathed=!martial&&!combat&&!action&&direction==='up';
+      weapon.setTexture(sheathed?'martial-arms-back':'martial-arms',this.martialWeapon.icon).setOrigin(.5,.75)
+        .setPosition(sheathed?-5:this.attachments.hand.x,sheathed?-33:this.attachments.hand.y).setScale(1.85)
+        .setRotation(sheathed?-.73:gripAngle+swing).setVisible(true);
+    }
     else if(combat&&['sword','saber','crossbow'].includes(combat.weapon)){
       const style=combat.weapon==='crossbow'?(action[5]==='guard'?'hold':action[5]):action[5];
       const key=`weapon/${combat.weapon}/${direction}/${style}`;

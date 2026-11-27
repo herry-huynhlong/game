@@ -3,7 +3,7 @@ import {build} from 'esbuild';
 
 const result=await build({entryPoints:['src/world/FlyingSword.js'],bundle:true,write:false,format:'esm',platform:'node'});
 const {AerialNavigation,FlyingSwordController,FLIGHT,flightEligibility,travelMode,visualFlightPose}=await import('data:text/javascript;base64,'+Buffer.from(result.outputFiles[0].text).toString('base64'));
-const actor=(id,x,y,extra={})=>({id,x,y,alive:true,realmIndex:2,realmLevel:1,hp:260,mp:120,hunger:0,fatigue:0,
+const actor=(id,x,y,extra={})=>({id,x,y,alive:true,realmIndex:2,realmLevel:1,hp:1500,mp:120,hunger:0,fatigue:0,
   spiritualRoot:'metal',technique:'sword',techniqueMastery:{sword:1},skills:['qi-sword'],inventory:[],
   action:'travel',goalAction:'cultivate',actionTarget:{x:940,y},...extra});
 const nav=new AerialNavigation(1300,650,[

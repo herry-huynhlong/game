@@ -6,6 +6,8 @@ import { TECHNIQUES, addTechniquePractice } from '../systems/TechniqueSystem.ts'
 import { addCultivationXp, cultivationStats } from '../systems/CultivationSystem.ts';
 import { SectProduction } from './SectProduction.js';
 import { SpiritVeins } from './SpiritVeins.js';
+import { GRADES, MARTIAL_TECHNIQUES } from '../dao/MartialRegistry.ts';
+import { martialMastery } from '../dao/MartialProgress.ts';
 
 export const SECT_SHOP='sect-treasure-pavilion';
 export const SECT_FOOD='sect-dining-hall';
@@ -220,6 +222,7 @@ export class SectCampus {
     q.status='completed';q.finished=this.now();q.progress=q.quantity;q.phase='settled';
     n.sectMerit=(n.sectMerit??0)+q.merit;
     this.note('completed',n,q,n.name+' nộp '+ITEMS[item].name+' ×'+q.quantity+', nhận '+q.reward+' linh thạch.');
+    this.scene.martialEconomy?.missionReward(n,q);
     this.retire(n);this.scene.requestBackgroundSave();
     return true;
   }
@@ -739,6 +742,7 @@ export class SectCampus {
     if(!this.panel.open)this.panel.showModal();this.updatePanel();
   }
   atLibrary(n){
+    if(this.scene.buildingOpen?.('sect-campus-library')===false)return false;
     const keeper=this.world.npcs.find(p=>this.staff.get(p.id)==='library');
     return member(n)&&this.civilian(n)&&this.civilian(keeper)&&keeper.decisionSlot===PREFIX+'library'&&
       distance(keeper,this.site('library'))<15&&distance(keeper,n)<45&&this.scene.merchants.line(keeper,n);
@@ -787,7 +791,7 @@ export class SectCampus {
   updatePanel(){
     if(!this.panel?.open)return;
     const n=this.viewer,s=this.snapshot(),state=this.state;
-    const key=JSON.stringify([this.panelMode,this.panelFilter,n?.id,n?.technique,n?.spiritStones,n?.inventory,s.wealth,s.treasury,s.orders,s.logs.length]);
+    const key=JSON.stringify([this.panelMode,this.panelFilter,n?.id,n?.technique,n?.martial?.learned,n?.spiritStones,n?.inventory,s.wealth,s.treasury,s.orders,s.logs.length]);
     if(this.panelKey===key)return;
     this.panelKey=key;
     const add=(tag,value,parent=this.panel)=>{const e=document.createElement(tag);e.textContent=value;parent.append(e);return e;};
@@ -806,6 +810,16 @@ export class SectCampus {
           n.technique=id;this.scene.requestBackgroundSave();this.updatePanel();
         });
         b.disabled=!rule||n.technique===id;
+      }
+      for(const id of this.scene.martialEconomy?.lessons??[]){
+        const book=MARTIAL_TECHNIQUES[id], known=martialMastery(n,id)>=0;
+        const credits=book.grade===2?12:4;
+        add('p',book.name+' · '+GRADES[book.grade].name+' phẩm · '+book.skills.map(move=>move.name).join(', '));
+        const learn=button(known?'Nghiên cứu công pháp':'Học · '+credits+' cống hiến',()=>{
+          this.scene.worldPopulationToast(this.scene.martialEconomy.library(n,id)?'Đã học hoặc nghiên cứu công pháp.':'Chưa đủ điều kiện hoặc đã nghiên cứu hôm nay.');
+          this.updatePanel();
+        });
+        learn.disabled=n.realmIndex<book.minimum||!known&&(state.credits[n.id]??0)<credits;
       }
       return;
     }

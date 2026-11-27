@@ -13,7 +13,7 @@ try{
     outfile:path.join(tmp,'monster.cjs'),bundle:true,platform:'node',format:'cjs',logLevel:'silent'});
   const m=createRequire(import.meta.url)(path.join(tmp,'monster.cjs'));
   const makeWorld=(worldId='deterministic')=>({worldId,clock:{day:1,minute:600},
-    npcs:[{id:'hunter',alive:true,inventory:[]}],environment:{objects:[],drops:[],processedEventIds:[],defeatedBeastIds:[]}});
+    npcs:[{id:'hunter',alive:true,realmIndex:4,realmLevel:1,inventory:[]}],environment:{objects:[],drops:[],processedEventIds:[],defeatedBeastIds:[]}});
   const map=JSON.parse(fs.readFileSync('maps/world-rebuild-1b.tmj','utf8'));
   const layer=name=>map.layers.find(l=>l.name===name);
   const zones=layer('FaunaZones').objects.map(o=>({...o,...Object.fromEntries(o.properties.map(p=>[p.name,p.value]))}));
@@ -62,7 +62,7 @@ try{
     const habitats=Object.values(z.territories);
     for(const a of habitats)for(const b of habitats)if(a!==b)assert.ok(a.x+a.width<=b.x||b.x+b.width<=a.x||a.y+a.height<=b.y||b.y+b.height<=a.y);
     const after=structuredClone(world),specimen=original[0];
-    const killed=m.damageFauna(after,specimen.id,'hunter',2000,'west-kill');
+    const killed=m.damageFauna(after,specimen.id,'hunter',specimen.maxHp*4,'west-kill');
     m.queueFaunaRespawn(after,killed.fauna,z.respawnMs);
     assert.equal(m.processFaunaRespawns(after,zones,z.respawnMs-1,open).spawned.length,0);
     assert.equal(slotKey(m.processFaunaRespawns(after,zones,z.respawnMs,open).spawned[0]),slotKey(specimen));
@@ -71,7 +71,7 @@ try{
   const king=western.find(f=>f.species==='wood-king'),eliteTree=western.find(f=>f.zoneId==='west-forbidden'&&f.rank==='elite');
   const summoning=structuredClone(world);
   assert.equal(m.summonWesternTree(summoning,forbidden,king,()=>true),false);
-  const sacrifice=m.damageFauna(summoning,eliteTree.id,'hunter',2000,'fallen-tree');
+  const sacrifice=m.damageFauna(summoning,eliteTree.id,'hunter',eliteTree.maxHp*4,'fallen-tree');
   m.queueFaunaRespawn(summoning,sacrifice.fauna,forbidden.respawnMs);
   assert.equal(m.summonWesternTree(summoning,forbidden,king,()=>true).species,'millennial');
   assert.equal(summoning.environment.fauna.filter(f=>f.alive).length,77+eastSlots+shanheSlots);
@@ -109,7 +109,8 @@ try{
   m.ensureFauna(legacy,zones,open);
   assert.deepEqual(legacy.environment.fauna.slice(0,24).map(b=>b.id),originals);
   assert.equal(legacy.environment.fauna.length,77+eastSlots+shanheSlots);
-  const outer=m.damageFauna(legacy,legacy.environment.fauna[24].id,'hunter',200,'old-road-hunt');
+  const oldRoadBeast=legacy.environment.fauna[24];
+  const outer=m.damageFauna(legacy,oldRoadBeast.id,'hunter',oldRoadBeast.maxHp*4,'old-road-hunt');
   const outerZone=zones.find(z=>z.zoneId===outer.fauna.zoneId);
   m.queueFaunaRespawn(legacy,outer.fauna,outerZone.respawnMs);
   const pending=structuredClone(legacy);
@@ -120,7 +121,7 @@ try{
   assert.equal(blocked.failed.length,1);
   assert.equal(m.processFaunaRespawns(pending,zones,outerZone.respawnMs+2500,open).spawned[0].rank,'normal');
   const beast=beasts[0],habitat=zones.find(z=>z.zoneId===beast.zoneId);
-  const dead=m.damageFauna(world,beast.id,'hunter',200,'first');
+  const dead=m.damageFauna(world,beast.id,'hunter',beast.maxHp*4,'first');
   assert.ok(!dead.fauna.alive&&dead.drops.length>=1);
   assert.equal(m.damageFauna(world,beast.id,'hunter',200,'repeat'),null);
   assert.ok(m.claimFaunaDrop(world,dead.drops[0].id,'hunter','claim'));
@@ -140,7 +141,7 @@ try{
     elites+=count;
     if(count){
       const f=sample.environment.fauna.find(b=>b.rank==='elite');
-      m.damageFauna(sample,f.id,'hunter',1000,'fixture-kill');
+      m.damageFauna(sample,f.id,'hunter',f.maxHp*4,'fixture-kill');
       m.queueFaunaRespawn(sample,f,1000);
       assert.ok(sample.environment.eliteReadyAt[habitat.zoneId]>=100000);
       assert.equal(m.processFaunaRespawns(sample,[habitat],1000,open).spawned[0].rank,'normal');

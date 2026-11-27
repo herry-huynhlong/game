@@ -1,12 +1,15 @@
+import {BUILDING_INTERIORS} from './BuildingInteriors.js';
 import {CRIME_NAMES} from './CivicSystem.js';
 import { ITEM_CATALOG } from '../dao/ItemCatalog.ts';
-import { FAUNA_QI_MAX, FAUNA_SPECIES, faunaName, MONSTER_SKILL_IDS, faunaBehavior, faunaCoreLoot, faunaRealm, monsterSkill } from '../dao/MonsterRegistry.ts';
+import { FAUNA_SPECIES, faunaStats, faunaName, MONSTER_SKILL_IDS, faunaBehavior, faunaCoreLoot, faunaRealm, monsterSkill } from '../dao/MonsterRegistry.ts';
 import { skillPhase } from '../dao/MonsterCombat.ts';
 import { formatRealm, REALMS } from '../systems/RealmConfig.ts';
 import { treasureDefinition, WEST_TREASURE_RARITY, WEST_TREASURE_MEDICINE } from '../dao/WestTreasureCatalog.ts';
 import { treasureBloomOpen, treasureStage } from '../dao/WestTreasureSystem.ts';
 import { faunaHabitat } from './FaunaHabitat.js';
 import { faunaStationaryForm } from '../dao/FaunaRecovery.ts';
+import { GRADES, ELEMENTS, MARTIAL_TECHNIQUES, MARTIAL_WEAPONS } from '../dao/MartialRegistry.ts';
+import { priceMartial } from './MartialEconomy.js';
 
 const quality={low:'Hạ phẩm',middle:'Trung phẩm',high:'Thượng phẩm'};
 const tier={mortal:'Phàm phẩm',artifact:'Pháp phẩm',spirit:'Linh phẩm',treasure:'Bảo phẩm','spiritual-treasure':'Linh bảo',immortal:'Tiên phẩm',divine:'Thần phẩm'};
@@ -31,7 +34,8 @@ const n=value=>number.format(value);
 const seconds=ms=>n(Math.max(0,Math.ceil(ms/100)/10))+' giây';
 const minutes=value=>n(Math.max(0,value))+' phút trong game';
 const itemName=id=>ITEM_CATALOG[id]?.name??id;
-const gradeOf=id=>{const item=ITEM_CATALOG[id];return item?`${tier[item.tier]} · ${quality[item.quality]}`:undefined;};
+const martialItems={...MARTIAL_WEAPONS,...Object.fromEntries(Object.values(MARTIAL_TECHNIQUES).map(course=>[course.book,course]))};
+const gradeOf=id=>{const item=ITEM_CATALOG[id],martial=martialItems[id];return martial?GRADES[martial.grade].name+' phẩm':item?`${tier[item.tier]} · ${quality[item.quality]}`:undefined;};
 const realmName=f=>REALMS[faunaRealm(f).realmIndex]?.name;
 const beastRealm=f=>[realmName(f),`tầng ${faunaRealm(f).realmLevel}`].filter(Boolean).join(' ');
 const rankName=f=>f.species==='wood-king'?'Yêu vương':f.rank==='elite'?'Tinh Anh':'Thường';
@@ -88,7 +92,7 @@ export function inspectionBrief(scene,entry){
   if(kind==='shop')return {title:data.shop.name,meta:'Cửa hàng',state:scene.merchants.serving(data)?'Đang phục vụ':'Chưa phục vụ'};
   if(kind==='venue')return {title:data.cfg.name,meta:'Công trình dịch vụ',state:scene.society.onDuty(data)?'Đang phục vụ':'Chưa phục vụ'};
   if(kind==='palace')return {title:'Phủ Thành Chủ',meta:'Chấp pháp và truy nã'};
-  if(kind==='building')return {title:sprite.name,meta:'Công trình',state:objectStates[data.status]};
+  if(kind==='building')return {title:sprite.name,meta:BUILDING_INTERIORS.get(id)?.type??(data.market?'Sạp chợ':'Công trình'),state:objectStates[data.status]};
   return {title:itemName(data.itemId??id),meta:gradeOf(data.itemId),state:kind==='drop'?(data.status==='ground'?'Nằm trên mặt đất':'Đã nhặt'):undefined};
 }
 
@@ -112,7 +116,7 @@ export function inspectionSnapshot(scene,entry){
     if(namSa)shape.description='Tiến sát và nhấn E khi nhập thân. Yêu thú ở di tích có thể canh giữ rương.';
     else if(chest)shape.description='Tiến sát và nhấn E khi nhập thân. Rương nằm sau khu vực Vạn Cốt Quỷ Vương trấn giữ.';
   }else if(kind==='fauna'){
-    const f=data,cfg=FAUNA_SPECIES[f.species],zone=scene.faunaZones.find(z=>z.zoneId===f.zoneId),habitat=faunaHabitat(zone,f.species);
+    const f=data,cfg=FAUNA_SPECIES[f.species],stats=faunaStats(f,now),position=stats.base.position,zone=scene.faunaZones.find(z=>z.zoneId===f.zoneId),habitat=faunaHabitat(zone,f.species);
     const effects=[['armorUntil','Tăng phòng ngự'],['buffUntil','Được cường hóa'],['hasteUntil','Tăng tốc'],['rageUntil','Kích động'],['injuredUntil','Bị thương']]
       .filter(([key])=>(f[key]??0)>now).map(([key,name])=>name+' · '+seconds(f[key]-now));
     const skills=MONSTER_SKILL_IDS.map(id=>[id,monsterSkill(id)]).filter(([,skill])=>skill.species===f.species&&(!skill.elite||f.rank==='elite'));
@@ -120,17 +124,17 @@ export function inspectionSnapshot(scene,entry){
     const loot=cfg.loot.map(itemName);
     loot.push(itemName(faunaCoreLoot(f)));
     rows=[['Chủng loài',cfg.name],['Sinh cảnh',zone?.name??region],['Lãnh địa',habitat!==zone?habitat?.name:undefined],
-      ['Tuổi đời',f.growth?.age===undefined?undefined:n(f.growth.age)+' năm'],['Cảnh giới',beastRealm(f)],['Phẩm chất',rankName(f)],
+      ['Tuổi đời',f.growth?.age===undefined?undefined:n(f.growth.age)+' năm'],['Cảnh giới',beastRealm(f)],['Cấp độ',position&&position.total+' / 90 · '+position.stage],['Phẩm chất',stats.quality[0]+' ×'+n(stats.quality[1])],
       ['Tập tính',behavior[faunaBehavior(f.species)]],['Thuộc tính kỹ năng',elements.join(', ')],
       ['Độ cao',f.species==='eagle'?`${Math.round(f.altitude??0)} px`:undefined],
-      ['Phòng ngự cơ bản',cfg.defense+(f.rank==='elite'?3:0)],['Tốc độ cơ bản',n(cfg.speed)+' px/giây'],
+      ['Sinh lực cơ bản',stats.base.hp],['Công kích',n(stats.base.attack)+' → '+n(stats.attack)],['Phòng ngự',n(stats.base.defense)+' → '+n(stats.defense)],['Hệ số loài HP/Công/Giáp',Object.values(stats.speciesFactor).map(n).join(' / ')],['Tốc độ cơ bản',n(cfg.speed)+' px/giây'],
       ['Linh khí tích lũy',f.growth?.qi],['Mục tiêu',npcName(scene,f.targetNpcId)],['Hiệu ứng',effects.join(' · ')],
       ['Hình thái',f.species==='sand-golem'?(Number(sprite?.frame.name)>=128&&Number(sprite?.frame.name)<144?'Ngụy trang thành cụm đá':'Thạch yêu đã hiện hình'):f.species==='flower'?faunaStationaryForm(f)?'Bông hoa ngụy trang':f.flower?.phase==='rooting'?'Đang thu chân rễ':'Yêu hoa chân rễ':
         ['bone-skeleton','bone-general','sand-worm'].includes(f.species)?faunaStationaryForm(f)?(f.species==='sand-worm'?'Ẩn dưới cát':'Hài cốt bất động'):'Đã hiện hình':
         f.growth||f.species==='vine'?faunaStationaryForm(f)?f.species==='vine'?'Dây leo ngụy trang':'Hình cây ngụy trang':'Hình thái yêu thú':undefined],
       ...recoveryFields(scene,f),
       ['Có thể rơi',loot.join(', ')]];
-    shape.bars=[bar('Sinh lực',f.hp,f.maxHp,'health'),bar('Linh lực',f.qi??FAUNA_QI_MAX,FAUNA_QI_MAX,'qi')];
+    shape.bars=[bar('Sinh lực',f.hp,f.maxHp,'health'),bar('Linh lực',f.qi??stats.qiMax,stats.qiMax,'qi')];
     shape.skills=skills.map(([id,s])=>({name:s.name,description:[s.effect&&conditionNames[s.effect],skillModes[s.mode],s.damage>0?`Sát thương cơ bản ${s.damage}`:null].filter(Boolean).join(' · '),
       timing:(f.cooldowns?.[id]??0)>now?`Hồi sau ${seconds(f.cooldowns[id]-now)}`:'Sẵn sàng'}));
     shape.links=(scene.westTreasures?.system.nodes??[]).filter(node=>node.harvestedAt===undefined&&node.guardSpecies===f.species&&node.zoneId===f.zoneId&&
@@ -164,7 +168,10 @@ export function inspectionSnapshot(scene,entry){
       ['Lượt đã hái',data.harvestCount],['Lượt mọc tiếp',data.nextGrowthAt!==undefined?minutes(data.nextGrowthAt-worldMinutes(world)):undefined]];
     shape.description=ITEM_CATALOG[data.itemId]?.description;
   }else if(kind==='drop'){
-    rows=[['Phẩm cấp',gradeOf(data.itemId)],['Số lượng',data.count],['Sinh cảnh',region],['Ngày xuất hiện',data.createdDay],['Người đã nhặt',npcName(scene,data.claimedBy)]];
+    const martial=martialItems[data.itemId];
+    rows=[['Phẩm cấp',gradeOf(data.itemId)],['Thuộc tính',martial&&ELEMENTS[martial.element]],
+      ['Xuất xứ',martial?.source],['Giá tham chiếu',martial&&(martial.grade>=3?'Truyền thừa hữu hạn':priceMartial(world,data.itemId)+' linh thạch')],
+      ['Số lượng',data.count],['Sinh cảnh',region],['Ngày xuất hiện',data.createdDay],['Người đã nhặt',npcName(scene,data.claimedBy)]];
     shape.description=ITEM_CATALOG[data.itemId]?.description;
   }else if(kind==='ore'){
     const mine=scene.underground?.describe(id);
@@ -231,8 +238,19 @@ export function inspectionSnapshot(scene,entry){
       ['Lệnh đang hiệu lực',warrants.length],['Tiền thưởng cam kết',warrants.reduce((total,c)=>total+c.warrant.reward,0)]];
     for(const c of warrants){const n=data.npc(c.actorId);rows.push([n?.name??c.actorId,CRIME_NAMES[c.kind]+' · '+(n?formatRealm(n):'Không rõ')+' · nguy hiểm '+c.severity+' · thưởng '+c.warrant.reward+' · đề nghị '+c.warrant.headcount+' người, '+(REALMS[c.warrant.realm]?.name??'cảnh giới tương ứng')]);}
   }else if(kind==='building'){
-    rows=[['Phân loại','Công trình'],['Sinh cảnh',region],['Phòng ngự',data.defense],['Tiến độ tu sửa',data.status==='repairing'?minutes(data.repairProgress):undefined]];
-    shape.bars=[bar('Độ bền',data.hp,data.maxHp,'health')];
+    const interior=BUILDING_INTERIORS.get(entry.id);
+    const faction=world.factions.find(f=>f.id===data.ownerFactionId);
+    const residents=interior?scene.weeklyAuction.occupants:[];
+    const owner=faction?.name??(data.ownerFactionId==='qingyun-city'?'Thanh Vân Thành':data.ownerFactionId==='qingyun-sect'?'Thanh Vân Tông':undefined);
+    rows=[['Phân loại',brief.meta],['Sinh cảnh',region],['Chủ sở hữu',owner],['Phòng ngự',data.defense],
+      ['Tu sửa',data.status==='repairing'?minutes(data.repairProgress):undefined],
+      ['Giờ hoạt động',interior?.hours],['Dịch vụ',interior?.services],
+      ['Số tầng',interior?scene.underground.sites.get(interior.siteId).map.floors.length:undefined],
+      ['Sức chứa',interior?interior.capacity+' ghế':undefined],
+      ['Đang sử dụng',interior?residents.map(n=>n.name).join(', ')||'Chưa có':undefined],
+      ['Đang làm việc',interior?residents.filter(n=>n.id===scene.weeklyAuction.steward?.id).map(n=>n.name).join(', ')||'Chưa có':undefined],
+      ['Hiện trong bí khố',interior?scene.weeklyAuction.vaultLots.length+' lô':undefined]];
+    if(data.maxHp)shape.bars=[bar('Độ bền',data.hp,data.maxHp,'health')];
   }else if(kind==='tree'){
     const timber=world.environment.timberSources?.find(t=>t.id==='timber:'+data.id);
     shape.state=timber?(timber.renewAt!==undefined?'Đã đốn · đang mọc lại':'Có thể đốn gỗ'):undefined;

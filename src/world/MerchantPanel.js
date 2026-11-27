@@ -2,6 +2,7 @@ import './merchant-panel.css';
 import { ITEM_CATALOG } from '../dao/ItemCatalog.ts';
 import { EconomySystem } from '../dao/EconomySystem.ts';
 import { makeItemIcon,itemQualities } from './ResidentInventory.js';
+import { martialShopLabel } from './MartialEconomy.js';
 
 export class MerchantPanel {
   constructor(scene){
@@ -50,7 +51,7 @@ export class MerchantPanel {
     this.scene.heavenActions.stopFishing();
     const portrait=this.scene.residentProfile.portraits.get(venue.owner),img=this.dialog.querySelector('img');
     if(portrait)img.src=portrait;else img.removeAttribute('src');
-    this.dialog.querySelector('h2').textContent=venue.shop.name;
+    this.dialog.querySelector('h2').textContent=[venue.shop.name,martialShopLabel(venue.shop.id)].filter(Boolean).join(' · ');
     this.dialog.querySelector('[data-merchant]').textContent=venue.owner.name+' · '+this.scene.npcRoleTitle(venue.owner)+' · Đang mở cửa';
     this.dialog.querySelector('[data-message]').textContent='';
     this.render();this.prompt.hidden=true;this.dialog.showModal();

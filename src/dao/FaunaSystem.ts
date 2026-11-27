@@ -1,9 +1,13 @@
+import {resolveDamage} from '../systems/CombatBalance';
+import {cultivationBreakdown} from '../systems/CultivationSystem';
+import {faunaStats} from './MonsterRegistry';
 import { creditDeath } from './DivinePowerLedger';
 import type { DivineWorldSave, EnvironmentSave, FaunaRespawnSave, FaunaSave, FaunaSpecies, GroundDropSave, MonsterRank, SimNPC, TradeItemId } from './types';
 import { BASE_FAUNA_IDS, FAUNA_SPECIES, MONSTER_SPAWN, faunaCoreLoot, faunaName, faunaRealm, hashMonster } from './MonsterRegistry';
 import { faunaHabitat } from '../world/FaunaHabitat.js';
 import { recordCombatDamage } from './CombatRecovery';
 import { eastDisguise } from './EastFauna';
+import { EconomySystem } from './EconomySystem';
 export { FAUNA_SPECIES } from './MonsterRegistry';
 
 type FaunaSlot={species:FaunaSpecies;rank:MonsterRank};
@@ -25,7 +29,7 @@ function growthFor(species:FaunaSpecies,seed:number):FaunaSave['growth']{
   if(species==='millennial')return {age:1100+seed%2100,qi:100,species,phase:'dormant'};
   if(species==='wood-king')return {age:11000+seed%2000,qi:100,species,phase:'dormant'};
 }
-const maxHp=(species:FaunaSpecies,rank:MonsterRank,zone:FaunaZone)=>FAUNA_SPECIES[species].hp+(rank==='elite'?55:0)+(zone.realmIndex??0)*54;
+
 const westernRanges=(habitat:FaunaZone,seed:number)=>({
   patrolRadius:Math.round((habitat.activityRadius??120)*(.80+(seed%41)/100)),
   leashRadius:Math.round((habitat.leash??170)*(.90+(seed%21)/100)),
@@ -83,8 +87,9 @@ export function spawnFaunaInZone(world:DivineWorldSave,zone:FaunaZone,isOpen:Can
     {...options,origin:options.origin??firstAnchor,spread:zone.spread?homes:undefined});
   if(position){
     const {x,y}=position;
-    const hp=maxHp(species,rank,zone),growth=growthFor(species,seed);
-    const realmLevel=zone.spread?Math.min(9,(zone.realmLevel??1)+(rank==='elite'?2:0)+seed%2):zone.realmLevel;
+    const growth=growthFor(species,seed);
+    const realmLevel=zone.spread?Math.min(10,(zone.realmLevel??1)+(rank==='elite'?2:0)+seed%2):zone.realmLevel;
+    const hp=faunaStats({species,rank,realmIndex:zone.realmIndex,realmLevel}).hpMax;
     const roaming=zone.spread?westernRanges(habitat,seed):{};
     const beast:FaunaSave={id:`fauna:v2:${zone.zoneId}:${serial}`,species,rank,x,y,home:{x,y},hp,maxHp:hp,realmIndex:zone.realmIndex,realmLevel,zoneId:zone.zoneId,alive:true,state:growth?'sleep':'idle',attackReadyAt:0,nextThinkAt:0,lootCreated:false,...roaming};
     if(growth)beast.growth=growth;
@@ -131,8 +136,8 @@ function migrateWesternRoster(world:DivineWorldSave,zones:FaunaZone[]){
     for(const f of live){const i=slotIndex(vacancies,f);if(i<0)changes.push(f);else vacancies.splice(i,1);}
     for(const f of changes){
       const slot=vacancies.shift();if(!slot)continue;
-      const hp=maxHp(slot.species,slot.rank,z),health=f.hp/Math.max(1,f.maxHp),growth=growthFor(slot.species,hashMonster(f.id));
-      Object.assign(f,slot,{growth,hp:Math.max(1,Math.round(hp*health)),maxHp:hp,state:growth?'sleep':'idle',
+      const hp=faunaStats({...f,...slot}).hpMax,health=f.hp/Math.max(1,f.maxHp),growth=growthFor(slot.species,hashMonster(f.id));
+      Object.assign(f,slot,{growth,hp:hp*Math.max(0,Math.min(1,health)),maxHp:hp,state:growth?'sleep':'idle',
         cast:undefined,targetNpcId:undefined,roamTarget:undefined,lastSkill:undefined,cooldowns:undefined});
       env.monsterProjectiles=env.monsterProjectiles?.filter(p=>p.sourceId!==f.id);
       env.monsterHazards=env.monsterHazards?.filter(h=>h.sourceId!==f.id);
@@ -247,14 +252,16 @@ export function faunaEvent(world:DivineWorldSave,id:string,type:string,actorId:s
   world.events??=[];world.events.push({id,type,actorId,targetId,description,day:world.clock.day,minute:world.clock.minute,status:'occurred'});
   if(world.events.length>400)world.events.splice(0,world.events.length-400);
 }
-export function damageFauna(world:DivineWorldSave,id:string,attackerId:string,rawDamage:number,eventId:string){
+export function damageFauna(world:DivineWorldSave,id:string,attackerId:string,rawDamage:number,eventId:string, modifiers:{outgoing?:number;shield?:number;resistance?:number;skill?:string}={}){
   const env=envFor(world),beast=env.fauna.find(f=>f.id===id);
   if(!beast?.alive||!Number.isFinite(rawDamage)||rawDamage<=0||env.processedEventIds.includes(eventId))return null;
   env.processedEventIds.push(eventId);if(env.processedEventIds.length>2000)env.processedEventIds.shift();
   const cfg=FAUNA_SPECIES[beast.species],now=env.faunaClockMs;
-  const defense=cfg.defense+(beast.rank==='elite'?3:0)+(now<(beast.armorUntil??0)?7:0);
-  const damage=Math.max(1,Math.floor(rawDamage)-defense);
-  recordCombatDamage(world.npcs.find(n=>n.id===attackerId),beast,now);
+  const attacker=world.npcs.find(n=>n.id===attackerId);
+  const targetStats=faunaStats(beast,now),sourceStats=attacker&&cultivationBreakdown(attacker);
+  const result=resolveDamage(rawDamage,targetStats.defense,attacker??targetStats.rank,targetStats.rank,modifiers);
+  const damage=result.damage,hpBefore=beast.hp;
+  recordCombatDamage(attacker,beast,now);
   beast.hp=Math.max(0,beast.hp-damage);beast.targetNpcId=attackerId;beast.rageUntil=now+6500;
   beast.targetSeenAt=now;
   beast.injuredUntil=now+2500;
@@ -276,14 +283,15 @@ export function damageFauna(world:DivineWorldSave,id:string,attackerId:string,ra
     }
   }
   faunaEvent(world,eventId,'fauna-combat-hit',attackerId,id,cfg.name+' chịu '+damage+' sát thương.');
-  return {fauna:beast,damage,drops};
+  return {fauna:beast,damage,drops,trace:{...result,eventId,skill:modifiers.skill,attackerId,attackerName:attacker?.name,targetId:id,targetName:faunaName(beast),
+    sourceStats,targetStats,hpBefore,hpAfter:beast.hp,death:!beast.alive,deathCause:beast.alive?null:'Bị đánh bại trong chiến đấu'}};
 }
 export function claimFaunaDrop(world:DivineWorldSave,dropId:string,npcId:string,eventId:string){
   const env=envFor(world),drop=env.drops.find(d=>d.id===dropId),npc=world.npcs.find(n=>n.id===npcId);
   if(!drop||drop.status!=='ground'||!npc?.alive||env.processedEventIds.includes(eventId))return null;
+  if(!EconomySystem.transferItem([{...drop}],npc.inventory,drop.itemId,drop.count,drop.id,npc.id))return null;
   env.processedEventIds.push(eventId);drop.status='claimed';drop.claimedBy=npcId;drop.claimedEventId=eventId;
-  const stack=npc.inventory.find(i=>i.itemId===drop.itemId);
-  if(stack)stack.count+=drop.count;else npc.inventory.push({itemId:drop.itemId,count:drop.count});
+  delete drop.instances;
   faunaEvent(world,eventId,'fauna-loot-claimed',npcId,drop.sourceId,npc.name+' nhặt '+drop.itemId+'.');
   return drop;
 }

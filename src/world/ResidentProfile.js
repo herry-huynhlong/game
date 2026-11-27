@@ -1,11 +1,14 @@
+import {familyFor,familyOfOrigin,VOCATIONS} from './PopulationLife.js';
 import './resident-profile.css';
-import { advancesQiMinor, cultivationStats, cultivationView } from '../systems/CultivationSystem.ts';
+import { advancesQiMinor, cultivationBreakdown, cultivationStats, cultivationView } from '../systems/CultivationSystem.ts';
 import { formatRealm, realmPosition, REALMS } from '../systems/RealmConfig.ts';
 import { flightEligibility, meetsFlightRealm, FLIGHT_REASONS } from './FlyingSword.js';
 import { ResidentPortraits } from './ResidentPortraits.js';
 import { renderResidentInventory } from './ResidentInventory.js';
+import { renderMartialProfile } from './MartialProfile.js';
 import { meetsSkyStepRealm } from './SkyStep.js';
 
+const combatNumber=new Intl.NumberFormat('vi-VN',{maximumFractionDigits:2});
 const ACTIONS={
   idle:'Đang sinh hoạt',rest:'Đang nghỉ ngơi',cultivate:'Đang đả tọa tu luyện',
   gather:'Đang thu thập',eat:'Đang dùng bữa',socialize:'Đang trò chuyện',trade:'Đang giao dịch',guard:'Đang canh gác',
@@ -23,6 +26,8 @@ const JOURNEYS={
 const WORKPLACES={
   'city-hall-entrance':'Phủ Thành Chủ','sect-yard':'Thanh Vân Tông','tavern-entrance':'Tửu Quán',
   'quest-office':'Ủy Thác Các','forest-outer':'Rìa Rừng Yêu Thú','city-center':'Thanh Vân Thành',
+  'forge-entrance':'Thiết Mộc Các','apothecary-entrance':'Hiệu thuốc Thanh Vân','east-camp':'Trạm nghỉ Ốc Đảo',
+  'sect-veins-approach':'Trạm khai khoáng','old-road-pavilion':'Đình nghỉ Cổ Đạo','old-road-north':'Xóm ven Cổ Đạo',
   'south-outskirts':'Ngoại thành phía Nam','gate-north':'Cổng Bắc','gate-south':'Cổng Nam',
   'gate-east':'Cổng Đông','gate-west':'Cổng Tây',
 };
@@ -34,7 +39,7 @@ export const residentName=npc=>npc.name.normalize('NFC').replace(/(\p{Ll})(\p{Lu
 
 export function residentActivity(npc,scene,possessed=false){
   const venue=scene.merchants?.byOwner.get(npc.id),duty=scene.merchants?.dutyFor(npc);
-  const workplace=venue?.shop.name??(npc.stallId?'Phường Thị Thanh Vân':WORKPLACES[npc.workplaceId])??'';
+  const workplace=venue?.shop.name??scene.society?.workplace(npc)??(npc.stallId?'Phường Thị Thanh Vân':WORKPLACES[npc.workplaceId])??'';
   const {action,goalAction:goal,actionTarget:target}=npc;
   const confirmedShift=Boolean(duty&&npc.decisionSlot==='shop-shift:'+duty.id);
   const entry=scene.scheduler?.byId.get(npc.id);
@@ -45,6 +50,8 @@ export function residentActivity(npc,scene,possessed=false){
   let activity;
   if(!npc.alive)activity='Đã mất';
   else if(npc.ascended)activity='Đã phi thăng';
+  else if(npc.minor)activity='Đang lớn lên cùng gia đình';
+  else if(npc.emigration||npc.decisionSlot?.startsWith('livelihood:'))activity=npc.shortGoal;
   else if(npc.tribulation&&npc.tribulation.phase!=='travel')activity=({
     cloud:'Đang tụ khí độ kiếp',warning:'Đang chuẩn bị đón thiên lôi',strike:'Đang chịu thiên lôi',
     success:'Vừa vượt qua thiên kiếp',failure:'Đang hồi sức sau thiên kiếp',
@@ -139,6 +146,8 @@ export class ResidentProfile {
           <p class="resident-note" data-profile="note"></p><p class="resident-note" data-profile="sectOrder" hidden></p><p class="resident-note" data-profile="westJourney" hidden></p>
           <p class="resident-note" data-profile="lifeDetails"></p>
           <section class="resident-party" data-profile="party" hidden></section>
+          <details data-profile="genealogy"><summary>Gia đình và gia phả</summary><p></p></details>
+          <details data-profile="biography"><summary>Lịch sử đời người và di sản</summary><p></p></details>
           <details data-profile="civic"><summary>Thiện ác và pháp lý</summary><p></p></details>
           <details data-profile="social"><summary>Sinh hoạt và bằng hữu</summary><div></div></details>
         </div>
@@ -149,6 +158,8 @@ export class ResidentProfile {
               <progress data-progress="${id}" aria-label="${label}" max="1" value="0"></progress>
             </div>`).join('')}
           <p class="resident-cultivation" data-profile="cultivation"></p>
+          <details data-profile="combatSources"><summary>Nguồn chỉ số chiến đấu</summary><p></p></details>
+          <details data-profile="martial"><summary>Công pháp, võ kỹ và linh bảo</summary><div></div></details>
           <p class="resident-flight" data-profile="flight"></p>
           <p class="resident-flight-detail" data-profile="flightDetail"></p>
         </div>
@@ -188,6 +199,7 @@ export class ResidentProfile {
     this.panel.hidden=false;
     const {scene,fields}=this;
     renderResidentInventory(scene,fields,npc,active);
+    if(scene.martialEconomy)renderMartialProfile(scene,fields.martial,npc,active);
     const rig=scene.characterRigPreview?.npc===npc?scene.characterRigPreview:null;
     const look=rig?.character.appearance??npc.modularAppearance?.look;
     if(!this.portraitInitialized||look!==this.look){
@@ -201,9 +213,9 @@ export class ResidentProfile {
     if(this.image.alt!==alt)this.image.alt=alt;
     setText(fields.name,name);
     const role=scene.npcRoleTitle(npc),job=PROFESSIONS[npc.profession];
-    setText(fields.role,npc.populationRole==='commoner'?job??role:role??job??'Cư dân');
+    setText(fields.role,npc.minor?'Trẻ nhỏ':VOCATIONS[npc.vocation]?.[0]??(npc.populationRole==='commoner'?job??role:role??job??'Cư dân'));
     setText(fields.faction,scene.populationWorld.factions?.find(f=>f.id===npc.faction)?.name??(npc.faction||'Tán tu'));
-    const label=formatRealm(npc);
+    const label=npc.minor?'Phàm nhân':formatRealm(npc);
     const expedition=npc.westJourney, region=this.scene.westWilds?.regions.find(r=>r.id===expedition?.zone);
     fields.westJourney.hidden=!expedition&&!(npc.westPoison>0);
     if(!fields.westJourney.hidden)setText(fields.westJourney,[region?.name,...(expedition?.log??[]).slice(-3),npc.westPoison>0?`Nhiễm độc ${Math.round(npc.westPoison)}%`:null].filter(Boolean).join(" · "));
@@ -231,6 +243,41 @@ export class ResidentProfile {
     const coords=point=>point?`${Math.round(point.x)}, ${Math.round(point.y)}`:'';
     setText(fields.lifeDetails,[npc.shortGoal,target&&'Đích '+coords(target),npc.home&&'Nơi ở '+coords(npc.home),
       needs[0][1]>=45&&needs[0][0]+' '+Math.round(needs[0][1])+'%',reason].filter(Boolean).join(' · '));
+    const world=scene.populationWorld, family=familyFor(world,npc.id);
+    const nameOf=id=>{
+      const member=world.npcs.find(n=>n.id===id)??world.populationLife?.departed[id]?.npc;
+      return member?residentName(member):id;
+    };
+    const joined=(ids,title)=>ids?.length?title+' '+ids.map(nameOf).join(', '):null;
+    const childhood=familyOfOrigin(world,npc.id);
+    const roots=npc.parents??[];
+    const grandparents=roots?.flatMap(id=>world.npcs.find(n=>n.id===id)?.parents??[]);
+    const spouse=family?.partners.includes(npc.id)?family.partners.filter(id=>id!==npc.id):[];
+    const heirs=spouse.length?family.children:[];
+    const siblings=childhood?.children.filter(id=>id!==npc.id)??[];
+    const inherited=[...new Set([family,childhood])].flatMap(h=>Object.values(h?.inheritances??{})).filter(row=>row.heirId===npc.id);
+    if(fields.genealogy.open||fields.genealogy.dataset.npc!==npc.id){
+      fields.genealogy.dataset.npc=npc.id;
+      setText(fields.genealogy.querySelector('p'),family?[
+        joined(grandparents,'Ông bà'),joined(roots,'Cha mẹ'),joined(siblings,'Anh chị em'),
+        joined(spouse,'Bạn đời'),joined(heirs,'Con'), 'Nơi ở chung '+family.homeName,
+        'Quỹ nhà '+family.fund+' linh thạch',
+      ].filter(Boolean).join(' · '):'Chưa ghi nhận quan hệ gia đình.');
+    }
+    if(fields.biography.open||fields.biography.dataset.npc!==npc.id){
+      fields.biography.dataset.npc=npc.id;
+      const milestones=world.events.filter(e=>e.actorId===npc.id&&/breakthrough|birth|immigration|adulthood|household|caravan|production|mission|inheritance/.test(e.type))
+        .slice(-4).map(e=>e.description);
+      setText(fields.biography.querySelector('p'),[
+        'Tuổi '+npc.age+' · Còn '+Math.max(0,npc.lifespan-npc.age)+' năm thọ nguyên',
+        npc.aiProfile?.origin&&'Xuất thân '+npc.aiProfile.origin,npc.residenceName&&'Cư trú '+npc.residenceName,
+        npc.personalGoal?.label&&'Tham vọng '+npc.personalGoal.label,npc.lifeOrigin?.reason,
+        'Tài sản '+Math.floor(npc.spiritStones)+' linh thạch',
+        npc.deathCause,
+        inherited.length&&'Đã nhận di sản '+inherited.reduce((sum,entry)=>sum+entry.amount,0)+' linh thạch',
+        ...milestones,
+      ].filter(Boolean).join(' · '));
+    }
     this.renderParty(fields.party,npc,coords);
     this.renderSocial(fields.social,npc);
     const civic=scene.civic,r=npc.reputation;
@@ -241,7 +288,21 @@ export class ResidentProfile {
       (r?Object.entries(r.relations).map(([id,value])=>civic.name(id)+' '+value).join(' · '):'')+
       (civic?.wanted(npc).length?' · Đang bị truy nã':'')+(cases.length?' · Nhật ký '+cases.map(c=>c.result??c.id).join(' · '):'');
     if(fields.vein){fields.vein.hidden=!active||!civic?.panel.closest(npc);fields.vein.onclick=()=>civic?.panel.show(npc);}
-    const stats=realmPosition(npc)&&npc.techniqueMastery?cultivationStats(npc):null;
+    const breakdown=realmPosition(npc)&&npc.techniqueMastery?cultivationBreakdown(npc):null;
+    const stats=breakdown?.stats;
+    fields.combatSources.hidden=!breakdown;
+    if(breakdown){
+      const {base,talent,afterTalent,afterTechnique,weaponBonusRate,potential}=breakdown;
+      setText(fields.combatSources.querySelector('p'),[
+        'Cấp '+base.position.total+' / 90 · '+base.position.stage,
+        'Thiên phú '+talent.name+' ×'+combatNumber.format(talent.multiplier),
+        'Sinh lực '+combatNumber.format(base.hp)+' → '+combatNumber.format(stats.hpMax),
+        'Công kích '+[base.attack,afterTalent,afterTechnique,stats.attack].map(value=>combatNumber.format(value)).join(' → '),
+        'Giáp '+combatNumber.format(base.defense)+' → '+combatNumber.format(stats.defense),
+        'Uy lực pháp bảo '+combatNumber.format(potential*100)+'% · Thưởng vũ khí '+combatNumber.format(weaponBonusRate*100)+'%',
+        'Thọ nguyên gốc '+base.position.realm.lifespan+' năm',
+      ].join(' · '));
+    }
     const health=!active&&stats?[
       `Sinh lực ${Math.round(npc.hp)}/${stats.hpMax}`,
       ...recoveryFields(scene,npc).map(([label,value])=>label+' '+value),
@@ -266,7 +327,7 @@ export class ResidentProfile {
       setText(fields.cultivation,'Chưa có tiến độ tu luyện.');
     }
     if(!active){
-      const available=npc.alive&&!npc.ascended,heaven=scene.populationWorld.heaven,cost=scene.possessionCost(npc);
+      const available=npc.alive&&!npc.ascended&&!npc.minor,heaven=scene.populationWorld.heaven,cost=scene.possessionCost(npc);
       const button=this.panel.querySelector('#possess-start');
       button.disabled=!available||Boolean(heaven.possession)||heaven.divinePower<cost;
       setText(button,'Nhập thân · '+cost+' Thần Lực');

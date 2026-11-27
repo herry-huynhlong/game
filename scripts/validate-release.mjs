@@ -75,7 +75,13 @@ const westernArt=['ancient-grove','habitat-accents','treasures','flower-forms','
   'centipede-normal','eagle-normal','eagle-elite','living-grove','living-floor','spirit-veins','stag-normal','wood-king-normal'];
 requireFile('monster-gallery.html','monster gallery source');
 requireFile('monster-movement.html','monster movement lab source');
+requireFile('combat-balance.html','combat balance lab source');
 requireFile('public/assets/effects/flying-swords.png','flying sword sprites');
+const martialArt=['items/inventory-icons.png','items/martial-arms.png','items/martial-arms-back.png','items/martial-arms-before.png'];
+martialArt.push(...['cinematic.png','cinematic.json','gather.wav','chime.wav','seal.wav','flight.wav','strike.wav','return.wav'].map(file=>'van-kiem/'+file));
+martialArt.push(...['atlas.png','atlas.json',...['blade','dao','spear','fist','lightning','fire','ice','spirit','seal','dragon','crow','shock','contact','tail']
+  .map(cue=>cue+'.wav')].map(file=>'van-phap/'+file));
+for(const name of martialArt)requireFile('public/assets/'+name,'martial equipment art');
 for(const name of monsterFiles)requireFile('public/assets/fauna/monster-v2/'+name+'.png','monster sprite');
 for(const name of undergroundArt)requireFile('public/assets/di-mach/'+name+'.png','underground asset');
 for(const name of westernArt)requireFile('public/assets/west-wilds/'+name+'.png','Van Linh art');
@@ -85,7 +91,9 @@ if (process.argv.includes('--dist')) {
   requireFile('dist/index.html', 'production entry point');
   requireFile('dist/monster-gallery.html','built monster gallery');
   requireFile('dist/monster-movement.html','built monster movement lab');
+  requireFile('dist/combat-balance.html','built combat balance lab');
   requireFile('dist/assets/effects/flying-swords.png','built flying sword sprites');
+  for(const name of martialArt)requireFile('dist/assets/'+name,'built martial equipment art');
   for(const name of monsterFiles)requireFile('dist/assets/fauna/monster-v2/'+name+'.png','built monster sprite');
   requireFile('dist/shanhe-preview.html','World Map Preview');
   requireFile('dist/assets/shanhe/terrain.png','built Shanhe terrain');

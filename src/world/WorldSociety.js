@@ -36,16 +36,28 @@ export class WorldSociety {
       const venue={id,cfg,staff,staffSlot,counter,seats:slots.filter(p=>p.use==='seat'),queue:slots.filter(p=>p.use==='queue'),
         landmark:(scene.map.getObjectLayer('SocietyStations')?.objects??[]).find(o=>scene.prop(o,'id')===id),
         shop:this.world.shops.find(s=>s.id===cfg.shop),ledger:this.state.venues[id]??={cash:0,stock:0,revenue:0,costs:0,served:0,produced:0}};
-      this.places.set(id,venue);this.staffIds.add(staff.id);
+      venue.primary=staff;
+      this.places.set(id,venue);
     }
+    this.refreshStaffPools();
     for(const [id,visit] of Object.entries(this.visits))if(!scene.scheduler.byId.has(id)||!this.places.has(visit.venue))delete this.visits[id];
     for(const n of this.world.npcs)this.account(n);
     this.social=new SocialConversations(this);
   }
+  refreshStaffPools(){
+    this.staffIds.clear();
+    for(const [id,venue] of this.places){
+      const profession={tavern:'attendant',inn:'attendant',music:'musician',clinic:'physician','east-rest':'attendant'}[id];
+      venue.substitutes=profession?this.world.npcs.filter(n=>n.alive&&n.vocation===profession&&
+        (id==='east-rest'?n.spawnRegionId==='oasis':n.spawnRegionId!=='oasis')&&
+        (id==='tavern'?n.aiProfile.seed%2===0:id==='inn'?n.aiProfile.seed%2!==0:true)):[];
+      for(const member of [venue.primary,...venue.substitutes])this.staffIds.add(member.id);
+    }
+  }
   now(){const {day,minute}=this.world.clock;return day*1440+minute;}
   open(v){const at=this.world.clock.minute;return at>=v.cfg.start&&at<v.cfg.end;}
   available(n){
-    return !this.scene.civic?.restricted(n)&&!n.decisionSlot?.startsWith('civic:')&&!this.scene.expeditions?.has(n)&&n.alive&&!n.underground&&!n.ascended&&n.id!==this.scene.possessedNpcId&&!n.flight&&!n.skyStep&&!n.wallLevel&&!n.tribulation&&
+    return !this.scene.civic?.restricted(n)&&!n.decisionSlot?.startsWith('civic:')&&!this.scene.expeditions?.has(n)&&n.alive&&!n.minor&&!n.emigration&&!n.underground&&!n.ascended&&n.id!==this.scene.possessedNpcId&&!n.flight&&!n.skyStep&&!n.wallLevel&&!n.tribulation&&
       !n.marketVisit&&!n.lawResponse&&!n.manualMeditation&&!n.faunaHuntTargetId&&n.goalAction!=='fight'&&n.goalAction!=='flee';
   }
   onDuty(v){
@@ -162,6 +174,15 @@ export class WorldSociety {
     return v.cfg.batch?v.ledger.stock:Infinity;
   }
   duty(v) {
+    const day=this.world.clock.day;
+    const staff=[v.primary,...v.substitutes];
+    const scheduled=staff[(day-1+Number(staff.length>1))%staff.length];
+    const ready=n=>this.available(n)&&n.hunger<=75&&n.fatigue<=80&&this.scene.canReachPoint(n,v.staffSlot);
+    const next=this.open(v)&&(ready(scheduled)?scheduled:staff.find(ready));
+    if(next&&next!==v.staff){
+      if(v.staff.decisionSlot===prefix+'staff')this.end(v.staff);
+      v.staff=next;
+    }
     const npc=v.staff;
     if(!this.open(v)||!this.available(npc)||npc.hunger>82||npc.fatigue>86){
       if(npc.decisionSlot===prefix+'staff')this.end(npc);
@@ -169,7 +190,7 @@ export class WorldSociety {
     }
     if(this.visits[npc.id])return;
     this.move(npc,v.staffSlot,'staff','work','Trực quầy · '+v.cfg.name);
-    const ledger=v.ledger,day=this.world.clock.day;
+    const ledger=v.ledger;
     if(this.onDuty(v)&&ledger.revenue>0&&ledger.cash>=3&&ledger.wageDay!==day&&
        this.world.clock.minute>=v.cfg.start+120){
       ledger.cash-=3;ledger.costs+=3;ledger.wageDay=day;
@@ -205,8 +226,8 @@ export class WorldSociety {
       n.fatigue=limit(n.fatigue-66);
       n.hp=Math.min(cultivationStats(n).hpMax,n.hp+8);
     }else if(v.id==='clinic'){
-      const factor=this.visits[n.id]?.remedy==='herb'?.22:.38;
-      n.hp=Math.min(cultivationStats(n).hpMax,n.hp+Math.ceil(cultivationStats(n).hpMax*factor));
+      const {hpMax}=cultivationStats(n),herbs=this.visits[n.id]?.remedy==='herb';
+      n.hp=Math.min(hpMax,n.hp+Math.min(herbs?75:160,hpMax*(herbs?.22:.38)));
       if(n.westPoison)n.westPoison=Math.max(0,n.westPoison-60);
     }else{
       if(v.id==='tavern')n.hunger=limit(n.hunger-28);
@@ -349,6 +370,7 @@ export class WorldSociety {
     }
     this.social.tick();
   }
+  workplace(n){return [...this.places.values()].find(v=>v.staff===n)?.cfg.name;}
   report(){
     return [...this.places.values()].map(v=>{
       const guests=Object.entries(this.visits).filter(([,p])=>p.venue===v.id);

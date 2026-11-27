@@ -1,4 +1,6 @@
 export function visualEquipment(weapon) {
+  if (weapon?.kind==='spear') return 'sword';
+  if (weapon?.kind==='hammer'||weapon?.kind==='scythe') return 'saber';
   if (weapon?.kind==='jian') return 'sword';
   if (weapon?.kind==='crossbow') return 'crossbow';
   if (weapon?.kind==='dao') return 'saber';

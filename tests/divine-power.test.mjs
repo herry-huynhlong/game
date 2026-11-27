@@ -40,9 +40,9 @@ for (const [realm, level, points] of [[0,1,2],[0,9,18],[1,5,20],[2,3,18],[2,9,54
 }
 assert.equal(creditDeath(w, living('mortal', undefined, 0), 'npc-death', 'Hết thọ nguyên'), false);
 assert.equal(creditBreakthrough(w, living('npc-advance', 1, 2), {realmIndex:0,realmLevel:7}), true);
-assert.equal(w.heaven.divineLedger.breakthrough, 6);
+assert.equal(w.heaven.divineLedger.breakthrough, 7);
 assert.equal(creditBreakthrough(w, living('npc-advance', 1, 3), {realmIndex:0,realmLevel:7}), true);
-assert.equal(w.heaven.divineLedger.breakthrough, 8);
+assert.equal(w.heaven.divineLedger.breakthrough, 9);
 
 const fauna = { ...living('beast-life-a', undefined, undefined), species:'wolf', rank:'normal', hp:1, alive:true, zoneId:'forest' };
 w.environment = {fauna:[fauna],drops:[],defeatedBeastIds:[],processedEventIds:[]};
@@ -80,9 +80,9 @@ assert.equal(aged.heaven.divinePower, 104);
 assert.equal(aged.npcs[0].deathCause, 'Hết thọ nguyên');
 assert.equal(advanceNpcLifespans(aged), false);
 
-for (const [roll, lethal, expected] of [[0,false,2],[1,false,0],[1,true,18]]) {
+for (const [roll, lethal, expected] of [[0,false,2],[1,false,0],[1,true,20]]) {
   const trial = world(), npc = createPopulationNPC('low_disciple','trial','roster',0,new Set());
-  Object.assign(npc,{x:21,y:25,realmIndex:0,realmLevel:9,xp:cultivationRequired(0,9),
+  Object.assign(npc,{x:21,y:25,realmIndex:0,realmLevel:10,xp:cultivationRequired(0,10),
     inventory:[{itemId:'qi_pill',count:1}],actionCooldown:0});
   npc.hp = cultivationStats(npc).hpMax; npc.mp = cultivationStats(npc).mpMax;
   assert.ok(planTribulation(trial,npc,{x:21,y:25,name:'Sân tu luyện'}));

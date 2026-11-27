@@ -1,4 +1,7 @@
 export function professionMarker(npc,scene){
+  if(npc.minor)return null;
+  const vocation={miner:2,musician:8,physician:6,attendant:7,caravan:3,alchemist:4,smith:5};
+  if(Object.hasOwn(vocation,npc.vocation))return vocation[npc.vocation];
   const role=npc.populationRole,profession=npc.profession,duty=npc.populationDuty??'';
   if(role==='city_guard')return 0;
   const job=npc.decisionSlot??'',specialty=scene.sectCampus?.staff.get(npc.id);

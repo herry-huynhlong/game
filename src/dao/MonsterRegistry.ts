@@ -1,3 +1,4 @@
+import {realmBase} from '../systems/RealmConfig';
 import { EAST_SKILLS, EAST_SPECIES, isEastSpecies } from './EastFauna';
 import type { FaunaSpecies, TradeItemId } from './types';
 
@@ -87,6 +88,29 @@ export const faunaBehavior=(species:FaunaSpecies):FaunaBehavior=>{
 const faunaTiers:Partial<Record<FaunaSpecies,number>>={wolf:4,boar:6,toad:5};
 export const faunaRealm=(beast:{species:FaunaSpecies;rank:string;realmIndex?:number;realmLevel?:number})=>
   ({realmIndex:beast.realmIndex??(beast.rank==='elite'?1:0),realmLevel:beast.realmLevel??(beast.rank==='elite'?2:faunaTiers[beast.species]??1)});
+export const FAUNA_QUALITIES=[['Suy yếu',.75],['Thường',1],['Tinh Anh',1.3],['Dị chủng',1.6],
+  ['Yêu tướng',2],['Yêu vương',2.5],['Thượng cổ dị thú',3]] as const;
+type FaunaStatsActor=Parameters<typeof faunaRealm>[0]&{qualityTier?:number;armorUntil?:number};
+export function faunaStats(beast:FaunaStatsActor,now=0){
+  const rank=faunaRealm(beast),base=realmBase(rank),species=FAUNA_SPECIES[beast.species];
+  const quality=FAUNA_QUALITIES[beast.qualityTier??(beast.species==='wood-king'||beast.species==='bone-king'?5:beast.rank==='elite'?2:1)]??FAUNA_QUALITIES[1];
+  const bound=(value:number,min:number,max:number)=>Math.min(max,Math.max(min,value));
+  const speciesFactor={hp:bound(species.hp/100,.65,1.55),attack:bound(species.power/36,.7,1.5),
+    defense:bound(.7+species.defense/12,.75,1.65)};
+  const armor=(beast.armorUntil??0)>now?1.35:1;
+  return {base,rank,quality,speciesFactor,armor,hpMax:base.hp*quality[1]*speciesFactor.hp,
+    attack:base.attack*quality[1]*speciesFactor.attack,defense:base.defense*quality[1]*speciesFactor.defense*armor,
+    qiMax:base.qi};
+}
+
+const resistances:Partial<Record<FaunaSpecies,Record<string,number>>>={
+  boar:{fire:.12},eagle:{fire:.30,sun:.20},toad:{poison:.35},centipede:{poison:.28},
+  'sand-scorpion':{earth:.18,poison:.30},millennial:{wood:.30},'wood-king':{wood:.45},
+  'bone-king':{shadow:.45,poison:.35},'bone-general':{shadow:.28,poison:.20},
+};
+export function faunaResistance(species:FaunaSpecies,element:string|undefined){
+  return element?resistances[species]?.[element]??0:0;
+}
 export function faunaCoreLoot(beast:Parameters<typeof faunaRealm>[0]):TradeItemId{
   if(beast.species==='eagle')return 'eagle_fire_core';
   const cores=['demon_core','beast_core_foundation','beast_core_gold','beast_core_nascent'] as const;

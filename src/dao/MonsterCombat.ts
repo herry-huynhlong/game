@@ -1,4 +1,4 @@
-import { FAUNA_QI_MAX, FAUNA_SPECIES, MONSTER_SKILL_IDS, faunaBehavior, hashMonster, monsterSkill } from './MonsterRegistry';
+import { faunaStats, FAUNA_SPECIES, MONSTER_SKILL_IDS, faunaBehavior, hashMonster, monsterSkill } from './MonsterRegistry';
 import { insideHabitat, type FaunaZone } from './FaunaSystem';
 import type { EnvironmentSave, FaunaSave, MonsterEffect, MonsterPoint, SimNPC } from './types';
 import { faunaHabitat } from '../world/FaunaHabitat.js';
@@ -28,9 +28,9 @@ export function startMonsterSkill(f:FaunaSave,id:string,target:MonsterPoint,now:
   const skill=monsterSkill(id);
   if(!skill||skill.species!==f.species||!f.alive||f.cast||now<(f.attackReadyAt??0)||now<(f.cooldowns?.[id]??0)||(skill.elite&&f.rank!=='elite'))return false;
   const dx=normalized(f,target),d=dist(f,target);
-  const cost=qiCost(skill);
-  if(d<skill.min||d>skill.max||(f.qi??FAUNA_QI_MAX)<cost)return false;
-  f.qi=(f.qi??FAUNA_QI_MAX)-cost;
+  const {qiMax}=faunaStats(f),cost=qiCost(skill)*qiMax/100;
+  if(d<skill.min||d>skill.max||(f.qi??qiMax)<cost)return false;
+  f.qi=(f.qi??qiMax)-cost;
   f.direction=monsterFacing(f,target);
   f.sequence=(f.sequence??0)+1;
   const reach=['leap','burrow'].includes(skill.mode)?Math.min(Math.max(0,d-(id==='eagle-talon'?29:23)),skill.reach):['dash','tongue','projectile'].includes(skill.mode)?skill.reach:Math.min(d,skill.reach);
@@ -102,7 +102,7 @@ export class MonsterCombat {
         else f.altitude=next;
       }
       const since=now-(f.qiAt??now);
-      if(since>=500||f.qiAt===undefined){f.qi=Math.min(FAUNA_QI_MAX,(f.qi??FAUNA_QI_MAX)+since*.006);f.qiAt=now;}
+      if(since>=500||f.qiAt===undefined){const {qiMax}=faunaStats(f);f.qi=Math.min(qiMax,(f.qi??qiMax)+since*qiMax*.00006);f.qiAt=now;}
       if(f.cast){
         if(f.cast.targetId&&(!insideHabitat(f,zone,8)||dist(f.home,f)>this.leash(f,zone)+12||!this.currentTarget(f,zone,now,f.cast.targetId))){
           this.abandon(f,zone,now);
@@ -276,7 +276,7 @@ export class MonsterCombat {
     const options=MONSTER_SKILL_IDS.filter(id=>{
       const skill=monsterSkill(id)!;
       if(skill.species!==f.species||skill.elite&&f.rank!=='elite'||range<skill.min||range>skill.max||now<(f.cooldowns?.[id]??0)||
-        (f.qi??FAUNA_QI_MAX)<qiCost(skill)||!this.port.line(f,target))return false;
+        (f.qi??faunaStats(f).qiMax)<qiCost(skill)*faunaStats(f).qiMax/100||!this.port.line(f,target))return false;
       if(id==='pack-roar')return allies.some(ally=>!ally.targetNpcId||now>=(ally.buffUntil??0));
       if(id==='phantom-pounce')return allies.some(ally=>ally.targetNpcId===target.id);
       if(skill.mode==='armor')return health<.8&&now>=(f.armorUntil??0);
@@ -348,7 +348,7 @@ export class MonsterCombat {
     f.state=phase==='recover'?'recover':'attack';
     const age=now-cast.started-skill.windup;
     if(age<0)return;
-    const damage=Math.floor(skill.damage*(f.rank==='elite'?1.12:1)*(now<(f.buffUntil??0)?1.22:1));
+    const damage=skill.damage/16*faunaStats(f).attack*(now<(f.buffUntil??0)?1.22:1);
     const id=f.id+':'+cast.sequence;
     const hit=(p:MonsterPoint,radius:number,from=p)=>{
       for(const target of this.port.targets(toward(from,p,.5),radius+dist(from,p)/2+8)){
@@ -361,7 +361,7 @@ export class MonsterCombat {
     };
     const mist=(p:MonsterPoint,shower?:number)=>{
       if(!insideHabitat(p,z,12)||this.port.safe(p))return;
-      this.env.monsterHazards!.push({id:'mist:'+id+(shower===undefined?'':':'+shower),sourceId:f.id,position:{x:p.x,y:p.y},radius:skill.radius,damage:skill.mode==='leap'?4:damage,nextPulse:now+580,expires:now+4800,effect:skill.effect,element:skill.element,...(shower===undefined?{}:{group:id})});
+      this.env.monsterHazards!.push({id:'mist:'+id+(shower===undefined?'':':'+shower),sourceId:f.id,position:{x:p.x,y:p.y},radius:skill.radius,damage:(skill.mode==='leap'?damage*.20:damage)/8,nextPulse:now+580,expires:now+4800,effect:skill.effect,element:skill.element,...(shower===undefined?{}:{group:id})});
     };
     if(!cast.activated){
       cast.activated=true;this.port.sound?.(cast.skillId,f);

@@ -1,3 +1,4 @@
+import {resolveDamage} from '../systems/CombatBalance.ts';
 import { creditDeath } from '../dao/DivinePowerLedger.ts';
 import {caveDistance,caveLine,caveOpen,caveCell} from './UndergroundMaps.js';
 import {CivicVeinPanel} from './CivicVeinPanel.js';
@@ -7,7 +8,7 @@ import {cultivationStats} from '../systems/CultivationSystem.ts';
 export const CRIME_NAMES={
   seizure:'Chiếm hữu trái phép',coercion:'Cưỡng ép lao động',assault:'Tấn công dân thường',
   theft:'Trộm tài nguyên',breach:'Vi phạm hợp đồng',robbery:'Cướp tài sản',
-  guardAssault:'Tấn công vệ binh',disorder:'Gây rối trật tự',
+  guardAssault:'Tấn công vệ binh',disorder:'Gây rối trật tự',propertyDamage:'Phá hoại công trình',
 };
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const point=p=>({x:p.x,y:p.y});
@@ -163,7 +164,7 @@ export class CivicSystem {
   activeWorker(id){return this.contracts.find(c=>c.workerId===id&&c.status==='active');}
   expectedRate(c,site){return c.mode==='wage'?c.price:c.mode==='share'?Math.floor(c.quantity*c.price/100)*site.worth:c.quantity*site.worth-c.price;}
   willing(n,c,site){
-    if(this.busy(n)||n.id===c.employer||n.realmIndex<site.grade-1||n.hunger>64||n.fatigue>74||
+    if(n.minor||n.emigration||this.busy(n)||n.id===c.employer||n.realmIndex<site.grade-1||n.hunger>64||n.fatigue>74||
       n.hp<cultivationStats(n).hpMax*.68||distance(n,site.point)>3600||!this.scene.canReachPoint(n,site.point))return false;
     if(!['commoner','independent_cultivator','repair_worker','herb_gatherer','low_disciple','hunter'].includes(n.populationRole))return false;
     const danger=(site.grade-1)*2+(this.veins.guard(site)?5:0),axes=witnessTraits(n),rate=this.expectedRate(c,site);
@@ -216,7 +217,7 @@ export class CivicSystem {
       if(c.status==='open'){
         if(c.expires<=this.now||!site||site.state.owner!==c.employer){this.cancelContract(c,'Hết hạn hoặc đổi chủ');continue;}
         const candidates=this.world.npcs.filter(n=>this.willing(n,c,site))
-          .sort((a,b)=>distance(a,site.point)-distance(b,site.point));
+          .sort((a,b)=>Number(b.vocation==='miner')-Number(a.vocation==='miner')||distance(a,site.point)-distance(b,site.point));
         if(candidates[0])this.accept(candidates[0],c);
       }else if(c.status==='active'){
         const n=this.npc(c.workerId);
@@ -313,7 +314,7 @@ export class CivicSystem {
     const d=actor.underground,v=victim.underground;
     if(!actor.alive||!victim.alive||!d||v?.siteId!==d.siteId||v.floor!==d.floor)return false;
     const stats=cultivationStats(actor),defense=cultivationStats(victim).defense;
-    const damage=Math.max(1,Math.round(stats.attack*.24-defense*.1));
+    const damage=resolveDamage(stats.attack*.24,defense,actor,victim,this.scene.damageModifiers?.(actor,victim)).damage;
     victim.hp=Math.max(0,victim.hp-damage);
     if(!lawful)this.violence({eventId:'mine-assault:'+actor.id+':'+victim.id+':'+this.now,attackerId:actor.id,victimId:victim.id,damage});
     if(!victim.hp){victim.alive=false;victim.deathCause='Giao tranh dưới lòng đất';creditDeath(this.world,victim,'npc-death',victim.deathCause);delete victim.underground;}
@@ -537,7 +538,7 @@ export class CivicSystem {
     for(const site of this.veins.sites.values()){
       if(!site.state.discovered||site.state.owner||site.state.controller||this.veins.guard(site))continue;
       const discoverer=roster.find(n=>!this.busy(n)&&n.realmIndex>=site.grade-1&&n.profession==='tu_si'&&
-        distance(n,site.point)<=38&&(n.aiProfile?.axes?.ambition??0)>=54);
+        distance(n,site.point)<=38&&(n.personalGoal?.id==='vein'||(n.aiProfile?.axes?.ambition??0)>=54));
       if(discoverer)this.claim(discoverer,site);
     }
     if(this.now-(this.state.lastOffense??-1440)>=1440){
@@ -549,10 +550,12 @@ export class CivicSystem {
       }
     }
     for(const site of this.veins.sites.values()){
-      const owner=this.npc(site.state.owner);
+      const faction=this.world.factions.find(f=>f.id===site.state.owner);
+      const owner=this.npc(site.state.owner)??this.npc(site.state.manager??faction?.leaderId);
       if(!owner?.alive||owner.id===this.scene.possessedNpcId||site.state.amount<3||site.grade>2||this.activeSite(site.id)||
         this.now-(site.state.lastOffer??-2000)<480)continue;
-      const c=this.offer(owner,site,{mode:owner.spiritStones>=18?'wage':'share',price:owner.spiritStones>=18?6:50,quantity:4});
+      const funded=this.balance(site.state.owner)>=18;
+      const c=this.offer(owner,site,{mode:funded?'wage':'share',price:funded?6:50,quantity:Math.min(4,site.state.amount)});
       if(c)site.state.lastOffer=this.now;
     }
   }

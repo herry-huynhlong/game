@@ -6,6 +6,8 @@ import {applyProfession} from './ProfessionAppearance.js';
 import {CAVE_BEASTS,CAVE_TREASURES,CAVE_BIOMES,CAVE_FLORA,caveBiomeAt,caveDistance} from './UndergroundMaps.js';
 import {UG_TILE as tile,UG_CHUNK as chunk,rect,polygon,crystal,mineral,propArt,portalArt,plantArt,makeCaveChunk,makeOverview} from './UndergroundArt.js';
 import {waterFlowFrame} from './WaterFlowFrame.js';
+import {auctionFloorArt,drawAuctionFurniture,displayTreasure} from './AuctionRoomArt.js';
+import {commerceProduct,worldMinute} from './CommerceCatalog.js';
 import './underground-world.css';
 
 function beastVisual(g,beast,centerX,centerY,now){
@@ -54,6 +56,7 @@ export class UndergroundView {
     }
     const head=this.system.world.clock.paused?5:Math.floor(this.system.scene.time.now/105)%6;
     renderer.workPose=npc.action==='work'&&d.nodeId?{x:[0,1,3,4,3,1][head],y:[0,-5,-9,4,3,1][head],bend:[0,0,1,3,2,1][head]}:null;
+    renderer.meditation=d.auctionSeated?{amount:1,name:'Seated',breath:false}:null;
     const at=this.system.scene.time.now,elapsed=Math.min(130,at-(entry.paintedAt??at-90));
     entry.paintedAt=at;
     renderer.advance(elapsed,npc.action==='travel'?'walk':'idle',d.facing,npc.action==='travel'?9:0);
@@ -80,19 +83,21 @@ export class UndergroundView {
       <div class="cave-overview"><canvas width="162" height="162" aria-label="Bản đồ tổng quan của tầng"></canvas>
       <div><button data-fit>Toàn tầng</button><button data-focus>Về cửa</button></div></div>
       <aside hidden><button data-clear aria-label="Đóng giám định">×</button><h2>Thiên Đạo Giám Định</h2><strong></strong><dl></dl>
-      <button data-follow hidden>Theo dõi</button></aside>
+      <button data-follow hidden>Theo dõi</button><button data-gift hidden>Ban thưởng</button><button data-local-action hidden></button></aside>
       <footer><span data-stats></span><span data-hint></span></footer>`;
     this.canvas=this.panel.querySelector('.cave-world');this.minimap=this.panel.querySelector('.cave-overview canvas');
     this.info=this.panel.querySelector('aside');this.ctx=this.canvas.getContext('2d',{alpha:false});
     this.el=name=>this.panel.querySelector('[data-'+name+']');
     this.el('speed').onchange=()=>{const select=document.getElementById('world-clock-speed');select.value=this.el('speed').value;select.dispatchEvent(new Event('change'));};
     this.el('close').onclick=()=>this.hide();
+    this.el('local-action').onclick=()=>this.localAction?.();
     this.el('up').onclick=()=>this.show(this.id,this.level-1);
     this.el('down').onclick=()=>this.show(this.id,this.level+1);
     this.el('fit').onclick=()=>this.fit();
     this.el('focus').onclick=()=>this.focus(this.floor.entry);
     this.el('clear').onclick=()=>{this.selection=null;this.info.hidden=true;};
     this.el('follow').onclick=()=>{this.follow=this.selection?.npcId??null;this.dirty=true;};
+    this.el('gift').onclick=()=>{if(this.selection?.npcId)this.system.scene.openNpcGift?.(this.selection.npcId);};
     this.minimap.onclick=e=>{
       if(this.controlled)return;
       const r=this.minimap.getBoundingClientRect();
@@ -151,8 +156,15 @@ export class UndergroundView {
     this.system.scene.cameras.main.setVisible(false);
     this.el('up').hidden=controlled||level===0;this.el('down').hidden=controlled||!this.floor.down;this.el('close').hidden=controlled;
     this.el('fit').hidden=controlled;this.el('focus').hidden=controlled;
+    if(site.kind==='auction'){this.el('up').hidden=true;this.el('down').hidden=true;}
+    this.el('local-action').hidden=true;
     this.el('hint').textContent=controlled?'WASD di chuyển · E tương tác · J đánh · Esc thoát nhập thân':'Kéo bản đồ · lăn chuột để zoom · nhấp để giám định';
     this.chunks.clear();this.motion.clear();this.overview=makeOverview(this.floor,6);
+    this.auctionArt??=new Map();
+    this.auctionFurniture??=new Map();
+    if(site.kind==='auction'&&!this.auctionArt.has(this.floor.id))this.auctionArt.set(this.floor.id,auctionFloorArt(this.floor,tile));
+    this.auctionBackground=this.auctionArt.get(this.floor.id)??null;
+    if(this.auctionBackground)this.overview=this.auctionBackground;
     this.focus(this.floor.entry);this.render();
   }
   hide(){
@@ -173,18 +185,30 @@ export class UndergroundView {
     return bg;
   }
   amount(node){return this.system.observedStock(this.site)[node.id]??0;}
+  get opportunities(){return this.system.scene.opportunities?.waiting.get(this.id+':'+this.level)??[];}
+  selectOpportunity(row){this.selection={opportunity:row};this.dirty=true;this.details();}
   inspect(p,preferDeposit=false){
     const {floor,state}=this;
     const at={x:Math.floor(p.x/tile),y:Math.floor(p.y/tile)};
+    if(this.system.scene.opportunities?.previewCave(this.id,this.level,at))return;
     const near=q=>q&&caveDistance(q,at)<=1;
+    if(floor.auction&&!this.controlled){
+      if(near(floor.down)){this.show(this.id,this.level+1);this.fit();return;}
+      if(near(floor.entry)){
+        if(this.level){this.show(this.id,this.level-1);this.fit();}else this.hide();
+        return;
+      }
+    }
     const npc=this.residents.find(n=>near(n.underground));
     const beast=state?.beasts?.[this.level],node=this.site.map.nodes.find(n=>n.level===this.level&&near(n));
     const plant=floor.flora.find(near),prop=floor.props.find(near);
+    const discovery=[...this.opportunities].find(near);
     if(node&&preferDeposit)this.selection={nodeId:node.id};
     else if(npc){this.selection={npcId:npc.id};if(this.controlled)this.system.selectedNpcId=npc.id;}
-    else if(beast?.phase!=='BURIED_IDLE'&&near(beast)&&beast.hp>0)this.selection={beast:true};
+    else if(beast&&beast.phase!=='BURIED_IDLE'&&near(beast)&&beast.hp>0)this.selection={beast:true};
     else if(node)this.selection={nodeId:node.id};
     else if(plant)this.selection={plantId:plant.id};
+    else if(discovery)this.selection={opportunity:discovery};
     else if(prop)this.selection={prop};
     else if(near(floor.treasure))this.selection={treasure:true};
     else this.selection={biome:caveBiomeAt(floor,at.x,at.y)};
@@ -194,9 +218,11 @@ export class UndergroundView {
     const s=this.selection;if(!s)return;
     const {site,floor,state,system}=this,place='Tầng '+(this.level+1),rows=[];
     const n=system.scene.scheduler.byId.get(s.npcId)?.npc;
-    let name;
+    let name,action;
     if(n){
       name=n.name;
+      if(floor.auction&&system.scene.weeklyAuction.steward?.id===n.id)
+        action={label:'Xem lịch và các lô',run:()=>system.scene.weeklyAuction.panel.open()};
       const d=n.underground;
       rows.push(['Sinh lực',n.hp],['Linh lực',n.mp],['Hoạt động',n.shortGoal],['Tổ đội',system.scene.expeditions?.of(n)?.name??'Đi một mình']);
       const custody=system.scene.civic?.state.custody[n.id];
@@ -217,15 +243,42 @@ export class UndergroundView {
       const b=state?.beasts[this.level];if(!b)return;
       name=CAVE_BEASTS[b.species].name;
       rows.push(['Sinh lực',b.hp],['Kỹ năng',CAVE_BEASTS[b.species].skill],['Trạng thái',b.phase],['Lãnh địa',place]);
+    }else if(s.opportunity){
+      const row=s.opportunity;
+      name=commerceProduct(row.itemId)?.name;
+      rows.push(['Trạng thái',row.owner?'Đã được tìm thấy':'Chờ người hữu duyên'],['Vị trí',place+' · '+row.x+', '+row.y],
+        ['Điều kiện',[(row.realm?'Cảnh giới '+row.realm:null),row.root,row.requireClear?'Hạ yêu thú canh giữ':null].filter(Boolean).join(' · ')||'Không giới hạn']);
     }else if(s.treasure){
       name=CAVE_TREASURES[floor.treasure.type];rows.push(['Trạng thái',state?.treasures[this.level]?'Đã lấy':'Còn tại chỗ'],['Vị trí',place]);
     }else{
       if(s.prop?.kind==='camp')rows.push(['Công dụng','E nghỉ · Shift+E gửi · R lấy'],['Kho tạm',Object.values(state?.warehouse??{}).flat().reduce((sum,row)=>sum+row.count,0)+' đơn vị']);
+      if(floor.auction&&s.prop){
+        const auction=system.scene.weeklyAuction,lot=auction.activeLot;
+        if(['podium','desk','display','balcony'].includes(s.prop.kind)){
+          rows.push(['Lịch','Ngày 7 · 10:00'],['Lô hiện tại',lot?commerceProduct(lot.itemId)?.name:'Chưa mở lô'],
+            ['Giá hiện tại',lot?(lot.escrow?.price??lot.ask)+' linh thạch':'—']);
+          action={label:'Xem lịch và các lô',run:()=>auction.panel.open()};
+        }
+        if(floor.level===2&&['cargo','shelf','rack','pedestal','desk'].includes(s.prop.kind)){
+          const listing=auction.vaultLots.filter(row=>{
+            const item=commerceProduct(row.itemId);
+            if(s.prop.kind==='shelf')return Boolean(item.book);
+            if(s.prop.kind==='rack')return Boolean(item.arm);
+            if(s.prop.kind==='cargo')return item.kind==='material';
+            return true;
+          });
+          rows.push(['Tồn kho',listing.map(row=>commerceProduct(row.itemId)?.name).join(', ')||'Không có lô phù hợp']);
+          if(s.prop.name==='Rương linh thạch')rows.push(['Hoa hồng đã thu',auction.state.treasury+' linh thạch']);
+        }
+      }
       name=s.prop?.name??CAVE_BIOMES[s.biome??0].name;rows.push(['Vị trí',place],['Mạch',site.name]);
     }
+    this.localAction=action?.run;this.el('local-action').hidden=!action;
+    if(action)this.el('local-action').textContent=action.label;
     const signature=JSON.stringify([name,rows]);
     this.info.hidden=false;
     this.el('follow').hidden=!n?.underground||this.controlled;
+    this.el('gift').hidden=!n?.alive||Boolean(system.scene.possessedNpcId);
     if(this.detailsSignature===signature)return;
     this.detailsSignature=signature;
     this.info.querySelector('strong').textContent=name;
@@ -280,7 +333,8 @@ export class UndergroundView {
     const visible=(p,padding=2)=>p.x>=left/tile-padding&&p.y>=top/tile-padding&&p.x<=right/tile+padding&&p.y<=bottom/tile+padding;
     g.imageSmoothingEnabled=false;rect(g,0,0,W,H,'#141c26');
     g.save();g.translate(Math.round(-left*z),Math.round(-top*z));g.scale(z,z);
-    if(z<.56)g.drawImage(this.overview,0,0,floor.width*tile,floor.height*tile);
+    if(this.auctionBackground)g.drawImage(this.auctionBackground,0,0);
+    else if(z<.56)g.drawImage(this.overview,0,0,floor.width*tile,floor.height*tile);
     else{
       const size=tile*chunk;
       for(let cy=Math.max(0,Math.floor(top/size));cy<=Math.min(Math.ceil(floor.height/chunk)-1,Math.floor(bottom/size));cy++)
@@ -303,12 +357,23 @@ export class UndergroundView {
     }
     const draw=[];
     const place=(p,fn)=>{if(visible(p))draw.push({y:p.y,draw:()=>fn(p.x*tile+12,p.y*tile+18)});};
-    place(floor.entry,(x,y)=>portalArt(g,x,y,false));if(floor.down)place(floor.down,(x,y)=>portalArt(g,x,y,true));
-    for(const prop of floor.props)place(prop,(x,y)=>propArt(g,x,y,prop,CAVE_BIOMES[caveBiomeAt(floor,prop.x,prop.y)].accent));
+    if(!floor.auction){place(floor.entry,(x,y)=>portalArt(g,x,y,false));if(floor.down)place(floor.down,(x,y)=>portalArt(g,x,y,true));}
+    for(const prop of floor.props)place(prop,(x,y)=>{
+      if(!floor.auction){propArt(g,x,y,prop,CAVE_BIOMES[caveBiomeAt(floor,prop.x,prop.y)].accent);return;}
+      drawAuctionFurniture(g,x,y,prop,this.auctionFurniture);
+      const auction=system.scene.weeklyAuction;
+      const lot=prop.kind==='podium'||prop.kind==='balcony'?auction.activeLot:
+        prop.kind==='pedestal'?auction.vaultLots[prop.name==='Bệ ký gửi'?0:1]:null;
+      if(lot)displayTreasure(system.scene,g,lot,x,y,at);
+    });
     for(const p of floor.flora)place(p,(x,y)=>plantArt(g,x,y,p.type,system.plantStage(site,p)));
     const stock=system.observedStock(site);
     for(const node of site.map.nodes)if(node.level===this.level)place(node,(x,y)=>mineral(g,x,y,site,Boolean(stock[node.id])));
     if(floor.treasure&&!state?.treasures[this.level])place(floor.treasure,(x,y)=>crystal(g,x,y,'#f3dc9d',.7));
+    for(const row of this.opportunities)place(row,(x,y)=>{
+      rect(g,x-9,y-11,18,13,'#432b32');rect(g,x-7,y-10,14,10,'#ae7451');rect(g,x-2,y-7,4,4,'#edc97d');
+      displayTreasure(system.scene,g,row,x,y,at);
+    });
     for(const drop of state?.drops??[])if(drop.level===this.level&&!drop.claimed)place(drop,(x,y)=>rect(g,x-2,y-4,4,4,'#e9ca86'));
     const beast=state?.beasts[this.level];
     if(beast)place(beast,(x,y)=>beastVisual(g,beast,x,y,clock.minute));
@@ -321,6 +386,15 @@ export class UndergroundView {
         const f=system.scene.npcSprites.get(n.id)?.frame;
         if(f)g.drawImage(f.source.image,f.cutX,f.cutY,f.cutWidth,f.cutHeight,x-12,y-26,24,28);
       }
+      const quote=n.underground.auctionSpeech;
+      const venue=floor.auction&&system.scene.weeklyAuction;
+      if(quote&&quote.until>=worldMinute(system.world)&&
+        (venue?.session?.auctioneer===n.id||venue?.activeLot?.escrow?.buyer===n.id)){
+        g.font='10px Georgia';
+        const width=Math.min(200,g.measureText(quote.text).width)+10;
+        rect(g,x-width/2,y-39,width,16,'#282624');
+        g.fillStyle='#f8dfaa';g.textAlign='center';g.fillText(quote.text,x,y-28,190);
+      }
     });
     draw.sort((a,b)=>a.y-b.y);for(const layer of draw)layer.draw();g.restore();
     for(const [id,e] of this.characters)if(!drawn.has(id)){e.renderer.destroy();this.characters.delete(id);}
@@ -329,8 +403,9 @@ export class UndergroundView {
     mini.strokeStyle='#ecd9a1';mini.strokeRect(left*mx,top*my,(right-left)*mx,(bottom-top)*my);
     for(const n of residents)rect(mini,n.underground.x*162/floor.width,n.underground.y*162/floor.height,2,2,'#f2d99b');
     const biome=CAVE_BIOMES[caveBiomeAt(floor,this.center.x/tile,this.center.y/tile)];
-    this.el('place').textContent=site.name+' – Tầng '+(this.level+1)+' – '+biome.name;
-    this.el('stats').textContent='Trữ lượng '+site.state.amount+'/'+site.max+' · '+residents.length+' cư dân · Zoom '+Math.round(z*100)+'%';
+    this.el('place').textContent=floor.auction?'Vạn Bảo Các – Tầng '+(this.level+1)+' · '+floor.name:site.name+' – Tầng '+(this.level+1)+' – '+biome.name;
+    this.el('stats').textContent=floor.auction?residents.filter(n=>n.underground.auctionSeated).length+' khách ngồi · '+floor.props.filter(p=>p.kind==='seat').length+' ghế':
+      'Trữ lượng '+site.state.amount+'/'+site.max+' · '+residents.length+' cư dân · Zoom '+Math.round(z*100)+'%';
     this.el('speed').value=String(clock.paused?0:clock.speed??1);
     this.details();
   }

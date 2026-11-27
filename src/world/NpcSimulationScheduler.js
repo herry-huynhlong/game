@@ -13,11 +13,20 @@ export class NpcSimulationScheduler {
   constructor(npcs) {
     this.time = 0;
     this.counts = [0, 0, 0];
-    this.byId = new Map(npcs.map((npc, index) => [npc.id, {
-      npc, index, level: 2, visible: false, lastMove: 0, retryAt: 0,
-      moveDue: 1 + index * 29 % MOVE_INTERVAL[2], thinkDue: 1000 + index * 137 % 1100,
+    this.byId = new Map();
+    this.ordinal = 0;
+    for (const npc of npcs) this.register(npc);
+  }
+
+  register(npc) {
+    if (this.byId.has(npc.id)) return;
+    const index = this.ordinal++;
+    this.byId.set(npc.id, {
+      npc, index, level: 2, visible: false, lastMove: this.time, retryAt: 0,
+      moveDue: this.time + 1 + index * 29 % MOVE_INTERVAL[2],
+      thinkDue: this.time + 1000 + index * 137 % 1100,
       minutes: 0, workMinutes: 0, workKey: '',
-    }]));
+    });
   }
 
   advance(delta, view, possessedId, urgentIds) {
@@ -32,7 +41,7 @@ export class NpcSimulationScheduler {
       entry.visible=npcVisibleInView(entry,view,controlled);
       entry.level = controlled || urgentIds.has(npc.id) || distance <= (previous === 0 ? 132 : 84)
         ? 0 : distance <= (previous < 2 ? 610 : 490) ? 1 : 2;
-      if (!npc.alive || npc.underground) {
+      if (!npc.alive || npc.underground || npc.minor) {
         entry.lastMove=this.time;
         entry.minutes=entry.workMinutes=0;
         continue;
@@ -58,7 +67,7 @@ export class NpcSimulationScheduler {
   accrueMinute(possessedId, arrivalTolerance=()=>25) {
     for (const entry of this.byId.values()) {
       const { npc } = entry;
-      if (!npc.alive || npc.underground || npc.id === possessedId) continue;
+      if (!npc.alive || npc.underground || npc.minor || npc.id === possessedId) continue;
       entry.minutes++;
       const target = npc.actionTarget ?? npc.home ?? npc;
       const key = npc.goalAction + ':' + target.x + ':' + target.y;

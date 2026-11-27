@@ -350,5 +350,125 @@
   "yin_soul_herb": [
     32,
     352
+  ],
+  "steel_jian": [
+    0,
+    384
+  ],
+  "heavy_dao": [
+    32,
+    384
+  ],
+  "iron_spear": [
+    64,
+    384
+  ],
+  "jade_jian": [
+    96,
+    384
+  ],
+  "scarlet_dao": [
+    128,
+    384
+  ],
+  "earth_spear": [
+    160,
+    384
+  ],
+  "purple_jian": [
+    192,
+    384
+  ],
+  "ice_spear": [
+    224,
+    384
+  ],
+  "soul_scythe": [
+    0,
+    416
+  ],
+  "heaven_thunder_jian": [
+    32,
+    416
+  ],
+  "dragon_dao": [
+    64,
+    416
+  ],
+  "earth_hammer": [
+    96,
+    416
+  ],
+  "void_jian": [
+    128,
+    416
+  ],
+  "chaos_spear": [
+    160,
+    416
+  ],
+  "crow_dao": [
+    192,
+    416
+  ],
+  "manual_breeze": [
+    224,
+    416
+  ],
+  "manual_mountain-fist": [
+    0,
+    448
+  ],
+  "manual_eight-spear": [
+    32,
+    448
+  ],
+  "manual_qingyun-flight": [
+    64,
+    448
+  ],
+  "manual_scarlet-palm": [
+    96,
+    448
+  ],
+  "manual_green-life": [
+    128,
+    448
+  ],
+  "manual_purple-sword": [
+    160,
+    448
+  ],
+  "manual_ice-heart": [
+    192,
+    448
+  ],
+  "manual_soul-eater": [
+    224,
+    448
+  ],
+  "manual_myriad-sword": [
+    0,
+    480
+  ],
+  "manual_nine-skies": [
+    32,
+    480
+  ],
+  "manual_burning-dragon": [
+    64,
+    480
+  ],
+  "manual_void-sword": [
+    96,
+    480
+  ],
+  "manual_chaos-thunder": [
+    128,
+    480
+  ],
+  "manual_golden-crow": [
+    160,
+    480
   ]
 }

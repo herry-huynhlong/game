@@ -1,0 +1,13 @@
+.commerce-filters{display:flex;flex-wrap:wrap;align-items:start;gap:6px;margin:8px 0}
+.commerce-filters small{width:100%}
+.commerce-weapon{display:inline-block;width:36px;height:48px;background-image:url('/assets/items/martial-arms.png');background-size:540px 48px;image-rendering:pixelated}
+.commerce-weapon[data-element='fire'],.commerce-weapon[data-element='sun']{animation:commerce-fire 1.3s steps(4) infinite}
+.commerce-weapon[data-element='thunder']{animation:commerce-thunder 1.2s steps(4) infinite}
+@keyframes commerce-fire{30%{filter:drop-shadow(0 0 4px #df6e44)}70%{filter:drop-shadow(0 0 2px #f3bb60)}}
+@keyframes commerce-thunder{25%{filter:drop-shadow(1px 0 3px #a285ee)}80%{filter:drop-shadow(-1px 0 1px #b8cbff)}}
+.commerce-auction.drawer,#heaven-shop{z-index:42}
+.commerce-auction.drawer{width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 100px);overflow:auto;background:#202921f8}
+.commerce-auction article{display:grid;grid-template-columns:auto 1fr;gap:10px;border-top:1px solid #695b42;padding:10px 0}
+.commerce-auction small{display:block;color:#d2c8a9;margin:4px 0}
+.commerce-auction button{margin:3px}
+@media(prefers-reduced-motion:reduce){.commerce-weapon{animation:none!important}}

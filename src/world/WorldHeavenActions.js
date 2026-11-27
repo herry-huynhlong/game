@@ -1,3 +1,4 @@
+import {wearMartialWeapon} from '../dao/MartialProgress.ts';
 import { blocksGroundCombat, aboveGroundCombat } from './FlyingSword.js';
 import { EconomySystem } from '../dao/EconomySystem.ts';
 import { SKILLS, hasRod, itemName, rodEquipped } from './HeavenShop.js';
@@ -42,7 +43,8 @@ export class WorldHeavenActions {
     if (skillId && (!skill || !npc.skills?.includes(skillId))) return fail('Hãy lĩnh ngộ bí kíp và gán võ kỹ vào phím K.');
     if (skill?.weapon && weapon?.kind !== skill.weapon) return fail('Chưa trang bị vũ khí phù hợp với võ kỹ.');
     if (skill && (npc.heavenSkillReadyAt ?? 0) > now) return fail('Võ kỹ đang hồi chiêu.');
-    if (skill && npc.mp < skill.mp) return fail('Không đủ linh lực.');
+    const stats=cultivationStats(npc),cost=skill?Math.max(skill.mp,stats.mpMax*skill.mp*.004):0;
+    if (skill && npc.mp < cost) return fail('Không đủ linh lực.');
     if (!skill && scene.playerAttackCooldown > 0) return false;
     if (rodEquipped(npc) && (!skill || skill.range)) return fail('Hãy tháo cần câu trước khi tấn công.');
     if (this.shots.length >= 32) return false;
@@ -51,7 +53,7 @@ export class WorldHeavenActions {
       if (ai && (npc.hp > cultivationStats(npc).hpMax * .55 || npc.heavenGuardUntil > now)) return false;
       npc.heavenGuardUntil = now + skill.duration;
       npc.heavenSkillReadyAt = now + skill.cooldown;
-      npc.mp -= skill.mp;
+      npc.mp -= cost;
       scene.persistPopulation();
       return true;
     }
@@ -63,6 +65,7 @@ export class WorldHeavenActions {
     if (ai && scene.populationWorld.npcs.some(other => other !== npc && other.alive && (npc.wallLevel??0)===(other.wallLevel??0) &&
       this.inLane(npc, other, ux, uy, range, width + 12))) return false;
     if (!ai) this.stopFishing();
+    if(weapon?.grade!==undefined)wearMartialWeapon(npc);
     const dir = facing(ux, uy);
     if (!ai) {
       scene.playerFacing = dir;
@@ -71,7 +74,7 @@ export class WorldHeavenActions {
     }
     if (skill) {
       npc.heavenSkillReadyAt = now + skill.cooldown;
-      npc.mp -= skill.mp;
+      npc.mp -= cost;
       scene.persistPopulation();
     }
     const actor = scene.npcSprites.get(npc.id);
@@ -85,7 +88,7 @@ export class WorldHeavenActions {
       id: createWorldUuid(), npc, ai, wallLevel:npc.wallLevel??0, x: npc.x, y: npc.y, ux, uy, range, width, sprite,
       start: scene.time.now + (weapon || skill ? 105 : 65), travel: 0, speed: effect === 'thrust' ? 630 : 450,
       frame: { dao: 0, jian: 3, thrust: 6 }[effect], visible: Boolean(weapon || skill), hits: skill?.hits ?? 1, struck: new Set(),
-      damage: damageForStrike(npc.realmIndex, combo, Boolean(skill), cultivationStats(npc).attack, skill?.multiplier ?? mode.multiplier ?? 1),
+      damage: damageForStrike(npc.realmIndex, combo, Boolean(skill), stats.attack, skill?.multiplier ?? mode.multiplier ?? 1),
     });
     return true;
   }
@@ -141,7 +144,7 @@ export class WorldHeavenActions {
             const eventId = 'heaven-strike:' + shot.id + ':' + target.id;
             const result = fauna
               ? scene.applyFaunaDamage(target, shot.npc, shot.damage, eventId,true)
-              : scene.reportCombat(shot.npc.id, target.id, Math.max(1, Math.floor(shot.damage - this.defense(target))), { eventId });
+              : scene.reportCombat(shot.npc.id, target.id, shot.damage, { eventId });
             if (result.ok === false) continue;
             if (shot.ai && shot.npc.populationRole === 'hunter' && fauna && !target.alive) {
               shot.npc.faunaHuntsToday = (shot.npc.faunaHuntsToday ?? 0) + 1;

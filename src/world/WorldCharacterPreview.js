@@ -43,16 +43,21 @@ export class WorldCharacterPreview {
     const equipped=visualEquipment(weapon);
     if(character.appearance.weapon!==equipped) character.customize({...character.appearance,weapon:equipped});
     const f=npc.flight;
-    const direction=f?.heading??(possessed?this.scene.playerFacing:sprite.anims.currentAnim?.key.split('_').at(-1)??'down');
+    const martial=this.scene.martialCombat;
+    const cast=martial?.casts.get(npc.id),cinema=martial?.cinematicPose(cast);
+    const direction=cinema?cast.direction:f?.heading??(possessed?this.scene.playerFacing:sprite.anims.currentAnim?.key.split('_').at(-1)??'down');
     const running=this.scene.possessedNpcId===npc.id&&this.scene.keys?.SHIFT?.isDown;
     const motion=!f&&sprite.getData('moving')?(running?'run':'walk'):'idle';
-    character.root.setPosition(Math.round(sprite.x),Math.round(sprite.y-flightOffset(f)-this.scene.ramparts.height(npc))).setDepth(sprite.depth+.01);
+    character.root.setPosition(Math.round(sprite.x),Math.round(sprite.y-flightOffset(f)-this.scene.ramparts.visualHeight(npc))).setDepth(sprite.depth+.01);
     this.mount.render(sprite.x,sprite.y,character.combat.action?.direction??direction,motion,distance);
     const hadFlight=character.flightWeapon;
     character.flightWeapon=Boolean(f);character.flightPose=visualFlightPose(f);
-    character.meditation=this.mount.attached?null:this.scene.cultivation?.poseFor(npc,this.scene.time.now);
+    const hadCinema=Boolean(character.martialPose?.cinema);
+    character.martialPose=cinema?{pose:cast.skill.delivery,phase:cast.phase,age:martial.clock-cast.at,cinema}:null;
+    character.martialWeapon=cinema&&weapon?.grade!==undefined?weapon:null;
+    character.meditation=this.mount.attached||cinema?null:this.scene.cultivation?.poseFor(npc,this.scene.time.now);
     character.advance(delta,motion,direction,Math.min(distance/character.root.scaleX,12));
-    if(f||hadFlight)character.apply();
+    if(f||hadFlight||cinema||hadCinema)character.apply();
     return true;
   }
   reset(){this.mount.reset();this.character.combat.cancel();}
@@ -131,7 +136,7 @@ export class WorldCharacterPreview {
     scene.spawnWeaponFx(weapon.kind==='dao'?'dao':thrust?'thrust':'jian',dir,npc.x+ux*20,npc.y+uy*20-15-scene.ramparts.height(npc),scene.ramparts.depth(npc)+15);
     if(!target)return;
     const id='rig-strike:'+createWorldUuid();
-    if(scene.npcSprites.has(target.id))scene.reportCombat(npc.id,target.id,Math.max(1,Math.floor(damage-scene.heavenActions.defense(target))),{eventId:id});
+    if(scene.npcSprites.has(target.id))scene.reportCombat(npc.id,target.id,damage,{eventId:id});
     else scene.applyFaunaDamage(target,npc,damage,id);
   }
 }

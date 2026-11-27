@@ -37,23 +37,29 @@ export class WorldNpcAppearanceFleet {
       if(!actor)continue;
       const record=npc.modularAppearance;
       let entry=this.entries.get(npc.id);
-      const attack=scene.weaponAttackStates.get(npc.id);
-      const flight=npc.flight,step=npc.skyStep,skyPose=skyStepPose(step);
-      const meditation=actor.visible?scene.cultivation?.poseFor(npc,time):null;
+      if(!npc.alive||!actor.visible){
+        if(entry?.renderer.root.visible)entry.renderer.root.setVisible(false);
+        actor.showingModularPose=false;
+        if(actor.alpha!==1)actor.setAlpha(1);
+        continue;
+      }
+      const meditation=scene.cultivation?.poseFor(npc,time);
       const reason=!record?'missing':!meditation&&rodEquipped(npc)?'fishing':null;
-      if(!npc.alive||!actor.visible||reason){
+      if(reason){
         if(entry?.renderer.root.visible)entry.renderer.root.setVisible(false);
         actor.showingModularPose=false;
         if(actor.alpha!==1)actor.setAlpha(1);
         if(reason&&npc.alive&&actor.visible)this.fallbacks[reason]=(this.fallbacks[reason]??0)+1;
         continue;
       }
-      const equipped=visualEquipment(weaponForNpc(npc));
+      const attack=scene.weaponAttackStates.get(npc.id);
+      const flight=npc.flight,step=npc.skyStep,skyPose=skyStepPose(step);
+      const arm=weaponForNpc(npc),equipped=visualEquipment(arm);
       if(!entry){
         if(creationBudget--<=0){actor.showingModularPose=false;continue;}
         try{
           const renderer=new CharacterRenderer(scene,actor.x,actor.y,{...validateAppearance(record.look),weapon:equipped});
-          renderer.root.setScale(.40);
+          renderer.root.setScale(npc.minor?.32:.40);
           entry={renderer,record,elapsed:0,x:actor.x,y:actor.y,weapon:equipped};
           this.entries.set(npc.id,entry);
         }catch{
@@ -63,6 +69,8 @@ export class WorldNpcAppearanceFleet {
         }
       }
       const {renderer}=entry;
+      renderer.martialWeapon=arm?.grade!==undefined?arm:null;
+      if(renderer.root.scaleX!==(npc.minor?.32:.40))renderer.root.setScale(npc.minor?.32:.40);
       if(entry.record!==record||entry.weapon!==equipped){
         renderer.customize({...record.look,weapon:equipped});entry.record=record;entry.weapon=equipped;
       }
@@ -71,7 +79,8 @@ export class WorldNpcAppearanceFleet {
       actor.showingModularPose=true;
       if(actor.alpha!==.001)actor.setAlpha(.001);
       if(!renderer.root.visible){renderer.root.setVisible(true);entry.x=actor.x;entry.y=actor.y;}
-      const x=Math.round(actor.x),y=Math.round(actor.y-flightOffset(flight)-(skyPose?.height??0)-(scene.ramparts?.height(npc)??0));
+      const cast=scene.martialCombat?.casts.get(npc.id);
+      const x=Math.round(actor.x),y=Math.round(actor.y-flightOffset(flight)-(skyPose?.height??0)-(scene.ramparts?.visualHeight(npc)??0));
       if(renderer.root.alpha!==(skyPose?.alpha??1))renderer.root.setAlpha(skyPose?.alpha??1);
       if(renderer.root.x!==x||renderer.root.y!==y)renderer.root.setPosition(x,y);
       if(renderer.root.depth!==actor.depth+.01)renderer.root.setDepth(actor.depth+.01);
@@ -80,7 +89,7 @@ export class WorldNpcAppearanceFleet {
       const key=actor.anims.currentAnim?.key;
       if(entry.animKey!==key){entry.animKey=key;entry.facing=key?.slice(key.lastIndexOf('_')+1);}
       const socialDirection=scene.society?.isSeated(npc)&&scene.society.seatFor(npc)?.facing;
-      const direction=socialDirection||(step?.heading??flight?.heading??(possessed?scene.playerFacing:entry.facing??'down'));
+      const direction=cast?.direction??(socialDirection||(step?.heading??flight?.heading??(possessed?scene.playerFacing:entry.facing??'down')));
       const motion=!flight&&!step&&moving?(possessed&&scene.keys?.SHIFT.isDown?'run':'walk'):'idle';
       const fighting=attack&&time<attack.until;
       if(fighting&&entry.combatStarted!==attack.started){
@@ -91,16 +100,19 @@ export class WorldNpcAppearanceFleet {
       const hadFlight=Boolean(renderer.flightWeapon);
       renderer.flightWeapon=Boolean(flight||step);
       renderer.flightPose=skyPose??visualFlightPose(flight);
-      renderer.meditation=meditation;
+      renderer.meditation=cast?null:meditation;
+      renderer.martialPose=cast&&{pose:cast.skill.delivery,phase:cast.phase,age:scene.martialCombat.clock-cast.at,
+        cinema:scene.martialCombat.cinematicPose(cast)};
       const farming=npc.action==='work'&&npc.decisionSlot?.includes('farm')&&!moving;
       const rhythm=Math.floor(time/135+npc.id.length)%6;
       const previousWork=renderer.workPose;
       renderer.workPose=farming?farmStrokes[rhythm]:null;
       entry.elapsed+=dt;
-      if(!possessed&&!step&&!renderer.combat.action&&hadFlight===Boolean(flight)&&entry.elapsed<(flight?52:poseInterval)&&renderer.direction===direction&&renderer.motion===motion)continue;
+      if(!possessed&&!step&&!cast&&!entry.hadCast&&!renderer.combat.action&&hadFlight===Boolean(flight)&&entry.elapsed<(flight?52:poseInterval)&&renderer.direction===direction&&renderer.motion===motion)continue;
       const distance=Math.hypot(actor.x-entry.x,actor.y-entry.y)/renderer.root.scaleX;
       renderer.advance(Math.min(160,entry.elapsed),motion,direction,Math.min(distance,18));
-      if(flight||step||hadFlight||previousWork&&!renderer.workPose)renderer.apply();
+      if(flight||step||hadFlight||cast||entry.hadCast||previousWork&&!renderer.workPose)renderer.apply();
+      entry.hadCast=Boolean(cast);
       applyProfession(renderer,npc,farming?(npc.farmPose==='harvest'?13:npc.farmPose==='water'?14:11):null);
       entry.x=actor.x;entry.y=actor.y;entry.elapsed=0;
     }

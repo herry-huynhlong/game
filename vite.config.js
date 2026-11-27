@@ -15,6 +15,7 @@ export default defineConfig({
     shanhePreview:fileURLToPath(new URL('./shanhe-preview.html',import.meta.url)),
     eastArtGallery:fileURLToPath(new URL('./east-art-gallery.html',import.meta.url)),
     monsterGallery:fileURLToPath(new URL('./monster-gallery.html',import.meta.url)),
+    combatBalance:fileURLToPath(new URL('./combat-balance.html',import.meta.url)),
     main:fileURLToPath(new URL('./index.html',import.meta.url)),
     characterShowcase:fileURLToPath(new URL('./gfx5b4b-showcase.html',import.meta.url)),
     characterStudy:fileURLToPath(new URL('./gfx5b4c-a2-study.html',import.meta.url)),

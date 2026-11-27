@@ -1,6 +1,9 @@
-import { REALMS, cultivationRequired, formatRealm } from './RealmConfig';
+import { REALMS, cultivationRequired, formatRealm, realmBase } from './RealmConfig';
 import { techniqueEffects } from './TechniqueSystem';
 import type { CultivationSave, CultivationStats, SpiritualRootId, TechniqueId } from './CultivationTypes';
+import {combatTalent,gradePotential} from './CombatBalance';
+import {MARTIAL_WEAPONS} from '../dao/MartialRegistry';
+import {equippedInstance,type WeaponStack} from '../dao/WeaponInstances';
 import { weaponBonus } from '../dao/GiftItemSystem';
 
 export type CultivationView = { realm: string; level: number; xp: number; required: number; canBreakthrough: boolean; breakthroughLabel: string };
@@ -14,26 +17,52 @@ export function cultivationView(save: Pick<CultivationSave, 'realmIndex'|'realmL
   return { realm: realm.name, level: save.realmLevel, xp: Math.min(save.xp, required), required, canBreakthrough, breakthroughLabel: realm.breakthrough };
 }
 
-export function cultivationStats(save: Pick<CultivationSave, 'realmIndex'|'realmLevel'|'spiritualRoot'|'technique'|'techniqueMastery'> & {equippedWeapon?:string|null;inventory?:{itemId:string;count:number}[]}): CultivationStats {
-  const index = Math.max(0, Math.min(REALMS.length - 1, save.realmIndex));
-  const realm = REALMS[index]; const level = Math.max(1, save.realmLevel);
-  const tech = techniqueEffects(save.technique, save.techniqueMastery[save.technique] ?? 1);
-  const floorHp = Math.max(0, level - 1) * 7;
-  const floorMp = Math.max(0, level - 1) * 4;
-  const floorAttack = Math.max(0, level - 1) * 1.5;
-  const floorDefense = Math.floor(Math.max(0, level - 1) / 3);
-  let hpMax = realm.hp + floorHp, mpMax = realm.mp + floorMp;
-  let attack = realm.attack + floorAttack, defense = realm.defense + floorDefense;
-  let hpRegen = 0, mpRegen = 5, skillDamage = 1;
-  switch (save.spiritualRoot as SpiritualRootId) {
-    case 'metal': attack *= 1.14; break;
-    case 'wood': hpMax = Math.round(hpMax * 1.12); hpRegen += 2; break;
-    case 'water': mpMax = Math.round(mpMax * 1.2); mpRegen += 3; break;
-    case 'fire': skillDamage = 1.18; break;
-    case 'earth': defense += 3; break;
-  }
-  hpMax = Math.round(hpMax * tech.hpMultiplier);
-  return { hpMax, mpMax, attack: attack * tech.swordDamage + weaponBonus(save), defense, absorption: realm.absorption, skillDamage: skillDamage * tech.qiDamage, hpRegen: hpRegen + tech.meditationHp, mpRegen, techniqueRate: tech.cultivationRate };
+type StatActor=Pick<CultivationSave,'realmIndex'|'realmLevel'|'spiritualRoot'|'technique'|'techniqueMastery'> & {
+  id?:string; equippedWeapon?:string|null; equippedWeaponInstance?:string|null; inventory?:WeaponStack[];
+  talent?:number; combatTalentTier?:number;
+};
+const legacyRealms=[
+  {hp:100,mp:60,attack:19,defense:1},{hp:180,mp:110,attack:31,defense:5},
+  {hp:280,mp:175,attack:47,defense:10},{hp:410,mp:260,attack:68,defense:16},
+  {hp:580,mp:380,attack:94,defense:24},
+];
+
+export function legacyVitals(save:StatActor){
+  const old=legacyRealms[Math.min(4,Math.max(0,save.realmIndex))]??legacyRealms[0];
+  const floor=Math.max(0,save.realmLevel-1);
+  const tech=techniqueEffects(save.technique,save.techniqueMastery?.[save.technique]??1);
+  const hp=old.hp+floor*7,mp=old.mp+floor*4;
+  return {hpMax:Math.round((save.spiritualRoot==='wood'?Math.round(hp*1.12):hp)*tech.hpMultiplier),
+    mpMax:save.spiritualRoot==='water'?Math.round(mp*1.2):mp};
+}
+
+export function cultivationBreakdown(save:StatActor){
+  const base=realmBase(save),talent=base.position?combatTalent(save):{name:'Phàm nhân',multiplier:1,tier:0};
+  const tech=techniqueEffects(save.technique,save.techniqueMastery?.[save.technique]??1);
+  const root=save.spiritualRoot;
+  const id=save.equippedWeapon??'';
+  const martial=MARTIAL_WEAPONS[id];
+  const hasWeapon=save.inventory?.some(stack=>stack.itemId===id&&stack.count>0);
+  const usable=Boolean(hasWeapon&&(equippedInstance({...save,id:save.id??''})?.durability??1)>0);
+  const grade=martial?.grade??0;
+  const potential=usable?gradePotential(base.position?.index??-1,grade):0;
+  const oldWeapon=weaponBonus(save)||({iron_sword:3,iron_dao:4,training_crossbow:3}[id as 'iron_sword']??0);
+  const weaponBonusRate=usable?(martial?.bonus??oldWeapon/100)*potential:0;
+  const afterTalent=base.attack*talent.multiplier;
+  const afterTechnique=afterTalent*(root==='metal'?1.14:1)*tech.swordDamage;
+  const hpMax=base.hp*talent.multiplier*(root==='wood'?1.12:1)*tech.hpMultiplier;
+  const mpMax=base.qi*(root==='water'?1.2:1);
+  const stats={hpMax,mpMax,attack:afterTechnique*(1+weaponBonusRate),
+    defense:base.defense*talent.multiplier*(root==='earth'?1.15:1),
+    absorption:base.position?.realm.absorption??0,techniqueRate:tech.cultivationRate,
+    skillDamage:(root==='fire'?1.18:1)*tech.qiDamage,
+    hpRegen:hpMax*((root==='wood'?.02:0)+tech.meditationHp/100),
+    mpRegen:mpMax*(root==='water'?.10:.07)};
+  return {base,talent,afterTalent,afterTechnique,weaponBonusRate,potential,grade,stats};
+}
+
+export function cultivationStats(save:StatActor):CultivationStats {
+  return cultivationBreakdown(save).stats;
 }
 
 export function addCultivationXp(save: CultivationSave, amount: number): boolean {

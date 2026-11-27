@@ -1,0 +1,15 @@
+.van-kiem-title {
+  position: fixed; z-index: 10; left: 50%; top: clamp(90px, 16vh, 175px);
+  width: max-content; max-width: 89vw; padding: 11px 34px 13px;
+  text-align: center; pointer-events: none;
+  background: linear-gradient(90deg, transparent, #111f2bd9 16%, #111f2be8 84%, transparent);
+  color: #ffdead; font-family: Georgia, 'Times New Roman', serif;
+}
+.van-kiem-title::before,.van-kiem-title::after {
+  content: ''; position: absolute; left: 8%; width: 84%; height: 1px;
+  background: linear-gradient(90deg, transparent, #e3b978, transparent);
+}
+.van-kiem-title::before { top: 0 }
+.van-kiem-title::after { bottom: 0 }
+.van-kiem-title strong { display:block; font-size:clamp(23px,3.2vw,48px); letter-spacing:.085em; text-shadow:0 2px #382923 }
+.van-kiem-title span { display:block; margin-top:4px; color:#cba987; font-size:clamp(12px,1.5vw,17px); letter-spacing:.12em }

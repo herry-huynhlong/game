@@ -1,4 +1,10 @@
 const COLORS={tea:0x98bfa3,tavern:0xc68358,music:0xe3bf81,clinic:0xc4ceed};
+export function makeWorldSpeech(scene){
+  return scene.add.text(0,0,'',{
+    color:'#f7eed2',fontFamily:'Georgia, serif',fontSize:'13px',backgroundColor:'#242f27',
+    padding:{x:8,y:6},wordWrap:{width:174,useAdvancedWrap:true},align:'center',
+  }).setOrigin(.5,1).setDepth(20012).setVisible(false);
+}
 
 export class SocialVisuals {
   constructor(scene){
@@ -25,10 +31,7 @@ export class SocialVisuals {
   }
 
   bubble(index){
-    return this.bubbles[index]??(this.bubbles[index]=this.scene.add.text(0,0,'',{
-      color:'#f7eed2',fontFamily:'Georgia, serif',fontSize:'13px',backgroundColor:'#242f27',
-      padding:{x:8,y:6},wordWrap:{width:174,useAdvancedWrap:true},align:'center',
-    }).setOrigin(.5,1).setDepth(20012).setVisible(false));
+    return this.bubbles[index]??(this.bubbles[index]=makeWorldSpeech(this.scene));
   }
 
   update(time){

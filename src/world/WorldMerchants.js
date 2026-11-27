@@ -7,9 +7,11 @@ import { ALL_TREASURE_IDS, treasureDefinition } from '../dao/WestTreasureCatalog
 import { itemPrices } from '../dao/SettlementSystem.ts';
 import { equipBestWeapon } from '../dao/GiftItemSystem.ts';
 import { livelihoodNeed } from '../dao/AutonomousNPCSystem.ts';
+import {martialStockOpen} from './MartialEconomy.js';
 
 const RANGE=64;
 const FACILITIES={'sect-dining-hall':'sect-food','sect-treasure-pavilion':'sect-market','city-food':'tavern-entrance','city-apothecary':'apothecary-entrance','city-forge':'forge-entrance','city-inn':'inn-entrance'};
+const VENUE_BUILDINGS={'city-food':'tavern-pine-shadow','city-inn':'inn-cloud-arrival','sect-dining-hall':'sect-campus-food','sect-treasure-pavilion':'sect-campus-market'};
 const shopAction=id=>id==='city-food'||id==='city-apothecary'||id==='city-forge'?'work':'trade';
 const TROPHIES=['wolf_fang','wolf_pelt','demon_core','boar_tusk','crimson_plate','toad_sac','jade_venom','elite_beast_core',...WEST_FAUNA_LOOT];
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
@@ -61,7 +63,7 @@ export class WorldMerchants {
   }
   onDuty(venue){
     const {owner,shop}=venue;
-    return EconomySystem.isOpen(shop,this.world.clock.minute)&&(venue.retryAt??0)<=this.scene.scheduler.time&&
+    return (this.scene.buildingOpen?.(VENUE_BUILDINGS[shop.id])??true)&&EconomySystem.isOpen(shop,this.world.clock.minute)&&(venue.retryAt??0)<=this.scene.scheduler.time&&
       owner.alive&&!owner.ascended&&!owner.flight&&!owner.marketVisit&&
       owner.id!==this.scene.possessedNpcId&&owner.safety>=35&&!urgent(owner)&&!livelihoodNeed(owner,this.world)&&
       owner.decisionSlot==='shop-shift:'+shop.id&&owner.goalAction===shopAction(shop.id);
@@ -101,6 +103,7 @@ export class WorldMerchants {
   }
   quote(npc,venue,side,itemId,count){
     if(!this.canTrade(npc,venue))return {ok:false,message:'Cần đứng gần thương nhân đang mở cửa, cùng phía với lối đi.'};
+    if(side==='sell'&&!martialStockOpen(venue.shop,itemId,count))return {ok:false,message:'Quầy không nhận mặt hàng này hoặc đã đầy.'};
     return EconomySystem.quote(this.world,npc,venue.shop.id,itemId,side,count);
   }
   execute(npc,venue,side,itemId,count,save=false){
@@ -133,7 +136,7 @@ export class WorldMerchants {
     if(this.world.events.length>400)this.world.events.splice(0,this.world.events.length-400);
   }
   propose(n){
-    if(this.scene.expeditions?.has(n)||this.byOwner.has(n.id)||urgent(n)||n.decisionSlot?.startsWith('sect-campus:')||
+    if(this.scene.weeklyAuction?.directives(n)||this.scene.expeditions?.has(n)||this.byOwner.has(n.id)||urgent(n)||n.decisionSlot?.startsWith('sect-campus:')||
       n.decisionSlot?.startsWith('society:')||n.marketRetryAt>this.now())return null;
     const count=id=>EconomySystem.count(n.inventory,id);
     const need=livelihoodNeed(n,this.world);
@@ -152,6 +155,8 @@ export class WorldMerchants {
       }
     }
     if(need==='rest'||n.goalAction==='rest')return null;
+    const martial=this.scene.martialEconomy?.intent(n);
+    if(martial)return martial;
     const sell=(items,reserve=0)=>items.map(id=>[id,EconomySystem.sellable(this.world,n,id)-reserve]).find(([,amount])=>amount>0);
     const surplus=n.x>=0?sell(ALL_TREASURE_IDS,1):null;
     if(surplus)return {side:'sell',itemId:surplus[0],count:surplus[1],preferred:'city-apothecary',onlyPreferred:true};
@@ -166,7 +171,7 @@ export class WorldMerchants {
     return null;
   }
   start(n,intent){
-    if(!intent||n.marketVisit||n.marketRetryAt>this.now()||urgent(n))return false;
+    if(!intent||n.minor||n.emigration||n.marketVisit||n.marketRetryAt>this.now()||urgent(n))return false;
     const {side,itemId,count,preferred,onlyPreferred=false}=intent;
     const meal=side==='buy'&&itemId==='ration'&&n.goalAction==='eat';
     const need=livelihoodNeed(n,this.world);
@@ -174,6 +179,7 @@ export class WorldMerchants {
     const options=[];
     for(const v of this.shops.values()){
       if(v.owner===n||onlyPreferred&&v.shop.id!==preferred||!this.onDuty(v)||!this.scene.canReachPoint(n,v.position))continue;
+      if(side==='sell'&&!martialStockOpen(v.shop,itemId,count))continue;
       const price=(side==='buy'?v.shop.sellPrices:v.shop.buyPrices)[itemId];
       if(!price)continue;
       const amount=Math.min(count,side==='buy'?Math.min(EconomySystem.count(v.shop.stock,itemId),Math.floor(n.spiritStones/price)):
@@ -205,8 +211,9 @@ export class WorldMerchants {
         ['duoc_su','dan_su'].includes(n.profession)?{materials:['spirit_herb'],product:'qi_pill'}:null;
       if(recipe&&(side==='buy'?recipe.materials.includes(itemId):recipe.product===itemId)){
         const source=side==='buy'?shop.stock:n.inventory;
-        if((side==='buy'||EconomySystem.sellable(this.world,n,itemId)>=count)&&EconomySystem.remove(source,itemId,count)){
-          EconomySystem.add(side==='buy'?n.inventory:shop.stock,itemId,count);
+        const destination=side==='buy'?n.inventory:shop.stock;
+        if((side==='buy'||EconomySystem.sellable(this.world,n,itemId)>=count)&&EconomySystem.transferItem(source,destination,itemId,count,
+          side==='buy'?shop.id:n.id,side==='buy'?n.id:shop.id,side==='sell'?n:undefined)){
           this.scene.requestBackgroundSave();
           return {ok:true,internal:true,message:'Đã chuyển hàng trong cửa tiệm.'};
         }

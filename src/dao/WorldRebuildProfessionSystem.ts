@@ -128,9 +128,9 @@ export function tickWorldRebuildProfessionWork(world:DivineWorldSave,board:{x:nu
 }
 
 /** Test/setup hook: damage only an authored map building and use the existing damage/commission pipeline. */
-export function damageWorldRebuildBuilding(world:DivineWorldSave,buildingId:string,eventId:string,damage:number,realmIndex=0){
+export function damageWorldRebuildBuilding(world:DivineWorldSave,buildingId:string,eventId:string,damage:number,realmIndex=0,options:{resolved?:boolean}={}){
  const object=world.environment?.objects.find(o=>o.id===buildingId);if(!object||!eventId)return null;
- return damageEnvironment(world,buildingId,eventId,damage,realmIndex);
+ return damageEnvironment(world,buildingId,eventId,damage,realmIndex,1,options.resolved);
 }
 
 export function listProfessionNodes(world:DivineWorldSave):ResourceNodeSave[]{return world.environment?.resourceNodes??[];}

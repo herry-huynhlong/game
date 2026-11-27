@@ -1,5 +1,6 @@
 import { EconomySystem as Economy } from '../dao/EconomySystem.ts';
-import { faunaCombatPower } from '../dao/FaunaSystem.ts';
+import {resolveDamage} from '../systems/CombatBalance.ts';
+import {faunaStats} from '../dao/MonsterRegistry.ts';
 import { FAUNA_SPECIES, faunaName, faunaRealm } from '../dao/MonsterRegistry.ts';
 import { treasureBloomOpen, treasureStage } from '../dao/WestTreasureSystem.ts';
 import { cultivationStats } from '../systems/CultivationSystem.ts';
@@ -389,9 +390,15 @@ export class Expeditions {
   }
 
   fight(p,team,target){
-    const realm=faunaRealm(target).realmIndex;
-    const teamPower=team.reduce((sum,n)=>{const stats=cultivationStats(n);return sum+(stats.attack+stats.defense+n.realmIndex*12)*health(n);},0);
-    if(teamPower<faunaCombatPower(target.species,target.rank)+realm*24){this.change(p,'retreat');return;}
+    const foe=faunaStats(target);
+    const teamPower=team.reduce((sum,n)=>{
+      const stats=cultivationStats(n);
+      const attack=resolveDamage(stats.attack,foe.base.defense,n,foe.rank).damage;
+      const defense=resolveDamage(foe.base.attack,stats.defense,foe.rank,n).damage;
+      const endurance=Math.min(1,n.hp/Math.max(1,defense*5));
+      return sum+attack*endurance*(.8+.2*n.mp/Math.max(1,stats.mpMax));
+    },0);
+    if(teamPower*12<foe.base.hp){this.change(p,'retreat');return;}
     if(!p.combatSlots||distance(p.combatAnchor,target)>16||this.now-p.combatAt>=10){
       p.combatSlots=this.slots(team,target,30)??{};p.combatAnchor=point(target);p.combatAt=this.now;
     }
@@ -414,6 +421,7 @@ export class Expeditions {
         this.scene.playWeaponPose(n,mode,facing);
         this.scene.spawnWeaponFx(weapon?.kind==='dao'?'dao':'thrust',facing,target.x,target.y);
       }
+      if(this.scene.martialCombat?.ai(n,target))continue;
       const hit=this.scene.applyFaunaDamage(target,n,cultivationStats(n).attack*(mode.multiplier??1),`${p.id}:strike:${target.id}:${n.id}:${this.now}`);
       if(hit.ok)p.hits++;
       if(hit.ok&&!target.alive){this.stat('kills');break;}

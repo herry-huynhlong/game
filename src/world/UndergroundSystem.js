@@ -1,17 +1,22 @@
+import {resolveDamage,healthAtNewMax} from '../systems/CombatBalance.ts';
+import {realmBase} from '../systems/RealmConfig.ts';
 import { creditDeath } from '../dao/DivinePowerLedger.ts';
 import {cultivationStats} from '../systems/CultivationSystem.ts';
-import {weaponForNpc} from './WeaponCombat.js';
 import {EconomySystem as Economy} from '../dao/EconomySystem.ts';
 import {CAVE_LAYOUT_VERSION,CAVE_ENTRY,CAVE_BEASTS,CAVE_TREASURES,CAVE_FLORA,CAVE_BIOMES,caveBiomeAt,caveCell,caveDistance,caveLine,caveOpen,caveRoute,caveSafePoint,caveStep,createCave,syncCaveStock} from './UndergroundMaps.js';
 import {UndergroundView} from './UndergroundView.js';
 
 const entrySlots=[CAVE_ENTRY,{x:3,y:7},{x:3,y:9},{x:4,y:7},{x:4,y:9}];
 const groundDistance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+const caveStats=species=>{
+  const spec=CAVE_BEASTS[species],base=realmBase(spec);
+  return {...base,rank:spec,attack:base.attack*Math.min(1.35,.65+spec.damage/45)};
+};
 const beastDrops=['demon_core','scorpion_venom','spirit_stone_middle','beast_core_foundation','iron_ore','beast_core_gold'];
 const treasureItems=['di_tam_linh_nhu','huyen_tinh_thach','dia_hoa_linh_chi','han_ngoc_tuy','tu_tinh_linh_qua','van_nien_thach_tuy','linh_mach_chi_tam'];
 
 export class UndergroundSystem {
-  constructor(scene){
+  constructor(scene,interior){
     this.scene=scene;
     this.world=scene.populationWorld;
     this.campus=scene.sectCampus;
@@ -29,6 +34,7 @@ export class UndergroundSystem {
         item:'iron_ore',kind:'iron',name:point.name||'Mỏ quặng sắt',region:'Thanh Vân Tông'});
     }
     this.view=new UndergroundView(this);
+    if(interior)this.sites.set(interior.id,interior);
     for(const npc of this.world.npcs){
       const d=npc.underground;
       if(!d)continue;
@@ -81,7 +87,7 @@ export class UndergroundSystem {
     for(const [level,floor] of site.map.floors.entries()){
       if(!floor.lair||state.beasts[level])continue;
       const {x,y,species}=floor.lair;
-      state.beasts[level]={id:site.id+':beast:'+level,species,x,y,hp:CAVE_BEASTS[species].hp,phase:'BURIED_IDLE',at:0};
+      state.beasts[level]={id:site.id+':beast:'+level,species,x,y,hp:caveStats(species).hp,combatBalanceVersion:1,phase:'BURIED_IDLE',at:0};
     }
     return state;
   }
@@ -103,15 +109,18 @@ export class UndergroundSystem {
 
   canEnter(npc,site,job){
     return Boolean(site&&npc.alive&&!npc.underground&&!npc.tribulation&&!npc.wallLevel&&!npc.flight&&!npc.skyStep&&
-      (this.scene.civic?.undergroundAccess(npc,site,job)||site.kind==='iron'||this.veins.authorized(npc,site)&&site.state.discovered&&!this.veins.guard(site)));
+      (site.kind==='auction'?this.scene.weeklyAuction?.access(npc,job):
+        this.scene.civic?.undergroundAccess(npc,site,job)||site.kind==='iron'||this.veins.authorized(npc,site)&&site.state.discovered&&!this.veins.guard(site)));
   }
+  canPlaceOpportunity(site){return site.kind==='iron'||site.kind==='spirit'&&Boolean(site.state.discovered);}
 
   enter(team,site,job=null,radius=34){
-    if(!team.length||team.length>entrySlots.length||!team.every(n=>this.canEnter(n,site,job)&&groundDistance(n,site.point)<=radius))return false;
+    const arrivals=site?.entrySlots??entrySlots;
+    if(!team.length||team.length>arrivals.length||!team.every(n=>this.canEnter(n,site,job)&&groundDistance(n,site.point)<=radius))return false;
     const floor=site.map.floors[0];
     const occupied=new Set(this.world.npcs.filter(n=>n.alive&&n.underground?.siteId===site.id&&n.underground.floor===0)
       .map(n=>caveCell(floor,n.underground)));
-    const slots=entrySlots.filter(p=>!occupied.has(caveCell(floor,p)));
+    const slots=arrivals.filter(p=>!occupied.has(caveCell(floor,p)));
     if(slots.length<team.length)return false;
     this.instance(site).visited=true;
     for(const [index,n] of team.entries()){
@@ -119,6 +128,7 @@ export class UndergroundSystem {
       n.faunaHuntTargetId=undefined;
       this.scene.workstations?.release(n.id);
       n.underground={...slots[index],siteId:site.id,floor:0,job,facing:'down',layoutVersion:CAVE_LAYOUT_VERSION};
+      if(site.kind==='auction')n.underground.auctionLayout=2;
       n.actionTarget=null;
       n.action='travel';
       n.shortGoal='Đi vào '+site.name;
@@ -131,7 +141,7 @@ export class UndergroundSystem {
   }
 
   enterNearby(npc){
-    const target=[...this.sites.values()].find(site=>groundDistance(npc,site.point)<=32);
+    const target=[...this.sites.values()].find(site=>site.kind!=='auction'&&groundDistance(npc,site.point)<=32);
     if(!target)return false;
     if(!this.enter([npc],target))this.scene.worldPopulationToast('Cửa mỏ chưa mở, đang có yêu thú canh giữ hoặc thân phận chưa phù hợp.');
     else this.view.show(target.id,0);
@@ -139,11 +149,12 @@ export class UndergroundSystem {
   }
 
   exit(npc,site){
-    const anchor=[{x:npc.x,y:npc.y},...[16,24,32].flatMap(r=>[[r,0],[-r,0],[0,r],[0,-r]].map(([x,y])=>({x:site.point.x+x,y:site.point.y+y})))].find(p=>
+    const anchor=[site.kind==='auction'?{x:site.point.x,y:site.point.y}:{x:npc.x,y:npc.y},...[16,24,32].flatMap(r=>[[r,0],[-r,0],[0,r],[0,-r]].map(([x,y])=>({x:site.point.x+x,y:site.point.y+y})))].find(p=>
       this.scene.groundPositionOpen(npc,p.x,p.y)&&this.scene.canReachPoint(site.point,p));
     if(!anchor)return false;
     Object.assign(npc,anchor);
     delete npc.underground;
+    if(site.kind==='auction')this.scene.weeklyAuction?.clearRoute(npc);
     this.routes.delete(npc.id);
     npc.action='idle';
     npc.shortGoal='Đã trở về mặt đất';
@@ -189,7 +200,7 @@ export class UndergroundSystem {
   portal(npc,site,direction){
     const d=npc.underground,next=d.floor+direction;
     const floor=site.map.floors[next];
-    if(!floor)return false;
+    if(!floor||direction>0&&site.kind==='auction'&&!this.scene.weeklyAuction?.permittedFloor(npc,next))return false;
     const portal=direction>0?floor.entry:floor.down;
     const positions=[portal,{x:portal.x,y:portal.y-1},{x:portal.x,y:portal.y+1}];
     const arrival=positions.find(p=>caveOpen(floor,p.x,p.y)&&!this.world.npcs.some(n=>n!==npc&&n.alive&&n.underground?.siteId===site.id&&n.underground.floor===next&&!caveDistance(p,n.underground)));
@@ -315,7 +326,7 @@ export class UndergroundSystem {
     }
     if(d.lastRest===this.now)return true;
     d.lastRest=this.now;npc.action='rest';npc.shortGoal='Dưỡng thương ở trạm nghỉ';
-    npc.hp=Math.min(max,npc.hp+2);npc.fatigue=Math.max(0,npc.fatigue-2);
+    npc.hp=Math.min(max,npc.hp+max*.015);npc.fatigue=Math.max(0,npc.fatigue-2);
     return true;
   }
 
@@ -343,8 +354,13 @@ export class UndergroundSystem {
       }
       for(const npc of residents){
         if(!npc.alive)continue;
+        if(site.kind==='auction'){
+          if(npc.id!==this.scene.possessedNpcId||npc.underground.auctionAssist)this.scene.weeklyAuction.inside(npc);
+          continue;
+        }
         this.applyVenom(npc);
         if(!npc.alive||npc.id===this.scene.possessedNpcId||this.now<(npc.underground.staggerUntil??0))continue;
+        this.scene.opportunities?.tryFind(npc);
         const d=npc.underground,order=this.orderFor(npc,d);
         const status=this.scene.civic?.state.custody[npc.id]?.status;
         if(status==='awaiting-rescue'||status==='detained'){npc.action='idle';continue;}
@@ -369,11 +385,15 @@ export class UndergroundSystem {
 
   beastTick(site,state,level,npcs){
     const beast=state.beasts[level],floor=site.map.floors[level],home=floor.lair;
-    const spec=CAVE_BEASTS[beast.species];
+    const spec=CAVE_BEASTS[beast.species],stats=caveStats(beast.species);
+    if(beast.combatBalanceVersion!==1){
+      beast.hp=healthAtNewMax(beast.hp,spec.hp,stats.hp);
+      beast.combatBalanceVersion=1;
+    }
     if(beast.hp<=0){
       beast.reviveAt??=this.now+1200+level*180;
       if(this.now<beast.reviveAt||npcs.some(n=>n.underground&&caveDistance(n.underground,home)<8))return;
-      Object.assign(beast,{x:home.x,y:home.y,hp:spec.hp,phase:'BURIED_IDLE',at:this.now,life:(beast.life??0)+1});
+      Object.assign(beast,{x:home.x,y:home.y,hp:stats.hp,phase:'BURIED_IDLE',at:this.now,life:(beast.life??0)+1});
       delete beast.reviveAt;delete beast.attackAt;this.save();
     }
     const target=npcs.filter(n=>n.alive&&caveDistance(n.underground,home)<=home.radius&&caveLine(floor,n.underground,home))
@@ -382,7 +402,7 @@ export class UndergroundSystem {
     switch(beast.phase){
       case 'BURIED_IDLE':
         if(target&&caveDistance(target.underground,home)<=5)phase('DETECTED_TARGET');
-        else if(beast.hp<spec.hp&&this.now%5===0){beast.hp++;this.save();}
+        else if(beast.hp<stats.hp&&this.now%5===0){beast.hp=Math.min(stats.hp,beast.hp+stats.hp*.009);this.save();}
         break;
       case 'DETECTED_TARGET': phase(target?'GROUND_WARNING':'BURIED_IDLE');break;
       case 'GROUND_WARNING':
@@ -406,11 +426,11 @@ export class UndergroundSystem {
           beast.attackAt=this.now+spec.interval;
           const attackTargets=beast.species===5?npcs.filter(n=>n.underground&&caveDistance(n.underground,beast)<=2):[target];
           for(const rival of attackTargets){
-            const defense=cultivationStats(rival).hpMax;
-            rival.hp=Math.max(0,rival.hp-Math.max(1,Math.round(spec.damage-defense*.025)));
+            const defense=cultivationStats(rival).defense;
+            rival.hp=Math.max(0,rival.hp-resolveDamage(stats.attack,defense,stats.rank,rival,this.scene.damageModifiers(beast,rival)).damage);
             if(beast.species===1){rival.underground.venomUntil=this.now+8;rival.underground.venomTick=this.now+2;}
             if(beast.species===2)rival.underground.staggerUntil=this.now+2;
-            if(beast.species===3)rival.mp=Math.max(0,rival.mp-4);
+            if(beast.species===3)rival.mp=Math.max(0,rival.mp-cultivationStats(rival).mpMax*.04);
             if(!rival.hp){rival.alive=false;rival.deathCause='Yêu thú dưới lòng đất';creditDeath(this.world,rival,'npc-death',rival.deathCause);delete rival.underground;}
           }
           this.save();
@@ -436,8 +456,12 @@ export class UndergroundSystem {
 
   hit(state,beast,npc,level){
     if(beast.hp<=0||!['ACTIVE','COMBAT','RETURN_HOME'].includes(beast.phase))return;
-    const weapon=weaponForNpc(npc);
-    beast.hp=Math.max(0,beast.hp-(9+npc.realmIndex*8+npc.realmLevel*2+(weapon?5:0)));
+    const target=caveStats(beast.species);
+    if(beast.combatBalanceVersion!==1){
+      beast.hp=healthAtNewMax(beast.hp,CAVE_BEASTS[beast.species].hp,target.hp);
+      beast.combatBalanceVersion=1;
+    }
+    beast.hp=Math.max(0,beast.hp-resolveDamage(cultivationStats(npc).attack,target.defense,npc,target.rank,this.scene.damageModifiers(npc,beast)).damage);
     if(!beast.hp){
       const life=beast.id+':'+(beast.life??0),spec=CAVE_BEASTS[beast.species];
       const underground={siteId:npc.underground.siteId,floor:level,x:beast.x,y:beast.y};
@@ -452,6 +476,8 @@ export class UndergroundSystem {
     const floor=site.map.floors[d.floor];
     if(mode==='withdraw'&&!floor.props.some(p=>p.kind==='camp'&&caveDistance(d,p)<=2))return false;
     if(caveDistance(d,floor.entry)<=1)return d.floor?this.portal(npc,site,-1):this.exit(npc,site);
+    if(site.kind==='auction')return this.scene.weeklyAuction.interactInterior(npc,floor);
+    if(this.scene.opportunities?.tryFind(npc,true))return true;
     if(floor.down&&caveDistance(d,floor.down)<=1)return this.portal(npc,site,1);
     const plant=floor.flora.find(p=>caveDistance(d,p)<=1&&CAVE_FLORA[p.type].material&&this.plantStage(site,p)===3);
     if(plant&&!this.world.clock.paused){
@@ -466,8 +492,10 @@ export class UndergroundSystem {
       if(mode){
         const cargo=((state.warehouse??={})[npc.id]??=[]);
         const from=mode==='deposit'?npc.inventory:cargo,to=mode==='deposit'?cargo:npc.inventory;
-        if(Economy.remove(from,site.item,1)){
-          Economy.add(to,site.item,1);this.save();
+        const warehouse=site.id+':warehouse:'+npc.id;
+        if(Economy.transferItem(from,to,site.item,1,mode==='deposit'?npc.id:warehouse,
+          mode==='deposit'?warehouse:npc.id,mode==='deposit'?npc:undefined)){
+          this.save();
           this.scene.worldPopulationToast(mode==='deposit'?'Đã gửi 1 đơn vị vào kho tạm.':'Đã lấy 1 đơn vị từ kho tạm.');
         }else this.scene.worldPopulationToast('Không có quặng phù hợp để chuyển.');
       }else{d.restUntil=this.now+32;npc.action='rest';}
@@ -511,6 +539,7 @@ export class UndergroundSystem {
     if(justDown(keys.R)){this.interact(npc,site,state,'withdraw');return;}
     const dx=Number(down('D','RIGHT'))-Number(down('A','LEFT'));
     const dy=Number(down('S','DOWN'))-Number(down('W','UP'));
+    if(dx||dy){delete d.auctionAssist;delete d.auctionSeated;}
     this.inputDelay=Math.max(0,(this.inputDelay??0)-dt);
     if(!this.inputDelay&&(dx||dy)&&this.now>=(d.staggerUntil??0)){
       const step={x:d.x+dx,y:d.y+(dx?0:dy)},floor=site.map.floors[d.floor];

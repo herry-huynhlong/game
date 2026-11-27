@@ -25,7 +25,9 @@ const authorityPresets={
 export function profileForNpc(npc){
   if(authorityPresets[npc.authorityRole])return npc.authorityRole;
   if(npc.populationRole==='sect_leader')return 'sect_leader';
-  const role=npc.populationRole??npc.profession;
+  const specialized={miner:'repair_worker',smith:'repair_worker',alchemist:'herb_gatherer',physician:'herb_gatherer',
+    caravan:'merchant',attendant:'tavern_staff',musician:'merchant',farmer:'commoner'};
+  const role=specialized[npc.vocation]??npc.populationRole??npc.profession;
   if(npc.authorityRole==='elder'||role==='elder')return 'elder';
   if(npc.faction==='qingyun-sect'||role==='low_disciple')return 'disciple';
   if(role==='monk'||npc.profession==='vo_tang')return 'monk';

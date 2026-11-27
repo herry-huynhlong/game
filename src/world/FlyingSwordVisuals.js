@@ -1,4 +1,5 @@
 import { visualFlightPose, FLIGHT } from './FlyingSword.js';
+import {MARTIAL_WEAPONS} from '../dao/MartialRegistry.ts';
 
 const dirs=['down','left','up','right'];
 const vec={down:[0,1],left:[-1,0],up:[0,-1],right:[1,0]};
@@ -42,10 +43,14 @@ export class FlyingSwordVisuals {
       const x=Math.round(npc.x),y=Math.round(npc.y-offset);
       const depth=npc.y+(f.altitude>9?1000+f.altitude:0);
       const blade=entry.blade;
-      blade.setVisible(true).setAlpha(opacity).setFrame(dir+(f.sword==='qi-sword'?4:0))
+      const arm=MARTIAL_WEAPONS[npc.equippedWeapon], isPhysical=arm?.kind==='jian'&&f.sword!=='qi-sword';
+      const frame=dir+(f.sword==='qi-sword'?4:0), texture=isPhysical?'martial-arms':'flying-swords';
+      const desired=isPhysical?arm.icon:frame;
+      if(blade.texture.key!==texture||Number(blade.frame.name)!==desired)blade.setTexture(texture,desired);
+      blade.setVisible(true).setAlpha(opacity)
         .setPosition(x+Math.round((1-mount)*10),y-1).setDepth(depth-.04)
         .setScale(1,dir%2===0 ? .66 : 1)
-        .setRotation(phase==='FlyingTurn'?(dx||dy)*Math.sin(Math.min(1,f.phaseMs/240)*Math.PI)*.12:0);
+        .setRotation((isPhysical?Math.atan2(dy,dx)+Math.PI/2:0)+(phase==='FlyingTurn'?(dx||dy)*Math.sin(Math.min(1,f.phaseMs/240)*Math.PI)*.12:0));
       entry.shadow.setVisible(offset>2).setPosition(x,Math.round(npc.y)).setDepth(npc.y-.08)
         .setAlpha(Math.max(.15,.45-offset*.0045)).setScale(1+offset*.007,1+offset*.003);
       const usesRig=scene.characterRigPreview?.npc===npc&&scene.characterRigPreview.character.root.visible||

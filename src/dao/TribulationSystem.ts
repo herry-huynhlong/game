@@ -1,6 +1,6 @@
 import { creditBreakthrough, creditDeath } from './DivinePowerLedger';
 import { breakthrough, cultivationStats, cultivationView } from '../systems/CultivationSystem';
-import { REALMS } from '../systems/RealmConfig';
+import { realmBase, REALMS } from '../systems/RealmConfig';
 import { EconomySystem } from './EconomySystem';
 import { equipBestWeapon } from './GiftItemSystem';
 import type { DivineWorldSave, SimNPC } from './types';
@@ -17,6 +17,10 @@ export const TRIBULATIONS = [
   {waves:3,power:56,cloud:5,warning:3,interval:3,radius:110},
   {waves:4,power:80,cloud:6,warning:4,interval:3,radius:140},
   {waves:5,power:110,cloud:7,warning:4,interval:4,radius:172},
+  {waves:6,power:142,cloud:8,warning:4,interval:4,radius:190},
+  {waves:7,power:178,cloud:8,warning:5,interval:4,radius:208},
+  {waves:8,power:218,cloud:9,warning:5,interval:4,radius:226},
+  {waves:9,power:264,cloud:10,warning:5,interval:4,radius:244},
 ] as const;
 
 export const BREAKTHROUGH_RISK = [
@@ -24,6 +28,10 @@ export const BREAKTHROUGH_RISK = [
   {base:.86,cap:.94,xpRetained:.74,recovery:300,fatigue:30},
   {base:.77,cap:.89,xpRetained:.70,recovery:390,fatigue:35},
   {base:.67,cap:.83,xpRetained:.65,recovery:480,fatigue:40},
+  {base:.59,cap:.77,xpRetained:.61,recovery:540,fatigue:44},
+  {base:.51,cap:.71,xpRetained:.57,recovery:610,fatigue:48},
+  {base:.43,cap:.65,xpRetained:.53,recovery:680,fatigue:51},
+  {base:.35,cap:.60,xpRetained:.50,recovery:760,fatigue:54},
 ] as const;
 
 export function tribulationChance(npc:SimNPC,realm:number){
@@ -71,7 +79,7 @@ export function planTribulation(world:DivineWorldSave,npc:SimNPC,site:Tribulatio
 export function beginTribulation(world:DivineWorldSave,npc:SimNPC){
   const t=npc.tribulation,config=t&&TRIBULATIONS[t.realm],stats=cultivationStats(npc);
   if(!t||!config||t.phase!=='travel'||!npc.alive||npc.flight||npc.realmIndex!==t.realm||!needsTribulation(npc)||
-    npc.hp<stats.hpMax*.5||npc.mp<10||Math.hypot(npc.x-t.site.x,npc.y-t.site.y)>9)return false;
+    npc.hp<stats.hpMax*.5||npc.mp<stats.mpMax*.10||Math.hypot(npc.x-t.site.x,npc.y-t.site.y)>9)return false;
   if(!EconomySystem.remove(npc.inventory,'qi_pill',1))return false;
   npc.tribulationAttempts=(npc.tribulationAttempts??0)+1;
   t.roll=deterministicRoll(world.worldId+':'+t.id);
@@ -79,7 +87,7 @@ export function beginTribulation(world:DivineWorldSave,npc:SimNPC){
   t.phase='cloud';
   t.anchor={x:npc.x,y:npc.y};
   t.nextAt=worldMinute(world)+config.cloud;
-  npc.mp-=10;
+  npc.mp-=stats.mpMax*.10;
   npc.action=npc.goalAction='cultivate';
   npc.shortGoal='Tụ Kiếp Vân · '+REALMS[t.realm+1].name;
   event(world,npc,t,'npc-tribulation-start',npc.name+' bắt đầu độ Thiên Kiếp '+REALMS[t.realm+1].name+' tại '+t.site.name+'.');
@@ -103,10 +111,13 @@ export function stepTribulation(world:DivineWorldSave,npc:SimNPC){
   }
   const stats=cultivationStats(npc);
   const ward=EconomySystem.count(npc.inventory,'protective_talisman')>0?6:0;
-  const harm=Math.max(4,Math.round(config.power+t.strikes*(4+t.realm*2)-stats.defense*1.4-
-    stats.mpRegen*.6-(npc.talent??50)*.09-ward-(npc.techniqueMastery[npc.technique]??1)));
+  const base=realmBase(npc);
+  const budget=base.hp*(.38+t.realm*.092);
+  const waveWeight=1+(t.strikes-(config.waves-1)/2)*.09;
+  const resilience=Math.min(.28,.09*stats.defense/Math.max(1,base.defense)+ward*.008);
+  const harm=budget/config.waves*waveWeight*(1-resilience);
   t.phase='strike';t.strikes++;t.nextAt=now+config.interval;
-  npc.hp=Math.max(0,npc.hp-harm);npc.mp=Math.max(0,npc.mp-5-t.realm);
+  npc.hp=Math.max(0,npc.hp-harm);npc.mp=Math.max(0,npc.mp-stats.mpMax*(.032+t.realm*.004));
   npc.shortGoal='Chịu Thiên Lôi · '+t.strikes+'/'+config.waves;
   if(npc.hp===0){npc.alive=false;npc.deathCause='Tử vong khi chịu Thiên Kiếp';creditDeath(world,npc,'npc-death',npc.deathCause);}
   if(!npc.alive)finish(world,npc,t,false);
@@ -119,6 +130,7 @@ function finish(world:DivineWorldSave,npc:SimNPC,t:TribulationSave,passed:boolea
   if(passed)passed=npc.realmIndex===t.realm&&needsTribulation(npc)&&breakthrough(npc).success;
   if(passed){
     creditBreakthrough(world,npc,prior,'Vượt Thiên Kiếp thành công');
+    npc.lifespan=Math.max(npc.lifespan,REALMS[npc.realmIndex].lifespan);
     equipBestWeapon(npc);
     const next=cultivationStats(npc);
     npc.hp=Math.min(next.hpMax,npc.hp+next.hpMax-old.hpMax);

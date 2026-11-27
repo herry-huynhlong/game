@@ -15,9 +15,9 @@ for(const n of [...farmers,...cultivators])assert.ok(n.aiProfile,'new NPC receiv
 assert.deepEqual(createInitialNPCs({},'npc-ai-variety-seed').find(n=>n.id==='qingyun-07').aiProfile,farmers[0].aiProfile,'fixed world seed and NPC ID reproduce the same profile');
 assert.notDeepEqual(createInitialNPCs({},'other-seed').find(n=>n.id==='qingyun-07').aiProfile,farmers[0].aiProfile,'a different world seed produces a different profile');
 
-farmers[0].hunger=15;farmers[0].fatigue=12;farmers[0].hp=100;farmers[0].relationships['qingyun-17']=42;farmers[0].actionTarget={x:2670,y:1195};farmers[0].actionProgress=17;
-farmers[1].hunger=15;farmers[1].fatigue=84;farmers[1].hp=100;
-cultivators[0].hunger=12;cultivators[0].fatigue=10;cultivators[0].hp=100;
+farmers[0].hunger=15;farmers[0].fatigue=12;farmers[0].relationships['qingyun-17']=42;farmers[0].actionTarget={x:2670,y:1195};farmers[0].actionProgress=17;
+farmers[1].hunger=15;farmers[1].fatigue=84;
+cultivators[0].hunger=12;cultivators[0].fatigue=10;
 cultivators[1].hunger=12;cultivators[1].fatigue=10;cultivators[1].hp=20;
 const before=JSON.stringify(initial.map(n=>({inventory:n.inventory,stones:n.spiritStones,xp:n.xp})));
 const decisions=[chooseLivelihoodGoal(farmers[0],'eat'),chooseLivelihoodGoal(farmers[1],'eat'),chooseLivelihoodGoal(cultivators[0],'cultivate'),chooseLivelihoodGoal(cultivators[1],'cultivate')];
@@ -47,26 +47,26 @@ assert.ok(longRun.filter(n=>n.profession==='nong_dan').every(n=>['farm','eat','r
 assert.ok(longRun.filter(n=>n.profession==='tu_si').every(n=>['cultivate','eat','rest','socialize','gather','mission'].includes(n.goalAction)),'cultivators remain in cultivation/sect-appropriate actions');
 assert.ok(longRun.find(n=>n.id==='qingyun-07').aiProfile&&longRun.find(n=>n.id==='qingyun-01').aiProfile,'profiles survive repeated simulation ticks');
 const disciple={...structuredClone(cultivators[0]),id:'failed-major-realm',populationRole:'low_disciple',
-  realmIndex:0,realmLevel:9,xp:10000,technique:'sword',talent:25,fatigue:43,actionCooldown:0,hunger:10,
+  realmIndex:0,realmLevel:10,xp:10000,technique:'sword',talent:25,fatigue:43,actionCooldown:0,hunger:10,
   action:'cultivate',goalAction:'cultivate',decisionSlot:'6:cultivate',actionProgress:59,actionTarget:{x:650,y:685},
-  x:650,y:685,hp:130,inventory:[{itemId:'qi_pill',count:3}]};
+  x:650,y:685,hp:185,inventory:[{itemId:'qi_pill',count:3}]};
 const breakthroughEvents=[];
 const failing=new AutonomousNPCSystem([disciple],event=>breakthroughEvents.push(event));
-failing.tick(1,6,630);
+failing.meditateAtRest(disciple,6,630);
 assert.equal(disciple.realmIndex,0);
-assert.equal(disciple.realmLevel,9);
+assert.equal(disciple.realmLevel,10);
 assert.equal(disciple.actionCooldown,240);
 assert.equal(disciple.inventory.reduce((count,item)=>count+item.count,0),2,'Exactly one pill is consumed');
-assert.equal(disciple.xp,412,'Failed breakthrough retains 85% of the required progress');
+assert.equal(disciple.xp,488,'Failed breakthrough retains 85% of the required progress');
 assert.equal(breakthroughEvents.filter(event=>event.type==='npc-breakthrough-failed').length,1);
 disciple.actionProgress=59;
-failing.tick(1,6,631);
+failing.meditateAtRest(disciple,6,631);
 assert.equal(disciple.inventory.reduce((count,item)=>count+item.count,0),2);
 assert.equal(breakthroughEvents.length,1,'Cooldown prevents a duplicate attempt');
 assert.equal(JSON.parse(JSON.stringify(disciple)).actionCooldown,239);
 
 const buyer={...structuredClone(disciple),id:'pill-buyer',inventory:[],spiritStones:20,
-  xp:485,fatigue:0,actionCooldown:0,decisionSlot:'6:shop',goalAction:'shop',actionProgress:44,
+  xp:575,fatigue:0,actionCooldown:0,decisionSlot:'6:shop',goalAction:'shop',actionProgress:44,
   actionTarget:{x:2965,y:632},x:2965,y:632};
 const apothecary={id:'city-apothecary',ownerId:'merchant',cash:30,stock:[{itemId:'qi_pill',count:2}],
   openHour:6,closeHour:20,sellPrices:{qi_pill:15}};

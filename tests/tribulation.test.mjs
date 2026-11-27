@@ -36,7 +36,7 @@ for(const item of Object.values(ITEM_CATALOG)){
 }
 assert.equal(unique.size,Object.keys(ITEM_CATALOG).length);
 
-function fixture(seed,realm=0,level=9){
+function fixture(seed,realm=0,level=10){
   const n=createPopulationNPC('low_disciple','seeded-disciple','roster',0,new Set());
   Object.assign(n,{x:321,y:400,realmIndex:realm,realmLevel:level,
     xp:cultivationRequired(realm,level),talent:55,fatigue:0,actionCooldown:0,
@@ -112,10 +112,10 @@ const boundary=fixture('boundary').n;
 boundary.inventory=[];
 model.tickNpc(boundary,1,1,600,0);
 assert.equal(boundary.realmIndex,0);
-const maxRealm=fixture('final-realm',4,8).n;
+const maxRealm=fixture('final-realm',8,9).n;
 Object.assign(maxRealm,{action:'cultivate',goalAction:'cultivate',actionProgress:59,hunger:0});
 model.meditateAtRest(maxRealm,1,600);
-assert.equal(maxRealm.realmLevel,9);
+assert.equal(maxRealm.realmLevel,10);
 assert.equal(maxRealm.tribulation,undefined);
 const anchor={x:1600,y:2400};
 for(const [realm,{cloud,warning,waves,interval}] of TRIBULATIONS.entries()){
@@ -152,7 +152,7 @@ const rates=TRIBULATIONS.map((_,realm)=>{
     assert.equal(n.tribulation.chance,chance);
     while(tribulationLocked(n))tick(world,n);
     if(n.tribulation.phase==='success')won++;
-    else if(n.alive){assert.ok(n.actionCooldown>0&&n.xp<cultivationRequired(realm,9));assert.equal(planTribulation(world,n,site),false);}
+    else if(n.alive){assert.ok(n.actionCooldown>0&&n.xp<cultivationRequired(realm,10));assert.equal(planTribulation(world,n,site),false);}
   }
   const expected=totalChance/trials;
   assert.ok(Math.abs(won/trials-expected)<.025,JSON.stringify({realm,won,trials,expected}));

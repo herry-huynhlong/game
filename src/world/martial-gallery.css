@@ -1,0 +1,20 @@
+.martial-gallery{position:fixed;right:14px;bottom:42px;z-index:9;max-width:min(96vw,360px);padding:7px 10px;border:1px solid #77633c;background:#14251fed;color:#ece1ba;font:13px system-ui,sans-serif;box-shadow:0 3px 14px #1119}
+.martial-gallery-lab{bottom:14px}
+.martial-gallery summary{cursor:pointer;color:#f1d7a2}
+.martial-gallery label,.martial-gallery a{display:inline-block;margin:4px 6px 4px 0}
+.martial-gallery a{color:#9dd8bc}
+.martial-gallery input,.martial-gallery select,.martial-gallery button{color:#f1e4c7;background:#243b33;border:1px solid #647361;border-radius:2px;padding:3px;max-width:100%}
+.martial-gallery input{accent-color:#8fc8a5}
+.martial-gallery-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px 8px}
+.martial-gallery-controls select{display:block;width:100%}
+.martial-gallery output{display:block;min-height:50px;padding:6px 0;color:#aed1c1}
+.martial-catalog[open]{position:fixed;z-index:1;left:50%;top:86px;width:min(760px,95vw);transform:translateX(-50%);padding:10px;border:1px solid #937b45;background:#14251ff5}
+.martial-catalog div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin-top:7px;max-height:67vh;overflow:auto}
+.martial-catalog button{display:flex;align-items:center;text-align:left;gap:4px;color:var(--martial-grade)}
+.martial-catalog button .resident-item-icon{flex:none}
+.martial-comparison{display:flex;gap:12px;margin-top:6px;color:#dfcea7}
+.martial-comparison[hidden]{display:none}
+.martial-comparison div{text-align:center}
+.martial-comparison span{display:block;width:48px;height:64px;background-size:720px 64px;image-rendering:pixelated}
+.martial-weapon-tile{flex:0 0 48px;height:64px;background-image:url('/assets/items/martial-arms.png');background-size:720px 64px;image-rendering:pixelated}
+.martial-gallery-lab{max-height:calc(100dvh - 85px);overflow:auto}

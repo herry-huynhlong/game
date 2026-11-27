@@ -64,7 +64,7 @@ export class WorldNameplates {
     this.health.clear();
     const inspect=(actor,sprite,fauna)=>{
       if(!actor.alive||actor.ascended||!sprite?.visible||actor.skyStep?.phase==='travel')return;
-      const elevation=fauna?Math.max(0,actor.y-sprite.y):s.ramparts.height(actor)+(actor.flight?flightOffset(actor.flight):0);
+      const elevation=fauna?Math.max(0,actor.y-sprite.y):s.ramparts.visualHeight(actor)+(actor.flight?flightOffset(actor.flight):0);
       const x=actor.x,y=actor.y-elevation;
       if(x<view.x||x>view.right||y<view.y||y>view.bottom)return;
       const selected=actor.id===(fauna?s.selectedFaunaId:s.selectedNpcId);
@@ -78,7 +78,8 @@ export class WorldNameplates {
         this.health.fillStyle(0x202323,.9).fillRect(x-15/z,y-36,30/z,4/z);
         this.health.fillStyle(0xcd735a).fillRect(x-14/z,y-36+1/z,28/z*Math.min(1,Math.max(0,hp)),2/z);
       }
-      if(this.enabled&&(z>=.59||selected||hover))rows.push({actor,x,y:y-(fauna?Math.max(52,sprite.displayHeight*.72):45),fauna,selected,hover});
+      const signature=!fauna&&s.martialCombat?.casts.get(actor.id)?.skill.id==='myriad-unite';
+      if(this.enabled&&!signature&&(z>=.59||selected||hover))rows.push({actor,x,y:y-(fauna?Math.max(52,sprite.displayHeight*.72):45),fauna,selected,hover});
     };
     for(const n of s.populationWorld.npcs)inspect(n,s.npcSprites.get(n.id),false);
     for(const f of s.populationWorld.environment.fauna)inspect(f,s.faunaSprites.get(f.id),true);

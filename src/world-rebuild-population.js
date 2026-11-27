@@ -1,3 +1,4 @@
+import {COMBAT_BALANCE_VERSION,migrateCombatBalance} from './dao/CombatBalanceMigration.ts';
 import { initDivinePower } from './dao/DivinePowerLedger.ts';
 import { ensureWorldNpcAppearances } from './world/NpcAppearanceProfiles.js';
 import { createWorldUuid } from './world/WorldId.ts';
@@ -125,6 +126,7 @@ export function loadWorldPopulation(storage, map) {
       world = JSON.parse(raw);
     } catch { /* A corrupt new-world save is preserved; do not import or overwrite legacy keys. */ }
     if (world?.population?.initialized && world.population.spawnVersion === 1 && world.npcs?.length >= 108) {
+      migrateCombatBalance(world);
       migrateWorldLayout(world,map);
       migrateSectCampus(world,map,worldLayout(map).westOffsetX);
       ensureWorldNpcAppearances(world);
@@ -135,6 +137,7 @@ export function loadWorldPopulation(storage, map) {
   }
   const seed = `qingyun-${createWorldUuid()}`;
   const world = makeFreshWorld(seed, map, solids);
+  world.combatBalanceVersion=COMBAT_BALANCE_VERSION;
   world.population.sectLayoutVersion = worldLayout(map).sectLayoutVersion;
   ensureWorldNpcAppearances(world);
   initDivinePower(world.heaven,world.clock.day);

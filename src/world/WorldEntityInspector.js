@@ -1,3 +1,4 @@
+import {BUILDING_INTERIORS} from './BuildingInteriors.js';
 import { inspectionBrief, inspectionSnapshot } from './WorldInspectionData.js';
 import './world-inspector.css';
 
@@ -58,7 +59,8 @@ export class WorldEntityInspector {
     this.panel.querySelector('[data-close]').onclick=()=>this.close();
     this.panel.querySelector('[data-locate]').onclick=()=>this.locate();
     this.undergroundButton=this.panel.querySelector('[data-underground]');
-    this.undergroundButton.onclick=()=>{const id=this.selected?.id;this.close();scene.underground.view.show(id);};
+    this.undergroundButton.onclick=()=>{const id=this.selected?.id;this.close();
+      if(BUILDING_INTERIORS.has(id))scene.weeklyAuction.observe();else scene.underground.view.show(id);};
     this.panel.addEventListener('click',e=>{
       const button=e.target.closest('button[data-inspect]');
       if(!button)return;
@@ -94,6 +96,16 @@ export class WorldEntityInspector {
     for(const [id,sprite] of this.scene.buildingSprites){
       if(this.scene.populationWorld.environment.objects.some(o=>o.id===id&&o.kind==='house'))register({kind:'building',id,sprite});
     }
+    for(const sprite of this.scene.objectSprites){
+      const obj=sprite.getData('tiledObject');
+      if(!obj||this.scene.prop(obj,'buildingId')||this.scene.prop(obj,'legacyRampart')||this.scene.prop(obj,'retiredSect'))continue;
+      const gid=obj.gid, market=gid>=524&&gid<531;
+      if(gid>=257&&gid<297||gid===330||gid>=640&&gid<=647||market)
+        register({kind:'building',id:'tiled:'+obj.id,sprite,data:{x:sprite.x,y:sprite.y,name:obj.name,market}});
+    }
+    for(const [id,sprite] of this.scene.buildingSprites){
+      if(!this.static.has('building:'+id))register({kind:'building',id,sprite,data:{x:sprite.x,y:sprite.y,name:sprite.name}});
+    }
     for(const venue of this.scene.society.places.values()){
       const sprite=this.scene.facilitySprites.find(s=>s.name===venue.cfg.name)??
         this.scene.facilitySprites.find(s=>s.name===venue.cfg.name+' · quầy');
@@ -122,7 +134,7 @@ export class WorldEntityInspector {
     const scene=this.scene,{environment:env}=scene.populationWorld,{kind,id}=ref;
     const fixed=this.static.get(keyOf(ref));
     if(fixed){
-      const data=kind==='building'?env.objects.find(o=>o.id===id):kind==='ore'?scene.sectCampus.production.state.veins[id]:fixed.data;
+      const data=kind==='building'?(env.objects.find(o=>o.id===id)??fixed.data):kind==='ore'?scene.sectCampus.production.state.veins[id]:fixed.data;
       return data?{...fixed,data}:null;
     }
     let data,sprite;
@@ -144,11 +156,11 @@ export class WorldEntityInspector {
     const s=this.scene,env=s.populationWorld.environment,zoom=s.cameras.main.zoom;
     const hits=[];
     const add=(entry)=>{
-      if(!entry||!visible(entry.sprite))return;
+      if(!entry||!visible(entry.sprite)&&!(entry.kind==='building'&&entry.sprite?.martialRuined))return;
       const {sprite,kind}=entry,margin=kind==='tree'||kind==='building'?0:Math.min(8,2/zoom);
       if(Math.abs(point.x-sprite.x)>sprite.displayWidth+margin||Math.abs(point.y-sprite.y)>sprite.displayHeight+margin)return;
       let exact=kind==='spiritVein'&&Math.hypot(point.x-sprite.x,point.y-sprite.y+sprite.displayHeight*.36)<Math.max(15,6/zoom)||opaque(sprite,point);
-      if(!exact&&(!margin||![[margin,0],[-margin,0],[0,margin],[0,-margin]].some(([dx,dy])=>opaque(sprite,{x:point.x+dx,y:point.y+dy}))))return;
+      if(!exact&&!(kind==='building'&&sprite.getBounds().contains(point.x,point.y))&&(!margin||![[margin,0],[-margin,0],[0,margin],[0,-margin]].some(([dx,dy])=>opaque(sprite,{x:point.x+dx,y:point.y+dy}))))return;
       hits.push({entry,exact});
     };
     for(const entry of this.cells.get(Math.floor(point.x/CELL)+','+Math.floor(point.y/CELL))??[])add(this.lookup(entry));
@@ -201,6 +213,7 @@ export class WorldEntityInspector {
 
   anchor(entry){
     if(!entry)return undefined;
+    if(entry.kind==='building')return {x:entry.sprite.x,y:entry.sprite.y-entry.sprite.displayHeight*.35};
     if(entry.kind==='tree')return {x:entry.sprite.x,y:entry.data.y};
     if(entry.kind==='ore')return {x:entry.sprite.x,y:entry.sprite.y+12};
     if(entry.kind==='spiritVein')return entry.data.point;
@@ -244,7 +257,10 @@ export class WorldEntityInspector {
     this.panel.dataset.kind=entry.kind;
     this.panel.dataset.id=entry.id;
     this.panel.dataset.tone=String(info.tone||0);
-    this.undergroundButton.hidden=!['ore','spiritVein'].includes(entry.kind)||!this.scene.underground?.sites.has(entry.id)||Boolean(this.scene.possessedNpcId);
+        const interior=entry.kind==='building'&&BUILDING_INTERIORS.get(entry.id);
+    this.undergroundButton.textContent=interior?'Vào bên trong':'Quan sát bên trong';
+    this.undergroundButton.hidden=!(interior?this.scene.underground?.sites.has(interior.siteId):
+      ['ore','spiritVein'].includes(entry.kind)&&this.scene.underground?.sites.has(entry.id));
     this.panel.querySelector('canvas').hidden=!entry.sprite;
     const large=entry.kind==='fauna'&&entry.sprite?.texture.key.startsWith('monster-east-');
     this.panel.toggleAttribute('data-large-portrait',Boolean(large));

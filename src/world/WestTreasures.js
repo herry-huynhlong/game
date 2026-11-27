@@ -2,7 +2,7 @@ import { WestTreasureSystem, treasureBloomOpen, treasureStage, treasureDistance 
 import { WEST_TREASURE_IDS, EAST_TREASURE_IDS, WEST_TREASURE_RARITY, treasureDefinition } from '../dao/WestTreasureCatalog.ts';
 import { EconomySystem } from '../dao/EconomySystem.ts';
 import { cultivationStats } from '../systems/CultivationSystem.ts';
-import { faunaCombatPower, insideHabitat } from '../dao/FaunaSystem.ts';
+import { insideHabitat } from '../dao/FaunaSystem.ts';
 import { weaponAttackMode, weaponForNpc } from './WeaponCombat.js';
 import { aboveGroundCombat } from './FlyingSword.js';
 
@@ -145,12 +145,10 @@ export class WestTreasures {
     const stats=cultivationStats(n),axes=n.aiProfile?.axes??{},def=treasureDefinition(node.itemId);
     const hp=n.hp/stats.hpMax,mp=n.mp/stats.mpMax;
     const courage=axes.courage??50,caution=axes.caution??50,greed=((axes.ambition??50)+(100-(axes.generosity??50)))/2;
-    const danger=guard?faunaCombatPower(guard.species,guard.rank)+(guard.realmIndex??0)*36:0;
-    const strength=(stats.attack+stats.defense+n.realmIndex*25)*(hp*.7+mp*.3);
     const cost=def.grade*6+distance(n,node)*.17;
     const reward=24+Math.sqrt(def.value)*5+greed*.27+courage*.2-caution*.2;
     return {hp,mp,score:reward-cost,canFight:Boolean(guard&&hp>.61&&mp>.21&&n.realmIndex>=(guard.realmIndex??0)&&
-      strength*(.83+courage*.005+caution*-.002)>danger*.74),retreat:hp<.42||mp<.08||n.westPoison>=58};
+      this.scene.canRiskHunt(n,guard)),retreat:hp<.42||mp<.08||n.westPoison>=58};
   }
 
   release(n,delay=9000){

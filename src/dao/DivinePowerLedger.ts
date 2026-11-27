@@ -1,10 +1,7 @@
 import { REALMS } from '../systems/RealmConfig';
 import type { DivineWorldSave, HeavenSave } from './types';
 
-const coefficients: Readonly<Record<string, number>> = Object.freeze({
-  'Phàm nhân': 0, 'Luyện Khí': 1, 'Trúc Cơ': 2, 'Kim Đan': 3, 'Nguyên Anh': 4,
-  'Hóa Thần': 5, 'Luyện Hư': 6, 'Hợp Thể': 7, 'Đại Thừa': 8, 'Độ Kiếp': 9, 'Chân Tiên': 10,
-});
+
 
 type Rank = {realmIndex?: number; realmLevel?: number};
 type CavePoint = {siteId: string; floor: number; x: number; y: number};
@@ -24,11 +21,11 @@ export type DivinePowerSave = {
   recent: DivinePowerEntry[]; credited: Record<string, true>;
 };
 
-export function realmPower(name: string) { return Object.hasOwn(coefficients, name) ? coefficients[name] : 0; }
+export function realmPower(name: string) { return REALMS.find(realm=>realm.name===name)?.rank??(name==='Chân Tiên'?10:0); }
 const realmAt = (index?: number) => index === undefined ? undefined : REALMS[index];
 const nameAt = (index?: number) => realmAt(index)?.name ?? 'Phàm nhân';
 const levelOf = (rank: Rank) => Number.isInteger(rank.realmLevel) && rank.realmLevel! > 0 ? rank.realmLevel! : 0;
-const deathPoints = (rank: Rank) => realmPower(nameAt(rank.realmIndex)) * levelOf(rank) * 2;
+const deathPoints = (rank: Rank) => (realmAt(rank.realmIndex)?.rank??0)*Math.min(10,levelOf(rank))*2;
 
 export function initDivinePower(heaven: HeavenSave, day: number) {
   const balance = heaven.divinePower;
@@ -92,9 +89,9 @@ export function creditBreakthrough(world: DivineWorldSave | undefined, subject: 
     const end = Math.min(realm.maxLevel, r === to ? levelOf(subject) : realm.maxLevel);
     for (let tier = r === from ? levelOf(prior) + 1 : 1; tier <= end; tier++) {
       const key = `breakthrough:${subject.id}:${realm.id}:${tier}`;
-      if (Object.hasOwn(credited, key) || !realmPower(realm.name)) continue;
+      if (Object.hasOwn(credited, key)) continue;
       keys.push(key);
-      points += realmPower(realm.name);
+      points += realm.rank;
     }
   }
   return credit(world, keys, 'breakthrough', subject, points, cause);

@@ -8,7 +8,7 @@ export function distributeResidentHomes(scene){
   const markers=scene.markers.filter(p=>/^residence-\d+$/.test(p.id));
   const original=world.npcs.filter(n=>n.home&&!n.homeId?.startsWith('merchant-home:'));
   const centers=scene.markers.filter(m=>['forest-outer','south-outskirts'].includes(m.id));
-  const affected=original.filter(n=>!(n.populationRole==='low_disciple'&&world.population.sectLayoutVersion)&&!n.homeId?.startsWith('residence-')&&
+  const affected=original.filter(n=>!n.lifeOrigin&&!(n.populationRole==='low_disciple'&&world.population.sectLayoutVersion)&&!n.homeId?.startsWith('residence-')&&
     (centers.some(p=>distance(p,n.home)<235)||n.populationRole==='low_disciple'));
   const occupied=original.filter(n=>!affected.includes(n)).map(n=>n.home);
   const dorm=scene.markers.find(m=>m.id==='sect-dorm');

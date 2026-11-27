@@ -1,3 +1,20 @@
+import {navigationComponents} from './world/NavigationComponents.js';
+import {VAN_KIEM_TEXTURE,VAN_KIEM_AUDIO} from './world/VanKiemCinematic.js';
+import {VAN_PHAP_TEXTURE,VAN_PHAP_AUDIO} from './world/VanPhapCinematic.js';
+import {ensureWorldWeaponInstances} from './dao/WeaponInstances.ts';
+import {applyMartialScenery,drawBuildingWear,refreshBuildingFootprints} from './world/MartialScenery.js';
+import {MartialCombat} from './world/MartialCombat.js';
+import {MartialEconomy} from './world/MartialEconomy.js';
+import {AUCTION_BUILDING} from './world/BuildingInteriors.js';
+import {installAuctionExterior,bindAuctionBuilding} from './world/AuctionExterior.js';
+import {auctionSite,WeeklyAuction} from './world/WeeklyAuction.js';
+import {HeavenOpportunities} from './world/HeavenOpportunities.js';
+import {mountMartialGallery} from './world/MartialGallery.js';
+import { ensureNPCVisualStyles } from './dao/CharacterAppearance.ts';
+import { ensureWorldNpcAppearances } from './world/NpcAppearanceProfiles.js';
+import { POPULATION_TARGET, VOCATIONS } from './world/PopulationLife.js';
+import { PopulationDirector, populationTestTarget } from './world/PopulationDirector.js';
+import { PopulationLivelihoods } from './world/PopulationLivelihoods.js';
 import { creditDeath, syncDivinePower } from './dao/DivinePowerLedger.ts';
 import { mountDivinePowerJournal } from './world/DivinePowerJournal.js';
 import { EAST_TREASURE_IDS } from './dao/WestTreasureCatalog.ts';
@@ -33,7 +50,10 @@ import { Ramparts } from './world/Ramparts.js';
 import { createWorldUuid, loadWorldPopulation, WORLD_POPULATION_SAVE_KEY } from './world-rebuild-population.js';
 import { advanceNpcLifespans, AutonomousNPCSystem } from './dao/AutonomousNPCSystem.ts';
 import { NPC_MODULAR_TEXTURES, NPC_STYLE_TEXTURES, ensureNPCModularAppearances, resolveNPCModularPart } from './dao/CharacterAppearance.ts';
-import { cultivationStats } from './systems/CultivationSystem.ts';
+import {cultivationBreakdown,cultivationStats} from './systems/CultivationSystem.ts';
+import {resolveDamage} from './systems/CombatBalance.ts';
+import {faunaResistance,faunaStats} from './dao/MonsterRegistry.ts';
+import {MARTIAL_SKILLS} from './dao/MartialRegistry.ts';
 import { tribulationLocked } from './dao/TribulationSystem.ts';
 import { WorldCultivation } from './world/WorldCultivation.js';
 import { preloadTribulationVisuals } from './world/TribulationVisuals.js';
@@ -47,7 +67,7 @@ import { PossessionSystem } from './dao/PossessionSystem.ts';
 import {CivicSystem} from './world/CivicSystem.js';
 import { reportCityCombat, markCityIncidentAtScene, clearCityResponse } from './dao/CityLawSystem.ts';
 import { ensureWorldRebuildEnvironment, tickWorldRebuildProfessionWork, damageWorldRebuildBuilding } from './dao/WorldRebuildProfessionSystem.ts';
-import { ensureFauna, hunterTolerance, damageFauna, faunaCombatPower, claimFaunaDrop, queueFaunaRespawn, processFaunaRespawns, spawnFaunaInZone, summonWesternTree, refillWesternFauna, faunaRoster, faunaEvent } from './dao/FaunaSystem.ts';
+import { ensureFauna, hunterTolerance, damageFauna, claimFaunaDrop, queueFaunaRespawn, processFaunaRespawns, spawnFaunaInZone, summonWesternTree, refillWesternFauna, faunaRoster, faunaEvent } from './dao/FaunaSystem.ts';
 import { applyMonsterCondition, monsterRooted, tickMonsterConditions } from './dao/MonsterConditions.ts';
 import { faunaHabitat } from './world/FaunaHabitat.js';
 import { itemIcon } from './dao/ItemCatalog.ts';
@@ -89,6 +109,7 @@ const LEGACY_NPC_RENDER=new URLSearchParams(location.search).get('legacyNpc')===
 const FLIGHT_ARENA=new URLSearchParams(location.search).get('flightTest')==='1';
 const CULTIVATION_DEMO=new URLSearchParams(location.search).get('cultivationDemo')==='1';
 const TRIBULATION_ARENA=new URLSearchParams(location.search).get('tribulationVfx')==='1';
+const MARTIAL_GALLERY=new URLSearchParams(location.search).has('combatGallery');
 const CHARACTER_RIG_PREVIEW=new URLSearchParams(location.search).get('characterRig')==='1';
 const PAPERDOLL_PREVIEW=new URLSearchParams(location.search).get('paperDoll')==='1';
 const PAPERDOLL_IDS=Array.from({length:24},(_,i)=>`P${String(i+1).padStart(2,'0')}`);
@@ -99,6 +120,13 @@ const REGION_TITLES=Object.freeze({city:'Thanh Vân Thành',north:'Cổng Bắc 
 export class RebuildWorldScene extends Phaser.Scene {
   constructor(){super('world-rebuild-1b');this.paperDollPreview=PAPERDOLL_PREVIEW;this.npcRenderTextures=new Map();this.collisionVisible=false;this.collisionRects=[];this.markers=[];this.dragState=null;this.lastWorldDragAt=0;this.keys=null;this.objectSprites=[];this.buildingSprites=new Map();this.resourceNodeSprites=new Map();this.faunaSprites=new Map();this.dropSprites=new Map();this.faunaTick=0;this.faunaRespawnTick=0;this.faunaZones=[];this.windSprites=[];this.windClock=0;this.npcSprites=new Map();this.modularVisuals=new Map();this.npcRoutes=new Map();this.weaponSprites=new Map();this.weaponAttackStates=new Map();this.weaponFxSprites=[];this.playerSkillCooldown=0;this.populationTick=0;this.populationSaveTick=0;this.populationAiCost=0;this.selectedNpcId=null;this.possessedNpcId=null;this.cameraFollowSuspended=false;this.cameraTween=null;this.lastExploreZoom=.85;this.minimap=null;this.selectedFaunaId=null;this.playerFacing='down';this.playerAttackCooldown=0;this.playerCombo=0;this.pathfindingCalls=0;this.collisionChecks=0;this.goalEvaluations=0;this.aiCostSamples=[];this.frameSamples=[];this.lastEcologyDebugAt=0;this.lastUpdateNow=0;}
   preload(){
+    this.load.spritesheet('martial-arms','/assets/items/martial-arms.png',{frameWidth:24,frameHeight:32});
+    this.load.image('commerce-items','/assets/items/inventory-icons.png');
+    this.load.atlas(VAN_KIEM_TEXTURE,'/assets/van-kiem/cinematic.png','/assets/van-kiem/cinematic.json');
+    for(const cue of VAN_KIEM_AUDIO)this.load.audio('van-kiem-'+cue,'/assets/van-kiem/'+cue+'.wav');
+    this.load.atlas(VAN_PHAP_TEXTURE,'/assets/van-phap/atlas.png','/assets/van-phap/atlas.json');
+    for(const cue of VAN_PHAP_AUDIO)this.load.audio('van-phap-'+cue,'/assets/van-phap/'+cue+'.wav');
+    this.load.spritesheet('martial-arms-back','/assets/items/martial-arms-back.png',{frameWidth:24,frameHeight:32});
     this.load.spritesheet('spirit-veins','/assets/west-wilds/spirit-veins.png',{frameWidth:48,frameHeight:48});
     preloadTribulationVisuals(this);
     preloadSkyStep(this);
@@ -300,6 +328,8 @@ export class RebuildWorldScene extends Phaser.Scene {
     for(const o of this.map.getObjectLayer('SocietyStations')?.objects??[]){
       if(this.prop(o,'site')==='landmark')this.markers.push({id:this.prop(o,'id'),x:o.x,y:o.y,region:'sect'});
     }
+    this.auctionPoint=installAuctionExterior(this);
+    this.markers.push({id:AUCTION_BUILDING,...this.auctionPoint,region:'city'});
     this.roadLayer=this.map.layers.find(layer=>layer.name==='Roads');
     this.navCell=16;
     this.navCols=this.map.widthInPixels/this.navCell;
@@ -386,6 +416,7 @@ export class RebuildWorldScene extends Phaser.Scene {
     });
     this.initRiverFish();
     this.heavenActions=new WorldHeavenActions(this);
+    this.martialCombat=new MartialCombat(this);
     mountHeavenShop(this);
     mountDivinePowerJournal(this);
     this.input.on('pointermove',()=>{this.lastAttackPointer=true});
@@ -395,10 +426,11 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.createResourceNodeSprites();
     window.__worldBoot?.setPhase('ecosystem','complete');
     this.environmentGraphics=this.add.graphics().setDepth(10000);
+    bindAuctionBuilding(this);
     this.refreshProfessionVisuals();
     this.livingWorldPanel=new LivingWorldPanel(this);
     this.collisionGraphics=this.add.graphics().setDepth(20000).setVisible(false);this.groundDebugGraphics=this.add.graphics().setDepth(20001).setVisible(false);this.drawCollisionDebug();
-    this.input.keyboard?.addCapture(['SPACE']);this.keys=this.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,PLUS,MINUS,C,ONE,TWO,THREE,FOUR,J,K,E,F,M,R,Q,V,T,ESC,SHIFT,CTRL')??{};
+    this.input.keyboard?.addCapture(['SPACE']);this.keys=this.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,PLUS,MINUS,C,ONE,TWO,THREE,FOUR,FIVE,J,K,E,F,M,R,Q,V,T,ESC,SHIFT,CTRL')??{};
     for(const key of ['J','K','F','M','R','Q','V','T']) {
       this.keys[key]?.on('down',(_key,event)=>{
         if(event.repeat||event.ctrlKey||event.altKey||event.metaKey||event.target?.matches?.('input,textarea,[contenteditable]'))return;
@@ -413,8 +445,13 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.merchantPanel=new MerchantPanel(this);this.sectCampus.mount();this.bindAppearanceSync();this.restorePossession();
     this.recovery=new WorldRecovery(this);
     this.expeditions=new Expeditions(this);
-    this.underground=new UndergroundSystem(this);
+    this.underground=new UndergroundSystem(this,auctionSite(this.auctionPoint));
     this.civic=new CivicSystem(this);
+    this.martialEconomy=new MartialEconomy(this);
+    this.weeklyAuction=new WeeklyAuction(this,this.auctionPoint);
+    this.opportunities=new HeavenOpportunities(this);
+    mountMartialGallery(this);
+    if(this.lifeDirector)this.populationLivelihoods=new PopulationLivelihoods(this);
     this.socialVisuals=new SocialVisuals(this);
     this.inspector=new WorldEntityInspector(this);
     this.veinOverlay=new SpiritVeinOverlay(this);
@@ -458,7 +495,7 @@ export class RebuildWorldScene extends Phaser.Scene {
       reportCombat:(attackerId,victimId,damage,options={})=>this.reportCombat(attackerId,victimId,damage,options),
       pan:(dx,dy)=>{this.cameras.main.scrollX+=dx;this.cameras.main.scrollY+=dy;this.clampCamera()},
     };
-    window.__worldBoot?.setPhase('ready','complete',`108 NPC; ${this.objectSprites.length} cảnh vật`);
+    window.__worldBoot?.setPhase('ready','complete',`${this.populationWorld.npcs.length} NPC; ${this.objectSprites.length} cảnh vật`);
     if(new URLSearchParams(location.search).has('testMode')){window.__worldRebuild.stepProfessionMinutes=minutes=>this.stepProfessionMinutes(minutes);window.__worldRebuild.refreshTestUI=()=>{this.refreshProfessionVisuals();this.renderPopulationDebug()};window.__worldRebuild.testTickFauna=seconds=>{for(let i=0;i<Math.max(1,Math.floor(seconds));i++){this.populationWorld.clock.minute++;this.tickFauna(1000)}return this.getFaunaState()};window.__worldRebuild.testStartHunterHunt=(hunterId,faunaId)=>{const h=this.populationWorld.npcs.find(n=>n.id===hunterId&&n.alive),f=this.populationWorld.environment.fauna.find(x=>x.id===faunaId&&x.alive);if(!h||!f||h.populationRole!=='hunter')return false;for(const other of this.populationWorld.npcs)if(other.id!==h.id&&other.faunaHuntTargetId===f.id)other.faunaHuntTargetId=undefined;h.faunaHuntTargetId=f.id;h.actionTarget={x:f.x,y:f.y};h.goalAction='fight';this.npcRoutes.delete(h.id);return true};window.__worldRebuild.endPossessionForTest=()=>this.endPossession('Kết thúc kiểm tra chiến đấu.');window.__worldRebuild.resetWeaponCooldownForTest=()=>{this.playerAttackCooldown=0;this.playerSkillCooldown=0};window.__worldRebuild.prepareWeaponCombatTest=(npcId,faunaId)=>{const npc=this.populationWorld.npcs.find(n=>n.id===npcId&&n.alive),fauna=this.populationWorld.environment.fauna.find(f=>f.id===faunaId&&f.alive),sprite=npc&&this.npcSprites.get(npc.id),beast=fauna&&this.faunaSprites.get(fauna.id);if(!npc||!fauna||!sprite||!beast||!weaponForNpc(npc))return{ok:false,reason:'test-actors-unavailable'};const offsets=[[-34,0],[34,0],[0,-34],[0,34]],point=offsets.map(([x,y])=>({x:fauna.x+x,y:fauna.y})).find(p=>this.canOccupy(p.x,p.y)&&Math.hypot(p.x-fauna.x,p.y-fauna.y)<=52&&this.clearFaunaLine({x:p.x,y:p.y},fauna));if(!point)return{ok:false,reason:'no-clear-adjacent-cell'};npc.x=point.x;npc.y=point.y;npc.action='idle';npc.faunaHuntTargetId=undefined;npc.actionTarget=null;this.npcRoutes.delete(npc.id);sprite.setPosition(point.x,point.y).setDepth(point.y).play(`${this.npcTextureFor(npc)}_idle_right`,true);this.selectedFaunaId=fauna.id;this.selectNPC(npc.id);this.beginPossession();this.persistPopulation();this.syncWeaponVisuals();this.cameras.main.centerOn(npc.x,npc.y);this.setZoom(1.4);return{ok:this.possessedNpcId===npc.id,npcId:npc.id,faunaId:fauna.id,weapon:weaponForNpc(npc)?.id,npc:{x:npc.x,y:npc.y},fauna:{x:fauna.x,y:fauna.y},distance:Math.hypot(npc.x-fauna.x,npc.y-fauna.y)}}}
     this.scale.on('resize',()=>{this.clampCamera();this.minimap?.update(true)});
     this.events.once(Phaser.Scenes.Events.SHUTDOWN,()=>{this.cameraInputAbort?.abort();this.minimap?.destroy();delete window.__worldRebuild;document.getElementById('possession-panel')?.remove();document.getElementById('ecology-debug')?.remove()});
@@ -495,7 +532,13 @@ export class RebuildWorldScene extends Phaser.Scene {
   getPaperDollAppearanceState(){const assignments=[...this.npcRenderTextures.entries()].map(([npcId,presetId])=>{const npc=this.populationWorld?.npcs.find(n=>n.id===npcId);return{npcId,presetId,populationRole:npc?.populationRole??null,authorityRole:npc?.authorityRole??null,profession:npc?.profession??null}});return{enabled:this.paperDollPreview,source:'URL ?paperDoll=1 only; no NPC/save fields changed',count:assignments.length,distinct:new Set(assignments.map(x=>x.presetId)).size,assignments}}
   initPopulation(){
     const loadStarted=performance.now();
-    const storage=TRIBULATION_ARENA?{
+    const testTarget=populationTestTarget(new URLSearchParams(location.search));
+    const storage=MARTIAL_GALLERY?{
+      getItem:()=>null,setItem:()=>{},
+    }:testTarget?{
+      getItem:key=>sessionStorage.getItem(key+':population:'+testTarget),
+      setItem:(key,value)=>sessionStorage.setItem(key+':population:'+testTarget,value),
+    }:TRIBULATION_ARENA?{
       getItem:key=>sessionStorage.getItem(key+':vfx-arena'),setItem:(key,value)=>sessionStorage.setItem(key+':vfx-arena',value),
     }:CULTIVATION_DEMO?sessionStorage:FLIGHT_ARENA?{
       getItem:key=>localStorage.getItem(key+':flight-arena'),setItem:(key,value)=>localStorage.setItem(key+':flight-arena',value),
@@ -504,41 +547,72 @@ export class RebuildWorldScene extends Phaser.Scene {
     const center=this.markers.find(m=>m.id==='city-center');
     this.cityMigratedResidents=placeCityResidents(this.populationWorld.npcs,this.collisionRects.filter(r=>r.kind==='city-redesign-solid'||r.kind==='society'),
       (x,y,w,h)=>this.footprintTerrainOpen(x,y,w,h),(point)=>this.canReachPoint(center,point),this.markers,loaded.fresh);
-    const provisioning=provisionWorldWeapons(this.populationWorld),partsChanged=ensureNPCModularAppearances(this.populationWorld.npcs);if(provisioning.changed||partsChanged)this.persistPopulation();
     relocateShanheResidents(this,this.populationWorld);
+    if(!this.paperDollPreview&&!TRIBULATION_ARENA&&!FLIGHT_ARENA&&!CULTIVATION_DEMO&&!MARTIAL_GALLERY){
+      this.lifeDirector=new PopulationDirector(this,testTarget??POPULATION_TARGET);
+      this.lifeDirector.initialize();
+    }
+    this.preparePopulationVisuals();
     this.ramparts.register(this.populationWorld.npcs);
     this.initLivingTimber();
     this.populationSimulation=new AutonomousNPCSystem(this.populationWorld.npcs,event=>{const id=`population-event:${this.populationWorld.clock.day}:${this.populationWorld.clock.minute}:${event.type}:${event.actorId??''}:${this.populationWorld.events.length}`;this.populationWorld.events.push({id,...event});if(event.type==='npc-breakthrough'||event.type==='npc-minor-advance')this.requestBackgroundSave();if(this.populationWorld.events.length>400)this.populationWorld.events.shift()},this.populationWorld,(a,b)=>!blocksGroundCombat(a)&&!aboveGroundCombat(b)&&this.clearCombatLine(a,b),
       (npc,side,shop,item,count)=>this.merchants?.redirect(npc,side,shop,item,count)??{ok:false,message:'Chưa có quầy.'},
       npc=>this.cultivation?.request(npc)??false,npc=>this.merchants?.dutyFor(npc),npc=>this.ramparts.routine(npc));
-    for(const n of this.populationWorld.npcs){if(n.populationRole==='hunter')n.populationDuty='Thợ săn tự chủ; săn con mồi trong vùng rồi thu nhặt chiến lợi phẩm';const texture=this.paperDollPreview?this.paperDollTextureFor(n):n.visualStyleId;if(this.paperDollPreview)this.npcRenderTextures.set(n.id,texture);if(!texture||!this.textures.exists(texture))throw new Error(`Missing NPC style texture for ${n.id}: ${texture}`);for(const [i,dir]of['down','up','left','right'].entries()){const idle=`${texture}_idle_${dir}`,walk=`${texture}_walk_${dir}`;if(!this.anims.exists(idle))this.anims.create({key:idle,frames:this.anims.generateFrameNumbers(texture,this.paperDollPreview?{start:i*4,end:i*4+3}:{start:i*8,end:i*8+3}),frameRate:4,repeat:-1});if(!this.anims.exists(walk))this.anims.create({key:walk,frames:this.anims.generateFrameNumbers(texture,this.paperDollPreview?{start:16+i*4,end:19+i*4}:{start:32+i*8,end:39+i*8}),frameRate:9,repeat:-1})}
-      const sprite=this.add.sprite(n.x,n.y,texture,0).setOrigin(.5,1).setDepth(this.ramparts.depth(n)).setName(n.id);sprite.setData('npcId',n.id);sprite.setInteractive({useHandCursor:true});sprite.on('pointerdown',pointer=>{if(!this.possessedNpcId)return;this.pendingNpcClick={id:n.id,x:pointer.x,y:pointer.y}});sprite.on('pointerup',pointer=>{const pending=this.pendingNpcClick;this.pendingNpcClick=null;if(pending?.id===n.id&&!this.dragState?.moved&&performance.now()-this.lastWorldDragAt>140&&Math.hypot(pointer.x-pending.x,pointer.y-pending.y)<7)this.selectNPC(n.id)});sprite.play(`${texture}_idle_down`);this.npcSprites.set(n.id,sprite);
-      const ramparts=this.ramparts;
-      const hit=sprite.input.hitArea,contains=sprite.input.hitAreaCallback;
-      sprite.input.hitAreaCallback=(area,x,y,actor)=>contains(hit,x,y+ramparts.height(n),actor);
-      for(const method of ['renderWebGL','renderCanvas']){
-        const render=sprite[method];
-        sprite[method]=function(renderer,source,camera,parentMatrix){
-          if(this.showingModularPose||n.skyStep?.phase==='travel')return;
-          const y=this.y;
-          this.y-=ramparts.height(n);
-          try{render.call(this,renderer,source,camera,parentMatrix);}finally{this.y=y;}
-        };
-      }
-      if(!this.paperDollPreview)this.createNPCModularSprites(n,sprite);
-    }
+    for(const npc of this.populationWorld.npcs)this.addPopulationActor(npc);
     this.nameplates=new WorldNameplates(this);
     if(CHARACTER_RIG_PREVIEW&&!this.paperDollPreview&&this.textures.exists('rig-variants')) {
       const npc=this.populationWorld.npcs.find(candidate=>candidate.alive&&candidate.populationRole==='low_disciple');
       if(npc) this.characterRigPreview=new WorldCharacterPreview(this,npc,this.npcSprites.get(npc.id));
     }
     this.syncWeaponVisuals();
-    this.populationDebug=document.createElement('aside');this.populationDebug.id='population-debug';this.populationDebug.innerHTML='<button type="button" aria-expanded="false">108 cư dân · AI</button><section hidden></section>';
+    this.populationDebug=document.createElement('aside');this.populationDebug.id='population-debug';this.populationDebug.innerHTML='<button type="button" aria-expanded="false">Cư dân · AI</button><section hidden></section>';
     this.populationDebug.style.cssText='position:fixed;right:14px;top:112px;z-index:20;color:#f1e7cc;font:12px/1.45 monospace;pointer-events:auto';this.populationDebug.hidden=true;
     const button=this.populationDebug.querySelector('button'),section=this.populationDebug.querySelector('section');button.style.cssText='padding:7px 10px;color:#f0dfb0;background:#111d18eF;border:1px solid #88764a;cursor:pointer';section.style.cssText='width:300px;max-height:48vh;overflow:auto;margin-top:5px;padding:9px;background:#111d18f2;border:1px solid #88764a';button.onclick=()=>{section.hidden=!section.hidden;button.setAttribute('aria-expanded',String(!section.hidden))};document.body.append(this.populationDebug);
     this.guardDebug=new GuardDebug(this);
     this.renderPopulationDebug();this.assignPopulationTargets();this.persistPopulation();
     if(loaded.fresh)window.dispatchEvent(new CustomEvent('qingyun-world-population',{detail:{key:WORLD_POPULATION_SAVE_KEY,count:this.populationWorld.npcs.length}}));
+  }
+  preparePopulationVisuals(){
+    provisionWorldWeapons(this.populationWorld);
+    ensureWorldWeaponInstances(this.populationWorld);
+    ensureNPCVisualStyles(this.populationWorld.npcs);
+    ensureNPCModularAppearances(this.populationWorld.npcs);
+    ensureWorldNpcAppearances(this.populationWorld);
+  }
+  addPopulationActor(n){
+    this.scheduler?.register(n);
+    if(n.populationRole==='hunter')n.populationDuty='Thợ săn tự chủ; săn con mồi trong vùng rồi thu nhặt chiến lợi phẩm';const texture=this.paperDollPreview?this.paperDollTextureFor(n):n.visualStyleId;if(this.paperDollPreview)this.npcRenderTextures.set(n.id,texture);if(!texture||!this.textures.exists(texture))throw new Error(`Missing NPC style texture for ${n.id}: ${texture}`);for(const [i,dir]of['down','up','left','right'].entries()){const idle=`${texture}_idle_${dir}`,walk=`${texture}_walk_${dir}`;if(!this.anims.exists(idle))this.anims.create({key:idle,frames:this.anims.generateFrameNumbers(texture,this.paperDollPreview?{start:i*4,end:i*4+3}:{start:i*8,end:i*8+3}),frameRate:4,repeat:-1});if(!this.anims.exists(walk))this.anims.create({key:walk,frames:this.anims.generateFrameNumbers(texture,this.paperDollPreview?{start:16+i*4,end:19+i*4}:{start:32+i*8,end:39+i*8}),frameRate:9,repeat:-1})}
+      const sprite=this.add.sprite(n.x,n.y,texture,0).setOrigin(.5,1).setDepth(this.ramparts.depth(n)).setName(n.id);sprite.setData('npcId',n.id);sprite.setInteractive({useHandCursor:true});sprite.on('pointerdown',pointer=>{if(!this.possessedNpcId)return;this.pendingNpcClick={id:n.id,x:pointer.x,y:pointer.y}});sprite.on('pointerup',pointer=>{const pending=this.pendingNpcClick;this.pendingNpcClick=null;if(pending?.id===n.id&&!this.dragState?.moved&&performance.now()-this.lastWorldDragAt>140&&Math.hypot(pointer.x-pending.x,pointer.y-pending.y)<7)this.selectNPC(n.id)});sprite.play(`${texture}_idle_down`);this.npcSprites.set(n.id,sprite);
+      const ramparts=this.ramparts;
+      const hit=sprite.input.hitArea,contains=sprite.input.hitAreaCallback;
+      sprite.input.hitAreaCallback=(area,x,y,actor)=>contains(hit,x,y+ramparts.visualHeight(n),actor);
+      for(const method of ['renderWebGL','renderCanvas']){
+        const render=sprite[method];
+        sprite[method]=function(renderer,source,camera,parentMatrix){
+          if(this.showingModularPose||n.skyStep?.phase==='travel')return;
+          const y=this.y;
+          this.y-=ramparts.visualHeight(n);
+          try{render.call(this,renderer,source,camera,parentMatrix);}finally{this.y=y;}
+        };
+      }
+      if(n.minor)sprite.setScale(.79);
+      if(!this.paperDollPreview)this.createNPCModularSprites(n,sprite);
+  }
+  removePopulationActor(n){
+    this.workstations.release(n.id);
+    this.npcRoutes.delete(n.id);
+    this.scheduler.byId.delete(n.id);
+    const rig=this.npcAppearanceFleet?.entries.get(n.id);
+    rig?.renderer.destroy();
+    this.npcAppearanceFleet?.entries.delete(n.id);
+    for(const sprite of this.modularVisuals.get(n.id)??[])sprite.destroy();
+    this.modularVisuals.delete(n.id);
+    this.weaponSprites.get(n.id)?.destroy();
+    this.weaponSprites.delete(n.id);
+    this.npcSprites.get(n.id)?.destroy();
+    this.npcSprites.delete(n.id);
+    if(this.selectedNpcId===n.id){this.selectedNpcId=null;this.renderPossessionHud();}
+    this.refreshRoster();
   }
   createNPCModularSprites(npc,actor){
     const parts=npc.visualParts;if(!parts)return;
@@ -550,13 +624,13 @@ export class RebuildWorldScene extends Phaser.Scene {
   syncNPCModularVisuals(){
     if(!this.populationWorld||this.paperDollPreview)return;
     for(const npc of this.populationWorld.npcs){const actor=this.npcSprites.get(npc.id),parts=this.modularVisuals.get(npc.id);if(!actor||!parts?.length)continue;if(!actor.visible||!npc.alive||npc.skyStep?.phase==='travel'||actor.alpha<.01){for(const overlay of parts)if(overlay.visible)overlay.setVisible(false);continue}const baseFrame=Number(actor.frame?.name)||0,row=Math.floor(baseFrame/8)%4,phase=actor.getData('moving')?Math.min(2,Math.floor((baseFrame%8)*3/8)):0,frame=row*3+phase;
-      for(const overlay of parts){const frameIndex=overlay.getData('frameOffset')+frame;if(overlay.getData('lastModularFrame')!==frameIndex){overlay.setFrame(frameIndex);overlay.setData('lastModularFrame',frameIndex)}const kind=overlay.getData('partKind'),isBack=row===1,depth=actor.depth+(isBack&&['hair','accessory'].includes(kind)?-0.12:kind==='outfit'?.02:kind==='face'?.04:kind==='hair'?.06:.08);const y=actor.y-this.ramparts.height(npc);if(overlay.x!==actor.x||overlay.y!==y)overlay.setPosition(actor.x,y);if(overlay.depth!==depth)overlay.setDepth(depth);if(!overlay.visible)overlay.setVisible(true)}
+      for(const overlay of parts){const frameIndex=overlay.getData('frameOffset')+frame;if(overlay.getData('lastModularFrame')!==frameIndex){overlay.setFrame(frameIndex);overlay.setData('lastModularFrame',frameIndex)}const kind=overlay.getData('partKind'),isBack=row===1,depth=actor.depth+(isBack&&['hair','accessory'].includes(kind)?-0.12:kind==='outfit'?.02:kind==='face'?.04:kind==='hair'?.06:.08);const y=actor.y-this.ramparts.visualHeight(npc);if(overlay.x!==actor.x||overlay.y!==y)overlay.setPosition(actor.x,y);if(overlay.depth!==depth)overlay.setDepth(depth);if(!overlay.visible)overlay.setVisible(true)}
     }
   }
   getModularAppearanceState(){const npcs=this.populationWorld?.npcs??[],parts=npcs.map(n=>n.visualParts).filter(Boolean),samples=npcs.slice(0,8).map(n=>{const actor=this.npcSprites.get(n.id);return{id:n.id,name:n.name,role:n.populationRole,visualStyleId:n.visualStyleId,visualParts:n.visualParts,baseFrame:Number(actor?.frame?.name??0),moving:Boolean(actor?.getData('moving')),layers:(this.modularVisuals.get(n.id)??[]).map(s=>({id:s.getData('partId'),frame:Number(s.frame?.name??0),visible:s.visible}))}}),frameTimes=this.frameSamples??[];return{population:npcs.length,assigned:parts.length,distinct:{hair:new Set(parts.map(p=>p.hairId)).size,face:new Set(parts.map(p=>p.faceId)).size,outfit:new Set(parts.map(p=>p.outfitId)).size,accessory:new Set(parts.flatMap(p=>p.accessoryIds)).size,completeLooks:new Set(parts.map(p=>JSON.stringify(p))).size},renderedLayers:[...this.modularVisuals.values()].reduce((n,a)=>n+a.length,0),visibleLayerSprites:[...this.modularVisuals.values()].flat().filter(s=>s.visible).length,frameTimeAverageMs:frameTimes.length?Number((frameTimes.reduce((a,b)=>a+b,0)/frameTimes.length).toFixed(2)):null,textures:NPC_MODULAR_TEXTURES.map(key=>({key,loaded:this.textures.exists(`modular-${key}`)})),sample:samples}}
-  npcRoleTitle(npc){const title=this.sectCampus?.titles.get(npc.id);if(title)return title;if(npc.authorityRole==='city_master')return'Thành chủ Thanh Vân Thành';if(npc.authorityRole==='sect_leader'||npc.populationRole==='sect_leader')return'Tông chủ Thanh Vân Tông';return({commoner:'Dân thường',low_disciple:'Đệ tử Thanh Vân Tông',elder:'Trưởng lão',merchant:'Thương nhân',tavern_staff:'Nhân viên tửu quán',city_guard:'Vệ binh Thanh Vân Thành',repair_worker:'Thợ sửa chữa',hunter:'Thợ săn',herb_gatherer:'Người hái dược',quest_clerk:'Thư lại nhiệm vụ',independent_cultivator:'Tán tu'})[npc.populationRole]??npc.populationDuty??npc.populationRole}
+  npcRoleTitle(npc){if(npc.minor)return'Trẻ nhỏ';if(npc.vocation)return VOCATIONS[npc.vocation]?.[0]??'Cư dân';const title=this.sectCampus?.titles.get(npc.id);if(title)return title;if(npc.authorityRole==='city_master')return'Thành chủ Thanh Vân Thành';if(npc.authorityRole==='sect_leader'||npc.populationRole==='sect_leader')return'Tông chủ Thanh Vân Tông';return({commoner:'Dân thường',low_disciple:'Đệ tử Thanh Vân Tông',elder:'Trưởng lão',merchant:'Thương nhân',tavern_staff:'Nhân viên tửu quán',city_guard:'Vệ binh Thanh Vân Thành',repair_worker:'Thợ sửa chữa',hunter:'Thợ săn',herb_gatherer:'Người hái dược',quest_clerk:'Thư lại nhiệm vụ',independent_cultivator:'Tán tu'})[npc.populationRole]??npc.populationDuty??npc.populationRole}
   selectNPC(id){const npc=this.populationWorld?.npcs.find(n=>n.id===id);if(!npc)return false;this.inspector?.close();this.closeNpcGift?.();this.selectedNpcId=id;if(!this.possessedNpcId){if(npc.underground)this.underground?.view.locate(npc);else{this.underground?.view.hide();this.cameras.main.centerOn(npc.x,npc.y);}}for(const drawer of ['world-map-menu','world-roster-panel','world-dev-menu'])document.getElementById(drawer).hidden=true;this.renderPossessionHud();this.refreshRoster();this.refreshHud();return true}
-  refreshRoster(){const list=document.getElementById('roster-list');if(!list||!this.populationWorld)return;const query=(document.getElementById('roster-search')?.value??'').trim().toLocaleLowerCase('vi'),npcs=this.populationWorld.npcs.filter(n=>n.alive&&(!query||`${residentName(n)} ${n.populationDuty??''} ${n.populationRole} ${n.profession}`.toLocaleLowerCase('vi').includes(query)));document.getElementById('roster-count').textContent=npcs.length+' cư dân';list.innerHTML=npcs.slice(0,108).map(n=>`<button class="roster-row" data-roster-npc="${n.id}"><span><b>${residentName(n)}</b><small>${this.npcRoleTitle(n)} · ${formatRealm(n)}</small></span><i>${residentActivity(n,this,n.id===this.possessedNpcId).activity}</i></button>`).join('');list.querySelectorAll('[data-roster-npc]').forEach(button=>button.onclick=()=>this.selectNPC(button.dataset.rosterNpc))}
+  refreshRoster(){const list=document.getElementById('roster-list');if(!list||!this.populationWorld)return;const query=(document.getElementById('roster-search')?.value??'').trim().toLocaleLowerCase('vi'),npcs=this.populationWorld.npcs.filter(n=>n.alive&&(!query||`${residentName(n)} ${n.populationDuty??''} ${n.vocation??''} ${n.populationRole} ${n.profession}`.toLocaleLowerCase('vi').includes(query)));document.getElementById('roster-count').textContent=npcs.length+' cư dân';list.innerHTML=npcs.map(n=>`<button class="roster-row" data-roster-npc="${n.id}"><span><b>${residentName(n)}</b><small>${this.npcRoleTitle(n)} · ${formatRealm(n)}</small></span><i>${residentActivity(n,this,n.id===this.possessedNpcId).activity}</i></button>`).join('');list.querySelectorAll('[data-roster-npc]').forEach(button=>button.onclick=()=>this.selectNPC(button.dataset.rosterNpc))}
   toggleDrawer(id){for(const other of ['world-map-menu','world-roster-panel','world-dev-menu']){const panel=document.getElementById(other);if(panel)panel.hidden=other===id?!panel.hidden:true}this.refreshRoster()}
   closeNpcCard(){if(this.possessedNpcId)return;this.closeNpcGift?.();this.selectedNpcId=null;this.renderPossessionHud()}
   initPossessionHud(){
@@ -584,8 +658,24 @@ export class RebuildWorldScene extends Phaser.Scene {
   restorePossession(){const session=this.populationWorld?.heaven?.possession;if(!session)return;const npc=this.populationWorld.npcs.find(n=>n.id===session.npcId&&n.alive&&!n.ascended);if(!npc){PossessionSystem.end(this.populationWorld.heaven);this.persistPopulation();return}this.possessedNpcId=npc.id;this.selectedNpcId=npc.id;this.cameraFollowSuspended=false;this.cameras.main.centerOn(npc.x,npc.y);this.worldPopulationToast(`Đã khôi phục nhập thân ${npc.name} sau khi tải lại.`)}
   getPossessionState(){const npc=this.populationWorld?.npcs.find(n=>n.id===this.possessedNpcId);return{active:Boolean(npc),npcId:npc?.id??null,name:npc?.name??null,hp:npc?.hp??null,x:npc?.x??null,y:npc?.y??null,realmIndex:npc?.realmIndex??null,inventory:npc?.inventory?.map(i=>({...i}))??[],divinePower:this.populationWorld?.heaven?.divinePower??0,targetFaunaId:this.selectedFaunaId}}
   getWeaponState(){const npcs=this.populationWorld?.npcs??[];return{provisioning:this.populationWorld?.weaponProvisioning??null,armed:npcs.filter(n=>weaponForNpc(n)).map(n=>({id:n.id,name:n.name,role:n.populationRole,weapon:weaponForNpc(n).id,owned:n.inventory.filter(i=>weaponForNpc({...n,equippedWeapon:i.itemId})).map(i=>i.itemId)})),unarmed:npcs.filter(n=>n.alive&&!weaponForNpc(n)).length,activeNpcId:this.possessedNpcId}}
-  equipPossessedWeapon(itemId){const npc=this.populationWorld?.npcs.find(n=>n.id===this.possessedNpcId&&n.alive);if((itemId==='training_crossbow'&&this.characterRigPreview?.npc!==npc)||this.characterRigPreview?.mount.locked||(itemId===ROD&&this.characterRigPreview?.mount.attached))return false;if(npc?.flight){this.worldPopulationToast('Hạ kiếm trước khi đổi trang bị.');return false}if(!npc||!(itemId===ROD ? hasRod(npc) && Boolean(npc.equippedWeapon=ROD) : setNpcWeapon(npc,itemId))){this.worldPopulationToast(itemId?'NPC không sở hữu vũ khí này.':'Không thể tháo vũ khí lúc này.');return false}this.heavenActions.stopFishing();this.syncWeaponVisuals();this.persistPopulation();this.refreshPossessionHud();this.worldPopulationToast(itemId?`Đã trang bị ${weaponForNpc(npc)?.name??itemName(itemId)}.`:'Đã tháo vũ khí.');return true}
-  syncWeaponVisuals(){if(!this.populationWorld)return;for(const npc of this.populationWorld.npcs){const actor=this.npcSprites.get(npc.id);if(!actor)continue;const weapon=weaponForNpc(npc);let overlay=this.weaponSprites.get(npc.id);
+  equipPossessedWeapon(itemId,instanceId=null){const npc=this.populationWorld?.npcs.find(n=>n.id===this.possessedNpcId&&n.alive);if((itemId==='training_crossbow'&&this.characterRigPreview?.npc!==npc)||this.characterRigPreview?.mount.locked||(itemId===ROD&&this.characterRigPreview?.mount.attached))return false;if(npc?.flight){this.worldPopulationToast('Hạ kiếm trước khi đổi trang bị.');return false}if(!npc||!(itemId===ROD ? hasRod(npc) && Boolean(npc.equippedWeapon=ROD) : setNpcWeapon(npc,itemId,instanceId))){this.worldPopulationToast(itemId?'NPC không sở hữu vũ khí này.':'Không thể tháo vũ khí lúc này.');return false}this.heavenActions.stopFishing();this.syncWeaponVisuals();this.persistPopulation();this.refreshPossessionHud();this.worldPopulationToast(itemId?`Đã trang bị ${weaponForNpc(npc)?.name??itemName(itemId)}.`:'Đã tháo vũ khí.');return true}
+  syncWeaponVisuals(){if(!this.populationWorld)return;const martialArms=this.martialCombat?.arms;martialArms?.clear();for(const npc of this.populationWorld.npcs){const actor=this.npcSprites.get(npc.id);if(!actor)continue;let overlay=this.weaponSprites.get(npc.id);
+    if(!npc.alive||!actor.visible){if(overlay?.visible)overlay.setVisible(false);continue}
+    const weapon=weaponForNpc(npc);
+    if(weapon?.grade!==undefined&&!npc.flight)martialArms?.set(npc.id,weapon);
+    if(weapon?.grade!==undefined&&actor.alpha>=.01&&!npc.flight){
+      if(!overlay){overlay=this.add.sprite(actor.x,actor.y,'martial-arms',weapon.icon);this.weaponSprites.set(npc.id,overlay);}
+      if(overlay.texture.key!=='martial-arms'||Number(overlay.frame.name)!==weapon.icon)overlay.setTexture('martial-arms',weapon.icon);
+      const direction=actor.anims.currentAnim?.key?.split('_').at(-1)??'down';
+      const swing=this.weaponAttackStates.get(npc.id);
+      const angle={up:-.12,right:.92,down:2.7,left:-.94}[direction]??0;
+      overlay.setData('weaponId',weapon.id).setOrigin(.5,.75)
+        .setPosition(actor.x+(direction==='left'?-7:7),actor.y-13-this.ramparts.visualHeight(npc))
+        .setRotation(angle+(swing&&this.time.now<swing.until?.5:0))
+        .setDepth(actor.depth+(direction==='up'?-.15:.15)).setVisible(true);
+      continue;
+    }
+    if(overlay?.texture.key==='martial-arms'&&(!weapon||weapon.grade===undefined)){overlay.destroy();this.weaponSprites.delete(npc.id);overlay=null;}
     if(npc.flight||actor.alpha<.01||weapon?.kind==='crossbow'){if(overlay?.visible)overlay.setVisible(false);continue}
     if(npc.wallLevel&&rodEquipped(npc)){overlay?.setVisible(false);continue}
     if(rodEquipped(npc)){syncRodVisual(this,npc,actor,overlay);continue}
@@ -598,9 +688,9 @@ export class RebuildWorldScene extends Phaser.Scene {
     const candidateId=targetId??(this.selectedNpcId&&this.selectedNpcId!==npc.id?this.selectedNpcId:this.selectedFaunaId),victim=candidateId?this.populationWorld.npcs.find(n=>n.id===candidateId&&n.alive&&!n.underground):null,fauna=candidateId?this.populationWorld.environment.fauna.find(f=>f.id===candidateId&&f.alive):null,target=victim??fauna;if(aboveGroundCombat(victim))return{ok:false,reason:'airborne-target'};if(!target){this.worldPopulationToast('Chọn yêu thú hoặc NPC còn sống làm mục tiêu.');return{ok:false,reason:'no-target'}}
     const weapon=weaponForNpc(npc),combo=this.playerCombo%3+1,mode=weaponAttackMode(weapon,combo,skill),facing=this.facePoint(npc,target),fallback=weapon?mode:{animation:`unarmed_${combo}`,hit:'unarmed',range:54,width:54,multiplier:1};const range=fallback.range??54,width=fallback.width??54;if(!isInWeaponArc(npc.x,npc.y,target.x,target.y,facing,{...fallback,range,width})){this.worldPopulationToast('Mục tiêu nằm ngoài tầm hoặc lệch hướng đòn đánh.');return{ok:false,reason:'out-of-range'}}if(!this.clearCombatLine(npc,target)){this.worldPopulationToast('Vật cản hoặc độ cao đang chắn đòn đánh.');return{ok:false,reason:'blocked'}}
     if(skill){npc.mp-=8;this.playerSkillCooldown=1.1}else this.playerAttackCooldown=weapon?.kind==='dao'?.52:.42;this.playerCombo=combo;actor.play(`${this.npcTextureFor(npc)}_idle_${facing}`,true);this.playWeaponPose(npc,fallback,facing);const fxKind=weapon?.kind==='dao'?'dao':skill&&weapon?.kind==='jian'?'thrust':weapon?.kind==='jian'?'jian':'dao';this.spawnWeaponFx(fxKind,facing,(npc.x+target.x)/2,(npc.y+target.y)/2-this.ramparts.height(npc),this.ramparts.depth(npc)+15);actor.setTint(0xd5f4dc);this.time.delayedCall(100,()=>actor.clearTint());const stats=cultivationStats(npc),raw=damageForStrike(npc.realmIndex,combo,skill,stats.attack,fallback.multiplier??1);let result;
-    if(victim){const victimStats=cultivationStats(victim),damage=Math.max(1,Math.floor(raw-victimStats.defense));result=this.reportCombat(npc.id,victim.id,damage,{eventId:`possessed-weapon:${createWorldUuid()}`});if(result.ok)this.spawnWeaponFx('jian',facing,victim.x,victim.y-this.ramparts.height(victim),this.ramparts.depth(victim)+15);this.worldPopulationToast(result.incident?'Luật thành: báo động vì tấn công NPC trái phép.':`Đã đánh ${victim.name} bằng ${weapon?.name??'tay không'} · ${damage} sát thương.`)}else{result=this.damageFaunaEntity(fauna.id,npc.id,raw,`possessed-weapon:${createWorldUuid()}`,range);if(result.ok){this.spawnWeaponFx('jian',facing,fauna.x,fauna.y);this.worldPopulationToast(result.fauna.alive?`Trúng ${faunaName(fauna)} bằng ${weapon?.name??'tay không'} · -${result.damage} HP.`:`${faunaName(fauna)} bị hạ · ${result.drops[0]?.itemId??'không có loot'}.`)}else this.worldPopulationToast('Đòn đánh hụt hoặc mục tiêu đã đổi trạng thái.')}
+    if(victim){result=this.reportCombat(npc.id,victim.id,raw,{eventId:`possessed-weapon:${createWorldUuid()}`,skill:skill?'qi-sword':undefined});if(result.ok)this.spawnWeaponFx('jian',facing,victim.x,victim.y-this.ramparts.height(victim),this.ramparts.depth(victim)+15);this.worldPopulationToast(result.incident?'Luật thành: báo động vì tấn công NPC trái phép.':`Đã đánh ${victim.name} bằng ${weapon?.name??'tay không'} · ${Math.round(result.damage??0)} sát thương.`)}else{result=this.damageFaunaEntity(fauna.id,npc.id,raw,`possessed-weapon:${createWorldUuid()}`,range,skill?'qi-sword':undefined);if(result.ok){this.spawnWeaponFx('jian',facing,fauna.x,fauna.y);this.worldPopulationToast(result.fauna.alive?`Trúng ${faunaName(fauna)} bằng ${weapon?.name??'tay không'} · -${result.damage.toFixed(1)} HP.`:`${faunaName(fauna)} bị hạ · ${result.drops[0]?.itemId??'không có loot'}.`)}else this.worldPopulationToast('Đòn đánh hụt hoặc mục tiêu đã đổi trạng thái.')}
     this.refreshHud();return{ok:Boolean(result?.ok??result?.eventId),weapon:weapon?.id??null,damage:result?.damage??null,mode:fallback.animation,skill}}
-  beginPossession(){document.getElementById("heaven-shop").hidden=true;const npc=this.populationWorld?.npcs.find(n=>n.id===this.selectedNpcId);if(!npc)return;if(npc.skyStep||tribulationLocked(npc)){this.worldPopulationToast(npc.skyStep?'Tu sĩ đang lướt mây.':'Tu sĩ đang chịu Thiên Kiếp.');return;}const result=PossessionSystem.start(this.populationWorld.heaven,npc);if(!result.ok){this.worldPopulationToast(result.message);return}this.prePossessionFaunaTarget=npc.faunaHuntTargetId;this.possessedNpcId=npc.id;this.inspector?.close();this.flyingSword.takeControl(npc);this.cameraFollowSuspended=false;this.selectedNpcId=npc.id;this.npcRoutes.delete(npc.id);this.cameras.main.centerOn(npc.x,npc.y);syncDivinePower(this.populationWorld,`Nhập thân ${npc.name}`);this.persistPopulation();this.worldPopulationToast(result.message);this.refreshHud()}
+  beginPossession(){document.getElementById("heaven-shop").hidden=true;const npc=this.populationWorld?.npcs.find(n=>n.id===this.selectedNpcId);if(!npc||npc.minor)return;if(npc.skyStep||tribulationLocked(npc)){this.worldPopulationToast(npc.skyStep?'Tu sĩ đang lướt mây.':'Tu sĩ đang chịu Thiên Kiếp.');return;}const result=PossessionSystem.start(this.populationWorld.heaven,npc);if(!result.ok){this.worldPopulationToast(result.message);return}this.prePossessionFaunaTarget=npc.faunaHuntTargetId;this.possessedNpcId=npc.id;this.inspector?.close();this.flyingSword.takeControl(npc);this.cameraFollowSuspended=false;this.selectedNpcId=npc.id;this.npcRoutes.delete(npc.id);this.cameras.main.centerOn(npc.x,npc.y);syncDivinePower(this.populationWorld,`Nhập thân ${npc.name}`);this.persistPopulation();this.worldPopulationToast(result.message);this.refreshHud()}
   endPossession(message='Đã rời nhập thân. NPC tiếp tục tự chủ từ vị trí hiện tại.'){if(!this.possessedNpcId)return;this.underground?.view.hide();if(this.civic?.panel.open)this.civic.panel.element.close();this.closeSkyAim();this.merchantPanel?.close();this.heavenActions.stopFishing();const npc=this.populationWorld.npcs.find(n=>n.id===this.possessedNpcId);PossessionSystem.end(this.populationWorld.heaven);this.possessedNpcId=null;this.cameraFollowSuspended=false;if(npc?.alive){
       if(npc.flight){npc.faunaHuntTargetId=this.prePossessionFaunaTarget;this.prePossessionFaunaTarget=null;this.flyingSword.releaseControl(npc);this.persistPopulation();this.worldPopulationToast(message);this.refreshHud();return}
       npc.faunaHuntTargetId=this.prePossessionFaunaTarget;this.prePossessionFaunaTarget=null;npc.actionTarget={x:npc.x,y:npc.y};npc.goalAction='idle';npc.action='idle';npc.shortGoal='Trở lại nhịp sống tự chủ';npc.routeIndex=0;this.npcRoutes.delete(npc.id)}this.persistPopulation();this.worldPopulationToast(message);this.refreshHud()}
@@ -798,13 +888,24 @@ export class RebuildWorldScene extends Phaser.Scene {
   monsterHitNpc(target,amount,source,eventId){
     if(!target.alive||aboveGroundCombat(target)||this.monsterSafe(target))return;
     const cfg=this.populationWorld.environment.fauna.find(b=>b.id===source);
-    const damage=Math.max(1,amount*(1+(cfg?.realmIndex??0)*.45)-Math.floor(this.heavenActions.defense(target)*.28));
+    const history=this.populationWorld.environment.processedEventIds;
+    if(!cfg||!Number.isFinite(amount)||amount<=0||history.includes(eventId))return;
+    history.push(eventId);if(history.length>2000)history.shift();
+    const sourceStats=faunaStats(cfg),targetStats=cultivationStats(target);
+    const result=resolveDamage(amount,this.heavenActions.defense(target),sourceStats.rank,target,this.damageModifiers(cfg,target));
+    const damage=result.damage;
+    this.lastDamageTrace={...result,eventId,attackerId:source,targetId:target.id,sourceStats,targetStats,
+      hpBefore:target.hp,hpAfter:Math.max(0,target.hp-damage),death:damage>=target.hp};
     recordCombatDamage(cfg,target,this.populationWorld.environment.faunaClockMs);
+    if(cfg){this.martialCombat?.engage(target,cfg,true);this.martialCombat?.engage(cfg,target);}
     target.hp=Math.max(0,target.hp-damage);
+    this.martialCombat?.interrupt(target,damage);
     this.cultivation?.interrupt(target);
     if(target.flight)this.flyingSword.land(target);
     target.safety=Math.max(0,target.safety-7);
-    if(cfg&&!this.expeditions?.has(target)&&target.id!==this.possessedNpcId&&target.hp>0&&(target.populationRole!=='hunter'||target.hp<cultivationStats(target).hpMax*.48))this.evadeFauna(target,cfg,this.faunaNow());
+    if(cfg&&!this.expeditions?.has(target)&&target.id!==this.possessedNpcId&&target.hp>0&&
+      (target.populationRole!=='hunter'||target.hp<cultivationStats(target).hpMax*.48)&&!this.martialCombat?.willStand(target,cfg))
+      this.evadeFauna(target,cfg,this.faunaNow());
     faunaEvent(this.populationWorld,eventId,'fauna-retaliation',source,target.id,`${target.name} chịu ${damage} sát thương từ yêu thú.`);
     if(target.hp===0){
       target.alive=false;target.deathCause=cfg?'Bị '+faunaName(cfg)+' hạ':'Bị đòn yêu thú hạ';
@@ -882,16 +983,22 @@ export class RebuildWorldScene extends Phaser.Scene {
     if(!point)return false;
     this.navigateCameraTo(point.x,point.y,'habitat',false,.97);return true;
   }
-  damageFaunaEntity(id,attackerId,damage,eventId,maxRange=52){const attacker=this.populationWorld.npcs.find(n=>n.id===attackerId&&n.alive),target=this.populationWorld.environment?.fauna?.find(f=>f.id===id&&f.alive),playerAttack=attackerId===this.possessedNpcId;if(!attacker||(!playerAttack&&attacker.populationRole!=='hunter')||!target||Math.hypot(attacker.x-target.x,attacker.y-target.y)>maxRange)return{ok:false,reason:'attacker-or-range'};return this.applyFaunaDamage(target,attacker,damage,eventId)}
-  applyFaunaDamage(target,attacker,damage,eventId,ranged=false){
+  damageFaunaEntity(id,attackerId,damage,eventId,maxRange=52,skill){const attacker=this.populationWorld.npcs.find(n=>n.id===attackerId&&n.alive),target=this.populationWorld.environment?.fauna?.find(f=>f.id===id&&f.alive),playerAttack=attackerId===this.possessedNpcId;if(!attacker||(!playerAttack&&attacker.populationRole!=='hunter')||!target||Math.hypot(attacker.x-target.x,attacker.y-target.y)>maxRange)return{ok:false,reason:'attacker-or-range'};return this.applyFaunaDamage(target,attacker,damage,eventId,Boolean(skill),skill)}
+  damageModifiers(attacker,target){
+    return {outgoing:this.martialCombat?.outgoing(attacker,1)??1,shield:1-(this.martialCombat?.guard(target,1)??1)};
+  }
+  applyFaunaDamage(target,attacker,damage,eventId,ranged=false,skill){
     if(attacker?.wallLevel)return {ok:false,reason:'different-floor'};
     if(target.species==='eagle'&&target.altitude>=18&&!ranged)return {ok:false,reason:'airborne'};
-    const id=target.id,result=damageFauna(this.populationWorld,id,attacker.id,damage,eventId);
+    const id=target.id,result=damageFauna(this.populationWorld,id,attacker.id,damage,eventId,{...this.damageModifiers(attacker,target),skill,resistance:faunaResistance(target.species,MARTIAL_SKILLS[skill]?.element)});
     if(!result)return {ok:false,reason:'invalid-or-duplicate'};
+    this.lastDamageTrace=result.trace;
     if(!result.fauna.alive){
       const habitat=this.faunaZones.find(z=>z.zoneId===result.fauna.zoneId);
       queueFaunaRespawn(this.populationWorld,result.fauna,faunaHabitat(habitat,result.fauna.species)?.respawnMs??20000);
       this.syncFaunaDrops();
+      this.martialEconomy?.reward(result.fauna,attacker);
+      if(attacker?.populationRole==='hunter'&&eventId.startsWith('martial:'))attacker.faunaHuntsToday=(attacker.faunaHuntsToday??0)+1;
     }
     this.requestBackgroundSave();
     return {ok:true,...result};
@@ -966,6 +1073,16 @@ export class RebuildWorldScene extends Phaser.Scene {
     }
     return{x:beast.x,y:beast.y};
   }
+  canRiskHunt(npc,beast){
+    const ours=cultivationStats(npc),theirs=faunaStats(beast,this.populationWorld.environment.faunaClockMs);
+    // Hunters use visible realm, track/size estimates and their own kit. They do not inspect unseen buffs or the beast's exact HP.
+    if(theirs.rank.realmIndex-npc.realmIndex>=2)return false;
+    const profile=npc.aiProfile?.axes??{},risk=Math.max(.55,Math.min(1.8,1+((profile.courage??50)-(profile.caution??50))*.011));
+    const dealt=resolveDamage(ours.attack,theirs.base.defense,npc,theirs.rank).damage;
+    const taken=resolveDamage(theirs.base.attack,ours.defense,theirs.rank,npc).damage;
+    const memory=(npc.grudges?.[beast.id]??0)>0?.86:1;
+    return dealt/Math.max(1,theirs.base.hp)>=taken/Math.max(1,npc.hp)*.36/(risk*memory);
+  }
   tickHunters(now){
     const world=this.populationWorld,env=world.environment,day=world.clock.day,hunters=world.npcs.filter(n=>n.alive&&!n.underground&&n.populationRole==='hunter'&&n.id!==this.possessedNpcId&&!this.expeditions?.has(n)&&!this.westTreasures?.directs(n)&&!this.recovery?.drives(n)&&!n.marketVisit&&!n.decisionSlot?.startsWith('sect-campus:')&&!this.sectCampus?.orderFor(n));
     for(const h of hunters){
@@ -991,12 +1108,14 @@ export class RebuildWorldScene extends Phaser.Scene {
       if(!target){
         h.faunaHuntTargetId=undefined;
         if(h.hp/stats.hpMax<(this.recovery?.thresholds(h).seek??.5)||(h.faunaHuntsToday??0)>=1||world.clock.minute<360||world.clock.minute>1140)continue;
-        target=env.fauna.filter(f=>f.alive&&tolerance.allowedPower*(h.hp/stats.hpMax<(this.recovery?.thresholds(h).careful??.8) ? .80 : 1)>=(faunaCombatPower(f.species,f.rank)+(f.realmIndex??0)*38)&&
+        target=env.fauna.filter(f=>f.alive&&this.canRiskHunt(h,f)&&
           Math.hypot(h.x-f.x,h.y-f.y)<tolerance.search&&this.canReachPoint(h,f)&&!hunters.some(other=>other!==h&&other.faunaHuntTargetId===f.id))
           .sort((a,b)=>Math.hypot(h.x-a.x,h.y-a.y)-Math.hypot(h.x-b.x,h.y-b.y))[0];
         if(!target)continue;
         h.faunaHuntTargetId=target.id;
       }
+      if(!this.canRiskHunt(h,target)){this.evadeFauna(h,target,now);h.faunaHuntTargetId=undefined;continue;}
+      if(this.martialCombat?.ai(h,target))continue;
       const weapon=weaponForNpc(h),mode=weaponAttackMode(weapon,1,false),range=weapon?Math.min(70,mode.range??52):38;
       h.actionTarget=this.hunterApproach(h,target);h.goalAction='fight';h.shortGoal='Đang săn '+FAUNA_SPECIES[target.species].name;
       if(Math.hypot(h.x-target.x,h.y-target.y)>range||now<(h.faunaAttackReadyAt??0)||!this.monsterLine(h,target))continue;
@@ -1006,12 +1125,14 @@ export class RebuildWorldScene extends Phaser.Scene {
       if(result.ok&&!result.fauna.alive)h.faunaHuntsToday=(h.faunaHuntsToday??0)+1;
     }
   }
+  applyMartialScenery(cast,point){return applyMartialScenery(this,cast,point)}
+  buildingOpen(id){return (this.populationWorld.environment.objects.find(o=>o.id===id)?.hp??1)>0;}
   damageBuilding(id,eventId,damage,realmIndex=0){const result=damageWorldRebuildBuilding(this.populationWorld,id,eventId,damage,realmIndex);if(result){this.refreshProfessionVisuals();this.persistPopulation();this.renderPopulationDebug()}return result}
-  refreshProfessionVisuals(){if(!this.environmentGraphics||!this.populationWorld?.environment)return;const g=this.environmentGraphics;g.clear();for(const obj of this.populationWorld.environment.objects){const sprite=this.buildingSprites.get(obj.id);if(!sprite)continue;const node=this.resourceNodeSprites.get(obj.id);if(node)node.setVisible(obj.status!=='destroyed');if(obj.status==='intact')continue;const alpha=obj.status==='repairing'?.22:.42,x=sprite.x-sprite.displayWidth*.30,y=sprite.y+sprite.displayHeight*.18,w=sprite.displayWidth*.6,h=6;g.fillStyle(0x241c16,.72).fillRect(x,y,w,h);g.fillStyle(obj.status==='repairing'?0x65cba0:0xd37755,alpha+.45).fillRect(x,y,w*Math.max(.03,obj.hp/obj.maxHp),h);if(obj.status==='damaged'||obj.status==='destroyed'){g.lineStyle(2,0x522d27,.82);g.lineBetween(x+w*.36,y-8,x+w*.43,y+10);g.lineBetween(x+w*.43,y+10,x+w*.51,y+3)}}for(const node of this.populationWorld.environment.resourceNodes??[]){const sprite=this.resourceNodeSprites.get(node.id);if(sprite){
+  refreshProfessionVisuals(){if(!this.environmentGraphics||!this.populationWorld?.environment)return;const g=this.environmentGraphics;g.clear();refreshBuildingFootprints(this);for(const obj of this.populationWorld.environment.objects){const sprite=this.buildingSprites.get(obj.id);if(!sprite)continue;drawBuildingWear(g,sprite,obj);const node=this.resourceNodeSprites.get(obj.id);if(node)node.setVisible(obj.status!=='destroyed');if(obj.status==='intact')continue;const alpha=obj.status==='repairing'?.22:.42,x=sprite.x-sprite.displayWidth*.30,y=sprite.y+sprite.displayHeight*.18,w=sprite.displayWidth*.6,h=6;g.fillStyle(0x241c16,.72).fillRect(x,y,w,h);g.fillStyle(obj.status==='repairing'?0x65cba0:0xd37755,alpha+.45).fillRect(x,y,w*Math.max(.03,obj.hp/obj.maxHp),h);if(obj.status==='damaged'||obj.status==='destroyed'){g.lineStyle(2,0x522d27,.82);g.lineBetween(x+w*.36,y-8,x+w*.43,y+10);g.lineBetween(x+w*.43,y+10,x+w*.51,y+3)}}for(const node of this.populationWorld.environment.resourceNodes??[]){const sprite=this.resourceNodeSprites.get(node.id);if(sprite){
       const frame=node.amount>0?20:25;
       if(Number(sprite.frame.name)!==frame)sprite.setFrame(frame);
     }}}
-  reportCombat(attackerId,victimId,damage,options={}){const attacker=this.populationWorld.npcs.find(n=>n.id===attackerId),victim=this.populationWorld.npcs.find(n=>n.id===victimId);if(!attacker?.alive||!victim?.alive||attacker.underground||victim.underground||attacker===victim||!Number.isFinite(damage)||damage<=0)return{ok:false,reason:'invalid'};if((attacker.wallLevel??0)!==(victim.wallLevel??0))return{ok:false,reason:'different-floor'};if(attacker.flight||aboveGroundCombat(victim)&&!options.airborne)return{ok:false,reason:'flight'};if(victim.flight)this.flyingSword.land(victim);const eventId=options.eventId??`combat:${this.populationWorld.clock.day}:${this.populationWorld.clock.minute}:${attackerId}:${victimId}:${createWorldUuid()}`;if(this.populationWorld.events.some(e=>e.id===eventId))return{ok:false,reason:'duplicate'};recordCombatDamage(attacker,victim,this.populationWorld.environment.faunaClockMs);victim.hp=Math.max(0,victim.hp-damage);this.cultivation?.interrupt(victim);victim.grudges??={};victim.grudges[attackerId]=(victim.grudges[attackerId]??0)+1;victim.relationships[attackerId]=Math.max(-100,(victim.relationships[attackerId]??0)-Math.max(3,Math.ceil(damage/8)));victim.memories.push({day:this.populationWorld.clock.day,text:`${attacker.name} gây ${Math.round(damage)} sát thương.`,kind:'combat',otherId:attackerId});if(victim.memories.length>12)victim.memories.shift();this.populationWorld.events.push({id:eventId,day:this.populationWorld.clock.day,minute:this.populationWorld.clock.minute,type:'npc-combat-hit',actorId:attackerId,targetId:victimId,description:`${attacker.name} gây ${Math.round(damage)} sát thương cho ${victim.name}.`,status:'occurred'});const report={eventId,attackerId,victimId,damage,authorizedDuel:Boolean(options.authorizedDuel),retaliation:Boolean(options.retaliation)};const law=this.civic?this.civic.violence(report):reportCityCombat(this.populationWorld,report);if(victim.hp<=0){victim.alive=false;victim.deathCause=`Bị ${attacker.name} đánh bại`;creditDeath(this.populationWorld,victim,'npc-death',victim.deathCause);this.npcSprites.get(victimId)?.setVisible(false)}if(law.incident){for(const id of [...law.responderIds,...(law.cityMasterId?[law.cityMasterId]:[])]){const n=this.populationWorld.npcs.find(x=>x.id===id);this.npcRoutes.delete(id);if(n)n.actionTarget={x:attacker.x,y:attacker.y}}this.cityLawTimers??=new Map();this.cityLawTimers.set(law.incident.id,performance.now());this.worldPopulationToast(`Báo động thành: lính đang tới hiện trường · cấp ${law.incident.severity}.`)}else if(law.caseId&&attacker.id===this.possessedNpcId)this.worldPopulationToast('Vụ việc đã phát sinh. Người chứng kiến có thể đi trình báo.');this.persistPopulation();this.renderPopulationDebug();return{...law,eventId,damage}}
+  reportCombat(attackerId,victimId,damage,options={}){const attacker=this.populationWorld.npcs.find(n=>n.id===attackerId),victim=this.populationWorld.npcs.find(n=>n.id===victimId);if(!attacker?.alive||!victim?.alive||attacker.underground||victim.underground||attacker===victim||!Number.isFinite(damage)||damage<=0)return{ok:false,reason:'invalid'};if((attacker.wallLevel??0)!==(victim.wallLevel??0))return{ok:false,reason:'different-floor'};if(attacker.flight||aboveGroundCombat(victim)&&!options.airborne)return{ok:false,reason:'flight'};if(victim.flight)this.flyingSword.land(victim);const eventId=options.eventId??`combat:${this.populationWorld.clock.day}:${this.populationWorld.clock.minute}:${attackerId}:${victimId}:${createWorldUuid()}`;if(this.populationWorld.events.some(e=>e.id===eventId))return{ok:false,reason:'duplicate'};recordCombatDamage(attacker,victim,this.populationWorld.environment.faunaClockMs);this.martialCombat?.engage(victim,attacker,true);this.martialCombat?.engage(attacker,victim);const sourceStats=cultivationBreakdown(attacker),targetStats=cultivationStats(victim);const trace=resolveDamage(damage,this.heavenActions.defense(victim),attacker,victim,this.damageModifiers(attacker,victim));damage=trace.damage;this.lastDamageTrace={...trace,eventId,skill:options.skill,attackerId,victimId,sourceStats,targetStats,hpBefore:victim.hp,hpAfter:Math.max(0,victim.hp-damage),death:damage>=victim.hp};victim.hp=Math.max(0,victim.hp-damage);this.martialCombat?.interrupt(victim,damage);this.cultivation?.interrupt(victim);victim.grudges??={};victim.grudges[attackerId]=(victim.grudges[attackerId]??0)+1;victim.relationships[attackerId]=Math.max(-100,(victim.relationships[attackerId]??0)-Math.max(3,Math.ceil(damage/8)));victim.memories.push({day:this.populationWorld.clock.day,text:`${attacker.name} gây ${Math.round(damage)} sát thương.`,kind:'combat',otherId:attackerId});if(victim.memories.length>12)victim.memories.shift();this.populationWorld.events.push({id:eventId,day:this.populationWorld.clock.day,minute:this.populationWorld.clock.minute,type:'npc-combat-hit',actorId:attackerId,targetId:victimId,description:`${attacker.name} gây ${Math.round(damage)} sát thương cho ${victim.name}.`,status:'occurred'});const report={eventId,attackerId,victimId,damage,authorizedDuel:Boolean(options.authorizedDuel),retaliation:Boolean(options.retaliation)};const law=this.civic?this.civic.violence(report):reportCityCombat(this.populationWorld,report);if(victim.hp<=0){victim.alive=false;victim.deathCause=`Bị ${attacker.name} đánh bại`;creditDeath(this.populationWorld,victim,'npc-death',victim.deathCause);this.npcSprites.get(victimId)?.setVisible(false)}if(law.incident){for(const id of [...law.responderIds,...(law.cityMasterId?[law.cityMasterId]:[])]){const n=this.populationWorld.npcs.find(x=>x.id===id);this.npcRoutes.delete(id);if(n)n.actionTarget={x:attacker.x,y:attacker.y}}this.cityLawTimers??=new Map();this.cityLawTimers.set(law.incident.id,performance.now());this.worldPopulationToast(`Báo động thành: lính đang tới hiện trường · cấp ${law.incident.severity}.`)}else if(law.caseId&&attacker.id===this.possessedNpcId)this.worldPopulationToast('Vụ việc đã phát sinh. Người chứng kiến có thể đi trình báo.');if(options.deferSave)this.requestBackgroundSave();else this.persistPopulation();this.renderPopulationDebug();return{...law,eventId,damage}}
   worldPopulationToast(message){const node=document.getElementById('population-toast')??document.createElement('div');node.id='population-toast';node.textContent=message;node.style.cssText='position:fixed;left:50%;top:78px;transform:translateX(-50%);z-index:30;padding:8px 12px;background:#111d18ed;border:1px solid #c4a35c;color:#f0dfb0;font:12px Georgia,serif';document.body.append(node);clearTimeout(this.populationToastTimer);this.populationToastTimer=setTimeout(()=>node.remove(),2600)}
   renderPopulationDebug(){if(!this.populationDebug||this.populationDebug.hidden||!this.populationWorld)return;const s=this.getPopulationState(),jobs=this.getProfessionState(),roles=Object.entries(s.counts).map(([role,count])=>`<div>${role.replaceAll('_',' ')} <b>${count}</b></div>`).join(''),states=Object.entries(s.states).map(([name,count])=>`${name} ${count}`).join(' · '),repair=jobs.repairers.map(n=>{const wood=n.materials.find(i=>i.itemId==='wood')?.count??0,ore=n.materials.find(i=>i.itemId==='iron_ore')?.count??0;return`${n.id.slice(-2)} · ${n.status} · ${n.buildingId??'đợi việc'} · HP ${n.hp??'—'}/${n.maxHp??'—'} · ${n.progress}m · gỗ ${wood}, quặng ${ore}`}).join('<br>'),herbs=jobs.herbGatherers.map(n=>`${n.id.slice(-2)} · ${n.status} · ${n.nodeId??n.reason??'đợi node'} · còn ${n.nodeRemaining??'—'} · túi ${n.inventory.find(i=>i.itemId==='spirit_herb')?.count??0}`).join('<br>'),selected=s.selected?`<hr><b>${s.selected.name}</b><br>${s.selected.id}<br>${s.selected.role} · ${s.selected.profession} · ${s.selected.faction}<br>${s.selected.personality} · ${formatRealm(s.selected)} · HP ${Math.round(s.selected.hp)}<br>${s.selected.goal}<br>${s.selected.task?`${s.selected.task.kind}: ${s.selected.task.targetId||s.selected.task.lastReason} · ${s.selected.task.state}`:s.selected.reason}`:'';this.populationDebug.querySelector('section').innerHTML=`<b>NPC mới: ${s.alive}/${s.total} · visible ${s.visible}</b><div data-city-guards></div><br>${roles}<hr>${states}<hr><b>Thợ sửa</b><br>${repair}<hr><b>Hái dược</b><br>${herbs}<hr>FPS ${Math.round(s.fps)} · frame avg/p95 ${s.frameAvgMs.toFixed(1)}/${s.frameP95Ms.toFixed(1)}ms · AI avg/p95 ${s.aiCostMs.toFixed(2)}/${s.aiCostP95Ms.toFixed(2)}ms<br>AI ${s.goalEvaluations}/s · path ${s.pathfindingCalls}/s · collision ${s.collisionChecks}/s · CityLaw ${s.cityLawCostAvgMs.toFixed(3)}/${s.cityLawCostP95Ms.toFixed(3)}ms · kẹt ${s.states.stuck}${selected}`;this.guardDebug.render(this.populationDebug.querySelector('[data-city-guards]'))}
   assignPopulationTargets(){const markers=new Map(this.markers.map(m=>[m.id,m])),solids=this.collisionRects,occupied=[],possessed=this.possessedNpcId??this.populationWorld.heaven?.possession?.npcId;for(const npc of this.populationWorld.npcs)if(npc.workPosition)occupied.push(npc.workPosition);for(const npc of this.populationWorld.npcs){if(npc.id===possessed||npc.underground||npc.flight||npc.skyStep)continue;let id='city-center',role=npc.populationRole,index=Number(npc.id.match(/:(\d+)$/)?.[1]??0);if(npc.authorityRole==='city_master')id='city-hall-entrance';else if(role==='merchant')id=npc.stallId;else if(role==='tavern_staff')id='tavern-entrance';else if(role==='quest_clerk'||role==='repair_worker')id='quest-office';else if(role==='city_guard')id=npc.guardPostId;else if(role==='low_disciple'||role==='elder'||role==='sect_leader')id='sect-yard';else if(role==='hunter')id='forest-outer';else if(role==='herb_gatherer')id=index%2?'forest-outer':'south-outskirts';else if(role==='commoner')id=npc.profession==='nong_dan'?'south-outskirts':index%3?'city-center':'south-outskirts';else if(role==='independent_cultivator')id=npc.spawnRegionId==='forest-outer'?'forest-outer':npc.spawnRegionId==='south-suburb'?'south-outskirts':'city-center';const base=markers.get(id)??markers.get('city-center');if(!npc.workPosition){const a=(index%8)*Math.PI/4,radius=72+(index%6)*28,pos=this.findOpenPosition(base.x+Math.cos(a)*radius,base.y+Math.sin(a)*radius,solids,occupied);npc.workPosition=pos;npc.workplaceId=id;occupied.push(pos)}if(role==='city_guard'&&(!npc.patrolPoints||!npc.patrolPoints.length||!npc.patrolLayoutVersion)){const post=markers.get(id)??base,horizontal=id==='gate-east'||id==='gate-west';
@@ -1050,7 +1171,7 @@ export class RebuildWorldScene extends Phaser.Scene {
     const sources=world.environment.timberSources??[],reserved=new Set();
     for(const source of sources)if(source.renewAt!==undefined&&now>=source.renewAt)source.renewAt=undefined;
     for(const npc of world.npcs){
-      if(!npc.alive||npc.populationRole!=='commoner'||npc.profession!=='dan_thuong'||(npc.aiProfile?.seed??1)%4!==0||npc.authorityRole||npc.id===this.possessedNpcId)continue;
+      if(!npc.alive||npc.populationRole!=='commoner'||npc.profession!=='dan_thuong'||npc.vocation&&npc.vocation!=='citizen'||(npc.aiProfile?.seed??1)%4!==0||npc.authorityRole||npc.id===this.possessedNpcId)continue;
       if(npc.timberSourceId){
         if(npc.hunger>=68||npc.fatigue>=75||npc.safety<40||npc.hp<cultivationStats(npc).hpMax*.45||minute>=1140||minute<480||!sources.some(s=>s.id===npc.timberSourceId&&s.renewAt===undefined)){
           npc.timberSourceId=undefined;npc.decisionSlot=undefined;
@@ -1058,7 +1179,7 @@ export class RebuildWorldScene extends Phaser.Scene {
       }
     }
     for(const npc of world.npcs){
-      if(!npc.alive||npc.populationRole!=='commoner'||npc.profession!=='dan_thuong'||(npc.aiProfile?.seed??1)%4!==0||npc.authorityRole||npc.id===this.possessedNpcId||npc.timberSourceId||npc.hunger>=56||npc.fatigue>=65||npc.safety<45||npc.hp<cultivationStats(npc).hpMax*.5||minute<480||minute>=1080||npc.inventory.some(i=>i.itemId==='wood'&&i.count>0))continue;
+      if(!npc.alive||npc.populationRole!=='commoner'||npc.profession!=='dan_thuong'||npc.vocation&&npc.vocation!=='citizen'||(npc.aiProfile?.seed??1)%4!==0||npc.authorityRole||npc.id===this.possessedNpcId||npc.timberSourceId||npc.hunger>=56||npc.fatigue>=65||npc.safety<45||npc.hp<cultivationStats(npc).hpMax*.5||minute<480||minute>=1080||npc.inventory.some(i=>i.itemId==='wood'&&i.count>0))continue;
       const source=sources.filter(s=>s.renewAt===undefined&&!reserved.has(s.id)&&this.canReachPoint(npc,s)).sort((a,b)=>Math.hypot(a.x-npc.x,a.y-npc.y)-Math.hypot(b.x-npc.x,b.y-npc.y))[0];
       if(!source)continue;
       reserved.add(source.id);npc.timberSourceId=source.id;npc.goalAction='work';
@@ -1069,6 +1190,9 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.refreshLivingTimber();
   }
   setNpcGoalTarget(npc){if(npc.tribulation)return npc.tribulation.site;
+    const auctionTarget=this.weeklyAuction?.directives(npc);
+    if(auctionTarget&&npc.goalAction==='travel')return auctionTarget;
+    if(npc.emigration||npc.minor||this.populationLivelihoods?.directs(npc))return npc.actionTarget;
     if(npc.decisionSlot?.startsWith('civic:')||this.expeditions?.has(npc)||this.recovery?.drives(npc)||this.westTreasures?.directs(npc)||this.westWilds?.directs(npc)||npc.decisionSlot?.startsWith('society:'))return npc.actionTarget;
     if(npc.decisionSlot?.startsWith('sect-campus:'))return npc.decisionSlot==='sect-campus:array'&&npc.meditationSpot||npc.actionTarget;
     if(npc.lawResponse?.status==='responding'||npc.lawResponse?.status==='at-scene'){
@@ -1114,7 +1238,7 @@ export class RebuildWorldScene extends Phaser.Scene {
     const ids=new Set();
     for(const npc of this.populationWorld.npcs) {
       if(npc.faunaHuntTargetId||npc.lawResponse||npc.goalAction==='fight'||npc.goalAction==='flee'||
-        /^(duel:|mandate:|board:)/.test(npc.decisionSlot??''))ids.add(npc.id);
+        /^(duel:|mandate:|board:|weekly-auction$)/.test(npc.decisionSlot??''))ids.add(npc.id);
     }
     for(const fauna of this.populationWorld.environment.fauna) {
       if(fauna.alive&&fauna.targetNpcId)ids.add(fauna.targetNpcId);
@@ -1320,7 +1444,12 @@ export class RebuildWorldScene extends Phaser.Scene {
       this.westWilds?.tick();
       this.civic?.tick();
       this.expeditions?.tick();
+      this.lifeDirector?.tick();
+      this.populationLivelihoods?.tick();
+      this.martialEconomy?.tick();
+      this.weeklyAuction?.tick();
       this.underground?.tick();
+      this.opportunities?.tick();
       if(world.clock.minute%10===0)this.updateLivingTimber();
       this.refreshLivingTimber();
       this.refreshProfessionVisuals();
@@ -1344,8 +1473,11 @@ export class RebuildWorldScene extends Phaser.Scene {
     for(const entry of thinking){
       if(decisions>=10*workSlices||(decisions>0&&performance.now()-aiStart>=2*workSlices))break;
       const npc=entry.npc,target=npc.actionTarget??npc.home??npc;
-      if(npc.underground||npc.decisionSlot?.startsWith('civic:')||this.expeditions?.has(npc)||npc.flight||npc.skyStep||npc.marketVisit||npc.tribulation||this.recovery?.drives(npc)||this.westTreasures?.directs(npc)||this.westWilds?.directs(npc)||this.cultivation?.fleeing(npc)||this.flightArena?.targets.has(npc.id)){
-        if(npc.flight){npc.hunger=Math.min(100,npc.hunger+entry.minutes*.027);npc.fatigue=Math.min(100,npc.fatigue+entry.minutes*.008);}
+      if(npc.minor||npc.emigration||this.weeklyAuction?.directives(npc)||this.populationLivelihoods?.directs(npc)||npc.underground||npc.decisionSlot?.startsWith('civic:')||this.expeditions?.has(npc)||npc.flight||npc.skyStep||npc.marketVisit||npc.tribulation||this.recovery?.drives(npc)||this.westTreasures?.directs(npc)||this.westWilds?.directs(npc)||this.cultivation?.fleeing(npc)||this.flightArena?.targets.has(npc.id)){
+        if(npc.flight||npc.emigration||this.populationLivelihoods?.directs(npc)){
+          npc.hunger=Math.min(100,npc.hunger+entry.minutes*.027);
+          npc.fatigue=Math.min(100,npc.fatigue+entry.minutes*(npc.action==='work'?.018:.008));
+        }
         this.scheduler.finishDecision(entry);decisions++;continue;
       }
       const eligible=entry.workKey===npc.goalAction+':'+target.x+':'+target.y;
@@ -1382,6 +1514,7 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.skyStep.advance(world.npcs,simDelta);
     this.flyingSword.advance(world.npcs,simDelta,npc=>npc.id===this.possessedNpcId?this.swordInput():null);
     this.updatePossessedPlayer(inputDelta);
+    this.martialCombat?.advance(simDelta);
     this.heavenActions.updateFishing();
     this.heavenActions.updateShots(inputDelta);
     this.heavenActions.updateGuards();
@@ -1436,6 +1569,7 @@ export class RebuildWorldScene extends Phaser.Scene {
   }
   resolveWorkstation(entry,goal){
     const {npc}=entry;
+    if(this.weeklyAuction?.directives(npc)){this.workstations.release(npc.id);entry.waitingForSlot=false;return goal;}
     if(this.expeditions?.has(npc)||npc.wallLevel||this.ramparts.wantsDuty(npc)>=0){
       this.workstations.release(npc.id);this.cultivation.spots.release(npc);entry.waitingForSlot=false;return goal;
     }
@@ -1602,6 +1736,7 @@ export class RebuildWorldScene extends Phaser.Scene {
       sprite.setData('moving',false);
       return false;
     }
+    if(this.martialCombat?.casts.has(npc.id)||this.martialCombat?.rooted(npc)){sprite.setData('moving',false);return false;}
     if(this.cultivation?.standingUp(npc,this.time.now))return false;
     if(this.cultivation?.isSeated(npc)){
       sprite.setData('moving',false);npc.pathBlocked=false;entry.travelWatch=null;entry.velocity={x:0,y:0};
@@ -1839,8 +1974,15 @@ export class RebuildWorldScene extends Phaser.Scene {
     }
     if(key==='F'&&rig?.mount.attached)return this.worldPopulationToast('Hãy xuống Huyền Hổ trước khi câu cá.');
     if(key==='F')return this.heavenActions.fish(npc);
+    if(key==='J'&&this.martialCombat?.casts.has(npc.id))return;
     if(key==='J'&&rig?.attack())return;
     if(key==='J')return this.heavenActions.fire(npc,null);
+    const martial=this.martialCombat?.selected(npc);
+    if(martial&&!npc.martial.legacyKey){
+      const target=this.populationWorld.environment.fauna.find(beast=>beast.id===this.selectedFaunaId&&beast.alive)??
+        this.populationWorld.npcs.find(other=>other.id===this.selectedNpcId&&other!==npc&&other.alive);
+      return this.martialCombat.cast(npc,martial,target);
+    }
     if(npc.activeHeavenSkill)return this.heavenActions.fire(npc,npc.activeHeavenSkill);
     this.worldPopulationToast('Chọn võ kỹ đã học trong bảng nhập thân để gán vào K.');
   }
@@ -1866,9 +2008,9 @@ export class RebuildWorldScene extends Phaser.Scene {
       this.clampCamera();
       if(Phaser.Input.Keyboard.JustDown(this.keys.ESC))this.endPossession();
       return;
-    }let dx=0,dy=0;if(this.keys?.A?.isDown||this.keys?.LEFT?.isDown)dx--;if(this.keys?.D?.isDown||this.keys?.RIGHT?.isDown)dx++;if(this.keys?.W?.isDown||this.keys?.UP?.isDown)dy--;if(this.keys?.S?.isDown||this.keys?.DOWN?.isDown)dy++;const rig=this.characterRigPreview?.npc===npc?this.characterRigPreview:null;const moving=!rig?.mount.locked&&(!monsterRooted(npc,this.populationWorld.environment.faunaClockMs)||this.monsterSafe(npc))&&(dx!==0||dy!==0);if(moving){if(npc.manualMeditation)this.cultivation.interrupt(npc);this.heavenActions.stopFishing();this.cameraFollowSuspended=false;const length=Math.hypot(dx,dy);dx/=length;dy/=length;this.playerFacing=Math.abs(dx)>Math.abs(dy)?(dx<0?'left':'right'):(dy<0?'up':'down');const mounted=rig?.mount.attached;const speed=(mounted?(this.keys?.SHIFT?.isDown?234:155):(this.keys?.SHIFT?.isDown?178:118))*(npc.westPoison>=45?.78:1);const x=sprite.x+dx*speed*dt/1000,y=sprite.y+dy*speed*dt/1000;const move=mounted?rig.moveMounted(x,y):this.moveOnGround(npc,sprite,x,y);if(move){sprite.setPosition(move.x,move.y);npc.x=move.x;npc.y=move.y;sprite.setDepth(this.ramparts.depth(npc));npc.action='travel';npc.shortGoal='Đang được Thiên Đạo điều khiển';sprite.setData('moving',true);sprite.play(`${this.npcTextureFor(npc)}_walk_${this.playerFacing}`,true)}else{sprite.setData('moving',false);sprite.play(`${this.npcTextureFor(npc)}_idle_${this.playerFacing}`,true)}}else{sprite.setData('moving',false);npc.x=sprite.x;npc.y=sprite.y;sprite.play(`${this.npcTextureFor(npc)}_idle_${this.playerFacing}`,true)}if(!this.cameraFollowSuspended)this.cameras.main.centerOn(npc.x,npc.y-this.ramparts.height(npc));this.clampCamera();this.playerAttackCooldown=Math.max(0,this.playerAttackCooldown-dt/1000);this.playerSkillCooldown=Math.max(0,this.playerSkillCooldown-dt/1000);
+    }let dx=0,dy=0;if(this.keys?.A?.isDown||this.keys?.LEFT?.isDown)dx--;if(this.keys?.D?.isDown||this.keys?.RIGHT?.isDown)dx++;if(this.keys?.W?.isDown||this.keys?.UP?.isDown)dy--;if(this.keys?.S?.isDown||this.keys?.DOWN?.isDown)dy++;const rig=this.characterRigPreview?.npc===npc?this.characterRigPreview:null;const moving=!rig?.mount.locked&&!this.martialCombat?.rooted(npc)&&!this.martialCombat?.casts.has(npc.id)&&(!monsterRooted(npc,this.populationWorld.environment.faunaClockMs)||this.monsterSafe(npc))&&(dx!==0||dy!==0);if(moving){if(npc.manualMeditation)this.cultivation.interrupt(npc);this.heavenActions.stopFishing();this.cameraFollowSuspended=false;const length=Math.hypot(dx,dy);dx/=length;dy/=length;this.playerFacing=Math.abs(dx)>Math.abs(dy)?(dx<0?'left':'right'):(dy<0?'up':'down');const mounted=rig?.mount.attached;const speed=(mounted?(this.keys?.SHIFT?.isDown?234:155):(this.keys?.SHIFT?.isDown?178:118))*(npc.westPoison>=45?.78:1);const x=sprite.x+dx*speed*dt/1000,y=sprite.y+dy*speed*dt/1000;const move=mounted?rig.moveMounted(x,y):this.moveOnGround(npc,sprite,x,y);if(move){sprite.setPosition(move.x,move.y);npc.x=move.x;npc.y=move.y;sprite.setDepth(this.ramparts.depth(npc));npc.action='travel';npc.shortGoal='Đang được Thiên Đạo điều khiển';sprite.setData('moving',true);sprite.play(`${this.npcTextureFor(npc)}_walk_${this.playerFacing}`,true)}else{sprite.setData('moving',false);sprite.play(`${this.npcTextureFor(npc)}_idle_${this.playerFacing}`,true)}}else{sprite.setData('moving',false);npc.x=sprite.x;npc.y=sprite.y;sprite.play(`${this.npcTextureFor(npc)}_idle_${this.playerFacing}`,true)}if(!this.cameraFollowSuspended)this.cameras.main.centerOn(npc.x,npc.y-this.ramparts.height(npc));this.clampCamera();this.playerAttackCooldown=Math.max(0,this.playerAttackCooldown-dt/1000);this.playerSkillCooldown=Math.max(0,this.playerSkillCooldown-dt/1000);
     updateSkillStatus(this,npc);
-    if(!npc.wallLevel&&Phaser.Input.Keyboard.JustDown(this.keys.E)&&!this.underground?.enterNearby(npc)&&!this.westTreasures?.interact(npc)&&!this.westWilds?.interact(npc)&&!this.sectCampus.interact(npc)&&!this.merchantPanel?.interact(npc)){const drop=(this.populationWorld.environment.drops??[]).filter(d=>d.status==='ground').sort((a,b)=>Math.hypot(npc.x-a.x,npc.y-a.y)-Math.hypot(npc.x-b.x,npc.y-b.y))[0];if(!drop)this.worldPopulationToast('Không có vật phẩm rơi gần đây.');else if(Math.hypot(npc.x-drop.x,npc.y-drop.y)>32)this.worldPopulationToast('Tiến sát chiến lợi phẩm rồi nhấn E để nhặt.');else{const result=this.claimFaunaDropForNpc(drop.id,npc.id,`possessed-pickup:${createWorldUuid()}`);this.worldPopulationToast(result?`Đã nhặt ${result.itemId} ×${result.count} vào túi ${npc.name}.`:'Vật phẩm đã được nhặt hoặc không còn hợp lệ.');this.refreshHud()}}
+    if(!npc.wallLevel&&Phaser.Input.Keyboard.JustDown(this.keys.E)&&!this.weeklyAuction?.interactSurface(npc)&&!this.opportunities?.tryFind(npc,true)&&!this.underground?.enterNearby(npc)&&!this.westTreasures?.interact(npc)&&!this.westWilds?.interact(npc)&&!this.sectCampus.interact(npc)&&!this.merchantPanel?.interact(npc)){const drop=(this.populationWorld.environment.drops??[]).filter(d=>d.status==='ground').sort((a,b)=>Math.hypot(npc.x-a.x,npc.y-a.y)-Math.hypot(npc.x-b.x,npc.y-b.y))[0];if(!drop)this.worldPopulationToast('Không có vật phẩm rơi gần đây.');else if(Math.hypot(npc.x-drop.x,npc.y-drop.y)>32)this.worldPopulationToast('Tiến sát chiến lợi phẩm rồi nhấn E để nhặt.');else{const result=this.claimFaunaDropForNpc(drop.id,npc.id,`possessed-pickup:${createWorldUuid()}`);this.worldPopulationToast(result?`Đã nhặt ${result.itemId} ×${result.count} vào túi ${npc.name}.`:'Vật phẩm đã được nhặt hoặc không còn hợp lệ.');this.refreshHud()}}
     if(Phaser.Input.Keyboard.JustDown(this.keys.ESC))this.endPossession();}
   tickCityLaw(){
     const start=performance.now();
@@ -2030,6 +2172,7 @@ export class RebuildWorldScene extends Phaser.Scene {
       this.footprintTerrainOpen(x,y,footprint.width/2,footprint.height/2,Boolean(actor.species));
   }
   moveOnGround(actor,sprite,x,y,allowAvoid=true){
+    if(this.martialCombat?.rooted(actor))return null;
     if(monsterRooted(actor,this.populationWorld.environment.faunaClockMs)&&!this.monsterSafe(actor))return null;
     const body=this.groundOccupancy?.bodies.get(actor.id);
     if(!body)return null;
@@ -2047,7 +2190,12 @@ export class RebuildWorldScene extends Phaser.Scene {
     return move;
   }
   canOccupyOrSlide(x,y,sprite){const moved=(px,py)=>Math.hypot(px-sprite.x,py-sprite.y)>.05;if(moved(x,y)&&this.canOccupy(x,y))return{x,y};if(moved(x,sprite.y)&&this.canOccupy(x,sprite.y))return{x,y:sprite.y};if(moved(sprite.x,y)&&this.canOccupy(sprite.x,y))return{x:sprite.x,y};const dx=x-sprite.x,dy=y-sprite.y,distances=[4,8,12,16,24,32],sideSteps=[];for(const step of distances){if(Math.abs(dx)>Math.abs(dy))sideSteps.push({x:sprite.x,y:sprite.y-step},{x:sprite.x,y:sprite.y+step});else sideSteps.push({x:sprite.x-step,y:sprite.y},{x:sprite.x+step,y:sprite.y})}const side=sideSteps.filter(point=>moved(point.x,point.y)&&this.canOccupy(point.x,point.y));return side.sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y))[0]??null}
-  buildNavigationComponents(){const total=this.navCols*this.navRows;this.navComponents=new Int32Array(total);this.navComponentSizes=[0];const queue=new Int32Array(total);let component=0;for(let start=0;start<total;start++){if(this.navBlocked[start]||this.navComponents[start])continue;component++;let head=0,tail=0;queue[tail++]=start;this.navComponents[start]=component;while(head<tail){const cur=queue[head++],x=cur%this.navCols,y=Math.floor(cur/this.navCols);for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=this.navCols||ny>=this.navRows)continue;const k=ny*this.navCols+nx;if(this.navBlocked[k]||this.navComponents[k])continue;this.navComponents[k]=component;queue[tail++]=k}}this.navComponentSizes[component]=tail}}
+  buildNavigationComponents(){
+    const began=performance.now(), result=navigationComponents(this.navBlocked,this.navCols);
+    this.navComponents=result.labels;
+    this.navComponentSizes=result.sizes;
+    this.navigationBuildMs=(this.navigationBuildMs??0)+performance.now()-began;
+  }
   navComponentAt(point){const gx=Math.floor((point.x+this.westOffsetX)/this.navCell),gy=Math.floor(point.y/this.navCell);if(gx<0||gy<0||gx>=this.navCols||gy>=this.navRows)return 0;const key=(x,y)=>y*this.navCols+x;if(!this.navBlocked[gy*this.navCols+gx])return this.navComponents[key(gx,gy)];for(let r=1;r<=4;r++)for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++){const x=gx+dx,y=gy+dy;if(x>=0&&y>=0&&x<this.navCols&&y<this.navRows&&!this.navBlocked[key(x,y)])return this.navComponents[key(x,y)]}return 0}
   canReachPoint(a,b){const x=this.navComponentAt(a),y=this.navComponentAt(b);return x>0&&x===y}
   bindCameraControls(){
@@ -2066,7 +2214,8 @@ export class RebuildWorldScene extends Phaser.Scene {
       if(drag.moved)this.lastWorldDragAt=performance.now();
       this.dragState=null;
       this.clampCamera();
-      if(event.type==='pointerup'&&drag.button===0&&!drag.moved&&Math.hypot(event.clientX-drag.x,event.clientY-drag.y)<4)this.inspector?.click(event);
+      if(event.type==='pointerup'&&drag.button===0&&!drag.moved&&Math.hypot(event.clientX-drag.x,event.clientY-drag.y)<4&&
+        !this.opportunities?.atSurface(event))this.inspector?.click(event);
     };
     canvas.addEventListener('pointerup',finish,{signal});
     canvas.addEventListener('pointercancel',finish,{signal});
@@ -2097,7 +2246,8 @@ export class RebuildWorldScene extends Phaser.Scene {
     if(document.hidden)return;
     this.windClock+=Math.min(delta,60);this.updateWindFrames();
     const simulationStarted=performance.now();
-    if(!TRIBULATION_ARENA)this.updatePopulation(time,delta);
+    if(this.martialGallery)this.martialGallery.step(Math.min(delta,80));
+    else if(!TRIBULATION_ARENA)this.updatePopulation(time,delta);
     if(this.populationWorld.clock.paused&&time>=(this.nextPausedCulling??0)){
       this.nextPausedCulling=time+100;
       this.refreshFaunaVisibility();
@@ -2114,7 +2264,7 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.npcAppearanceFleet?.update(time,Math.min(delta,60));
     this.cultivation?.draw(time);
     this.skyStepVisuals.update(this.skyStep.active,time);
-    this.nameplates?.update(time);this.sectCampus.update();this.syncNPCModularVisuals();this.syncWeaponVisuals();this.flightVisuals.update(this.flyingSword);
+    this.nameplates?.update(time);this.sectCampus.update();this.syncNPCModularVisuals();this.syncWeaponVisuals();this.martialCombat?.render();this.flightVisuals.update(this.flyingSword);
     this.animationMs=performance.now()-animationStarted;
     for(let i=0;i<this.flowSprites.length;i++){const sprite=this.flowSprites[i];if(!this.inSceneryView(sprite,80))continue;const frame=waterFlowFrame(time,sprite.getData('flowPeriod'),sprite.getData('flowPhase'),sprite.getData('flowFirst'));if(frame!==sprite.getData('flowFrame')){sprite.setFrame(frame);sprite.setData('flowFrame',frame)}}
     const speed=680*delta/1000/this.cameras.main.zoom;
@@ -2131,7 +2281,12 @@ export class RebuildWorldScene extends Phaser.Scene {
     this.daylight?.update(time);
     this.veinOverlay?.update(time);
     this.socialVisuals?.update(time);
-    this.cityScenery.update(time,daylightAt(this.populationWorld.clock.minute+(this.populationTick??0)/1000).lamps);
+    const lamps=daylightAt(this.populationWorld.clock.minute+(this.populationTick??0)/1000).lamps;
+    this.cityScenery.update(time,lamps);
+    const auctionSprite=this.buildingSprites.get(AUCTION_BUILDING);
+    const auctionLit=lamps>.25||['reception','inspection','bidding'].includes(this.weeklyAuction?.session?.phase);
+    const auctionTexture=auctionLit?'van-bao-lit':'van-bao-day';
+    if(auctionSprite.texture.key!==auctionTexture)auctionSprite.setTexture(auctionTexture);
     this.cityFxMs=performance.now()-cityFxStarted;
     this.fadeWestCanopies(time);
     this.monsterVisuals.update(this.populationWorld.environment,this.populationWorld.environment.faunaClockMs);
@@ -2150,7 +2305,8 @@ export class RebuildWorldScene extends Phaser.Scene {
     const pad=64;
     for(const bounds of this.sceneryBounds){
       const visible=bounds.left<=x+width+pad&&bounds.right>=x-pad&&bounds.top<=y+height+pad&&bounds.bottom>=y-pad;
-      if(bounds.sprite.visible!==visible)bounds.sprite.setVisible(visible);
+      const show=visible&&!bounds.sprite.martialRuined;
+      if(bounds.sprite.visible!==show)bounds.sprite.setVisible(show);
     }
   }
   fadeWestCanopies(time){
@@ -2271,7 +2427,7 @@ export class RebuildWorldScene extends Phaser.Scene {
   canNavigate(a,b){return this.findNavigationPath(a,b)!==null}
   gotoMarker(id,zoom=.95){const marker=this.markers.find(m=>m.id===id);if(!marker)return false;this.cameras.main.setZoom(zoom).centerOn(marker.x,marker.y);this.clampCamera();return true}
   async walkDebugPath(a,b){const points=this.findNavigationPath(a,b);if(!points)return{from:a,to:b,reached:false,reason:'blocked'};if(!this.debugSolids){this.debugSolids=this.physics.add.staticGroup();for(const r of this.collisionRects){const solid=this.add.rectangle(r.x+r.width/2,r.y+r.height/2,r.width,r.height,0,0).setVisible(false);this.physics.add.existing(solid,true);this.debugSolids.add(solid)}}const first=points[0],actor=this.add.ellipse(first.x,first.y,14,18,0xffd979,.95).setStrokeStyle(2,0x4c3527).setDepth(first.y+1000);actor.setName('temporary-gate-debug-actor');this.physics.add.existing(actor);actor.body.setSize(12,12);actor.body.setCollideWorldBounds(true);const collider=this.physics.add.collider(actor,this.debugSolids);let reached=true,stalledAt=null,stalledTarget=null;try{for(let i=1;i<points.length;i++){const target=points[i],dx=target.x-actor.x,dy=target.y-actor.y,distance=Math.hypot(dx,dy);if(distance<2)continue;actor.body.setVelocity(dx/distance*90,dy/distance*90);const start=this.time.now;let best=Math.hypot(target.x-actor.x,target.y-actor.y);while(best>8&&this.time.now-start<Math.max(1600,distance/90*1000+800)){await new Promise(resolve=>this.time.delayedCall(16,resolve));const current=Math.hypot(target.x-actor.x,target.y-actor.y);if(current<best)best=current;else if(current>best+3)break}actor.body.setVelocity(0,0);if(best>12){reached=false;stalledAt={x:actor.x,y:actor.y};stalledTarget=target;break}}}finally{this.physics.world.removeCollider(collider);actor.destroy()}return{from:a,to:b,reached,waypoints:points.length,...(!reached?{stalledAt,stalledTarget}: {})}}
-  getState(){const anchorCount=this.map.getObjectLayer('PopulationAnchors')?.objects.length??0,zones=this.map.getObjectLayer('EncounterZones')?.objects??[],cityBuildings=this.map.getObjectLayer('Buildings')?.objects??[],stalls=this.map.getObjectLayer('MarketDecor')?.objects??[],interactions=this.map.getObjectLayer('InteractionMarkers')?.objects??[];return{mapUrl:MAP_URL,widthTiles:this.map.width,heightTiles:this.map.height,tileWidth:this.map.tileWidth,tileHeight:this.map.tileHeight,worldWidth:this.map.widthInPixels,worldHeight:this.map.heightInPixels,regions:Object.keys(REGION_TITLES).map(id=>({id,title:REGION_TITLES[id]})),npcCount:this.populationWorld?.npcs?.length??0,futurePopulation:108,activeNPCCount:this.populationWorld?.npcs?.filter(n=>n.alive).length??0,populationAnchorCount:anchorCount,activeMonsterSpawns:zones.reduce((n,z)=>n+Number(this.prop(z,'spawnCount')??0),0),encounterZones:zones.map(z=>({name:z.name,tier:this.prop(z,'dangerTier'),realmIndexMin:this.prop(z,'realmIndexMin'),realmIndexMax:this.prop(z,'realmIndexMax'),enabled:this.prop(z,'enemySpawnEnabled')})),objectCount:this.objectSprites.length,cityBuildings:cityBuildings.map(o=>({name:o.name,gid:o.gid,display:[o.width,o.height]})),marketStalls:stalls.map(o=>({name:o.name,stallId:this.prop(o,'stallId'),gid:o.gid,display:[o.width,o.height]})),interactionMarkers:interactions.map(o=>({name:o.name,id:this.prop(o,'markerId'),kind:this.prop(o,'kind'),active:this.prop(o,'active')})),population:this.getPopulationState(),windTreeCount:this.windSprites.length,windKinds:[...new Set(this.windSprites.map(s=>s.getData('windKind')))],windFrames:this.windSprites.map(s=>({kind:s.getData('windKind'),frame:s.frame.name,x:s.x,y:s.y,phase:s.getData('windPhase')})),flowEffectCount:this.flowSprites.length,waterFrames:this.flowSprites.map(s=>s.frame.name),tilesets:this.map.tilesets.map(s=>s.name),layers:this.map.layers.map(l=>({name:l.name,tileCount:l.data?.flat()?.filter(t=>t.index>=0).length??0,visible:l.visible})),sprites:this.objectSprites.slice(0,6).map(s=>({name:s.name,texture:s.texture.key,frame:s.frame.name,x:s.x,y:s.y,display:[s.displayWidth,s.displayHeight]})),directionalGateSprites:this.objectSprites.filter(s=>s.texture.key==='rebuild-directional-gates').map(s=>({name:s.name,frame:s.frame.name,rotation:s.rotation,display:[s.displayWidth,s.displayHeight]})),camera:{width:this.cameras.main.width,height:this.cameras.main.height,zoom:this.cameras.main.zoom,x:this.cameras.main.scrollX,y:this.cameras.main.scrollY},zoom:this.cameras.main.zoom,scrollX:this.cameras.main.scrollX,scrollY:this.cameras.main.scrollY,collisionCount:this.collisionRects.length,collisionVisible:this.collisionVisible,markers:this.markers.map(m=>m.id)}}
+  getState(){const anchorCount=this.map.getObjectLayer('PopulationAnchors')?.objects.length??0,zones=this.map.getObjectLayer('EncounterZones')?.objects??[],cityBuildings=this.map.getObjectLayer('Buildings')?.objects??[],stalls=this.map.getObjectLayer('MarketDecor')?.objects??[],interactions=this.map.getObjectLayer('InteractionMarkers')?.objects??[];return{mapUrl:MAP_URL,widthTiles:this.map.width,heightTiles:this.map.height,tileWidth:this.map.tileWidth,tileHeight:this.map.tileHeight,worldWidth:this.map.widthInPixels,worldHeight:this.map.heightInPixels,regions:Object.keys(REGION_TITLES).map(id=>({id,title:REGION_TITLES[id]})),npcCount:this.populationWorld?.npcs?.length??0,futurePopulation:this.lifeDirector?.target??108,activeNPCCount:this.populationWorld?.npcs?.filter(n=>n.alive).length??0,populationAnchorCount:anchorCount,activeMonsterSpawns:zones.reduce((n,z)=>n+Number(this.prop(z,'spawnCount')??0),0),encounterZones:zones.map(z=>({name:z.name,tier:this.prop(z,'dangerTier'),realmIndexMin:this.prop(z,'realmIndexMin'),realmIndexMax:this.prop(z,'realmIndexMax'),enabled:this.prop(z,'enemySpawnEnabled')})),objectCount:this.objectSprites.length,cityBuildings:cityBuildings.map(o=>({name:o.name,gid:o.gid,display:[o.width,o.height]})),marketStalls:stalls.map(o=>({name:o.name,stallId:this.prop(o,'stallId'),gid:o.gid,display:[o.width,o.height]})),interactionMarkers:interactions.map(o=>({name:o.name,id:this.prop(o,'markerId'),kind:this.prop(o,'kind'),active:this.prop(o,'active')})),population:this.getPopulationState(),windTreeCount:this.windSprites.length,windKinds:[...new Set(this.windSprites.map(s=>s.getData('windKind')))],windFrames:this.windSprites.map(s=>({kind:s.getData('windKind'),frame:s.frame.name,x:s.x,y:s.y,phase:s.getData('windPhase')})),flowEffectCount:this.flowSprites.length,waterFrames:this.flowSprites.map(s=>s.frame.name),tilesets:this.map.tilesets.map(s=>s.name),layers:this.map.layers.map(l=>({name:l.name,tileCount:l.data?.flat()?.filter(t=>t.index>=0).length??0,visible:l.visible})),sprites:this.objectSprites.slice(0,6).map(s=>({name:s.name,texture:s.texture.key,frame:s.frame.name,x:s.x,y:s.y,display:[s.displayWidth,s.displayHeight]})),directionalGateSprites:this.objectSprites.filter(s=>s.texture.key==='rebuild-directional-gates').map(s=>({name:s.name,frame:s.frame.name,rotation:s.rotation,display:[s.displayWidth,s.displayHeight]})),camera:{width:this.cameras.main.width,height:this.cameras.main.height,zoom:this.cameras.main.zoom,x:this.cameras.main.scrollX,y:this.cameras.main.scrollY},zoom:this.cameras.main.zoom,scrollX:this.cameras.main.scrollX,scrollY:this.cameras.main.scrollY,collisionCount:this.collisionRects.length,collisionVisible:this.collisionVisible,markers:this.markers.map(m=>m.id)}}
   regionAtCamera(){
     const view=this.cameras.main.worldView,npc=!this.cameraFollowSuspended&&this.scheduler?.byId.get(this.possessedNpcId)?.npc;
     return this.regionAtPoint(npc?.x??view.centerX,npc?.y??view.centerY);
@@ -2288,7 +2444,7 @@ export class RebuildWorldScene extends Phaser.Scene {
     return west?`${west.name} · ${west.danger} · ${west.realm}`:REGION_TITLES[key]??'Thế giới Thanh Vân Ký';
   }
   getMinimapState(){const camera=this.cameras.main,view=camera.worldView;return{world:{width:this.map.widthInPixels,height:this.map.heightInPixels},zoom:camera.zoom,worldView:{x:view.x,y:view.y,width:view.width,height:view.height},viewport:this.minimap?.transform.cameraRect(camera)??null,followActor:this.possessedNpcId?{id:this.possessedNpcId,suspended:this.cameraFollowSuspended}:null,markers:(this.map.getObjectLayer('RegionMarkers')?.objects??[]).map(o=>({name:o.name,id:this.prop(o,'regionId'),x:o.x,y:o.y,width:o.width,height:o.height}))}}
-  refreshHud(){this.refreshHeavenWallet?.();this.refreshDivinePowerJournal?.();const region=this.regionAtCamera(),label=document.getElementById('world-area-title'),title=this.possessedNpcId?'Thiên Đạo nhập thân · '+(this.populationWorld.npcs.find(n=>n.id===this.possessedNpcId)?.name??'')+(this.westWilds?.regionAt(this.scheduler.byId.get(this.possessedNpcId)?.npc.x)?' · '+region:''):region;if(label&&label.textContent!==title)label.textContent=title;const now=this.time?.now??performance.now();if(this.nextHudPopulationAt===undefined||now>=this.nextHudPopulationAt){this.hudAliveCount=this.populationWorld?.npcs?.filter(n=>n.alive).length??0;this.nextHudPopulationAt=now+250}const active=this.hudAliveCount??0,sub=document.getElementById('world-camera-status'),status=this.possessedNpcId?(this.cameraFollowSuspended?`Đang xem xa · WASD trở về NPC · cư dân: ${active}/108`:`Theo NPC · WASD di chuyển · J đánh · E nhặt · Esc rời · cư dân: ${active}/108`):`Zoom ${this.cameras.main.zoom.toFixed(2)}× · cư dân: ${active}/108`;if(sub&&sub.textContent!==status)sub.textContent=status;this.refreshPossessionHud()}
+  refreshHud(){this.refreshHeavenWallet?.();this.refreshDivinePowerJournal?.();const region=this.regionAtCamera(),label=document.getElementById('world-area-title'),title=this.possessedNpcId?'Thiên Đạo nhập thân · '+(this.populationWorld.npcs.find(n=>n.id===this.possessedNpcId)?.name??'')+(this.westWilds?.regionAt(this.scheduler.byId.get(this.possessedNpcId)?.npc.x)?' · '+region:''):region;if(label&&label.textContent!==title)label.textContent=title;const now=this.time?.now??performance.now();if(this.nextHudPopulationAt===undefined||now>=this.nextHudPopulationAt){this.hudAliveCount=this.populationWorld?.npcs?.filter(n=>n.alive).length??0;this.nextHudPopulationAt=now+250}const rosterBadge=document.querySelector('#open-roster i');if(rosterBadge&&rosterBadge.textContent!==String(this.populationWorld.npcs.length))rosterBadge.textContent=String(this.populationWorld.npcs.length);const active=this.hudAliveCount??0,sub=document.getElementById('world-camera-status'),status=this.possessedNpcId?(this.cameraFollowSuspended?`Đang xem xa · WASD trở về NPC · cư dân: ${active}/${this.populationWorld?.npcs.length??0}`:`Theo NPC · WASD di chuyển · J đánh · E nhặt · Esc rời · cư dân: ${active}/${this.populationWorld?.npcs.length??0}`):`Zoom ${this.cameras.main.zoom.toFixed(2)}× · cư dân: ${active}/${this.populationWorld?.npcs.length??0}`;if(sub&&sub.textContent!==status)sub.textContent=status;this.refreshPossessionHud()}
   refreshPossessionHud(){this.renderPossessionHud();}
 }
 

@@ -78,6 +78,8 @@ export class Ramparts {
     return HEIGHT * clamp((t - 9) / (stair.length - 9),0,1);
   }
 
+  visualHeight(npc){return this.height(npc)+(this.scene.martialCombat?.altitude(npc)??0);}
+
   depth(npc) {
     if (npc.wallLevel !== 1) return npc.y;
     return npc.y + 160;

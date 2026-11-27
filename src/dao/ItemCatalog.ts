@@ -1,3 +1,4 @@
+import {ELEMENTS,GRADES,MARTIAL_B,MARTIAL_TECHNIQUES,MARTIAL_WEAPONS} from './MartialRegistry';
 import ITEM_ICON_FRAMES from './ItemIconFrames.json';
 import { treasureDefinition, ALL_TREASURE_IDS, WEST_TREASURE_MEDICINE, WEST_TREASURE_RARITY } from './WestTreasureCatalog';
 
@@ -76,6 +77,15 @@ for(const id of ALL_TREASURE_IDS){
   ITEM_CATALOG[id]={id,name:t.name,kind:t.material?'material':'herb',tier:t.grade===5?'spiritual-treasure':t.grade===4?'treasure':t.grade>=2?'spirit':'artifact',
     quality:t.grade>=4?'high':t.grade>=2?'middle':'low',value:t.value,
     description:`${WEST_TREASURE_RARITY[t.grade]} · hệ ${t.element}${t.age?` · ${t.age} năm`:''}${t.material?' · Nguyên liệu Đông Hoang':' · Dược liệu luyện '+WEST_TREASURE_MEDICINE[t.medicine]}.`};
+}
+const martialTiers:ItemTier[]=['mortal','artifact','spirit','treasure','divine'];
+for(const course of Object.values(MARTIAL_TECHNIQUES)){
+  ITEM_CATALOG[course.book]={id:course.book,name:course.name+' · Bí tịch',kind:'treasure',tier:martialTiers[course.grade],quality:'middle',
+    value:course.price*MARTIAL_B,description:GRADES[course.grade].name+' cấp · '+course.category+' · '+course.source};
+}
+for(const weapon of Object.values(MARTIAL_WEAPONS)){
+  ITEM_CATALOG[weapon.id]={id:weapon.id,name:weapon.name,kind:'weapon',tier:martialTiers[weapon.grade],quality:'middle',
+    value:weapon.price*MARTIAL_B,description:GRADES[weapon.grade].name+' cấp · '+ELEMENTS[weapon.element]+' · '+weapon.source};
 }
 export const itemIcon=(id:string)=>(ITEM_ICON_FRAMES as Record<string,readonly number[]>)[id]??ITEM_ICON_FRAMES.unknown;
 for(const item of Object.values(ITEM_CATALOG))item.icon=itemIcon(item.id);
